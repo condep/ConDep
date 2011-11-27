@@ -2,16 +2,26 @@
 
 namespace TestWebDeployApp
 {
-	class Program 
+	public class Program : ConDepConsoleApp<Program>
 	{
 		static void Main(string[] args)
 		{
-			//Sync()
-			//   .FromServer("ffdevweb01")
-			//   .UsingProvider(p => p.WebApp(@"agent.frende.no/STS")
-			//                        .AddToRemoteWebsite("Default Web Site")
-			//                        .SetRemoteAppNameTo("STSSync"))
-			//   .ToLocalHost();
+			var program = Initialize(args);
+
+			program.Sync(s => s.FromLocalHost()
+			                  	.UsingProvider(p =>
+			                  	               	{
+			                  	               		p.Certificate("");
+			                  	               		p.DefineCustom("providerName", "sourcePath", "destinationPath");
+																	p.DefineCustom("providerName", "sourcePath", "destinationPath", cpo =>
+																	                                                                	{
+																	                                                                		cpo.Define("name", "value");
+																	                                                                		cpo.Define("name", "value");
+																	                                                                	});
+			                  	               	}));
+
+
 		}
+
 	}
 }

@@ -5,7 +5,7 @@ using Microsoft.Web.Deployment;
 
 namespace ConDep.WebDeploy.Dsl
 {
-	public class WebDeploy
+	public class WebDeploy : IWebDeploy
 	{
 		private readonly WebDeployDefinition _webDeployDefinition;
 

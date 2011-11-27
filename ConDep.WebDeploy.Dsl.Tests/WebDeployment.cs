@@ -2,39 +2,40 @@
 using ConDep.WebDeploy.Dsl.Builders;
 using ConDep.WebDeploy.Dsl;
 using ConDep.WebDeploy.Dsl.SemanticModel;
-using NUnit.Framework;
+using Xunit;
+using Moq;
 
 namespace ConDep.WebDeploy.Dsl.Tests
 {
-	[TestFixture]
 	public class WebDeploymentTests
 	{
 		private SyncBuilder _sync;
 		private WebDeployDefinition _webDeployDefinition;
-		private WebDeploy _webDeploy;
+		private IWebDeploy _webDeploy;
 
-		[SetUp]
-		public void Init()
+		public WebDeploymentTests()
 		{
 			_webDeployDefinition = new WebDeployDefinition();
 			_sync = new SyncBuilder(_webDeployDefinition);
-			_webDeploy = new WebDeploy(_webDeployDefinition);
+			_webDeploy = new Mock<IWebDeploy>().Object;
 		}
 
-		[Test]
+		[Fact]
 		public void TestThat_WebApp_Works_With_Default_Credentials()
 		{
+			const string SOURCE_SERVER = "ffdevweb01";
+
 			_sync
-				.FromServer("ffdevweb01")
+				.FromServer(SOURCE_SERVER)
 				.UsingProvider(p => p.WebApp(@"agent.frende.no/STS")
 				                    	.AddToRemoteWebsite("Default Web Site")
 				                    	.SetRemoteAppNameTo("STSSync"))
 				.ToLocalHost();
 
-			_webDeploy.Deploy();
+			Assert.Equal(_webDeployDefinition.Source.ComputerName, SOURCE_SERVER);
 		}
 
-		[Test]
+		[Fact]
 		public void TestThat_WebApp_Works_With_Destination_Credentials()
 		{
 			_sync
@@ -52,7 +53,7 @@ namespace ConDep.WebDeploy.Dsl.Tests
 			_webDeploy.Deploy();
 		}
 
-		[Test]
+		[Fact]
 		public void TestThat_WebApp_Works_With_Source_And_Destination_Credentials()
 		{
 			_sync
@@ -74,7 +75,7 @@ namespace ConDep.WebDeploy.Dsl.Tests
 			_webDeploy.Deploy();
 		}
 
-		[Test]
+		[Fact]
 		public void TestThat_CopyDir_Works()
 		{
 			_sync
@@ -86,7 +87,7 @@ namespace ConDep.WebDeploy.Dsl.Tests
 			_webDeploy.Deploy();
 		}
 
-		[Test]
+		[Fact]
 		public void TestThat_Certificate_Works()
 		{
 			_sync
@@ -97,7 +98,7 @@ namespace ConDep.WebDeploy.Dsl.Tests
 			_webDeploy.Deploy();
 		}
 
-		[Test]
+		[Fact]
 		public void TestThat_SetAcl_Works()
 		{
 _sync
@@ -121,7 +122,7 @@ _sync
 			_webDeploy.Deploy();
 		}
 
-		[Test]
+		[Fact]
 		public void TestThat_AutoDeployAgent_Works()
 		{
 			_sync
@@ -137,7 +138,7 @@ _sync
 			_webDeploy.Deploy();
 		}
 
-		[Test]
+		[Fact]
 		public void TestThat_CopyFile_Works()
 		{
 			_sync

@@ -52,16 +52,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builders\CustomProviderOptionsBuilder.cs" />
     <Compile Include="Builders\IOperation.cs" />
     <Compile Include="Builders\IProvide.cs" />
     <Compile Include="Builders\ISync.cs" />
     <Compile Include="Builders\IOperateFrom.cs" />
-    <Compile Include="ConsoleBase.cs" />
+    <Compile Include="CmdParameterParser.cs" />
+    <Compile Include="ConDepConsoleApp.cs" />
     <Compile Include="Builders\DeleteBuilder.cs" />
     <Compile Include="Builders\PackageBuilder.cs" />
     <Compile Include="Builders\IDelete.cs" />
     <Compile Include="Builders\IPackage.cs" />
     <Compile Include="Builders\IArchive.cs" />
+    <Compile Include="IWebDeploy.cs" />
     <Compile Include="Providers\Certificate\CertificateExtension.cs" />
     <Compile Include="Builders\ConfigurationBuilder.cs" />
     <Compile Include="Providers\CopyDir\CopyDirBuilder.cs" />
@@ -81,6 +84,7 @@
     <Compile Include="Providers\CopyFile\CopyFileProvider.cs" />
     <Compile Include="Providers\CopyDir\CopyDirProvider.cs" />
     <Compile Include="Providers\Credentials\CredentialsProvider.cs" />
+    <Compile Include="SemanticModel\CustomProvider.cs" />
     <Compile Include="SemanticModel\Destination.cs" />
     <Compile Include="SemanticModel\Provider.cs" />
     <Compile Include="Providers\SetAcl\SetAclProvider.cs" />

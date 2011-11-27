@@ -9,6 +9,11 @@ namespace ConDep.WebDeploy.Dsl
 		public void Sync(Action<SyncBuilder> action)
 		{
 			var definition = new WebDeployDefinition();
+			Sync(definition, action);
+		}
+
+		public void Sync(WebDeployDefinition definition, Action<SyncBuilder> action)
+		{
 			action(new SyncBuilder(definition));
 
 			var webDeploy = new WebDeploy(definition);
