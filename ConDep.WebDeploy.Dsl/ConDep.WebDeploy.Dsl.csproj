@@ -58,6 +58,7 @@
     <Compile Include="Builders\ISync.cs" />
     <Compile Include="Builders\IOperateFrom.cs" />
     <Compile Include="CmdParameterParser.cs" />
+    <Compile Include="ConDepConfiguration.cs" />
     <Compile Include="ConDepConsoleApp.cs" />
     <Compile Include="Builders\DeleteBuilder.cs" />
     <Compile Include="Builders\PackageBuilder.cs" />

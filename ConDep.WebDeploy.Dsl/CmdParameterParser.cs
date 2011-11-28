@@ -6,69 +6,11 @@ namespace ConDep.WebDeploy.Dsl
 {
 	internal abstract class CmdParameterParser
 	{
-		private const char COMMA_CHAR = ',';
 		private const char DOUBLE_QUOTE_CHAR = '"';
-		private const char EQUALS_CHAR = '=';
 		private const char SINGLE_QUOTE_CHAR = '\'';
 		private const char SPACE_CHAR = ' ';
 
-		protected abstract void HandleObjectParameterAlreadySpecified(string name);
-
-		internal Dictionary<string, string> Parse(string descriptor)
-		{
-			var dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-			while (!string.IsNullOrEmpty(descriptor))
-			{
-				string str;
-				string str2;
-				string str3;
-				int length = SmartIndexOf(descriptor, COMMA_CHAR);
-				if (length == -1)
-				{
-					str = descriptor;
-				}
-				else
-				{
-					str = descriptor.Substring(0, length);
-				}
-				int num2 = SmartIndexOf(str, EQUALS_CHAR);
-				if (num2 == -1)
-				{
-					str3 = str;
-					str2 = string.Empty;
-				}
-				else
-				{
-					str3 = str.Substring(0, num2);
-					if (num2 < (str.Length - 1))
-					{
-						str2 = str.Substring(num2 + 1);
-					}
-					else
-					{
-						str2 = string.Empty;
-					}
-				}
-				str3 = str3.Trim(new[] { SINGLE_QUOTE_CHAR }).Trim(new[] { DOUBLE_QUOTE_CHAR });
-				str2 = str2.Trim(new[] { SINGLE_QUOTE_CHAR }).Trim(new[] { DOUBLE_QUOTE_CHAR });
-				if (dictionary.ContainsKey(str3))
-				{
-					this.HandleObjectParameterAlreadySpecified(str3);
-				}
-				dictionary.Add(str3, ParseValue(str3, str2));
-				if ((length != -1) && (length < (descriptor.Length - 1)))
-				{
-					descriptor = descriptor.Substring(length + 1);
-				}
-				else
-				{
-					descriptor = null;
-				}
-			}
-			return dictionary;
-		}
-
-		public static List<string> ParseOnSpace(string input)
+		public static List<string> GetCmdParameters(string input)
 		{
 			var list = new List<string>();
 			if (!string.IsNullOrEmpty(input))
@@ -89,10 +31,12 @@ namespace ConDep.WebDeploy.Dsl
 					list.Add(str);
 				}
 			}
+			if(list.Count > 0)
+			{
+				list.RemoveAt(0);
+			}
 			return list;
 		}
-
-		protected abstract string ParseValue(string name, string value);
 
 		private static int SmartIndexOf(string str, char ch)
 		{

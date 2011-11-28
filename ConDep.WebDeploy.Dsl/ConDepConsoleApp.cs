@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security;
 
 namespace ConDep.WebDeploy.Dsl
 {
-	public class ConDepConsoleApp<ConsoleOwner> : WebDeployOperation where ConsoleOwner : ConDepConsoleApp<ConsoleOwner>, new()
+	public class ConDepConsoleApp<TConsoleOwner, TSettings> : WebDeployOperation 
+		where TConsoleOwner : ConDepConsoleApp<TConsoleOwner, TSettings>, new()
+		where TSettings : ConDepConfiguration, new()
 	{
-		protected CustomConfiguration CustomConfig { get; private set; }
+		protected TSettings Settings { get; private set; }
 
-		public static ConsoleOwner Initialize(string[] args)
+		public static TConsoleOwner Initialize(string[] args)
 		{
 			string commandLine;
 
@@ -21,19 +24,31 @@ namespace ConDep.WebDeploy.Dsl
 				throw new Exception("Insufficient permissions to run exe", exception);
 			}
 
-			var list = CmdParameterParser.ParseOnSpace(commandLine);
+			var list = CmdParameterParser.GetCmdParameters(commandLine);
+
+			if(list.Count == 0)
+			{
+				PrintHelp();
+			}
+
+			foreach (var element in list.Where(element => (element.Equals("-?") || element.Equals("/?")) || element.Equals("-help", StringComparison.OrdinalIgnoreCase)))
+			{
+				PrintHelp();
+			} 
+
 			var customConfig = GetCustomConfiguration(list);
 
-			return new ConsoleOwner {CustomConfig = customConfig};
+			return new TConsoleOwner {Settings = customConfig};
 		}
 
-		private static CustomConfiguration GetCustomConfiguration(List<string> list)
+		private static TSettings GetCustomConfiguration(List<string> list)
 		{
-			return new CustomConfiguration();
+			return new TSettings();
 		}
-	}
 
-	public class CustomConfiguration
-	{
+		private static void PrintHelp()
+		{
+			
+		}
 	}
 }

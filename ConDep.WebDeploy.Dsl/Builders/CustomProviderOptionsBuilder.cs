@@ -11,7 +11,7 @@ namespace ConDep.WebDeploy.Dsl.Builders
 			_provider = provider;
 		}
 
-		public CustomProviderOptionsBuilder Define(string name, string value)
+		public CustomProviderOptionsBuilder Add(string name, string value)
 		{
 			_provider.ProviderSettings.Add(name, value);
 			return this;
