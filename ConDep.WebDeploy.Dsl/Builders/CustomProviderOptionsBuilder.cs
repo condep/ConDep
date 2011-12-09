@@ -4,9 +4,9 @@ namespace ConDep.WebDeploy.Dsl.Builders
 {
 	public class CustomProviderOptionsBuilder
 	{
-		private readonly CustomProvider _provider;
+		private readonly BasicProvider _provider;
 
-		public CustomProviderOptionsBuilder(CustomProvider provider)
+		public CustomProviderOptionsBuilder(BasicProvider provider)
 		{
 			_provider = provider;
 		}

@@ -7,46 +7,89 @@ namespace ConDep.WebDeploy.Dsl
 {
 	public class WebDeploy : IWebDeploy
 	{
-		private readonly WebDeployDefinition _webDeployDefinition;
+		public event EventHandler<WebDeployMessegaEventArgs> Output;
+		public event EventHandler<WebDeployMessegaEventArgs> OutputError;
 
-		public WebDeploy(WebDeployDefinition webDeployDefinition)
+		public void Deploy(WebDeployDefinition webDeployDefinition)
 		{
-			_webDeployDefinition = webDeployDefinition;
-		}
-
-		public void Deploy()
-		{
-			var syncOptions = new DeploymentSyncOptions();
-			var sourceBaseOptions = _webDeployDefinition.Source.GetSourceBaseOptions();
-			var destBaseOptions = _webDeployDefinition.Destination.GetDestinationBaseOptions();
-
-			destBaseOptions.Trace += destBaseOptions_Trace;
-			destBaseOptions.TraceLevel = TraceLevel.Verbose;
-
-			foreach (var provider in _webDeployDefinition.Source.Providers)
+			try
 			{
-				var sourceDepObject = provider.GetWebDeploySourceObject(sourceBaseOptions);
-				var destProviderOptions = provider.GetWebDeployDestinationProviderOptions();
+				var syncOptions = new DeploymentSyncOptions();
+				var sourceBaseOptions = webDeployDefinition.Source.GetSourceBaseOptions();
+				var destBaseOptions = webDeployDefinition.Destination.GetDestinationBaseOptions();
 
-				if (_webDeployDefinition.Configuration.AutoDeployAgent)
+				destBaseOptions.Trace += OnWebDeployTraceMessage;
+				destBaseOptions.TraceLevel = TraceLevel.Verbose;
+
+				foreach (var provider in webDeployDefinition.Source.Providers)
 				{
-					destBaseOptions.TempAgent = true;
+					var sourceDepObject = provider.GetWebDeploySourceObject(sourceBaseOptions);
+					var destProviderOptions = provider.GetWebDeployDestinationProviderOptions();
+
+					if (webDeployDefinition.Configuration.AutoDeployAgent)
+					{
+						destBaseOptions.TempAgent = true;
+					}
+
+					sourceDepObject.SyncTo(destProviderOptions, destBaseOptions, syncOptions);
 				}
 
-				sourceDepObject.SyncTo(destProviderOptions, destBaseOptions, syncOptions);
+				destBaseOptions.Trace -= OnWebDeployTraceMessage;
 			}
+			catch(Exception ex)
+			{
+				if(OutputError != null)
+				{
+					var message = GetCompleteExceptionMessage(ex);
 
-			destBaseOptions.Trace -= destBaseOptions_Trace;
+					OutputError(this, new WebDeployMessegaEventArgs { Message = message, Level = TraceLevel.Error });
+				}
+			}
 		}
 
-		void destBaseOptions_Trace(object sender, DeploymentTraceEventArgs e)
+		private string GetCompleteExceptionMessage(Exception exception)
 		{
-			Trace.WriteLine(e.Message);
+			var message = exception.Message;
+			if (exception.InnerException != null)
+			{
+				message += " " + GetCompleteExceptionMessage(exception.InnerException);
+			}
+			return message;
 		}
 
-		public void Delete()
+		void OnWebDeployTraceMessage(object sender, DeploymentTraceEventArgs e)
+		{
+			if(e.EventLevel == TraceLevel.Error)
+			{
+				if(OutputError != null)
+				{
+					OutputError(this, new WebDeployMessegaEventArgs {Message = e.Message, Level = e.EventLevel});
+				}
+			}
+			else
+			{
+				if (Output != null)
+				{
+					Output(this, new WebDeployMessegaEventArgs { Message = e.Message, Level = e.EventLevel });
+				}
+			}
+		}
+
+		public void Delete(WebDeployDefinition webDeployDefinition)
 		{
 			throw new NotImplementedException();
 		}
+
+		//public WebDeployDefinition Definition
+		//{
+		//   get { return _webDeployDefinition; }
+		//   set { _webDeployDefinition = value; }
+		//}
+	}
+
+	public class WebDeployMessegaEventArgs : EventArgs
+	{
+		public string Message { get; set; }
+		public TraceLevel Level { get; set; }
 	}
 }

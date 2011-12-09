@@ -2,37 +2,23 @@
 
 namespace TestWebDeployApp
 {
+	//ToDo: ILMerge
 	public class Program : ConDepConsoleApp<Program, DeploymentSettings>
 	{
 		static void Main(string[] args)
 		{
-			//var program = Initialize(args);
-			var program = Initialize(args);
-
-			program.Sync(s => s.FromLocalHost()
-			                  	.UsingProvider(p =>
-			                  	               	{
-			                  	               		p.Certificate("");
-			                  	               		p.DefineCustom("providerName", program.Settings.ServerName, "destinationPath");
-			                  	               		p.DefineCustom("providerName", program.Settings.IP, "destinationPath", cpo =>
-			                  	               		                                                                	{
-			                  	               		                                                                		cpo.Add(
-			                  	               		                                                                			"name",
-			                  	               		                                                                			"value");
-			                  	               		                                                                		cpo.Add(
-			                  	               		                                                                			"name",
-			                  	               		                                                                			"value");
-			                  	               		                                                                	});
-			                  	               	}));
-
-
+			Initialize(args);
 		}
 
-	}
-
-	public class DeploymentSettings : ConDepConfiguration
-	{
-		public string ServerName { get; set; }
-		public string IP { get; set; }
+		protected override void Execute()
+		{
+			Sync(s => s
+							.From.LocalHost()
+			          	.UsingProvider(p => p.WebApp(Settings.WebAppName)
+			          	                    	.AddToRemoteWebsite(Settings.RemoteWebSite)
+			          	                    	.WithRemoteAppName(Settings.RemoteWebApp))
+															
+							.To.Server(Settings.ToServer));
+		}
 	}
 }

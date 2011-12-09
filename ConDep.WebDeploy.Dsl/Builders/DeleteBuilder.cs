@@ -3,7 +3,7 @@ using ConDep.WebDeploy.Dsl.SemanticModel;
 
 namespace ConDep.WebDeploy.Dsl.Builders
 {
-	public class DeleteBuilder : IDelete
+	public class DeleteBuilder
 	{
 		private readonly WebDeployDefinition _webDeployDefinition;
 
@@ -12,26 +12,26 @@ namespace ConDep.WebDeploy.Dsl.Builders
 			_webDeployDefinition = webDeployDefinition;
 		}
 
-		public IDelete UsingProvider(Action<ProviderBuilder> action)
+		public DeleteBuilder UsingProvider(Action<ProviderCollectionBuilder> action)
 		{
-			var providerBuilder = new ProviderBuilder(_webDeployDefinition.Source.Providers);
+			var providerBuilder = new ProviderCollectionBuilder(_webDeployDefinition.Source.Providers);
 			action(providerBuilder);
 			return this;
 		}
 
-		public IDelete FromLocalHost()
+		public DeleteBuilder FromLocalHost()
 		{
 			_webDeployDefinition.Source.LocalHost = true;
 			return this;
 		}
 
-		public IDelete FromServer(string serverName)
+		public DeleteBuilder FromServer(string serverName)
 		{
 			_webDeployDefinition.Source.ComputerName = serverName;
 			return this;
 		}
 
-		public IDelete FromServer(string serverName, Action<CredentialsBuilder> action)
+		public DeleteBuilder FromServer(string serverName, Action<CredentialsBuilder> action)
 		{
 			_webDeployDefinition.Source.ComputerName = serverName;
 

@@ -37,5 +37,10 @@ namespace ConDep.WebDeploy.Dsl
 		{
 			return DeploymentManager.CreateObject(Name, "", sourceBaseOptions);
 		}
+
+		public override bool IsValid()
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

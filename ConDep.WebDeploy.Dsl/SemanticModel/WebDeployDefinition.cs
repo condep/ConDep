@@ -22,10 +22,5 @@ namespace ConDep.WebDeploy.Dsl.SemanticModel
 		{
 			get { return _configuration; }
 		}
-
-		public void Deploy()
-		{
-			throw new NotImplementedException();
-		}
 	}
 }

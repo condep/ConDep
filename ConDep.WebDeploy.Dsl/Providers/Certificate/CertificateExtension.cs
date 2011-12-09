@@ -4,10 +4,10 @@ namespace ConDep.WebDeploy.Dsl
 {
 	public static class CertificateExtension
 	{
-		public static void Certificate(this ProviderBuilder providerBuilder, string thumbprint)
+		public static void Certificate(this ProviderCollectionBuilder providerCollectionBuilder, string thumbprint)
 		{
 			var certificateProvider = new CertficiateProvider(thumbprint);
-			providerBuilder.AddProvider(certificateProvider);
+			providerCollectionBuilder.AddProvider(certificateProvider);
 		}
 	}
 }

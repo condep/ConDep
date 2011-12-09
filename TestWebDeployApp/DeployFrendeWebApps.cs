@@ -4,16 +4,21 @@ namespace TestWebDeployApp
 {
 	public class DeployFrendeWebApps : WebDeployOperation
 	{
-		public DeployFrendeWebApps()
+		public DeployFrendeWebApps() 
 		{
 			Sync(s => s
-			          	.FromServer("ffdevweb01")
+			          	.From.Server("ffdevweb01")
 			          	.UsingProvider(p => p.WebApp(@"agent.frende.no/STS")
 			          	                    	.AddToRemoteWebsite("Default Web Site")
-			          	                    	.SetRemoteAppNameTo("STSSync"))
+			          	                    	.WithRemoteAppName("STSSync"))
 
-			          	.ToLocalHost());
+			          	.To.LocalHost());
 
+		}
+
+		public override void OnWebDeployMessage(object sender, WebDeployMessegaEventArgs e)
+		{
+			throw new System.NotImplementedException();
 		}
 	}
 }

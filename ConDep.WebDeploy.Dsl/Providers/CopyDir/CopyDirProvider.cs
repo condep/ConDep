@@ -22,5 +22,10 @@ namespace ConDep.WebDeploy.Dsl
 		{
 			return DeploymentManager.CreateObject(Name, SourcePath, sourceBaseOptions);
 		}
+
+		public override bool IsValid()
+		{
+			return !(string.IsNullOrWhiteSpace(SourcePath) && string.IsNullOrWhiteSpace(DestinationPath));
+		}
 	}
 }

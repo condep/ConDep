@@ -53,18 +53,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builders\CustomProviderOptionsBuilder.cs" />
-    <Compile Include="Builders\IOperation.cs" />
-    <Compile Include="Builders\IProvide.cs" />
-    <Compile Include="Builders\ISync.cs" />
-    <Compile Include="Builders\IOperateFrom.cs" />
-    <Compile Include="CmdParameterParser.cs" />
+    <Compile Include="Builders\FromBuilder.cs" />
+    <Compile Include="Builders\ToBuilder.cs" />
+    <Compile Include="Console\CmdParamAttribute.cs" />
+    <Compile Include="Console\CmdParameterParser.cs" />
     <Compile Include="ConDepConfiguration.cs" />
-    <Compile Include="ConDepConsoleApp.cs" />
+    <Compile Include="Console\ConDepConsoleApp.cs" />
     <Compile Include="Builders\DeleteBuilder.cs" />
     <Compile Include="Builders\PackageBuilder.cs" />
-    <Compile Include="Builders\IDelete.cs" />
-    <Compile Include="Builders\IPackage.cs" />
-    <Compile Include="Builders\IArchive.cs" />
     <Compile Include="IWebDeploy.cs" />
     <Compile Include="Providers\Certificate\CertificateExtension.cs" />
     <Compile Include="Builders\ConfigurationBuilder.cs" />
@@ -73,7 +69,7 @@
     <Compile Include="Providers\CopyFile\CopyFileExtension.cs" />
     <Compile Include="Providers\CopyFile\CopyFileBuilder.cs" />
     <Compile Include="Providers\Credentials\CredentialsBuilder.cs" />
-    <Compile Include="Builders\ProviderBuilder.cs" />
+    <Compile Include="Builders\ProviderCollectionBuilder.cs" />
     <Compile Include="Providers\SetAcl\SetAclExtension.cs" />
     <Compile Include="Providers\WebApp\WebAppExtension.cs" />
     <Compile Include="Providers\SetAcl\SetAclBuilder.cs" />
@@ -85,7 +81,7 @@
     <Compile Include="Providers\CopyFile\CopyFileProvider.cs" />
     <Compile Include="Providers\CopyDir\CopyDirProvider.cs" />
     <Compile Include="Providers\Credentials\CredentialsProvider.cs" />
-    <Compile Include="SemanticModel\CustomProvider.cs" />
+    <Compile Include="SemanticModel\BasicProvider.cs" />
     <Compile Include="SemanticModel\Destination.cs" />
     <Compile Include="SemanticModel\Provider.cs" />
     <Compile Include="Providers\SetAcl\SetAclProvider.cs" />

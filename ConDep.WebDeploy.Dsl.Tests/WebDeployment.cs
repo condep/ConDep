@@ -1,4 +1,5 @@
-﻿using System.Security.AccessControl;
+﻿using System.Diagnostics;
+using System.Security.AccessControl;
 using ConDep.WebDeploy.Dsl.Builders;
 using ConDep.WebDeploy.Dsl;
 using ConDep.WebDeploy.Dsl.SemanticModel;
@@ -7,17 +8,21 @@ using Moq;
 
 namespace ConDep.WebDeploy.Dsl.Tests
 {
-	public class WebDeploymentTests
+	public class WebDeploymentTests : SimpleTestFixture
 	{
 		private SyncBuilder _sync;
 		private WebDeployDefinition _webDeployDefinition;
 		private IWebDeploy _webDeploy;
 
-		public WebDeploymentTests()
+		protected override void Given()
 		{
 			_webDeployDefinition = new WebDeployDefinition();
-			_sync = new SyncBuilder(_webDeployDefinition);
 			_webDeploy = new Mock<IWebDeploy>().Object;
+		}
+
+		protected override void When()
+		{
+			throw new System.NotImplementedException();
 		}
 
 		[Fact]
@@ -25,12 +30,12 @@ namespace ConDep.WebDeploy.Dsl.Tests
 		{
 			const string SOURCE_SERVER = "ffdevweb01";
 
-			_sync
-				.FromServer(SOURCE_SERVER)
-				.UsingProvider(p => p.WebApp(@"agent.frende.no/STS")
-				                    	.AddToRemoteWebsite("Default Web Site")
-				                    	.SetRemoteAppNameTo("STSSync"))
-				.ToLocalHost();
+			_operation.Sync(_webDeploy, _webDeployDefinition, s => s
+			                                                       	.From.Server(SOURCE_SERVER)
+			                                                       	.UsingProvider(p => p.WebApp(@"agent.frende.no/STS")
+			                                                       	                    	.AddToRemoteWebsite("Default Web Site")
+			                                                       	                    	.WithRemoteAppName("STSSync"))
+			                                                       	.ToLocalHost());
 
 			Assert.Equal(_webDeployDefinition.Source.ComputerName, SOURCE_SERVER);
 		}
@@ -42,7 +47,7 @@ namespace ConDep.WebDeploy.Dsl.Tests
 				.FromServer("ffdevweb01")
 				.UsingProvider(p => p.WebApp(@"agent.frende.no/STS")
 				                    	.AddToRemoteWebsite("Default Web Site")
-				                    	.SetRemoteAppNameTo("STSSync")
+				                    	.WithRemoteAppName("STSSync")
 				)
 				.ToLocalHost(c =>
 				             	{
@@ -64,7 +69,7 @@ namespace ConDep.WebDeploy.Dsl.Tests
 				                          	})
 				.UsingProvider(p => p.WebApp(@"agent.frende.no/STS")
 				                    	.AddToRemoteWebsite("Default Web Site")
-				                    	.SetRemoteAppNameTo("STSSync")
+				                    	.WithRemoteAppName("STSSync")
 				)
 				.ToLocalHost(c =>
 				             	{
@@ -107,7 +112,7 @@ _sync
 				         {
 				            p.WebApp(@"agent.frende.no/STS")
 				               .AddToRemoteWebsite("Default Web Site")
-				               .SetRemoteAppNameTo("STSSync");
+				               .WithRemoteAppName("STSSync");
 
 				            p.SetAcl(@"C:\Temp\Acos")
 				               .Permissions(FileSystemRights.Modify | FileSystemRights.TakeOwnership)

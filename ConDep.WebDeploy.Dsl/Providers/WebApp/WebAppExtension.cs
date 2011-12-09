@@ -4,10 +4,10 @@ namespace ConDep.WebDeploy.Dsl
 {
 	public static class WebAppExtension
 	{
-		public static WebAppBuilder WebApp(this ProviderBuilder providerBuilder, string sourcePath)
+		public static WebAppBuilder WebApp(this ProviderCollectionBuilder providerCollectionBuilder, string sourcePath)
 		{
 			var webAppProvider = new WebAppProvider(sourcePath);
-			providerBuilder.AddProvider(webAppProvider);
+			providerCollectionBuilder.AddProvider(webAppProvider);
 			return new WebAppBuilder(webAppProvider);
 		}
 

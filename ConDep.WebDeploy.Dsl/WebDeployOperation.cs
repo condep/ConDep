@@ -4,20 +4,21 @@ using ConDep.WebDeploy.Dsl.SemanticModel;
 
 namespace ConDep.WebDeploy.Dsl
 {
-	public class WebDeployOperation 
+	public abstract class WebDeployOperation
 	{
-		public void Sync(Action<SyncBuilder> action)
+		private readonly WebDeployDefinition _definition;
+		private readonly IWebDeploy _webDeployer;
+
+		protected WebDeployOperation(WebDeployDefinition definition, IWebDeploy webDeployer)
 		{
-			var definition = new WebDeployDefinition();
-			Sync(definition, action);
+			_definition = definition;
+			_webDeployer = webDeployer;
 		}
 
-		public void Sync(WebDeployDefinition definition, Action<SyncBuilder> action)
+		public void Sync(Action<SyncBuilder> action)
 		{
-			action(new SyncBuilder(definition));
-
-			var webDeploy = new WebDeploy(definition);
-			webDeploy.Deploy();
+			action(new SyncBuilder(_definition));
+			_webDeployer.Deploy(_definition);
 		}
 
 		public void Delete(Action<DeleteBuilder> action)
@@ -25,9 +26,11 @@ namespace ConDep.WebDeploy.Dsl
 			var definition = new WebDeployDefinition();
 			action(new DeleteBuilder(new WebDeployDefinition()));
 
-			var webDeploy = new WebDeploy(definition);
-			webDeploy.Delete();
+			var webDeploy = new WebDeploy();
+			webDeploy.Delete(definition);
 		}
+
+		public abstract void OnWebDeployMessage(object sender, WebDeployMessegaEventArgs e);
 
 		//public void Package(Action<IPackage> action)
 		//{

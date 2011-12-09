@@ -15,7 +15,7 @@
 			return this;
 		}
 
-		public WebAppBuilder SetRemoteAppNameTo(string appName)
+		public WebAppBuilder WithRemoteAppName(string appName)
 		{
 			_webAppProvider.DestinationAppName = appName;
 			return this;
