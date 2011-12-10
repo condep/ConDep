@@ -1,3 +1,4 @@
+using System;
 using ConDep.WebDeploy.Dsl.SemanticModel;
 using Microsoft.Web.Deployment;
 
@@ -23,9 +24,38 @@ namespace ConDep.WebDeploy.Dsl
 			return DeploymentManager.CreateObject(Name, SourcePath, sourceBaseOptions);
 		}
 
-		public override bool IsValid()
+		public override bool IsValid(Notification notification)
 		{
-			return !(string.IsNullOrWhiteSpace(SourcePath) && string.IsNullOrWhiteSpace(DestinationPath));
+			var valid = true;
+
+			if (string.IsNullOrWhiteSpace(SourcePath))
+			{
+				notification.AddError(new SemanticValidationError(string.Format("Source path is missing for provider <{0}>.", GetType().Name), ValidationErrorType.NoSourceForProvider));
+				valid = false;
+			}
+
+			if(string.IsNullOrWhiteSpace(DestinationPath))
+			{
+				notification.AddError(new SemanticValidationError(string.Format("Source path is missing for provider <{0}>.", GetType().Name), ValidationErrorType.NoDestinationForProvider));
+				valid = false;
+			}
+			return valid;
+		}
+	}
+
+	public class MissingProviderDestinationException : Exception
+	{
+		public MissingProviderDestinationException(string message) : base(message)
+		{
+			
+		}
+	}
+
+	public class MissingProviderSourceException : Exception
+	{
+		public MissingProviderSourceException(string message) : base(message)
+		{
+			
 		}
 	}
 }

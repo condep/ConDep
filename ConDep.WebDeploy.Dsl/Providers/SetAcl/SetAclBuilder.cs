@@ -11,14 +11,9 @@ namespace ConDep.WebDeploy.Dsl
 			_setAclProvider = setAclProvider;
 		}
 
-		public SetAclBuilder Permissions(FileSystemRights accessRights)
+		public SetAclBuilder Permissions(FileSystemRights accessRights, string userName)
 		{
 			_setAclProvider.Permissions = accessRights;
-			return this;
-		}
-
-		public SetAclBuilder User(string userName)
-		{
 			_setAclProvider.User = userName;
 			return this;
 		}

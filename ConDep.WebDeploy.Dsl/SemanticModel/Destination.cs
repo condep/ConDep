@@ -1,9 +1,10 @@
-﻿using ConDep.WebDeploy.Dsl;
+﻿using System.Collections.Generic;
+using ConDep.WebDeploy.Dsl;
 using Microsoft.Web.Deployment;
 
 namespace ConDep.WebDeploy.Dsl.SemanticModel
 {
-	public class Destination
+	public class Destination : IWebDeployModel
 	{
 		private readonly CredentialsProvider _credentialsProvider = new CredentialsProvider();
 
@@ -22,6 +23,16 @@ namespace ConDep.WebDeploy.Dsl.SemanticModel
 				Password = CredentialsProvider.Password
 			};
 			return destBaseOptions;
+		}
+
+		public bool IsValid(Notification notification)
+		{
+			if (string.IsNullOrWhiteSpace(ComputerName))
+			{
+				notification.AddError(new SemanticValidationError("No computer name is specified for destination.", ValidationErrorType.NoDestination));
+				return true;
+			}
+			return false;
 		}
 	}
 }

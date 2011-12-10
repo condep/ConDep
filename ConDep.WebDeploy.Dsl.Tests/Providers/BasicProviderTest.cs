@@ -11,27 +11,24 @@ namespace ConDep.WebDeploy.Dsl.Tests.Providers
 		private ProviderCollectionBuilder _providers;
 		private List<Provider> _internalProviders;
 
-		private const string SOURCE_PATH = @"C:\tmp";
-		private const string DESTINATION_PATH = @"E:\tmp";
-
-		private bool _isInitialized;
 		private Provider _provider;
 
 		protected void Initialize(Func<string, CopyDirBuilder> function)
 		{
-			_isInitialized = true;
-
-			function(SOURCE_PATH).SetRemotePathTo(DESTINATION_PATH);
+			function(SourcePath).SetRemotePathTo(DestinationPath);
 			_provider = _internalProviders[0];
 
-			base.Initialize();
+			Initialize();
 		}
+
+		public abstract string SourcePath { get; }
+		public abstract string DestinationPath { get; }
 
 		[Test]
 		public void validate_source_and_destination_path()
 		{
-			Assert.That(SOURCE_PATH, Is.EqualTo(_provider.SourcePath));
-			Assert.That(DESTINATION_PATH, Is.EqualTo(_provider.DestinationPath));
+			Assert.That(SourcePath, Is.EqualTo(_provider.SourcePath));
+			Assert.That(DestinationPath, Is.EqualTo(_provider.DestinationPath));
 		}
 
 		protected ProviderCollectionBuilder Providers

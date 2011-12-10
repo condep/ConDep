@@ -34,7 +34,7 @@ namespace ConDep.WebDeploy.Dsl
 			return DeploymentManager.CreateObject(Name, SourcePath, sourceBaseOptions);
 		}
 
-		public override bool IsValid()
+		public override bool IsValid(Notification notification)
 		{
 			throw new System.NotImplementedException();
 		}

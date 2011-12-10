@@ -56,9 +56,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Providers\BasicProviderTest.cs" />
-    <Compile Include="Providers\WhenUsingProvider.cs" />
+    <Compile Include="Providers\WhenUsingCopydirProvider.cs" />
     <Compile Include="ProviderTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SematicModel\SemanticModelTests.cs" />
+    <Compile Include="SimpleTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConDep.WebDeploy.Dsl\ConDep.WebDeploy.Dsl.csproj">
@@ -66,6 +68,7 @@
       <Name>ConDep.WebDeploy.Dsl</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

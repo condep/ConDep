@@ -21,7 +21,7 @@ namespace ConDep.WebDeploy.Dsl
 				destBaseOptions.Trace += OnWebDeployTraceMessage;
 				destBaseOptions.TraceLevel = TraceLevel.Verbose;
 
-				foreach (var provider in webDeployDefinition.Source.Providers)
+				foreach (var provider in webDeployDefinition.Providers)
 				{
 					var sourceDepObject = provider.GetWebDeploySourceObject(sourceBaseOptions);
 					var destProviderOptions = provider.GetWebDeployDestinationProviderOptions();

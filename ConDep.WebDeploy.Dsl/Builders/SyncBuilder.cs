@@ -21,7 +21,7 @@ namespace ConDep.WebDeploy.Dsl.Builders
 
 		public SyncBuilder UsingProvider(Action<ProviderCollectionBuilder> action)
 		{
-			var providerBuilder = new ProviderCollectionBuilder(_webDeployDefinition.Source.Providers);
+			var providerBuilder = new ProviderCollectionBuilder(_webDeployDefinition.Providers);
 			action(providerBuilder);
 			return this;
 		}

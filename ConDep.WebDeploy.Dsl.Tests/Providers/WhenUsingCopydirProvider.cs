@@ -1,8 +1,8 @@
 ﻿namespace ConDep.WebDeploy.Dsl.Tests.Providers
 {
-	public class WhenUsingProvider : BasicProviderTest
+	public class WhenUsingCopyDirProvider : BasicProviderTest
 	{
-		public WhenUsingProvider()
+		public WhenUsingCopyDirProvider()
 		{
 			Initialize(Providers.CopyDir);
 		}
@@ -13,6 +13,16 @@
 
 		protected override void When()
 		{
+		}
+
+		public override string SourcePath
+		{
+			get { return @"C:\tmp"; }
+		}
+
+		public override string DestinationPath
+		{
+			get { return @"E:\tmp"; }
 		}
 	}
 }

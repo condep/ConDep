@@ -68,7 +68,7 @@
     <Compile Include="Providers\CopyDir\CopyDirExtension.cs" />
     <Compile Include="Providers\CopyFile\CopyFileExtension.cs" />
     <Compile Include="Providers\CopyFile\CopyFileBuilder.cs" />
-    <Compile Include="Providers\Credentials\CredentialsBuilder.cs" />
+    <Compile Include="Builders\CredentialsBuilder.cs" />
     <Compile Include="Builders\ProviderCollectionBuilder.cs" />
     <Compile Include="Providers\SetAcl\SetAclExtension.cs" />
     <Compile Include="Providers\WebApp\WebAppExtension.cs" />
@@ -80,11 +80,17 @@
     <Compile Include="SemanticModel\Configuration.cs" />
     <Compile Include="Providers\CopyFile\CopyFileProvider.cs" />
     <Compile Include="Providers\CopyDir\CopyDirProvider.cs" />
-    <Compile Include="Providers\Credentials\CredentialsProvider.cs" />
+    <Compile Include="SemanticModel\CredentialsProvider.cs" />
     <Compile Include="SemanticModel\BasicProvider.cs" />
     <Compile Include="SemanticModel\Destination.cs" />
+    <Compile Include="SemanticModel\IWebDeployModel.cs" />
+    <Compile Include="SemanticModel\MissingDestinationExcepton.cs" />
+    <Compile Include="SemanticModel\MissingProviderException.cs" />
+    <Compile Include="SemanticModel\MissingSourceException.cs" />
+    <Compile Include="SemanticModel\Notification.cs" />
     <Compile Include="SemanticModel\Provider.cs" />
     <Compile Include="Providers\SetAcl\SetAclProvider.cs" />
+    <Compile Include="SemanticModel\SemanticValidationError.cs" />
     <Compile Include="SemanticModel\Source.cs" />
     <Compile Include="SemanticModel\WebDeployDefinition.cs" />
     <Compile Include="Providers\WebApp\WebAppProvider.cs" />

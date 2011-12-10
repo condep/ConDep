@@ -4,14 +4,12 @@ using Microsoft.Web.Deployment;
 
 namespace ConDep.WebDeploy.Dsl.SemanticModel
 {
-	public class Source
+	public class Source : IWebDeployModel
 	{
-		private readonly List<Provider> _providers = new List<Provider>();
 		private CredentialsProvider _credentialsProvider = new CredentialsProvider();
 
 		public string ComputerName { get; set; }
 		public bool LocalHost { get; set; }
-		public List<Provider> Providers { get { return _providers; } }
 		public bool HasCredentials
 		{
 			get { return !string.IsNullOrWhiteSpace(CredentialsProvider.UserName); }
@@ -38,6 +36,16 @@ namespace ConDep.WebDeploy.Dsl.SemanticModel
 				sourceBaseOptions.Password = CredentialsProvider.Password;
 			}
 			return sourceBaseOptions;
+		}
+
+		public bool IsValid(Notification notification)
+		{
+			if (!LocalHost && string.IsNullOrWhiteSpace(ComputerName))
+			{
+				notification.AddError(new SemanticValidationError("Neither localhost or computer name is defined for source.", ValidationErrorType.NoSource));
+				return true;
+			}
+			return false;
 		}
 	}
 }
