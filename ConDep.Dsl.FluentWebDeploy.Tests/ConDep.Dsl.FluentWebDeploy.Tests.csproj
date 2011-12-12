@@ -8,8 +8,8 @@
     <ProjectGuid>{1A131274-45B3-47EE-A48D-8310FDB3C332}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConDep.WebDeploy.Dsl.Tests</RootNamespace>
-    <AssemblyName>ConDep.WebDeploy.Dsl.Tests</AssemblyName>
+    <RootNamespace>ConDep.Dsl.FluentWebDeploy.Tests</RootNamespace>
+    <AssemblyName>ConDep.Dsl.FluentWebDeploy.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
@@ -69,9 +69,9 @@
     <Compile Include="SimpleTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConDep.WebDeploy.Dsl\ConDep.WebDeploy.Dsl.csproj">
+    <ProjectReference Include="..\ConDep.Dsl.FluentWebDeploy\ConDep.Dsl.FluentWebDeploy.csproj">
       <Project>{9928C9C8-EB7A-48ED-BD3B-BEAAE05787FE}</Project>
-      <Name>ConDep.WebDeploy.Dsl</Name>
+      <Name>ConDep.Dsl.FluentWebDeploy</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -61,9 +61,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConDep.WebDeploy.Dsl\ConDep.WebDeploy.Dsl.csproj">
+    <ProjectReference Include="..\ConDep.Dsl.FluentWebDeploy\ConDep.Dsl.FluentWebDeploy.csproj">
       <Project>{9928C9C8-EB7A-48ED-BD3B-BEAAE05787FE}</Project>
-      <Name>ConDep.WebDeploy.Dsl</Name>
+      <Name>ConDep.Dsl.FluentWebDeploy</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
