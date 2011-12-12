@@ -1,6 +1,6 @@
-using ConDep.WebDeploy.Dsl.Builders;
+using ConDep.Dsl.FluentWebDeploy.Builders;
 
-namespace ConDep.WebDeploy.Dsl
+namespace ConDep.Dsl.FluentWebDeploy
 {
 	public static class WebAppExtension
 	{

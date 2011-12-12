@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Web.Deployment;
 
-namespace ConDep.WebDeploy.Dsl.SemanticModel
+namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
 	public abstract class CustomProvider 
 	{

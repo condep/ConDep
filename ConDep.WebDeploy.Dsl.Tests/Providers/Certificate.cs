@@ -1,4 +1,4 @@
-using ConDep.WebDeploy.Dsl.SemanticModel;
+using ConDep.Dsl.FluentWebDeploy;
 using Microsoft.Web.Deployment;
 using NUnit.Framework;
 

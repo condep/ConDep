@@ -1,6 +1,4 @@
-﻿using ConDep.WebDeploy.Dsl.SemanticModel;
-
-namespace ConDep.WebDeploy.Dsl
+﻿namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
 	public class Credentials : IWebDeployModel
 	{

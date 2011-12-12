@@ -5,10 +5,10 @@ using System.Text;
 using System.Security;
 using System.Reflection;
 using System.Collections.Generic;
-using ConDep.WebDeploy.Dsl.Console;
-using ConDep.WebDeploy.Dsl.Deployment;
+using ConDep.Dsl.FluentWebDeploy.Console;
+using ConDep.Dsl.FluentWebDeploy.Deployment;
 
-namespace ConDep.WebDeploy.Dsl
+namespace ConDep.Dsl.FluentWebDeploy
 {
 	//ToDo: Refactor -> Violates SRP (...and a few other things)
 	public abstract class ConDepConsoleApp<TConsoleOwner, TSettings> : WebDeployOperation 

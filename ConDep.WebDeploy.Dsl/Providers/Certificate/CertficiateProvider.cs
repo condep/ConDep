@@ -1,7 +1,7 @@
-using ConDep.WebDeploy.Dsl.SemanticModel;
+using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 using Microsoft.Web.Deployment;
 
-namespace ConDep.WebDeploy.Dsl
+namespace ConDep.Dsl.FluentWebDeploy
 {
 	public class CertficiateProvider : Provider
 	{

@@ -1,4 +1,4 @@
-﻿namespace ConDep.WebDeploy.Dsl
+﻿namespace ConDep.Dsl.FluentWebDeploy
 {
 	public class WebAppBuilder : IProviderBuilder<WebAppBuilder>
 	{

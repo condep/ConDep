@@ -1,6 +1,6 @@
 ﻿using System.Security.AccessControl;
 
-namespace ConDep.WebDeploy.Dsl
+namespace ConDep.Dsl.FluentWebDeploy
 {
 	public class SetAclBuilder : IProviderBuilder<SetAclBuilder>
 	{

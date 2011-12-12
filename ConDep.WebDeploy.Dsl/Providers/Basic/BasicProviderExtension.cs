@@ -1,8 +1,7 @@
 ﻿using System;
-using ConDep.WebDeploy.Dsl.Builders;
-using ConDep.WebDeploy.Dsl.SemanticModel;
+using ConDep.Dsl.FluentWebDeploy.Builders;
 
-namespace ConDep.WebDeploy.Dsl.Providers.Basic
+namespace ConDep.Dsl.FluentWebDeploy
 {
 	public static class BasicProviderExtension
 	{

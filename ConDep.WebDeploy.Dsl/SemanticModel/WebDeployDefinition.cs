@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 
-namespace ConDep.WebDeploy.Dsl.SemanticModel
+namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
 	public enum ValidationErrorType
 	{

@@ -1,6 +1,6 @@
 using System;
 
-namespace ConDep.WebDeploy.Dsl.Console
+namespace ConDep.Dsl.FluentWebDeploy.Console
 {
 	public class CmdParamAttribute : Attribute
 	{

@@ -1,4 +1,4 @@
-﻿using ConDep.WebDeploy.Dsl.SemanticModel;
+﻿using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 using NUnit.Framework;
 
 namespace ConDep.WebDeploy.Dsl.Tests.SematicModel

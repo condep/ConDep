@@ -1,9 +1,9 @@
 using System;
 using System.Diagnostics;
-using ConDep.WebDeploy.Dsl.SemanticModel;
+using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 using Microsoft.Web.Deployment;
 
-namespace ConDep.WebDeploy.Dsl.Deployment
+namespace ConDep.Dsl.FluentWebDeploy.Deployment
 {
 	public class WebDeploy : IWebDeploy
 	{

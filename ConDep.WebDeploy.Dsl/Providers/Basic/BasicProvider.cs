@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 using Microsoft.Web.Deployment;
 
-namespace ConDep.WebDeploy.Dsl.SemanticModel
+namespace ConDep.Dsl.FluentWebDeploy
 {
 	public class BasicProvider : Provider
 	{

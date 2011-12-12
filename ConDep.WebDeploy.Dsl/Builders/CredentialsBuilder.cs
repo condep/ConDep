@@ -1,4 +1,6 @@
-﻿namespace ConDep.WebDeploy.Dsl
+﻿using ConDep.Dsl.FluentWebDeploy.SemanticModel;
+
+namespace ConDep.Dsl.FluentWebDeploy.Builders
 {
 	public class CredentialsBuilder
 	{

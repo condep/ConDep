@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 
-namespace ConDep.WebDeploy.Dsl
+namespace ConDep.Dsl.FluentWebDeploy
 {
 	public abstract class ConDepConfiguration
 	{

@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using ConDep.WebDeploy.Dsl;
-using ConDep.WebDeploy.Dsl.Deployment;
+using ConDep.Dsl.FluentWebDeploy;
+using ConDep.Dsl.FluentWebDeploy.Deployment;
 
 namespace TestWebDeployApp
 {

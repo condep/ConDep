@@ -1,4 +1,4 @@
-﻿namespace ConDep.WebDeploy.Dsl.SemanticModel
+﻿namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
 	public class Configuration : IWebDeployModel
 	{

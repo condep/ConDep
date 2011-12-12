@@ -1,6 +1,4 @@
-using ConDep.WebDeploy.Dsl.SemanticModel;
-
-namespace ConDep.WebDeploy.Dsl.Builders
+namespace ConDep.Dsl.FluentWebDeploy
 {
 	public class BasicProviderBuilder : IProviderBuilder<BasicProviderBuilder>
 	{

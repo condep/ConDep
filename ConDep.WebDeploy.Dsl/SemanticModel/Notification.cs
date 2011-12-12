@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ConDep.WebDeploy.Dsl.SemanticModel
+namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
 	public class Notification
 	{

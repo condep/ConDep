@@ -1,9 +1,9 @@
 using System;
-using ConDep.WebDeploy.Dsl.Builders;
-using ConDep.WebDeploy.Dsl.Deployment;
-using ConDep.WebDeploy.Dsl.SemanticModel;
+using ConDep.Dsl.FluentWebDeploy.Builders;
+using ConDep.Dsl.FluentWebDeploy.Deployment;
+using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 
-namespace ConDep.WebDeploy.Dsl
+namespace ConDep.Dsl.FluentWebDeploy
 {
 	public abstract class WebDeployOperation
 	{
@@ -13,7 +13,7 @@ namespace ConDep.WebDeploy.Dsl
 		protected WebDeployOperation()
 		{
 			_definition = new WebDeployDefinition();
-			_webDeployer = new Deployment.WebDeploy();
+			_webDeployer = new ConDep.Dsl.FluentWebDeploy.Deployment.WebDeploy();
 			HookUpDeployEvents();
 		}
 
@@ -42,7 +42,7 @@ namespace ConDep.WebDeploy.Dsl
 			var definition = new WebDeployDefinition();
 			action(new DeleteBuilder(new WebDeployDefinition()));
 
-			var webDeploy = new Deployment.WebDeploy();
+			var webDeploy = new ConDep.Dsl.FluentWebDeploy.Deployment.WebDeploy();
 			webDeploy.Delete(definition);
 		}
 

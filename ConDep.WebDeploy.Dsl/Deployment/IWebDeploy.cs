@@ -1,7 +1,7 @@
 ﻿using System;
-using ConDep.WebDeploy.Dsl.SemanticModel;
+using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 
-namespace ConDep.WebDeploy.Dsl.Deployment
+namespace ConDep.Dsl.FluentWebDeploy.Deployment
 {
 	public interface IWebDeploy
 	{

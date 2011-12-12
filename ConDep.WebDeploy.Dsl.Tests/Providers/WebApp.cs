@@ -1,3 +1,4 @@
+using ConDep.Dsl.FluentWebDeploy;
 using NUnit.Framework;
 
 namespace ConDep.WebDeploy.Dsl.Tests.Providers

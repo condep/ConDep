@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace ConDep.WebDeploy.Dsl.Deployment
+namespace ConDep.Dsl.FluentWebDeploy.Deployment
 {
 	public class WebDeployMessageEventArgs : EventArgs
 	{

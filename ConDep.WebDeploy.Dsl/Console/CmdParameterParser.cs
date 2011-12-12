@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace ConDep.WebDeploy.Dsl.Console
+namespace ConDep.Dsl.FluentWebDeploy.Console
 {
 	internal abstract class CmdParameterParser
 	{

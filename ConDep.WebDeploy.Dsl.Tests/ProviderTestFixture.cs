@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ConDep.WebDeploy.Dsl.Builders;
-using ConDep.WebDeploy.Dsl.SemanticModel;
+using ConDep.Dsl.FluentWebDeploy.Builders;
+using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 using NUnit.Framework;
 
 namespace ConDep.WebDeploy.Dsl.Tests

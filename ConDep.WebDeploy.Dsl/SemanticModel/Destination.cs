@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using ConDep.WebDeploy.Dsl;
-using Microsoft.Web.Deployment;
+﻿using Microsoft.Web.Deployment;
 
-namespace ConDep.WebDeploy.Dsl.SemanticModel
+namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
 	public class Destination : IWebDeployModel
 	{
