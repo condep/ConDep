@@ -13,7 +13,7 @@ namespace TestWebDeployApp
 		protected override void Execute()
 		{
 			Sync(s => s
-							.From.LocalHost()
+							.From.Server(Settings.FromServer)
 			          	.UsingProvider(p => p.WebApp(Settings.WebAppName)
 			          	                    	.AddToRemoteWebsite(Settings.RemoteWebSite)
 			          	                    	.WithRemoteAppName(Settings.RemoteWebApp))

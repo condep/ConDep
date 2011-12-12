@@ -5,11 +5,13 @@ namespace ConDep.WebDeploy.Dsl.Builders
 {
 	public class ToBuilder
 	{
+		private readonly WebDeployDefinition _definition;
 		private readonly Destination _destination;
 
-		public ToBuilder(Destination destination)
+		public ToBuilder(WebDeployDefinition definition)
 		{
-			_destination = destination;
+			_definition = definition;
+			_destination = definition.Destination;
 		}
 
 		public void LocalHost()
@@ -20,7 +22,7 @@ namespace ConDep.WebDeploy.Dsl.Builders
 		public void LocalHost(Action<CredentialsBuilder> credentials)
 		{
 			_destination.ComputerName = "127.0.0.1";
-			var credBuilder = new CredentialsBuilder(_destination.CredentialsProvider);
+			var credBuilder = new CredentialsBuilder(_destination.Credentials);
 			credentials(credBuilder);
 		}
 
@@ -32,7 +34,7 @@ namespace ConDep.WebDeploy.Dsl.Builders
 		public void Server(string serverName, Action<CredentialsBuilder> credentials)
 		{
 			_destination.ComputerName = serverName;
-			var credBuilder = new CredentialsBuilder(_destination.CredentialsProvider);
+			var credBuilder = new CredentialsBuilder(_destination.Credentials);
 			credentials(credBuilder);
 		}
 

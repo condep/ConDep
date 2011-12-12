@@ -8,8 +8,8 @@
     <ProjectGuid>{9928C9C8-EB7A-48ED-BD3B-BEAAE05787FE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConDep.WebDeploy.Dsl</RootNamespace>
-    <AssemblyName>ConDep.WebDeploy.Dsl</AssemblyName>
+    <RootNamespace>ConDep.Dsl.FluentWebDeploy</RootNamespace>
+    <AssemblyName>ConDep.Dsl.FluentWebDeploy</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
@@ -52,20 +52,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Builders\CustomProviderOptionsBuilder.cs" />
+    <Compile Include="Providers\Basic\BasicProviderBuilder.cs" />
     <Compile Include="Builders\FromBuilder.cs" />
     <Compile Include="Builders\ToBuilder.cs" />
     <Compile Include="Console\CmdParamAttribute.cs" />
     <Compile Include="Console\CmdParameterParser.cs" />
     <Compile Include="ConDepConfiguration.cs" />
-    <Compile Include="Console\ConDepConsoleApp.cs" />
+    <Compile Include="ConDepConsoleApp.cs" />
     <Compile Include="Builders\DeleteBuilder.cs" />
     <Compile Include="Builders\PackageBuilder.cs" />
-    <Compile Include="IWebDeploy.cs" />
+    <Compile Include="Deployment\IWebDeploy.cs" />
+    <Compile Include="Providers\Basic\BasicProviderExtension.cs" />
     <Compile Include="Providers\Certificate\CertificateExtension.cs" />
     <Compile Include="Builders\ConfigurationBuilder.cs" />
     <Compile Include="Providers\CopyDir\CopyDirBuilder.cs" />
     <Compile Include="Providers\CopyDir\CopyDirExtension.cs" />
+    <Compile Include="Providers\CopyDir\IProviderBuilder.cs" />
     <Compile Include="Providers\CopyFile\CopyFileExtension.cs" />
     <Compile Include="Providers\CopyFile\CopyFileBuilder.cs" />
     <Compile Include="Builders\CredentialsBuilder.cs" />
@@ -80,13 +82,11 @@
     <Compile Include="SemanticModel\Configuration.cs" />
     <Compile Include="Providers\CopyFile\CopyFileProvider.cs" />
     <Compile Include="Providers\CopyDir\CopyDirProvider.cs" />
-    <Compile Include="SemanticModel\CredentialsProvider.cs" />
-    <Compile Include="SemanticModel\BasicProvider.cs" />
+    <Compile Include="SemanticModel\Credentials.cs" />
+    <Compile Include="Providers\Basic\BasicProvider.cs" />
+    <Compile Include="SemanticModel\CustomProvider.cs" />
     <Compile Include="SemanticModel\Destination.cs" />
     <Compile Include="SemanticModel\IWebDeployModel.cs" />
-    <Compile Include="SemanticModel\MissingDestinationExcepton.cs" />
-    <Compile Include="SemanticModel\MissingProviderException.cs" />
-    <Compile Include="SemanticModel\MissingSourceException.cs" />
     <Compile Include="SemanticModel\Notification.cs" />
     <Compile Include="SemanticModel\Provider.cs" />
     <Compile Include="Providers\SetAcl\SetAclProvider.cs" />
@@ -94,8 +94,9 @@
     <Compile Include="SemanticModel\Source.cs" />
     <Compile Include="SemanticModel\WebDeployDefinition.cs" />
     <Compile Include="Providers\WebApp\WebAppProvider.cs" />
+    <Compile Include="Deployment\WebDeployMessageEventArgs.cs" />
     <Compile Include="WebDeployOperation.cs" />
-    <Compile Include="WebDeploy.cs" />
+    <Compile Include="Deployment\WebDeploy.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

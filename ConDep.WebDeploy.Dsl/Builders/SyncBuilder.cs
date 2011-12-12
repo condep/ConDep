@@ -33,7 +33,7 @@ namespace ConDep.WebDeploy.Dsl.Builders
 
 		public ToBuilder To
 		{
-			get { return new ToBuilder(_webDeployDefinition.Destination); }
+			get { return new ToBuilder(_webDeployDefinition); }
 		}
 	}
 }

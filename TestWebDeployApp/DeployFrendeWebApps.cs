@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using ConDep.WebDeploy.Dsl;
+using ConDep.WebDeploy.Dsl.Deployment;
 
 namespace TestWebDeployApp
 {
@@ -7,18 +9,29 @@ namespace TestWebDeployApp
 		public DeployFrendeWebApps() 
 		{
 			Sync(s => s
-			          	.From.Server("ffdevweb01")
-			          	.UsingProvider(p => p.WebApp(@"agent.frende.no/STS")
-			          	                    	.AddToRemoteWebsite("Default Web Site")
-			          	                    	.WithRemoteAppName("STSSync"))
+							.From.Server("ffdevweb01")
+							.UsingProvider(p => p.WebApp(@"agent.frende.no/STS")
+														.AddToRemoteWebsite("Default Web Site")
+														.WithRemoteAppName("STSSync"))
 
-			          	.To.LocalHost());
-
+							.To.LocalHost());
 		}
 
-		public override void OnWebDeployMessage(object sender, WebDeployMessegaEventArgs e)
+		protected override void OnWebDeployMessage(object sender, WebDeployMessageEventArgs e)
 		{
-			throw new System.NotImplementedException();
+			if(e.Level == TraceLevel.Warning)
+			{
+				Trace.TraceWarning(e.Message);
+			}
+			else
+			{
+				Trace.TraceInformation(e.Message);
+			}
+		}
+
+		protected override void OnWebDeployErrorMessage(object sender, WebDeployMessageEventArgs e)
+		{
+			Trace.TraceError(e.Message);
 		}
 	}
 }

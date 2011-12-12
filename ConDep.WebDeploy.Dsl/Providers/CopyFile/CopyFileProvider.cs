@@ -25,7 +25,20 @@ namespace ConDep.WebDeploy.Dsl
 
 		public override bool IsValid(Notification notification)
 		{
-			throw new System.NotImplementedException();
+			var valid = true;
+
+			if (string.IsNullOrWhiteSpace(SourcePath))
+			{
+				notification.AddError(new SemanticValidationError(string.Format("Source path is missing for provider <{0}>.", GetType().Name), ValidationErrorType.NoSourcePathForProvider));
+				valid = false;
+			}
+
+			if (string.IsNullOrWhiteSpace(DestinationPath))
+			{
+				notification.AddError(new SemanticValidationError(string.Format("Destination path is missing for provider <{0}>.", GetType().Name), ValidationErrorType.NoDestinationPathForProvider));
+				valid = false;
+			}
+			return valid;
 		}
 	}
 }

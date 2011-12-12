@@ -2,22 +2,22 @@
 {
 	public class CredentialsBuilder
 	{
-		private readonly CredentialsProvider _credentialsProvider;
+		private readonly Credentials _credentials;
 
-		public CredentialsBuilder(CredentialsProvider credentialsProvider)
+		public CredentialsBuilder(Credentials credentials)
 		{
-			_credentialsProvider = credentialsProvider;
+			_credentials = credentials;
 		}
 
 		public CredentialsBuilder WithUserName(string userName)
 		{
-			_credentialsProvider.UserName = userName;
+			_credentials.UserName = userName;
 			return this;
 		}
 
 		public CredentialsBuilder WithPassword(string password)
 		{
-			_credentialsProvider.Password = password;
+			_credentials.Password = password;
 			return this;
 		}
 	}

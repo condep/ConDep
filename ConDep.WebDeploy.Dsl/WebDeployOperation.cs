@@ -1,5 +1,6 @@
 using System;
 using ConDep.WebDeploy.Dsl.Builders;
+using ConDep.WebDeploy.Dsl.Deployment;
 using ConDep.WebDeploy.Dsl.SemanticModel;
 
 namespace ConDep.WebDeploy.Dsl
@@ -9,11 +10,26 @@ namespace ConDep.WebDeploy.Dsl
 		private readonly WebDeployDefinition _definition;
 		private readonly IWebDeploy _webDeployer;
 
-		protected WebDeployOperation(WebDeployDefinition definition, IWebDeploy webDeployer)
+		protected WebDeployOperation()
 		{
-			_definition = definition;
-			_webDeployer = webDeployer;
+			_definition = new WebDeployDefinition();
+			_webDeployer = new Deployment.WebDeploy();
+			HookUpDeployEvents();
 		}
+
+		//protected WebDeployOperation(WebDeployDefinition definition, IWebDeploy webDeployer)
+		//{
+		//   _definition = definition;
+		//   _webDeployer = webDeployer;
+		//   HookUpDeployEvents();
+		//}
+
+		private void HookUpDeployEvents()
+		{
+			_webDeployer.Output += OnWebDeployMessage;
+			_webDeployer.OutputError += OnWebDeployErrorMessage;
+		}
+
 
 		public void Sync(Action<SyncBuilder> action)
 		{
@@ -26,11 +42,12 @@ namespace ConDep.WebDeploy.Dsl
 			var definition = new WebDeployDefinition();
 			action(new DeleteBuilder(new WebDeployDefinition()));
 
-			var webDeploy = new WebDeploy();
+			var webDeploy = new Deployment.WebDeploy();
 			webDeploy.Delete(definition);
 		}
 
-		public abstract void OnWebDeployMessage(object sender, WebDeployMessegaEventArgs e);
+		protected abstract void OnWebDeployMessage(object sender, WebDeployMessageEventArgs e);
+		protected abstract void OnWebDeployErrorMessage(object sender, WebDeployMessageEventArgs e);
 
 		//public void Package(Action<IPackage> action)
 		//{

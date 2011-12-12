@@ -6,12 +6,12 @@ namespace ConDep.WebDeploy.Dsl.SemanticModel
 {
 	public class Destination : IWebDeployModel
 	{
-		private readonly CredentialsProvider _credentialsProvider = new CredentialsProvider();
+		private readonly Credentials _credentials = new Credentials();
 
 		public string ComputerName { get; set; }
-		public CredentialsProvider CredentialsProvider
+		public Credentials Credentials
 		{
-			get { return _credentialsProvider; }
+			get { return _credentials; }
 		}
 
 		public DeploymentBaseOptions GetDestinationBaseOptions()
@@ -19,8 +19,8 @@ namespace ConDep.WebDeploy.Dsl.SemanticModel
 			var destBaseOptions = new DeploymentBaseOptions
 			{
 				ComputerName = ComputerName,
-				UserName = CredentialsProvider.UserName,
-				Password = CredentialsProvider.Password
+				UserName = Credentials.UserName,
+				Password = Credentials.Password
 			};
 			return destBaseOptions;
 		}

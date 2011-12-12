@@ -6,18 +6,17 @@ using System.Security;
 using System.Reflection;
 using System.Collections.Generic;
 using ConDep.WebDeploy.Dsl.Console;
-using ConDep.WebDeploy.Dsl.SemanticModel;
+using ConDep.WebDeploy.Dsl.Deployment;
 
 namespace ConDep.WebDeploy.Dsl
 {
+	//ToDo: Refactor -> Violates SRP (...and a few other things)
 	public abstract class ConDepConsoleApp<TConsoleOwner, TSettings> : WebDeployOperation 
 		where TConsoleOwner : ConDepConsoleApp<TConsoleOwner, TSettings>, new()
 		where TSettings : ConDepConfiguration, new()
 	{
 
-		protected TSettings Settings { get; private set; }
-
-		protected ConDepConsoleApp() : base(new WebDeployDefinition(), new WebDeploy()) 
+		protected ConDepConsoleApp() 
 		{
 			Settings = new TSettings();
 
@@ -33,12 +32,14 @@ namespace ConDep.WebDeploy.Dsl
 			Execute();
 		}
 
+		protected TSettings Settings { get; private set; }
+
 		private void AddSettingsFromCmdLine(IEnumerable<string> cmdParams)
 		{
 			var settingParams = ExtractSettingsParams(cmdParams);
 			foreach(var param in settingParams)
 			{
-				Settings.GetType().GetProperty(param.ParamName).SetValue(Settings, param.ParamValue, null);
+				Settings.GetType().GetField(param.ParamName).SetValue(Settings, param.ParamValue);
 			}
 		}
 
@@ -100,7 +101,7 @@ namespace ConDep.WebDeploy.Dsl
 		private StringBuilder GetCmdHelpForSettings()
 		{
 			var validSettings = new StringBuilder();
-			foreach (var setting in Settings.GetType().GetProperties().Where(setting => setting.IsDefined(typeof (CmdParamAttribute), false)))
+			foreach (var setting in Settings.GetType().GetFields().Where(setting => setting.IsDefined(typeof (CmdParamAttribute), false)))
 			{
 				validSettings.Append("[" + setting.Name + "=value] ");
 			}
@@ -118,19 +119,12 @@ namespace ConDep.WebDeploy.Dsl
 
 		protected abstract void Execute();
 
-		public override void OnWebDeployMessage(object sender, WebDeployMessegaEventArgs e)
+		protected override void OnWebDeployMessage(object sender, WebDeployMessageEventArgs e)
 		{
-			if(e.Level == System.Diagnostics.TraceLevel.Error)
+			if(e.Level == System.Diagnostics.TraceLevel.Warning)
 			{
 				var currentConsoleColor = System.Console.ForegroundColor;
 				System.Console.ForegroundColor = ConsoleColor.Yellow;
-				System.Console.Error.WriteLine(e.Message);
-				System.Console.ForegroundColor = currentConsoleColor;
-			}
-			else if(e.Level == System.Diagnostics.TraceLevel.Warning)
-			{
-				var currentConsoleColor = System.Console.ForegroundColor;
-				System.Console.ForegroundColor = ConsoleColor.Red;
 				System.Console.Out.WriteLine(e.Message);
 				System.Console.ForegroundColor = currentConsoleColor;
 			}
@@ -139,6 +133,15 @@ namespace ConDep.WebDeploy.Dsl
 				System.Console.Out.WriteLine(e.Message);
 			}
 		}
+
+		protected override void OnWebDeployErrorMessage(object sender, WebDeployMessageEventArgs e)
+		{
+			var currentConsoleColor = System.Console.ForegroundColor;
+			System.Console.ForegroundColor = ConsoleColor.Red;
+			System.Console.Error.WriteLine(e.Message);
+			System.Console.ForegroundColor = currentConsoleColor;
+		}
+
 	}
 
 	internal class CmdParam

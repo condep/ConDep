@@ -2,7 +2,7 @@
 
 namespace ConDep.WebDeploy.Dsl
 {
-	public class SetAclBuilder
+	public class SetAclBuilder : IProviderBuilder<SetAclBuilder>
 	{
 		private readonly SetAclProvider _setAclProvider;
 
@@ -11,11 +11,10 @@ namespace ConDep.WebDeploy.Dsl
 			_setAclProvider = setAclProvider;
 		}
 
-		public SetAclBuilder Permissions(FileSystemRights accessRights, string userName)
+		public void Permissions(FileSystemRights accessRights, string userName)
 		{
 			_setAclProvider.Permissions = accessRights;
 			_setAclProvider.User = userName;
-			return this;
 		}
 	}
 }

@@ -23,7 +23,7 @@ namespace ConDep.WebDeploy.Dsl.Builders
 		public SyncBuilder LocalHost(Action<CredentialsBuilder> credentials)
 		{
 			_source.ComputerName = "127.0.0.1";
-			var credBuilder = new CredentialsBuilder(_source.CredentialsProvider);
+			var credBuilder = new CredentialsBuilder(_source.Credentials);
 			credentials(credBuilder);
 			return _syncBuilder;
 		}
@@ -38,7 +38,7 @@ namespace ConDep.WebDeploy.Dsl.Builders
 		{
 			_source.ComputerName = serverName;
 
-			var credBuilder = new CredentialsBuilder(_source.CredentialsProvider);
+			var credBuilder = new CredentialsBuilder(_source.Credentials);
 			credentials(credBuilder);
 			return _syncBuilder;
 		}

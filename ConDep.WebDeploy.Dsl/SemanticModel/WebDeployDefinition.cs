@@ -8,8 +8,8 @@ namespace ConDep.WebDeploy.Dsl.SemanticModel
 		NoProviders,
 		NoSource,
 		NoDestination,
-		NoSourceForProvider,
-		NoDestinationForProvider,
+		NoSourcePathForProvider,
+		NoDestinationPathForProvider,
 		Configuration
 	}
 
@@ -39,13 +39,19 @@ namespace ConDep.WebDeploy.Dsl.SemanticModel
 
 		public bool IsValid(Notification notification)
 		{
+			if (_providers.Count == 0) notification.AddError(new SemanticValidationError("No providers have been specified", ValidationErrorType.NoProviders));
+
+			ValidateChildren(notification);
+
+			return !notification.HasErrors;
+		}
+
+		private void ValidateChildren(Notification notification)
+		{
 			_source.IsValid(notification);
 			_destination.IsValid(notification);
 			_configuration.IsValid(notification);
-
-			if (_providers.Count == 0) notification.AddError(new SemanticValidationError("No providers have been specified", ValidationErrorType.NoProviders));
 			_providers.ForEach(p => p.IsValid(notification));
-			return !notification.HasErrors;
 		}
 	}
 }

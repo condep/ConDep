@@ -35,7 +35,7 @@ namespace ConDep.WebDeploy.Dsl.Builders
 		{
 			_webDeployDefinition.Source.ComputerName = serverName;
 
-			var credBuilder = new CredentialsBuilder(_webDeployDefinition.Source.CredentialsProvider);
+			var credBuilder = new CredentialsBuilder(_webDeployDefinition.Source.Credentials);
 			action(credBuilder);
 			return this;
 		}

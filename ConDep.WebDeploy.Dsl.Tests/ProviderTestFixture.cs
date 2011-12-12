@@ -1,68 +1,68 @@
 ﻿using System;
+using System.Collections.Generic;
+using ConDep.WebDeploy.Dsl.Builders;
+using ConDep.WebDeploy.Dsl.SemanticModel;
 using NUnit.Framework;
 
 namespace ConDep.WebDeploy.Dsl.Tests
 {
 	[TestFixture]
-	public abstract class ProviderTestFixture : IDisposable
+	public abstract class ProviderTestFixture<TProvider> : SimpleTestFixture where TProvider : Provider
 	{
-		private bool _caughtAccessed;
-		private Exception _caught;
+		private ProviderCollectionBuilder _providers;
+		private List<Provider> _internalProviders;
+		private readonly Notification _notification = new Notification();
 
-		protected ProviderTestFixture()
-		{
-			AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-		}
-
-		void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
-		{
-			_caught = e.Exception;
-			AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
-		}
-
-		public Exception Caught
+		protected ProviderCollectionBuilder Providers
 		{
 			get
 			{
-				_caughtAccessed = true;
-				return _caught;
+				if (_providers == null)
+				{
+					_internalProviders = new List<Provider>();
+					_providers = new ProviderCollectionBuilder(_internalProviders);
+				}
+				return _providers;
 			}
 		}
 
-		protected virtual void Before() { }
-		protected abstract void Given();
-
-		protected abstract void When();
-
-		protected void Initialize()
+		protected TProvider Provider
 		{
-			_caught = null;
-
-			Before();
-			Given();
-
-			try
-			{
-				When();
-			}
-			catch (Exception e)
-			{
-				_caught = e;
-			}
-
+			get { return _internalProviders[0] as TProvider; }
 		}
 
-		protected virtual void After() { }
-
-		public void Dispose()
+		protected Notification Notification
 		{
-			After();
-
-			if (_caught != null && !_caughtAccessed)
-			{
-				throw _caught;
-			}
-
+			get { return _notification; }
 		}
+
+		protected override void Given()
+		{
+			
+		}
+
+		protected override void After()
+		{
+			Provider.IsValid(_notification);
+		}
+
+		[Test]
+		public void should_have_no_notifications()
+		{
+			Assert.That(Notification.HasErrors, Is.False);
+		}
+
+		//[Test]
+		//public virtual void should_return_webdeploy_provider_options_without_issues()
+		//{
+		//   Provider.GetWebDeployDestinationProviderOptions();
+		//}
+
+		//[Test]
+		//public virtual void should_return_webdeploy_deploy_object_without_issues()
+		//{
+		//   Provider.GetWebDeploySourceObject(new Microsoft.Web.Deployment.DeploymentBaseOptions());
+		//}
+
 	}
 }

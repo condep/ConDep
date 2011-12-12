@@ -1,6 +1,6 @@
 ﻿namespace ConDep.WebDeploy.Dsl
 {
-	public class WebAppBuilder
+	public class WebAppBuilder : IProviderBuilder<WebAppBuilder>
 	{
 		private readonly WebAppProvider _webAppProvider;
 

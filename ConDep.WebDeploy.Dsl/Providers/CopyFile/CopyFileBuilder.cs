@@ -1,6 +1,6 @@
 ﻿namespace ConDep.WebDeploy.Dsl
 {
-	public class CopyFileBuilder
+	public class CopyFileBuilder : IProviderBuilder<CopyFileBuilder>
 	{
 		private readonly CopyFileProvider _copyFileProvider;
 
@@ -9,7 +9,7 @@
 			_copyFileProvider = credentials;
 		}
 
-		public CopyFileBuilder SetRemotePathTo(string remotePath)
+		public IProviderBuilder<CopyFileBuilder> SetRemotePathTo(string remotePath)
 		{
 			_copyFileProvider.DestinationPath = remotePath;
 			return this;

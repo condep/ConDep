@@ -20,12 +20,13 @@ namespace ConDep.WebDeploy.Dsl
 
 		public override DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions)
 		{
-			return DeploymentManager.CreateObject(Name, SourcePath, sourceBaseOptions);
+			var obj = DeploymentManager.CreateObject(Name, SourcePath, sourceBaseOptions);
+			return obj;
 		}
 
 		public override bool IsValid(Notification notification)
 		{
-			throw new System.NotImplementedException();
+			return !string.IsNullOrWhiteSpace(SourcePath);
 		}
 	}
 }

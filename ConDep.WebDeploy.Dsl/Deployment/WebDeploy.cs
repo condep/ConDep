@@ -3,12 +3,12 @@ using System.Diagnostics;
 using ConDep.WebDeploy.Dsl.SemanticModel;
 using Microsoft.Web.Deployment;
 
-namespace ConDep.WebDeploy.Dsl
+namespace ConDep.WebDeploy.Dsl.Deployment
 {
 	public class WebDeploy : IWebDeploy
 	{
-		public event EventHandler<WebDeployMessegaEventArgs> Output;
-		public event EventHandler<WebDeployMessegaEventArgs> OutputError;
+		public event EventHandler<WebDeployMessageEventArgs> Output;
+		public event EventHandler<WebDeployMessageEventArgs> OutputError;
 
 		public void Deploy(WebDeployDefinition webDeployDefinition)
 		{
@@ -42,7 +42,11 @@ namespace ConDep.WebDeploy.Dsl
 				{
 					var message = GetCompleteExceptionMessage(ex);
 
-					OutputError(this, new WebDeployMessegaEventArgs { Message = message, Level = TraceLevel.Error });
+					OutputError(this, new WebDeployMessageEventArgs { Message = message, Level = TraceLevel.Error });
+				}
+				else
+				{
+					throw;
 				}
 			}
 		}
@@ -52,7 +56,7 @@ namespace ConDep.WebDeploy.Dsl
 			var message = exception.Message;
 			if (exception.InnerException != null)
 			{
-				message += " " + GetCompleteExceptionMessage(exception.InnerException);
+				message += "\n" + GetCompleteExceptionMessage(exception.InnerException);
 			}
 			return message;
 		}
@@ -63,14 +67,14 @@ namespace ConDep.WebDeploy.Dsl
 			{
 				if(OutputError != null)
 				{
-					OutputError(this, new WebDeployMessegaEventArgs {Message = e.Message, Level = e.EventLevel});
+					OutputError(this, new WebDeployMessageEventArgs {Message = e.Message, Level = e.EventLevel});
 				}
 			}
 			else
 			{
 				if (Output != null)
 				{
-					Output(this, new WebDeployMessegaEventArgs { Message = e.Message, Level = e.EventLevel });
+					Output(this, new WebDeployMessageEventArgs { Message = e.Message, Level = e.EventLevel });
 				}
 			}
 		}
@@ -79,17 +83,5 @@ namespace ConDep.WebDeploy.Dsl
 		{
 			throw new NotImplementedException();
 		}
-
-		//public WebDeployDefinition Definition
-		//{
-		//   get { return _webDeployDefinition; }
-		//   set { _webDeployDefinition = value; }
-		//}
-	}
-
-	public class WebDeployMessegaEventArgs : EventArgs
-	{
-		public string Message { get; set; }
-		public TraceLevel Level { get; set; }
 	}
 }

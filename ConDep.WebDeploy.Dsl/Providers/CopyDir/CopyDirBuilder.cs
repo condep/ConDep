@@ -15,9 +15,4 @@
 			return this;
 		}
 	}
-
-	public interface IProviderBuilder<T>
-	{
-		IProviderBuilder<T> SetRemotePathTo(string remotePath);
-	}
 }

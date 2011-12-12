@@ -36,7 +36,9 @@ namespace ConDep.WebDeploy.Dsl
 
 		public override bool IsValid(Notification notification)
 		{
-			throw new System.NotImplementedException();
+			return !string.IsNullOrWhiteSpace(SourcePath) && 
+					 !string.IsNullOrWhiteSpace(DestinationWebSite) &&
+			       !string.IsNullOrWhiteSpace(DestinationAppName);
 		}
 	}
 }
