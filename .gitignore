@@ -24,4 +24,4 @@ _ReSharper.*/
 *.orig
 *.log
 *.TeamCity.user
-TestWebDeployApp/
+TestWebDeployApp
