@@ -10,7 +10,7 @@ using ConDep.Dsl.FluentWebDeploy.Deployment;
 
 namespace ConDep.Dsl.FluentWebDeploy
 {
-	//ToDo: Refactor -> Violates SRP (...and a few other things)
+	//ToDo: Refactor -> Violates SRP (...and probably quite a few other things)
 	public abstract class ConDepConsoleApp<TConsoleOwner, TSettings> : WebDeployOperation 
 		where TConsoleOwner : ConDepConsoleApp<TConsoleOwner, TSettings>, new()
 		where TSettings : ConDepConfiguration, new()
@@ -93,9 +93,9 @@ namespace ConDep.Dsl.FluentWebDeploy
 
 		private void PrintHelp()
 		{
-			System.Console.WriteLine(string.Format("\n" +
-			                                "{0} [settingsFile] {1}"
-													  , FileName, GetCmdHelpForSettings()));
+		    System.Console.WriteLine(string.Format("\n" +
+		                                           "{0} {1}"
+		                                           , FileName, GetCmdHelpForSettings()));
 		}
 
 		private StringBuilder GetCmdHelpForSettings()
@@ -103,7 +103,18 @@ namespace ConDep.Dsl.FluentWebDeploy
 			var validSettings = new StringBuilder();
 			foreach (var setting in Settings.GetType().GetFields().Where(setting => setting.IsDefined(typeof (CmdParamAttribute), false)))
 			{
-				validSettings.Append("[" + setting.Name + "=value] ");
+			    var attrib = setting.GetCustomAttributes(typeof (CmdParamAttribute), false).FirstOrDefault() as CmdParamAttribute;
+			    string settingHelp;
+
+                if(attrib == null || !attrib.Mandatory)
+                {
+                    settingHelp = string.Format("{0}=value ", setting.Name);
+                }
+                else
+                {
+                    settingHelp = string.Format("[{0}=value] ", setting.Name);
+                }
+			    validSettings.Append(settingHelp);
 			}
 			return validSettings;
 		}
