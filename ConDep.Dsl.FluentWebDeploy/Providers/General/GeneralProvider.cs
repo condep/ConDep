@@ -8,7 +8,7 @@ namespace ConDep.Dsl.FluentWebDeploy
 	{
 		private Dictionary<string, string> _providerSettings = new Dictionary<string,string>();
 
-		public override DeploymentProviderOptions GetWebDeployDestinationProviderOptions()
+		public override DeploymentProviderOptions GetWebDeployDestinationObject()
 		{
 			var destProviderOptions = new DeploymentProviderOptions(Name) { Path = DestinationPath };
 

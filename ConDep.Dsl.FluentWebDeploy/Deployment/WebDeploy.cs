@@ -21,17 +21,24 @@ namespace ConDep.Dsl.FluentWebDeploy.Deployment
 				destBaseOptions.Trace += OnWebDeployTraceMessage;
 				destBaseOptions.TraceLevel = TraceLevel.Verbose;
 
+                if (webDeployDefinition.Configuration.AutoDeployAgent)
+                {
+                    destBaseOptions.TempAgent = true;
+                }
+
 				foreach (var provider in webDeployDefinition.Providers)
 				{
-					var sourceDepObject = provider.GetWebDeploySourceObject(sourceBaseOptions);
-					var destProviderOptions = provider.GetWebDeployDestinationProviderOptions();
-
-					if (webDeployDefinition.Configuration.AutoDeployAgent)
-					{
-						destBaseOptions.TempAgent = true;
-					}
-
-					sourceDepObject.SyncTo(destProviderOptions, destBaseOptions, syncOptions);
+                    if(provider is Provider)
+                    {
+                        SyncProvider(destBaseOptions, provider, sourceBaseOptions, syncOptions);
+                    }
+                    else if(provider is CompositeProvider)
+                    {
+                        foreach(var childProvider in ((CompositeProvider)provider).ChildProviders)
+                        {
+                            SyncProvider(destBaseOptions, childProvider, sourceBaseOptions, syncOptions);
+                        }
+                    }
 				}
 
 				destBaseOptions.Trace -= OnWebDeployTraceMessage;
@@ -51,7 +58,15 @@ namespace ConDep.Dsl.FluentWebDeploy.Deployment
 			}
 		}
 
-		private string GetCompleteExceptionMessage(Exception exception)
+	    private void SyncProvider(DeploymentBaseOptions destBaseOptions, IProvide provider, DeploymentBaseOptions sourceBaseOptions, DeploymentSyncOptions syncOptions)
+	    {
+	        var sourceDepObject = ((Provider)provider).GetWebDeploySourceObject(sourceBaseOptions);
+	        var destProviderOptions = ((Provider)provider).GetWebDeployDestinationObject();
+
+	        sourceDepObject.SyncTo(destProviderOptions, destBaseOptions, syncOptions);
+	    }
+
+	    private string GetCompleteExceptionMessage(Exception exception)
 		{
 			var message = exception.Message;
 			if (exception.InnerException != null)

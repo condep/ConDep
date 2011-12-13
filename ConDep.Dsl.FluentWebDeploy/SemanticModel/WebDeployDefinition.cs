@@ -17,14 +17,14 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 		private readonly Source _source = new Source();
 		private readonly Destination _destination = new Destination();
 		private readonly Configuration _configuration = new Configuration();
-		private readonly List<Provider> _providers = new List<Provider>();
+		private readonly List<IProvide> _providers = new List<IProvide>();
 
 		public Source Source
 		{
 			get { return _source; }
 		}
 
-		public List<Provider> Providers { get { return _providers; } }
+		public List<IProvide> Providers { get { return _providers; } }
 
 		public Destination Destination
 		{

@@ -15,7 +15,7 @@ namespace ConDep.Dsl.FluentWebDeploy
 		public FileSystemRights Permissions { get; set; }
 		public string User { get; set; }
 
-		public override DeploymentProviderOptions GetWebDeployDestinationProviderOptions()
+		public override DeploymentProviderOptions GetWebDeployDestinationObject()
 		{
 			var destProviderOptions = new DeploymentProviderOptions(Name) { Path = DestinationPath };
 

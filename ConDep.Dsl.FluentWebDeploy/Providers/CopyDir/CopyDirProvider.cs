@@ -13,7 +13,7 @@ namespace ConDep.Dsl.FluentWebDeploy
 			Name = NAME;
 		}
 
-		public override DeploymentProviderOptions GetWebDeployDestinationProviderOptions()
+		public override DeploymentProviderOptions GetWebDeployDestinationObject()
 		{
 			return new DeploymentProviderOptions(Name) { Path = DestinationPath };
 		}

@@ -72,6 +72,9 @@
     <Compile Include="Providers\CopyFile\CopyFileBuilder.cs" />
     <Compile Include="Builders\CredentialsBuilder.cs" />
     <Compile Include="Builders\ProviderCollectionBuilder.cs" />
+    <Compile Include="Providers\NServiceBus\NServiceBusBuilder.cs" />
+    <Compile Include="Providers\NServiceBus\NServicebusExtension.cs" />
+    <Compile Include="Providers\NServiceBus\NServiceBusProvider.cs" />
     <Compile Include="Providers\SetAcl\SetAclExtension.cs" />
     <Compile Include="Providers\WebApp\WebAppExtension.cs" />
     <Compile Include="Providers\SetAcl\SetAclBuilder.cs" />
@@ -84,8 +87,9 @@
     <Compile Include="Providers\CopyDir\CopyDirProvider.cs" />
     <Compile Include="SemanticModel\Credentials.cs" />
     <Compile Include="Providers\General\GeneralProvider.cs" />
-    <Compile Include="SemanticModel\CustomProvider.cs" />
+    <Compile Include="SemanticModel\CompositeProvider.cs" />
     <Compile Include="SemanticModel\Destination.cs" />
+    <Compile Include="SemanticModel\IProvide.cs" />
     <Compile Include="SemanticModel\IWebDeployModel.cs" />
     <Compile Include="SemanticModel\Notification.cs" />
     <Compile Include="SemanticModel\Provider.cs" />

@@ -5,14 +5,14 @@ namespace ConDep.Dsl.FluentWebDeploy.Builders
 {
 	public class ProviderCollectionBuilder
 	{
-		private readonly List<Provider> _providers;
+		private readonly List<IProvide> _providers;
 
-		public ProviderCollectionBuilder(List<Provider> providers)
+		public ProviderCollectionBuilder(List<IProvide> providers)
 		{
 			_providers = providers;
 		}
 
-		protected internal void AddProvider(Provider provider)
+		protected internal void AddProvider(IProvide provider)
 		{
 			_providers.Add(provider);
 		}

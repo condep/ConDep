@@ -7,10 +7,10 @@ using NUnit.Framework;
 namespace ConDep.WebDeploy.Dsl.Tests
 {
 	[TestFixture]
-	public abstract class ProviderTestFixture<TProvider> : SimpleTestFixture where TProvider : Provider
+	public abstract class ProviderTestFixture<TProvider> : SimpleTestFixture where TProvider : class, IProvide
 	{
 		private ProviderCollectionBuilder _providers;
-		private List<Provider> _internalProviders;
+		private List<IProvide> _internalProviders;
 		private readonly Notification _notification = new Notification();
 
 		protected ProviderCollectionBuilder Providers
@@ -19,7 +19,7 @@ namespace ConDep.WebDeploy.Dsl.Tests
 			{
 				if (_providers == null)
 				{
-					_internalProviders = new List<Provider>();
+					_internalProviders = new List<IProvide>();
 					_providers = new ProviderCollectionBuilder(_internalProviders);
 				}
 				return _providers;
@@ -38,24 +38,23 @@ namespace ConDep.WebDeploy.Dsl.Tests
 
 		protected override void Given()
 		{
-			
-		}
+        }
 
 		protected override void After()
 		{
-			Provider.IsValid(_notification);
 		}
 
 		[Test]
 		public void should_have_no_notifications()
 		{
-			Assert.That(Notification.HasErrors, Is.False);
+            Provider.IsValid(Notification);
+            Assert.That(Notification.HasErrors, Is.False);
 		}
 
 		//[Test]
 		//public virtual void should_return_webdeploy_provider_options_without_issues()
 		//{
-		//   Provider.GetWebDeployDestinationProviderOptions();
+		//   Provider.GetWebDeployDestinationObject();
 		//}
 
 		//[Test]

@@ -13,7 +13,7 @@ namespace ConDep.Dsl.FluentWebDeploy
 		protected WebDeployOperation()
 		{
 			_definition = new WebDeployDefinition();
-			_webDeployer = new ConDep.Dsl.FluentWebDeploy.Deployment.WebDeploy();
+			_webDeployer = new WebDeploy();
 			HookUpDeployEvents();
 		}
 
