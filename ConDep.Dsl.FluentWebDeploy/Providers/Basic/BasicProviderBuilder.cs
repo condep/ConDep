@@ -1,3 +1,5 @@
+using ConDep.Dsl.FluentWebDeploy.Builders;
+
 namespace ConDep.Dsl.FluentWebDeploy
 {
 	public class BasicProviderBuilder : IProviderBuilder<BasicProviderBuilder>

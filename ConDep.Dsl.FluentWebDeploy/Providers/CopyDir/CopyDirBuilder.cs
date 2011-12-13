@@ -1,4 +1,6 @@
-﻿namespace ConDep.Dsl.FluentWebDeploy
+﻿using ConDep.Dsl.FluentWebDeploy.Builders;
+
+namespace ConDep.Dsl.FluentWebDeploy
 {
 	public class CopyDirBuilder : IProviderBuilder<CopyDirBuilder>
 	{

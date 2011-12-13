@@ -67,7 +67,7 @@
     <Compile Include="Builders\ConfigurationBuilder.cs" />
     <Compile Include="Providers\CopyDir\CopyDirBuilder.cs" />
     <Compile Include="Providers\CopyDir\CopyDirExtension.cs" />
-    <Compile Include="Providers\CopyDir\IProviderBuilder.cs" />
+    <Compile Include="Builders\IProviderBuilder.cs" />
     <Compile Include="Providers\CopyFile\CopyFileExtension.cs" />
     <Compile Include="Providers\CopyFile\CopyFileBuilder.cs" />
     <Compile Include="Builders\CredentialsBuilder.cs" />

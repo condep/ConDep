@@ -6,6 +6,7 @@ namespace ConDep.WebDeploy.Dsl.Tests.SematicModel
 	public class when_no_providers_are_specified : SemanticTestFixture
 	{
 		[Test]
+
 		public void should_notify_about_missing_provider()
 		{
 			Assert.That(Notification.HasErrorOfType(ValidationErrorType.NoProviders));

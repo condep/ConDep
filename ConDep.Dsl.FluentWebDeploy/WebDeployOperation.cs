@@ -42,7 +42,7 @@ namespace ConDep.Dsl.FluentWebDeploy
 			var definition = new WebDeployDefinition();
 			action(new DeleteBuilder(new WebDeployDefinition()));
 
-			var webDeploy = new ConDep.Dsl.FluentWebDeploy.Deployment.WebDeploy();
+			var webDeploy = new WebDeploy();
 			webDeploy.Delete(definition);
 		}
 
