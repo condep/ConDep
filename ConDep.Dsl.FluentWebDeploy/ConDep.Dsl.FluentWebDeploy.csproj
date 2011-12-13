@@ -52,7 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Providers\Basic\BasicProviderBuilder.cs" />
+    <Compile Include="Providers\General\GeneralProviderBuilder.cs" />
     <Compile Include="Builders\FromBuilder.cs" />
     <Compile Include="Builders\ToBuilder.cs" />
     <Compile Include="Console\CmdParamAttribute.cs" />
@@ -62,7 +62,7 @@
     <Compile Include="Builders\DeleteBuilder.cs" />
     <Compile Include="Builders\PackageBuilder.cs" />
     <Compile Include="Deployment\IWebDeploy.cs" />
-    <Compile Include="Providers\Basic\BasicProviderExtension.cs" />
+    <Compile Include="Providers\General\GeneralProviderExtension.cs" />
     <Compile Include="Providers\Certificate\CertificateExtension.cs" />
     <Compile Include="Builders\ConfigurationBuilder.cs" />
     <Compile Include="Providers\CopyDir\CopyDirBuilder.cs" />
@@ -83,7 +83,7 @@
     <Compile Include="Providers\CopyFile\CopyFileProvider.cs" />
     <Compile Include="Providers\CopyDir\CopyDirProvider.cs" />
     <Compile Include="SemanticModel\Credentials.cs" />
-    <Compile Include="Providers\Basic\BasicProvider.cs" />
+    <Compile Include="Providers\General\GeneralProvider.cs" />
     <Compile Include="SemanticModel\CustomProvider.cs" />
     <Compile Include="SemanticModel\Destination.cs" />
     <Compile Include="SemanticModel\IWebDeployModel.cs" />
