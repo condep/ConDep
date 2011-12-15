@@ -38,10 +38,10 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
                         .From.LocalHost()
                         .UsingProvider(p => p
                             .NServiceBus(@"C:\Temp\Frende.Customer.Endpoint", c => c
-                            .ToDirectory(@"C:\Temp\Frende.Customer.Endpoint2")
-							.ServiceInstaller("NServiceBus.Host.exe")
-							.ServiceName("Frende.Customer.Endpoint")
-							.ServiceGroup("MyFrendeGroup")))
+                                .ToDirectory(@"C:\Temp\Frende.Customer.Endpoint2")
+							    .ServiceInstaller("NServiceBus.Host.exe")
+							    .ServiceName("Frende.Customer.Endpoint")
+							    .ServiceGroup("MyFrendeGroup")))
                         .To.LocalHost()
                      );
         }
