@@ -7,6 +7,17 @@ namespace ConDep.Dsl.FluentWebDeploy
 	public class GeneralProvider : Provider
 	{
 		private Dictionary<string, string> _providerSettings = new Dictionary<string,string>();
+		private readonly string _name;
+
+		public GeneralProvider(string providername)
+		{
+			_name = providername;
+		}
+
+		public override string Name
+		{
+			get { return _name; }
+		}
 
 		public override DeploymentProviderOptions GetWebDeployDestinationObject()
 		{

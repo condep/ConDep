@@ -6,7 +6,8 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 	{
 		public string SourcePath { get; set; }
 		public virtual string DestinationPath { get; set; }
-		public string Name { get; set; }
+		public abstract string Name { get; }
+		public int WaitInterval { get; set; }
 
 		public abstract DeploymentProviderOptions GetWebDeployDestinationObject();
 		public abstract DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions);

@@ -9,11 +9,15 @@ namespace ConDep.Dsl.FluentWebDeploy
 		public SetAclProvider(string destinationPath)
 		{
 			DestinationPath = destinationPath;
-			Name = "setAcl";
 		}
 
 		public FileSystemRights Permissions { get; set; }
 		public string User { get; set; }
+
+		public override string Name
+		{
+			get { return "setAcl"; }
+		}
 
 		public override DeploymentProviderOptions GetWebDeployDestinationObject()
 		{

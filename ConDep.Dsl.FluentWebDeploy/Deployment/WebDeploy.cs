@@ -60,10 +60,21 @@ namespace ConDep.Dsl.FluentWebDeploy.Deployment
 
 	    private void SyncProvider(DeploymentBaseOptions destBaseOptions, IProvide provider, DeploymentBaseOptions sourceBaseOptions, DeploymentSyncOptions syncOptions)
 	    {
+			var defaultWaitInterval = destBaseOptions.RetryInterval;
+			if(provider.WaitInterval > 0)
+			{
+				destBaseOptions.RetryInterval = provider.WaitInterval*1000;
+			}
 	        var sourceDepObject = ((Provider)provider).GetWebDeploySourceObject(sourceBaseOptions);
 	        var destProviderOptions = ((Provider)provider).GetWebDeployDestinationObject();
+	    	
+			destBaseOptions.RetryInterval = defaultWaitInterval;
 
-	        sourceDepObject.SyncTo(destProviderOptions, destBaseOptions, syncOptions);
+	        var summery = sourceDepObject.SyncTo(destProviderOptions, destBaseOptions, syncOptions);
+			if(summery.Errors > 0)
+			{
+				throw new Exception("The provider reported " + summery.Errors + " during deployment.");
+			}
 	    }
 
 	    private string GetCompleteExceptionMessage(Exception exception)

@@ -10,7 +10,11 @@ namespace ConDep.Dsl.FluentWebDeploy
 		public CopyDirProvider(string sourcePath)
 		{
 			SourcePath = sourcePath;
-			Name = NAME;
+		}
+
+		public override string Name
+		{
+			get { return NAME; }
 		}
 
 		public override DeploymentProviderOptions GetWebDeployDestinationObject()

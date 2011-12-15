@@ -15,6 +15,8 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 
 		public abstract bool IsValid(Notification notification);
 
+		public int WaitInterval { get; set; }
+
 		public abstract void Configure();
 
 		protected void Configure(Action<ProviderCollectionBuilder> action)

@@ -9,7 +9,6 @@ namespace ConDep.Dsl.FluentWebDeploy
 
 		public WebAppProvider(string sourcePath)
 		{
-			Name = NAME;
 			SourcePath = sourcePath;
 		}
 
@@ -22,6 +21,11 @@ namespace ConDep.Dsl.FluentWebDeploy
 			{
 				return DestinationWebSite + "/" + DestinationAppName;
 			}
+		}
+
+		public override string Name
+		{
+			get { return NAME; }
 		}
 
 		public override DeploymentProviderOptions GetWebDeployDestinationObject()

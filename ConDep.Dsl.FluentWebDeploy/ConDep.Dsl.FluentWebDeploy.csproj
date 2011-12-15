@@ -75,6 +75,9 @@
     <Compile Include="Providers\NServiceBus\NServiceBusBuilder.cs" />
     <Compile Include="Providers\NServiceBus\NServicebusExtension.cs" />
     <Compile Include="Providers\NServiceBus\NServiceBusProvider.cs" />
+    <Compile Include="Providers\RunCmd\RunCmdBuilder.cs" />
+    <Compile Include="Providers\RunCmd\RunCmdExtension.cs" />
+    <Compile Include="Providers\RunCmd\RunCmdProvider.cs" />
     <Compile Include="Providers\SetAcl\SetAclExtension.cs" />
     <Compile Include="Providers\WebApp\WebAppExtension.cs" />
     <Compile Include="Providers\SetAcl\SetAclBuilder.cs" />

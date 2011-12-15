@@ -10,7 +10,11 @@ namespace ConDep.Dsl.FluentWebDeploy
 		public CertficiateProvider(string thumbprint)
 		{
 			SourcePath = thumbprint;
-			Name = NAME;
+		}
+
+		public override string Name
+		{
+			get { return NAME; }
 		}
 
 		public override DeploymentProviderOptions GetWebDeployDestinationObject()

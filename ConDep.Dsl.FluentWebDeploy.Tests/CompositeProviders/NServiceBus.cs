@@ -10,7 +10,12 @@ namespace ConDep.WebDeploy.Dsl.Tests.CompositeProviders
         	Providers
         		.NServiceBus(SourcePath,
         		             config => config
-        		                       	.ToDirectory(DestinationPath));
+        		                       	.ToDirectory(DestinationPath)
+										.ServiceName("asdfasdf")
+										.ServiceInstaller("asdf")
+										.UserName("asdf")
+										.Password("asdf")
+										.ServiceGroup("asdf"));
         }
 
         protected string DestinationPath
