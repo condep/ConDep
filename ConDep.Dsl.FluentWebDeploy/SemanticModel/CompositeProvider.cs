@@ -6,19 +6,21 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
 	public abstract class CompositeProvider : IProvide
 	{
-	    private readonly List<IProvide> _childProviders = new List<IProvide>();
+		private readonly List<IProvide> _childProviders = new List<IProvide>();
 
-        public IEnumerable<IProvide> ChildProviders { get { return _childProviders; } }
+		public IEnumerable<IProvide> ChildProviders { get { return _childProviders; } }
 
-        public string SourcePath { get; set; }
-        public virtual string DestinationPath { get; set; }
+		public string SourcePath { get; set; }
+		public virtual string DestinationPath { get; set; }
 
-	    public abstract bool IsValid(Notification notification);
+		public abstract bool IsValid(Notification notification);
 
-        public void Sync(Action<ProviderCollectionBuilder> action)
-        {
-            action(new ProviderCollectionBuilder(_childProviders));
-        }
+		public abstract void Configure();
 
-    }
+		protected void Configure(Action<ProviderCollectionBuilder> action)
+		{
+			action(new ProviderCollectionBuilder(_childProviders));
+		}
+
+	}
 }

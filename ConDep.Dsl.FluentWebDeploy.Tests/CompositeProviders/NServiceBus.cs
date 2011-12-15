@@ -8,9 +8,10 @@ namespace ConDep.WebDeploy.Dsl.Tests.CompositeProviders
     {
         protected override void When()
         {
-            Providers
-                .NServiceBus(SourcePath)
-                .ToDirectory(DestinationPath);
+        	Providers
+        		.NServiceBus(SourcePath,
+        		             config => config
+        		                       	.ToDirectory(DestinationPath));
         }
 
         protected string DestinationPath

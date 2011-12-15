@@ -15,6 +15,11 @@ namespace ConDep.Dsl.FluentWebDeploy.Builders
 		protected internal void AddProvider(IProvide provider)
 		{
 			_providers.Add(provider);
+
+			if(provider is CompositeProvider)
+			{
+				((CompositeProvider) provider).Configure();
+			}
 		}
 	}
 }

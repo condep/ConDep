@@ -8,9 +8,10 @@ namespace ConDep.WebDeploy.Dsl.Tests.Providers
 		protected override void When()
 		{
 			Providers
-				.WebApp(SourcePath)
-				.AddToRemoteWebsite(RemoteWebSite)
-				.WithRemoteAppName(RemoteAppName);
+				.WebApp(SourcePath,
+				        c => c
+				             	.AddToRemoteWebsite(RemoteWebSite)
+				             	.WithRemoteAppName(RemoteAppName));
 		}
 
 		[Test]

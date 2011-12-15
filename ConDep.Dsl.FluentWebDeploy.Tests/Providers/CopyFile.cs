@@ -8,8 +8,7 @@ namespace ConDep.WebDeploy.Dsl.Tests.Providers
 		protected override void When()
 		{
 			Providers
-				.CopyFile(SourcePath)
-				.SetRemotePathTo(DestinationPath);
+				.CopyFile(SourcePath, c => c.SetRemotePathTo(DestinationPath));
 		}
 
 		[Test]

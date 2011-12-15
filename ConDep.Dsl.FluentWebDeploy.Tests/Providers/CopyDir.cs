@@ -9,8 +9,7 @@ namespace ConDep.WebDeploy.Dsl.Tests.Providers
 		protected override void When()
 		{
 			Providers
-				.CopyDir(SourcePath)
-				.SetRemotePathTo(DestinationPath);
+				.CopyDir(SourcePath, c => c.SetRemotePathTo(DestinationPath));
 		}
 
 		[Test]

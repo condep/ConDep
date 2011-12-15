@@ -7,10 +7,15 @@ namespace ConDep.Dsl.FluentWebDeploy
         public NServiceBusProvider(string path)
         {
             SourcePath = path;
-
-            Sync(p => p.CopyDir(path)
-                          .SetRemotePathTo(DestinationPath));
         }
+
+		  public override void Configure()
+		  {
+			  Configure(p =>
+			  {
+				  p.CopyDir(SourcePath, c => c.SetRemotePathTo(DestinationPath));
+			  });
+		  }
 
         public override bool IsValid(Notification notification)
         {

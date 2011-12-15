@@ -9,8 +9,7 @@ namespace ConDep.WebDeploy.Dsl.Tests.Providers
 		protected override void When()
 		{
 			Providers
-				.SetAcl(SourcePath)
-				.Permissions(Permissions, UserName);
+				.SetAcl(SourcePath, c => c.Permissions(Permissions, UserName));
 		}
 
 		[Test]
