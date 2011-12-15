@@ -1,10 +1,9 @@
-using System;
 using ConDep.Dsl.FluentWebDeploy;
 using NUnit.Framework;
 
 namespace ConDep.WebDeploy.Dsl.Tests.CompositeProviders
 {
-    public class NServiceBus : ProviderTestFixture<NServiceBusProvider>
+    public class when_using_NServiceBus_provider : ProviderTestFixture<NServiceBusProvider>
     {
         protected override void When()
         {

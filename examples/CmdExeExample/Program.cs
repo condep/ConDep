@@ -17,9 +17,9 @@ namespace TestWebDeployApp
 									  .WithUserName("asdf")
 									  .WithPassword("asdf"))
 								  
-                          .UsingProvider(p => p.WebApp(Settings.WebAppName)
+                          .UsingProvider(p => p.WebApp(Settings.WebAppName, c => c
                                                   .AddToRemoteWebsite(Settings.RemoteWebSite)
-                                                  .WithRemoteAppName(Settings.RemoteWebApp))
+                                                  .WithRemoteAppName(Settings.RemoteWebApp)))
 
                           .To.Server(Settings.ToServer));
         }
