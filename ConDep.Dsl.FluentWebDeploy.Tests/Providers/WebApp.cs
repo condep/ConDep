@@ -1,17 +1,13 @@
-using ConDep.Dsl.FluentWebDeploy;
 using NUnit.Framework;
 
-namespace ConDep.WebDeploy.Dsl.Tests.Providers
+namespace ConDep.Dsl.FluentWebDeploy.Tests.Providers
 {
 	public class when_using_web_app_provider : ProviderTestFixture<WebAppProvider>
 	{
 		protected override void When()
 		{
 			Providers
-				.WebApp(SourcePath,
-				        c => c
-				             	.AddToRemoteWebsite(RemoteWebSite)
-				             	.WithRemoteAppName(RemoteAppName));
+				.WebApp(SourcePath, RemoteAppName, RemoteWebSite);
 		}
 
 		[Test]

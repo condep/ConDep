@@ -11,9 +11,9 @@ namespace ConDep.Dsl.FluentWebDeploy.Builders
 			_configuration = configuration;
 		}
 		
-		public ConfigurationBuilder AutoDeployAgent()
+		public ConfigurationBuilder DoNotAutoDeployAgent()
 		{
-			_configuration.AutoDeployAgent = true;
+			_configuration.DoNotAutoDeployAgent = true;
 			return this;
 		}
 	}

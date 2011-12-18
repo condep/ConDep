@@ -9,17 +9,11 @@
             _nservicebusProvider = nservicebusProvider;
         }
         
-        public NServiceBusBuilder ToDirectory(string path)
+        public NServiceBusBuilder DestinationDir(string path)
         {
             _nservicebusProvider.DestinationPath = path;
             return this;
         }
-
-    	public NServiceBusBuilder ServiceName(string serviceName)
-    	{
-    		_nservicebusProvider.ServiceName = serviceName;
-    		return this;
-    	}
 
     	public NServiceBusBuilder ServiceInstaller(string nServiceBusInstallerPath)
     	{

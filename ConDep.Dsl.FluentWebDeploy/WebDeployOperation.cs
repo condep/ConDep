@@ -9,54 +9,26 @@ namespace ConDep.Dsl.FluentWebDeploy
 	{
 		private readonly WebDeployDefinition _definition;
 		private readonly IWebDeploy _webDeployer;
+	    private Notification _notification;
 
-		protected WebDeployOperation()
+	    protected WebDeployOperation()
 		{
 			_definition = new WebDeployDefinition();
 			_webDeployer = new WebDeploy();
-			HookUpDeployEvents();
+		    _notification = new Notification();
 		}
 
-		//protected WebDeployOperation(WebDeployDefinition definition, IWebDeploy webDeployer)
-		//{
-		//   _definition = definition;
-		//   _webDeployer = webDeployer;
-		//   HookUpDeployEvents();
-		//}
-
-		private void HookUpDeployEvents()
-		{
-			_webDeployer.Output += OnWebDeployMessage;
-			_webDeployer.OutputError += OnWebDeployErrorMessage;
-		}
-
-
-		public void Sync(Action<SyncBuilder> action)
+		public DeploymentStatus Sync(Action<SyncBuilder> action)
 		{
 			action(new SyncBuilder(_definition));
-			_webDeployer.Deploy(_definition);
-		}
-
-		public void Delete(Action<DeleteBuilder> action)
-		{
-			var definition = new WebDeployDefinition();
-			action(new DeleteBuilder(new WebDeployDefinition()));
-
-			var webDeploy = new WebDeploy();
-			webDeploy.Delete(definition);
+            if (!_definition.IsValid(_notification))
+            {
+                _notification.Throw();
+            }
+			return _webDeployer.Deploy(_definition, OnWebDeployMessage, OnWebDeployErrorMessage);
 		}
 
 		protected abstract void OnWebDeployMessage(object sender, WebDeployMessageEventArgs e);
 		protected abstract void OnWebDeployErrorMessage(object sender, WebDeployMessageEventArgs e);
-
-		//public void Package(Action<IPackage> action)
-		//{
-		//   action(new SyncBuilder(new WebDeployDefinition()));
-		//}
-
-		//public void Archive(Action<IArchive> action)
-		//{
-		//   action(new SyncBuilder(new WebDeployDefinition()));
-		//}
 	}
 }

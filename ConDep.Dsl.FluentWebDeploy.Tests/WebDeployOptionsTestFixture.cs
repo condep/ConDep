@@ -2,7 +2,7 @@ using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 using Microsoft.Web.Deployment;
 using NUnit.Framework;
 
-namespace ConDep.WebDeploy.Dsl.Tests
+namespace ConDep.Dsl.FluentWebDeploy.Tests
 {
 	public abstract class WebDeployOptionsTestFixture : SimpleTestFixture
 	{

@@ -1,29 +1,28 @@
-using ConDep.Dsl.FluentWebDeploy;
 using NUnit.Framework;
 
-namespace ConDep.WebDeploy.Dsl.Tests.Providers
+namespace ConDep.Dsl.FluentWebDeploy.Tests.Providers
 {
 	public class when_using_copy_file_provider : ProviderTestFixture<CopyFileProvider>
 	{
 		protected override void When()
 		{
 			Providers
-				.CopyFile(SourcePath, c => c.SetRemotePathTo(DestinationPath));
+				.CopyFile(SourceFile, c => c.RenameFileOnDestination(DestinationFileName));
 		}
 
 		[Test]
 		public void should_have_valid_source_path()
 		{
-			Assert.That(SourcePath, Is.EqualTo(Provider.SourcePath));
+			Assert.That(SourceFile, Is.EqualTo(Provider.SourcePath));
 		}
 
 		[Test]
 		public void should_have_valid_destination_path()
 		{
-			Assert.That(DestinationPath, Is.EqualTo(Provider.DestinationPath));
+			Assert.That(DestinationFileName, Is.EqualTo(Provider.DestinationPath));
 		}
 
-		public string SourcePath
+		public string SourceFile
 		{
 			get
 			{
@@ -31,7 +30,7 @@ namespace ConDep.WebDeploy.Dsl.Tests.Providers
 			}
 		}
 
-		public string DestinationPath
+		public string DestinationFileName
 		{
 			get { return @"E:\tmp"; }
 		}

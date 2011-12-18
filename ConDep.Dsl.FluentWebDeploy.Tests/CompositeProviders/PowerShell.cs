@@ -1,7 +1,6 @@
-using ConDep.Dsl.FluentWebDeploy;
 using NUnit.Framework;
 
-namespace ConDep.WebDeploy.Dsl.Tests.Providers
+namespace ConDep.Dsl.FluentWebDeploy.Tests.CompositeProviders
 {
     public class when_using_PowerShell_provider : ProviderTestFixture<PowerShellProvider>
     {

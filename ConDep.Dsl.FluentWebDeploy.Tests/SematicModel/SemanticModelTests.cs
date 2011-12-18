@@ -1,7 +1,7 @@
 ﻿using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 using NUnit.Framework;
 
-namespace ConDep.WebDeploy.Dsl.Tests.SematicModel
+namespace ConDep.Dsl.FluentWebDeploy.Tests.SematicModel
 {
 	public class when_no_providers_are_specified : SemanticTestFixture
 	{

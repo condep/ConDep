@@ -11,10 +11,10 @@ namespace ConDep.Dsl.FluentWebDeploy
 			providerCollectionBuilder.AddProvider(runCmdProvider);
 		}
 
-		public static void RunCmd(this ProviderCollectionBuilder providerCollectionBuilder, string command, Action<RunCmdBuilder> configuration)
+		public static void RunCmd(this ProviderCollectionBuilder providerCollectionBuilder, string command, Action<RunCmdOptions> options)
 		{
 			var runCmdProvider = new RunCmdProvider(command);
-			configuration(new RunCmdBuilder(runCmdProvider));
+			options(new RunCmdOptions(runCmdProvider));
 			providerCollectionBuilder.AddProvider(runCmdProvider);
 		}
  

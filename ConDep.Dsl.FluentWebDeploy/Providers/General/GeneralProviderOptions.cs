@@ -2,16 +2,16 @@ using ConDep.Dsl.FluentWebDeploy.Builders;
 
 namespace ConDep.Dsl.FluentWebDeploy
 {
-	public class GeneralProviderBuilder : IProviderBuilder<GeneralProviderBuilder>
+	public class GeneralProviderOptions : IProvideOptions<GeneralProviderOptions>
 	{
 		private readonly GeneralProvider _provider;
 
-		public GeneralProviderBuilder(GeneralProvider provider)
+		public GeneralProviderOptions(GeneralProvider provider)
 		{
 			_provider = provider;
 		}
 
-		public GeneralProviderBuilder Add(string name, string value)
+		public GeneralProviderOptions Add(string name, string value)
 		{
 			_provider.ProviderSettings.Add(name, value);
 			return this;

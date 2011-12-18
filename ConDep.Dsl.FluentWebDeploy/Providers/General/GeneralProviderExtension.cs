@@ -11,11 +11,11 @@ namespace ConDep.Dsl.FluentWebDeploy
 			providerCollectionBuilder.AddProvider(provider);
 		}
 
-		public static void DefineCustom(this ProviderCollectionBuilder providerCollectionBuilder, string providername, string sourcepath, string destinationpath, Action<GeneralProviderBuilder> configuration)
+		public static void DefineCustom(this ProviderCollectionBuilder providerCollectionBuilder, string providername, string sourcepath, string destinationpath, Action<GeneralProviderOptions> options)
 		{
 			var provider = new GeneralProvider(providername) { SourcePath = sourcepath, DestinationPath = destinationpath };
-			var providerOptions = new GeneralProviderBuilder(provider);
-			configuration(providerOptions);
+			var providerOptions = new GeneralProviderOptions(provider);
+			options(providerOptions);
 			providerCollectionBuilder.AddProvider(provider);
 		}
 

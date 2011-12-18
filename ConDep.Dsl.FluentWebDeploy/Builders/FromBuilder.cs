@@ -16,7 +16,7 @@ namespace ConDep.Dsl.FluentWebDeploy.Builders
 
 		public SyncBuilder LocalHost()
 		{
-			_source.ComputerName = "127.0.0.1";
+		    _source.LocalHost = true;
 			return _syncBuilder;
 		}
 

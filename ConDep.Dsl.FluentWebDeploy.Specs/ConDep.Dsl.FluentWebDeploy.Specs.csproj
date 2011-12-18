@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,17 +48,37 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NServiceBusDefinition.cs" />
-    <Compile Include="NServiceBusProvider.feature.cs">
+    <Compile Include="Features\NServiceBusProvider.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>NServiceBusProvider.feature</DependentUpon>
     </Compile>
+    <Compile Include="PowerShellDefinition.cs" />
+    <Compile Include="Features\PowerShellFeature.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PowerShellFeature.feature</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RunCommandDefinition.cs" />
+    <Compile Include="Features\RunCommandFeature.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RunCommandFeature.feature</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="NServiceBusProvider.feature">
+    <None Include="Features\NServiceBusProvider.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>NServiceBusProvider.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\PowerShellFeature.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>PowerShellFeature.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\RunCommandFeature.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>RunCommandFeature.feature.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

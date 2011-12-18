@@ -2,16 +2,16 @@
 
 namespace ConDep.Dsl.FluentWebDeploy
 {
-	public class CopyDirBuilder : IProviderBuilder<CopyDirBuilder>
+	public class CopyDirOptions : IProvideOptions<CopyDirOptions>
 	{
 		private readonly CopyDirProvider _copyDirProvider;
 
-		public CopyDirBuilder(CopyDirProvider copyDirProvider)
+		public CopyDirOptions(CopyDirProvider copyDirProvider)
 		{
 			_copyDirProvider = copyDirProvider;
 		}
 
-		public IProviderBuilder<CopyDirBuilder> SetRemotePathTo(string remotePath)
+		public IProvideOptions<CopyDirOptions> DestinationDir(string remotePath)
 		{
 			_copyDirProvider.DestinationPath = remotePath;
 			return this;

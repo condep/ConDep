@@ -5,11 +5,11 @@ namespace ConDep.Dsl.FluentWebDeploy
 {
     public static class NServicebusExtension
     {
-        public static void NServiceBus(this ProviderCollectionBuilder providerCollectionBuilder, string path, Action<NServiceBusBuilder> configuration)
+        public static void NServiceBus(this ProviderCollectionBuilder providerCollectionBuilder, string sourceDir, string serviceName, Action<NServiceBusBuilder> options)
         {
-            var nservicebusProvider = new NServiceBusProvider(path);
-	        	configuration(new NServiceBusBuilder(nservicebusProvider));
-				providerCollectionBuilder.AddProvider(nservicebusProvider);
+            var nservicebusProvider = new NServiceBusProvider(sourceDir, serviceName);
+	        options(new NServiceBusBuilder(nservicebusProvider));
+			providerCollectionBuilder.AddProvider(nservicebusProvider);
         }
     }
 }

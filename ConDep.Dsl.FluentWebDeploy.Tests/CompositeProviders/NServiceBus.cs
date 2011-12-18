@@ -1,17 +1,15 @@
-using ConDep.Dsl.FluentWebDeploy;
 using NUnit.Framework;
 
-namespace ConDep.WebDeploy.Dsl.Tests.CompositeProviders
+namespace ConDep.Dsl.FluentWebDeploy.Tests.CompositeProviders
 {
     public class when_using_NServiceBus_provider : ProviderTestFixture<NServiceBusProvider>
     {
         protected override void When()
         {
         	Providers
-        		.NServiceBus(SourcePath,
+        		.NServiceBus(SourcePath, "serviceName",
         		             config => config
-        		                       	.ToDirectory(DestinationPath)
-										.ServiceName("asdfasdf")
+        		                       	.DestinationDir(DestinationPath)
 										.ServiceInstaller("asdf")
 										.UserName("asdf")
 										.Password("asdf")

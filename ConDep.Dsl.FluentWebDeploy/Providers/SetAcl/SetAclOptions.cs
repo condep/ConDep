@@ -3,11 +3,11 @@ using ConDep.Dsl.FluentWebDeploy.Builders;
 
 namespace ConDep.Dsl.FluentWebDeploy
 {
-	public class SetAclBuilder : IProviderBuilder<SetAclBuilder>
+	public class SetAclOptions : IProvideOptions<SetAclOptions>
 	{
 		private readonly SetAclProvider _setAclProvider;
 
-		public SetAclBuilder(SetAclProvider setAclProvider)
+		public SetAclOptions(SetAclProvider setAclProvider)
 		{
 			_setAclProvider = setAclProvider;
 		}

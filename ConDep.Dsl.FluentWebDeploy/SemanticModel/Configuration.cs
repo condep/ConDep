@@ -2,12 +2,12 @@
 {
 	public class Configuration : IWebDeployModel
 	{
-		private bool _autoDeployAgent = true;
+		private bool _doNotAutoDeployAgent = true;
 
-		public bool AutoDeployAgent
+		public bool DoNotAutoDeployAgent
 		{
-			get { return _autoDeployAgent; }
-			set { _autoDeployAgent = value; }
+			get { return _doNotAutoDeployAgent; }
+			set { _doNotAutoDeployAgent = value; }
 		}
 
 		public bool IsValid(Notification notification)

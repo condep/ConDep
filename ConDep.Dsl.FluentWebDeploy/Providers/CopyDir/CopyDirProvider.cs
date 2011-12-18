@@ -7,9 +7,9 @@ namespace ConDep.Dsl.FluentWebDeploy
 	{
 		private const string NAME = "dirPath";
 
-		public CopyDirProvider(string sourcePath)
+		public CopyDirProvider(string sourceDir)
 		{
-			SourcePath = sourcePath;
+			SourcePath = sourceDir;
 		}
 
 		public override string Name

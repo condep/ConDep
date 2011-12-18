@@ -7,9 +7,11 @@ namespace ConDep.Dsl.FluentWebDeploy
 	{
 		private const string NAME = "iisApp";
 
-		public WebAppProvider(string sourcePath)
+		public WebAppProvider(string sourceDir, string webAppName, string destinationWebSiteName)
 		{
-			SourcePath = sourcePath;
+			SourcePath = sourceDir;
+		    DestinationAppName = webAppName;
+		    DestinationWebSite = destinationWebSiteName;
 		}
 
 		public string DestinationWebSite { get; set; }

@@ -1,4 +1,3 @@
-using System;
 using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 using Microsoft.Web.Deployment;
 
@@ -25,12 +24,20 @@ namespace ConDep.Dsl.FluentWebDeploy
 
 		public override DeploymentProviderOptions GetWebDeployDestinationObject()
 		{
-			return new DeploymentProviderOptions(Name) { Path = DestinationPath };
+			var destProviderOptions = new DeploymentProviderOptions(Name) { Path = DestinationPath };
+        
+            //DeploymentProviderSetting dontUseCmdExe;
+            //if (destProviderOptions.ProviderSettings.TryGetValue("dontUseCommandExe", out dontUseCmdExe))
+            //{
+            //    dontUseCmdExe.Value = true;
+            //}
+		    return destProviderOptions;
 		}
 
 		public override bool IsValid(Notification notification)
 		{
-			throw new NotImplementedException();
+			return !string.IsNullOrWhiteSpace(DestinationPath) ||
+                string.IsNullOrWhiteSpace(SourcePath);
 		}
 	}
 }

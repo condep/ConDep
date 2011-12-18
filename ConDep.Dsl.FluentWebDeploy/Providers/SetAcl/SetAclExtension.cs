@@ -5,10 +5,10 @@ namespace ConDep.Dsl.FluentWebDeploy
 {
 	public static class SetAclExtension
 	{
-		public static void SetAcl(this ProviderCollectionBuilder providerCollectionBuilder, string path, Action<SetAclBuilder> configuration)
+		public static void SetAcl(this ProviderCollectionBuilder providerCollectionBuilder, string path, Action<SetAclOptions> options)
 		{
 			var setAclProvider = new SetAclProvider(path);
-			configuration(new SetAclBuilder(setAclProvider));
+			options(new SetAclOptions(setAclProvider));
 			providerCollectionBuilder.AddProvider(setAclProvider);
 		}
 	}

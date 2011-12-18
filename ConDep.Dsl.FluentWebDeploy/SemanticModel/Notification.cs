@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,5 +22,10 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 		{
 			return _validationErrors.Any(e => e.ErrorType == errorType);
 		}
+
+	    public void Throw()
+	    {
+	        throw _validationErrors.Aggregate<SemanticValidationError, Exception>(null, (current, error) => new Exception(error.Message, current));
+	    }
 	}
 }

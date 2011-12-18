@@ -5,10 +5,10 @@ namespace ConDep.Dsl.FluentWebDeploy
 {
 	public static class CopyFileExtension
 	{
-		public static void CopyFile(this ProviderCollectionBuilder providerCollectionBuilder, string path, Action<CopyFileBuilder> configuration)
+		public static void CopyFile(this ProviderCollectionBuilder providerCollectionBuilder, string path, Action<CopyFileOptions> options)
 		{
 			var copyFileProvider = new CopyFileProvider(path);
-			configuration(new CopyFileBuilder(copyFileProvider));
+			options(new CopyFileOptions(copyFileProvider));
 			providerCollectionBuilder.AddProvider(copyFileProvider);
 		}
 	}

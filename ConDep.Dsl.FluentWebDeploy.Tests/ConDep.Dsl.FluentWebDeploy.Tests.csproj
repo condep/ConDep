@@ -60,7 +60,7 @@
     <Compile Include="Providers\Certificate.cs" />
     <Compile Include="Providers\CopyDir.cs" />
     <Compile Include="Providers\CopyFile.cs" />
-    <Compile Include="Providers\PowerShell.cs" />
+    <Compile Include="CompositeProviders\PowerShell.cs" />
     <Compile Include="Providers\SetAcl.cs" />
     <Compile Include="Providers\WebApp.cs" />
     <Compile Include="ProviderTestFixture.cs" />

@@ -10,12 +10,5 @@ namespace ConDep.Dsl.FluentWebDeploy
             var powerShellProvider = new PowerShellProvider(command);
             providerCollectionBuilder.AddProvider(powerShellProvider);
         }
-
-        public static void PowerShell(this ProviderCollectionBuilder providerCollectionBuilder, string command, Action<PowerShellBuilder> configuration)
-        {
-            var powerShellProvider = new PowerShellProvider(command);
-	        configuration(new PowerShellBuilder(powerShellProvider));
-			providerCollectionBuilder.AddProvider(powerShellProvider);
-        }
     }
 }

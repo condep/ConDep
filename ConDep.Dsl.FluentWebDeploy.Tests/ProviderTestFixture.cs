@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ConDep.Dsl.FluentWebDeploy.Builders;
 using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 using NUnit.Framework;
 
-namespace ConDep.WebDeploy.Dsl.Tests
+namespace ConDep.Dsl.FluentWebDeploy.Tests
 {
 	[TestFixture]
 	public abstract class ProviderTestFixture<TProvider> : SimpleTestFixture where TProvider : class, IProvide

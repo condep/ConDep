@@ -5,10 +5,6 @@ namespace ConDep.Dsl.FluentWebDeploy.Deployment
 {
 	public interface IWebDeploy
 	{
-		event EventHandler<WebDeployMessageEventArgs> Output;
-		event EventHandler<WebDeployMessageEventArgs> OutputError;
-
-		void Deploy(WebDeployDefinition webDeployDefinition);
-		void Delete(WebDeployDefinition webDeployDefinition);
+        DeploymentStatus Deploy(WebDeployDefinition webDeployDefinition, Action<object, WebDeployMessageEventArgs> output, Action<object, WebDeployMessageEventArgs> outputError);
 	}
 }

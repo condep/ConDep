@@ -1,8 +1,7 @@
 using System.Security.AccessControl;
-using ConDep.Dsl.FluentWebDeploy;
 using NUnit.Framework;
 
-namespace ConDep.WebDeploy.Dsl.Tests.Providers
+namespace ConDep.Dsl.FluentWebDeploy.Tests.Providers
 {
 	public class when_using_set_acl_provider : ProviderTestFixture<SetAclProvider>
 	{

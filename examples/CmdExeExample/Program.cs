@@ -16,11 +16,7 @@ namespace TestWebDeployApp
                           .From.Server(Settings.FromServer, c => c
 									  .WithUserName("asdf")
 									  .WithPassword("asdf"))
-								  
-                          .UsingProvider(p => p.WebApp(Settings.WebAppName, c => c
-                                                  .AddToRemoteWebsite(Settings.RemoteWebSite)
-                                                  .WithRemoteAppName(Settings.RemoteWebApp)))
-
+                          .UsingProvider(p => p.WebApp(Settings.WebAppName, Settings.RemoteWebApp, Settings.RemoteWebSite))
                           .To.Server(Settings.ToServer));
         }
     }

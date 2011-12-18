@@ -1,21 +1,19 @@
-﻿using System.Threading;
-using ConDep.Dsl.FluentWebDeploy;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
-namespace ConDep.WebDeploy.Dsl.Tests.Providers
+namespace ConDep.Dsl.FluentWebDeploy.Tests.Providers
 {
 	public class when_using_copy_dir_provider : ProviderTestFixture<CopyDirProvider>
 	{
 		protected override void When()
 		{
 			Providers
-				.CopyDir(SourcePath, c => c.SetRemotePathTo(DestinationPath));
+				.CopyDir(SourceDir, c => c.DestinationDir(DestinationPath));
 		}
 
 		[Test]
 		public void should_have_valid_source_path()
 		{
-			Assert.That(SourcePath, Is.EqualTo(Provider.SourcePath));
+			Assert.That(SourceDir, Is.EqualTo(Provider.SourcePath));
 		}
 
 		[Test]
@@ -24,7 +22,7 @@ namespace ConDep.WebDeploy.Dsl.Tests.Providers
 			Assert.That(DestinationPath, Is.EqualTo(Provider.DestinationPath));
 		}
 
-		public string SourcePath
+		public string SourceDir
 		{
 			get
 			{

@@ -1,8 +1,6 @@
-using ConDep.Dsl.FluentWebDeploy;
-using Microsoft.Web.Deployment;
 using NUnit.Framework;
 
-namespace ConDep.WebDeploy.Dsl.Tests.Providers
+namespace ConDep.Dsl.FluentWebDeploy.Tests.Providers
 {
 	public class when_using_certificate_provider : ProviderTestFixture<CertficiateProvider>
 	{

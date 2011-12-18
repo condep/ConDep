@@ -11,7 +11,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace ConDep.Dsl.FluentWebDeploy.Specs
+namespace ConDep.Dsl.FluentWebDeploy.Specs.Features
 {
     using TechTalk.SpecFlow;
     

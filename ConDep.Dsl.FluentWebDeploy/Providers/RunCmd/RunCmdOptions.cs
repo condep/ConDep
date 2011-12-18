@@ -1,15 +1,15 @@
 namespace ConDep.Dsl.FluentWebDeploy
 {
-	public class RunCmdBuilder
+	public class RunCmdOptions
 	{
 		private readonly RunCmdProvider _provider;
 
-		public RunCmdBuilder(RunCmdProvider provider)
+		public RunCmdOptions(RunCmdProvider provider)
 		{
 			_provider = provider;
 		}
 
-		public RunCmdBuilder WaitIntervalInSeconds(int waitInterval)
+		public RunCmdOptions WaitIntervalInSeconds(int waitInterval)
 		{
 			_provider.WaitInterval = waitInterval;
 			return this;

@@ -1,6 +1,6 @@
 using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 
-namespace ConDep.WebDeploy.Dsl.Tests
+namespace ConDep.Dsl.FluentWebDeploy.Tests
 {
 	public abstract class SemanticTestFixture : SimpleTestFixture
 	{

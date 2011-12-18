@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 
-namespace ConDep.WebDeploy.Dsl.Tests
+namespace ConDep.Dsl.FluentWebDeploy.Tests
 {
 	[TestFixture]
 	public abstract class SimpleTestFixture : IDisposable
