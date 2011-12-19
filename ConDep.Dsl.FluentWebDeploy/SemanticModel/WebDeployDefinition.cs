@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using ConDep.Dsl.FluentWebDeploy.Deployment;
 
 namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
@@ -18,8 +20,14 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 		private readonly Destination _destination = new Destination();
 		private readonly Configuration _configuration = new Configuration();
 		private readonly List<IProvide> _providers = new List<IProvide>();
+	    private WebDeploy _webDeploy;
 
-		public Source Source
+	    public WebDeployDefinition()
+        {
+            _webDeploy = new WebDeploy(this);
+        }
+
+        public Source Source
 		{
 			get { return _source; }
 		}
@@ -52,5 +60,11 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 			_configuration.IsValid(notification);
 			_providers.ForEach(p => p.IsValid(notification));
 		}
+
+        public DeploymentStatus Sync(Action<object, WebDeployMessageEventArgs> output, Action<object, WebDeployMessageEventArgs> outputError)
+        {
+            return _webDeploy.Sync(output, outputError);
+        }
+
 	}
 }

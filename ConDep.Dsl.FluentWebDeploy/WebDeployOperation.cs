@@ -8,13 +8,11 @@ namespace ConDep.Dsl.FluentWebDeploy
 	public abstract class WebDeployOperation
 	{
 		private readonly WebDeployDefinition _definition;
-		private readonly IWebDeploy _webDeployer;
 	    private Notification _notification;
 
 	    protected WebDeployOperation()
 		{
 			_definition = new WebDeployDefinition();
-			_webDeployer = new WebDeploy();
 		    _notification = new Notification();
 		}
 
@@ -25,7 +23,7 @@ namespace ConDep.Dsl.FluentWebDeploy
             {
                 _notification.Throw();
             }
-			return _webDeployer.Deploy(_definition, OnWebDeployMessage, OnWebDeployErrorMessage);
+		    return _definition.Sync(OnWebDeployMessage, OnWebDeployErrorMessage);
 		}
 
 		protected abstract void OnWebDeployMessage(object sender, WebDeployMessageEventArgs e);
