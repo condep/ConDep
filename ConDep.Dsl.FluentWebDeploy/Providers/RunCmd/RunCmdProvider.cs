@@ -1,3 +1,4 @@
+using System;
 using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 using Microsoft.Web.Deployment;
 
@@ -5,7 +6,8 @@ namespace ConDep.Dsl.FluentWebDeploy
 {
 	public class RunCmdProvider : Provider
 	{
-		private const string NAME = "runCommand";
+        private Exception _untrappedExitCodeException;
+        private const string NAME = "runCommand";
 
 		public RunCmdProvider(string command)
 		{
@@ -39,5 +41,37 @@ namespace ConDep.Dsl.FluentWebDeploy
 			return !string.IsNullOrWhiteSpace(DestinationPath) ||
                 string.IsNullOrWhiteSpace(SourcePath);
 		}
+
+        public override Deployment.DeploymentStatus Sync(Deployment.WebDeployOptions webDeployOptions, Deployment.DeploymentStatus deploymentStatus)
+        {
+            try
+            {
+                webDeployOptions.DestBaseOptions.Trace += CheckForUntrappedRunCommandExitCodes;
+                base.Sync(webDeployOptions, deploymentStatus);
+            }
+            finally
+            {
+                webDeployOptions.DestBaseOptions.Trace -= CheckForUntrappedRunCommandExitCodes;
+
+                if (_untrappedExitCodeException != null)
+                {
+                    throw _untrappedExitCodeException;
+                }
+            }
+            return deploymentStatus;
+        }
+
+        void CheckForUntrappedRunCommandExitCodes(object sender, DeploymentTraceEventArgs e)
+        {
+            //Terrible hack to trap exit codes that the WebDeploy runCommand ignores!
+            if (e.Message.Contains("exited with code "))
+            {
+                if (!e.Message.Contains("exited with code '0x0'"))
+                {
+                    _untrappedExitCodeException = new Exception(e.Message, _untrappedExitCodeException);
+                }
+            }
+        }
+
 	}
 }
