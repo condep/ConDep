@@ -56,6 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyVersionInfo.cs">
+      <Link>Properties\AssemblyVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="CompositeProviders\NServiceBus.cs" />
     <Compile Include="Providers\Certificate.cs" />
     <Compile Include="Providers\CopyDir.cs" />
