@@ -8,9 +8,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ConDep.Dsl.FluentWebDeploy.Specs")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("ConDep.Dsl.FluentWebDeploy.Specs")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

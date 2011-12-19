@@ -8,9 +8,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ConDep.WebDeploy.Configuration.Dsl.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("ConDep.WebDeploy.Configuration.Dsl.Tests")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
