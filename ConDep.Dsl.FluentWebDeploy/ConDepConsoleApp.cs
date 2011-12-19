@@ -155,7 +155,7 @@ namespace ConDep.Dsl.FluentWebDeploy
 
 	}
 
-	internal class CmdParam
+	internal sealed class CmdParam
 	{
 		public string ParamName { get; set; }
 		public string ParamValue { get; set; }

@@ -68,4 +68,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{875FC631-3060-499C-BFA4-B82373ADE135} = {33CD345E-45E2-4282-978B-DE29B1E0C23C}
 	EndGlobalSection
+	GlobalSection(NDepend) = preSolution
+		Project = ".\ConDep.Dsl.FluentWebDeploy.ndproj"
+	EndGlobalSection
 EndGlobal

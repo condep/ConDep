@@ -22,42 +22,54 @@ namespace ConDep.Dsl.FluentWebDeploy.Deployment
             _outputError = outputError;
 
             var deploymentStatus = new DeploymentStatus();
-            DeploymentBaseOptions destBaseOptions = null;
+            WebDeployOptions options = null;
 
             try
             {
-                var syncOptions = new DeploymentSyncOptions();
-                var sourceBaseOptions = _definition.Source.GetSourceBaseOptions();
-
-                destBaseOptions = _definition.Destination.GetDestinationBaseOptions();
-                destBaseOptions.TempAgent = !_definition.Configuration.DoNotAutoDeployAgent;
-                destBaseOptions.Trace += OnWebDeployTraceMessage;
-                destBaseOptions.TraceLevel = TraceLevel.Verbose;
+                options = ConfigureAllWebDeployOptions();
 
                 foreach (var provider in _definition.Providers)
                 {
-                    var options = new WebDeployOptions(sourceBaseOptions, destBaseOptions, syncOptions);
                     provider.Sync(options, deploymentStatus);
                 }
             }
             catch (Exception ex)
             {
-                deploymentStatus.AddUntrappedException(ex);
-                var message = GetCompleteExceptionMessage(ex);
-
-                if(_outputError != null)
-                {
-                    _outputError(this, new WebDeployMessageEventArgs { Message = message, Level = TraceLevel.Error });
-                }
+                HandleSyncException(deploymentStatus, ex);
             }
             finally
             {
-                if (destBaseOptions != null) destBaseOptions.Trace -= OnWebDeployTraceMessage;
+                if (options != null && options.DestBaseOptions != null) options.DestBaseOptions.Trace -= OnWebDeployTraceMessage;
             }
 
             return deploymentStatus;
         }
 
+        private void HandleSyncException(DeploymentStatus deploymentStatus, Exception ex)
+        {
+            deploymentStatus.AddUntrappedException(ex);
+            var message = GetCompleteExceptionMessage(ex);
+
+            if(_outputError != null)
+            {
+                _outputError(this, new WebDeployMessageEventArgs { Message = message, Level = TraceLevel.Error });
+            }
+        }
+
+        WebDeployOptions ConfigureAllWebDeployOptions()
+        {
+            DeploymentBaseOptions destBaseOptions = null;
+
+            var syncOptions = new DeploymentSyncOptions();
+            var sourceBaseOptions = _definition.Source.GetSourceBaseOptions();
+
+            destBaseOptions = _definition.Destination.GetDestinationBaseOptions();
+            destBaseOptions.TempAgent = !_definition.Configuration.DoNotAutoDeployAgent;
+            destBaseOptions.Trace += OnWebDeployTraceMessage;
+            destBaseOptions.TraceLevel = TraceLevel.Verbose;
+
+            return new WebDeployOptions(sourceBaseOptions, destBaseOptions, syncOptions);
+        }
 
         void OnWebDeployTraceMessage(object sender, DeploymentTraceEventArgs e)
         {

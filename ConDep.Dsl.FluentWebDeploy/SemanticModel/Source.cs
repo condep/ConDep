@@ -4,7 +4,7 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
 	public class Source : IWebDeployModel
 	{
-		private Credentials _credentials = new Credentials();
+		private readonly Credentials _credentials = new Credentials();
 
 		public string ComputerName { get; set; }
 		public bool LocalHost { get; set; }

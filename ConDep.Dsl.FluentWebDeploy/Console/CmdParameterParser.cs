@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ConDep.Dsl.FluentWebDeploy.Console
 {
-	internal abstract class CmdParameterParser
+	internal static class CmdParameterParser
 	{
 		private const char DOUBLE_QUOTE_CHAR = '"';
 		private const char SINGLE_QUOTE_CHAR = '\'';

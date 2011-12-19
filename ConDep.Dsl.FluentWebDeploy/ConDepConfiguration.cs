@@ -14,11 +14,10 @@ namespace ConDep.Dsl.FluentWebDeploy
 		{
 			foreach (var property in GetType().GetProperties())
 			{
-				if (property.IsDefined(typeof(DefaultValueAttribute), false))
-				{
-					var attrib = property.GetCustomAttributes(typeof(DefaultValueAttribute), false).FirstOrDefault() as DefaultValueAttribute;
-					property.SetValue(this, attrib.Value, null);
-				}
+			    if (!property.IsDefined(typeof (DefaultValueAttribute), false)) continue;
+			    
+                var attrib = property.GetCustomAttributes(typeof(DefaultValueAttribute), false).FirstOrDefault() as DefaultValueAttribute;
+			    property.SetValue(this, attrib.Value, null);
 			}
 		}
 		 

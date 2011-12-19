@@ -6,7 +6,7 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
 	public class Notification
 	{
-		private List<SemanticValidationError> _validationErrors = new List<SemanticValidationError>();
+		private readonly List<SemanticValidationError> _validationErrors = new List<SemanticValidationError>();
 
 		public bool HasErrors
 		{

@@ -8,7 +8,7 @@ namespace ConDep.Dsl.FluentWebDeploy
 	public abstract class WebDeployOperation
 	{
 		private readonly WebDeployDefinition _definition;
-	    private Notification _notification;
+	    private readonly Notification _notification;
 
 	    protected WebDeployOperation()
 		{

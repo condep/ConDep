@@ -29,6 +29,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -104,6 +105,7 @@
     <Compile Include="Providers\SetAcl\SetAclProvider.cs" />
     <Compile Include="SemanticModel\SemanticValidationError.cs" />
     <Compile Include="SemanticModel\Source.cs" />
+    <Compile Include="SemanticModel\ValidationErrorType.cs" />
     <Compile Include="SemanticModel\WebDeployDefinition.cs" />
     <Compile Include="Providers\WebApp\WebAppProvider.cs" />
     <Compile Include="Deployment\WebDeployMessageEventArgs.cs" />

@@ -4,23 +4,13 @@ using ConDep.Dsl.FluentWebDeploy.Deployment;
 
 namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
-	public enum ValidationErrorType
-	{
-		NoProviders,
-		NoSource,
-		NoDestination,
-		NoSourcePathForProvider,
-		NoDestinationPathForProvider,
-		Configuration
-	}
-
-	public class WebDeployDefinition : IWebDeployModel
+    public class WebDeployDefinition : IWebDeployModel
 	{
 		private readonly Source _source = new Source();
 		private readonly Destination _destination = new Destination();
 		private readonly Configuration _configuration = new Configuration();
 		private readonly List<IProvide> _providers = new List<IProvide>();
-	    private WebDeploy _webDeploy;
+	    private readonly WebDeploy _webDeploy;
 
 	    public WebDeployDefinition()
         {

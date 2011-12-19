@@ -2,7 +2,8 @@ using System;
 
 namespace ConDep.Dsl.FluentWebDeploy.Console
 {
-	public class CmdParamAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Field)]
+	public sealed class CmdParamAttribute : Attribute
 	{
 	    private readonly bool _mandatory;
 
