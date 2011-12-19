@@ -53,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Deployment\DeploymentStatus.cs" />
-    <Compile Include="Deployment\ProviderSync.cs" />
     <Compile Include="Deployment\WebDeployOptions.cs" />
     <Compile Include="Deployment\WebDeploySync.cs" />
     <Compile Include="Providers\General\GeneralProviderOptions.cs" />

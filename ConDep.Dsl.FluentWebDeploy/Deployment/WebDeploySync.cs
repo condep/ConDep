@@ -20,7 +20,6 @@ namespace ConDep.Dsl.FluentWebDeploy.Deployment
 
         public DeploymentStatus Execute()
         {
-            var providerSync = new ProviderSync();
             var deploymentStatus = new DeploymentStatus();
             DeploymentBaseOptions destBaseOptions = null;
 
@@ -37,7 +36,7 @@ namespace ConDep.Dsl.FluentWebDeploy.Deployment
                 foreach (var provider in _definition.Providers)
                 {
                     var options = new WebDeployOptions(sourceBaseOptions, destBaseOptions, syncOptions);
-                    providerSync.Execute(provider, options, deploymentStatus);
+                    provider.Execute(options, deploymentStatus);
                 }
             }
             catch (Exception ex)

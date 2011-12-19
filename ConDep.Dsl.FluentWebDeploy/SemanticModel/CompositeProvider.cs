@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ConDep.Dsl.FluentWebDeploy.Builders;
+using ConDep.Dsl.FluentWebDeploy.Deployment;
 
 namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
@@ -24,5 +25,13 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 			action(new ProviderCollectionBuilder(_childProviders));
 		}
 
+        public DeploymentStatus Execute(WebDeployOptions webDeployOptions, DeploymentStatus deploymentStatus)
+        {
+            foreach (var childProvider in ChildProviders)
+            {
+                childProvider.Execute(webDeployOptions, deploymentStatus);
+            }
+            return deploymentStatus;
+        }
 	}
 }
