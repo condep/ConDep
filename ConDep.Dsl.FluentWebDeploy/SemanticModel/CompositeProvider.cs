@@ -25,11 +25,11 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 			action(new ProviderCollectionBuilder(_childProviders));
 		}
 
-        public DeploymentStatus Execute(WebDeployOptions webDeployOptions, DeploymentStatus deploymentStatus)
+        public DeploymentStatus Sync(WebDeployOptions webDeployOptions, DeploymentStatus deploymentStatus)
         {
             foreach (var childProvider in ChildProviders)
             {
-                childProvider.Execute(webDeployOptions, deploymentStatus);
+                childProvider.Sync(webDeployOptions, deploymentStatus);
             }
             return deploymentStatus;
         }

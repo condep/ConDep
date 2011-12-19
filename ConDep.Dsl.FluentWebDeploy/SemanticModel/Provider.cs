@@ -17,7 +17,7 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 		public abstract DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions);
 		public abstract bool IsValid(Notification notification);
 
-        public DeploymentStatus Execute(WebDeployOptions webDeployOptions, DeploymentStatus deploymentStatus)
+        public DeploymentStatus Sync(WebDeployOptions webDeployOptions, DeploymentStatus deploymentStatus)
         {
             try
             {

@@ -7,6 +7,6 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
     {
         bool IsValid(Notification notification);
 		int WaitInterval { get; set; }
-        DeploymentStatus Execute(WebDeployOptions webDeployOptions, DeploymentStatus deploymentStatus);
+        DeploymentStatus Sync(WebDeployOptions webDeployOptions, DeploymentStatus deploymentStatus);
     }
 }

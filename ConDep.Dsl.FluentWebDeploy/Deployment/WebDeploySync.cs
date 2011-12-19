@@ -36,7 +36,7 @@ namespace ConDep.Dsl.FluentWebDeploy.Deployment
                 foreach (var provider in _definition.Providers)
                 {
                     var options = new WebDeployOptions(sourceBaseOptions, destBaseOptions, syncOptions);
-                    provider.Execute(options, deploymentStatus);
+                    provider.Sync(options, deploymentStatus);
                 }
             }
             catch (Exception ex)
