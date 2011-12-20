@@ -6,7 +6,7 @@ using System.Security;
 using System.Reflection;
 using System.Collections.Generic;
 using ConDep.Dsl.FluentWebDeploy.Console;
-using ConDep.Dsl.FluentWebDeploy.Deployment;
+using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 
 namespace ConDep.Dsl.FluentWebDeploy
 {

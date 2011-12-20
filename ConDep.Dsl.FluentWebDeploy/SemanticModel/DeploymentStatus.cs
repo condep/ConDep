@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Web.Deployment;
 
-namespace ConDep.Dsl.FluentWebDeploy.Deployment
+namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
     public class DeploymentStatus
     {

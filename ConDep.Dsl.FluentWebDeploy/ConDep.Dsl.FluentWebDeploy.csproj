@@ -56,9 +56,8 @@
     <Compile Include="..\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
-    <Compile Include="Deployment\DeploymentStatus.cs" />
-    <Compile Include="Deployment\WebDeployOptions.cs" />
-    <Compile Include="Deployment\WebDeploy.cs" />
+    <Compile Include="SemanticModel\DeploymentStatus.cs" />
+    <Compile Include="SemanticModel\WebDeployOptions.cs" />
     <Compile Include="Providers\General\GeneralProviderOptions.cs" />
     <Compile Include="Builders\FromBuilder.cs" />
     <Compile Include="Builders\ToBuilder.cs" />
@@ -108,7 +107,7 @@
     <Compile Include="SemanticModel\ValidationErrorType.cs" />
     <Compile Include="SemanticModel\WebDeployDefinition.cs" />
     <Compile Include="Providers\WebApp\WebAppProvider.cs" />
-    <Compile Include="Deployment\WebDeployMessageEventArgs.cs" />
+    <Compile Include="SemanticModel\WebDeployMessageEventArgs.cs" />
     <Compile Include="WebDeployOperation.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using ConDep.Dsl.FluentWebDeploy.Deployment;
+using System.Diagnostics;
+using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
@@ -10,12 +11,9 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 		private readonly Destination _destination = new Destination();
 		private readonly Configuration _configuration = new Configuration();
 		private readonly List<IProvide> _providers = new List<IProvide>();
-	    private readonly WebDeploy _webDeploy;
 
-	    public WebDeployDefinition()
-        {
-            _webDeploy = new WebDeploy(this);
-        }
+		private Action<object, WebDeployMessageEventArgs> _output;
+		private Action<object, WebDeployMessageEventArgs> _outputError;
 
         public Source Source
 		{
@@ -53,8 +51,86 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 
         public DeploymentStatus Sync(Action<object, WebDeployMessageEventArgs> output, Action<object, WebDeployMessageEventArgs> outputError)
         {
-            return _webDeploy.Sync(output, outputError);
-        }
+			  _output = output;
+			  _outputError = outputError;
+
+			  var deploymentStatus = new DeploymentStatus();
+			  WebDeployOptions options = null;
+
+			  try
+			  {
+				  options = GetWebDeployOptions();
+
+				  foreach (var provider in Providers)
+				  {
+					  provider.Sync(options, deploymentStatus);
+				  }
+			  }
+			  catch (Exception ex)
+			  {
+				  HandleSyncException(deploymentStatus, ex);
+			  }
+			  finally
+			  {
+				  if (options != null && options.DestBaseOptions != null) options.DestBaseOptions.Trace -= OnWebDeployTraceMessage;
+			  }
+
+			  return deploymentStatus;
+		  }
+
+		  WebDeployOptions GetWebDeployOptions()
+		  {
+			  DeploymentBaseOptions destBaseOptions = null;
+
+			  var syncOptions = new DeploymentSyncOptions();
+			  var sourceBaseOptions = Source.GetSourceBaseOptions();
+
+			  destBaseOptions = Destination.GetDestinationBaseOptions();
+			  destBaseOptions.TempAgent = !Configuration.DoNotAutoDeployAgent;
+			  destBaseOptions.Trace += OnWebDeployTraceMessage;
+			  destBaseOptions.TraceLevel = TraceLevel.Verbose;
+
+			  return new WebDeployOptions(sourceBaseOptions, destBaseOptions, syncOptions);
+		  }
+
+		  private void HandleSyncException(DeploymentStatus deploymentStatus, Exception ex)
+		  {
+			  deploymentStatus.AddUntrappedException(ex);
+			  var message = GetCompleteExceptionMessage(ex);
+
+			  if (_outputError != null)
+			  {
+				  _outputError(this, new WebDeployMessageEventArgs { Message = message, Level = TraceLevel.Error });
+			  }
+		  }
+
+		  void OnWebDeployTraceMessage(object sender, DeploymentTraceEventArgs e)
+		  {
+			  if (e.EventLevel == TraceLevel.Error)
+			  {
+				  if (_outputError != null)
+				  {
+					  _outputError(this, new WebDeployMessageEventArgs { Message = e.Message, Level = e.EventLevel });
+				  }
+			  }
+			  else
+			  {
+				  if (_output != null)
+				  {
+					  _output(this, new WebDeployMessageEventArgs { Message = e.Message, Level = e.EventLevel });
+				  }
+			  }
+		  }
+
+		  private string GetCompleteExceptionMessage(Exception exception)
+		  {
+			  var message = exception.Message;
+			  if (exception.InnerException != null)
+			  {
+				  message += "\n" + GetCompleteExceptionMessage(exception.InnerException);
+			  }
+			  return message;
+		  }
 
 	}
 }

@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using ConDep.Dsl.FluentWebDeploy.Deployment;
+using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 using NUnit.Framework;
 using TechTalk.SpecFlow;
 

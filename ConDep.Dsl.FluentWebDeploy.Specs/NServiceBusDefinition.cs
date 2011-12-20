@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using ConDep.Dsl.FluentWebDeploy.Deployment;
+using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 using NUnit.Framework;
 using TechTalk.SpecFlow;
 
@@ -13,8 +13,6 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
     [Binding]
     public class NServiceBusDefinition
     {
-    	private NServiceBusExecutor _deployer;
-
     	[Given(@"I have fluently described how to deploy the NServiceBus project")]
         public void GivenIHaveFluentlyDescribedHowToDeployTheNServiceBusProject()
         {

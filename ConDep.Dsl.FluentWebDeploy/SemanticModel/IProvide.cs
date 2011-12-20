@@ -1,5 +1,4 @@
-﻿using ConDep.Dsl.FluentWebDeploy.Deployment;
-using Microsoft.Web.Deployment;
+﻿using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {

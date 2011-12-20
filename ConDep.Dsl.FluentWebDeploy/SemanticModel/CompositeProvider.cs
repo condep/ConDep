@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using ConDep.Dsl.FluentWebDeploy.Builders;
-using ConDep.Dsl.FluentWebDeploy.Deployment;
 
 namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {

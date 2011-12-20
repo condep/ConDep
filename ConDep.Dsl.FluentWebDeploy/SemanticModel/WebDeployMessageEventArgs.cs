@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace ConDep.Dsl.FluentWebDeploy.Deployment
+namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
 	public class WebDeployMessageEventArgs : EventArgs
 	{

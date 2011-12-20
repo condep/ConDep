@@ -42,7 +42,7 @@ namespace ConDep.Dsl.FluentWebDeploy
                 string.IsNullOrWhiteSpace(SourcePath);
 		}
 
-        public override Deployment.DeploymentStatus Sync(Deployment.WebDeployOptions webDeployOptions, Deployment.DeploymentStatus deploymentStatus)
+        public override DeploymentStatus Sync(WebDeployOptions webDeployOptions, DeploymentStatus deploymentStatus)
         {
             try
             {
