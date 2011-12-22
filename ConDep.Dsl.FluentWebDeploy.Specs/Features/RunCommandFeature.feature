@@ -5,12 +5,14 @@
 
 Scenario: Retreiving date successfully
 	Given the WebDeploy Agent Service is running 
-	And I have entered the command date /t
-	When I execute my Run Command
+	And I am using the RunCommand provider
+	And I have entered the command ipconfig /all
+	When I execute my DSL
 	Then I would expect no errors
 
 Scenario: Exit codes greater than 0 should trigger exceptions
 	Given the WebDeploy Agent Service is running 
+	And I am using the RunCommand provider
 	And I have entered the command bogus
-	When I execute my Run Command
+	When I execute my DSL
 	Then I would expect an exit code error

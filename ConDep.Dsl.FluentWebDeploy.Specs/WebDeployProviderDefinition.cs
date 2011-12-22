@@ -8,18 +8,21 @@ using TechTalk.SpecFlow;
 namespace ConDep.Dsl.FluentWebDeploy.Specs
 {
     [Binding]
-    public class RunCommandDefinition
+    public class WebDeployProviderDefinition
     {
         private string _command;
-        private RunCmdExecutor _executor;
+        private IExecuteWebDeploy _executor;
+        private string _provider;
 
         [Given(@"the WebDeploy Agent Service is running")]
         public void GivenTheWebDeployAgentServiceIsRunning()
         {
-            var controller = new ServiceController("MsDepSvc");
-            if(controller.Status != ServiceControllerStatus.Running)
+            using(var controller = new ServiceController("MsDepSvc"))
             {
-                throw new Exception("The WebDeploy Agent Service is not running.");
+                if (controller.Status != ServiceControllerStatus.Running)
+                {
+                    throw new Exception("The WebDeploy Agent Service is not running.");
+                }
             }
         }
 
@@ -29,10 +32,26 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
             _command = command;
         }
 
-        [When(@"I execute my Run Command")]
-        public void WhenIExecuteMyRunCommand()
+        [Given(@"I am using the (.*) provider")]
+        public void GivenIAmUsingTheProvider(string provider)
         {
-            _executor = new RunCmdExecutor(_command);
+            _provider = provider;
+        }
+
+        [When(@"I execute my DSL")]
+        public void WhenIExecuteMyDSL()
+        {
+            switch (_provider.ToLower())
+            {
+                case "powershell":
+                    _executor = new PowerShellExecutor(_command);
+                    break;
+                case "runcommand":
+                    _executor = new RunCmdExecutor(_command);
+                    break;
+                default:
+                    throw new Exception("Provider not known!");
+            }
         }
 
         [Then(@"I would expect no errors")]
@@ -46,9 +65,20 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
         {
             Assert.That(_executor.DeploymentStatus.HasExitCodeErrors, Is.True);
         }
+
+        [Then(@"an exception should occour")]
+        public void ThenAnExceptionShouldOccour()
+        {
+            Assert.That(_executor.DeploymentStatus.HasErrors);
+        }
     }
 
-    public class RunCmdExecutor : WebDeployOperation
+    public interface IExecuteWebDeploy
+    {
+        DeploymentStatus DeploymentStatus { get; }
+    }
+
+    public class RunCmdExecutor : WebDeployOperation, IExecuteWebDeploy
     {
         private readonly DeploymentStatus _deploymentStatus;
 
@@ -78,5 +108,4 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
         }
 
     }
-
 }

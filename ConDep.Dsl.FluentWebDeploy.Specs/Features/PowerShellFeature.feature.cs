@@ -32,9 +32,8 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs.Features
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "FowerShell Provider", "In order to execute powershell commands and scripts from WebDeploy\r\nAs a PowerShe" +
-                    "ll fanatic\r\nI want all my powershell commands and scripts to execute as expected" +
-                    "", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "FowerShell Provider", "In order to execute powershell commands from WebDeploy\r\nAs a PowerShell fanatic\r\n" +
+                    "I want all my powershell commands to execute as expected", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -76,11 +75,34 @@ this.ScenarioSetup(scenarioInfo);
 #line 7
  testRunner.Given("the WebDeploy Agent Service is running");
 #line 8
- testRunner.And("I have provided the powershell command Exit 1 to the powershell provider");
+ testRunner.And("I am using the PowerShell provider");
 #line 9
- testRunner.When("I execute my DSL");
+ testRunner.And("I have entered the command Exit 1");
 #line 10
+ testRunner.When("I execute my DSL");
+#line 11
  testRunner.Then("an exception should occour");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Execute Get-Date PowerShell command")]
+        public virtual void ExecuteGet_DatePowerShellCommand()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Execute Get-Date PowerShell command", ((string[])(null)));
+#line 13
+this.ScenarioSetup(scenarioInfo);
+#line 14
+ testRunner.Given("the WebDeploy Agent Service is running");
+#line 15
+ testRunner.And("I am using the PowerShell provider");
+#line 16
+ testRunner.And("I have entered the command Get-Date");
+#line 17
+ testRunner.When("I execute my DSL");
+#line 18
+ testRunner.Then("I would expect no errors");
 #line hidden
             this.ScenarioCleanup();
         }

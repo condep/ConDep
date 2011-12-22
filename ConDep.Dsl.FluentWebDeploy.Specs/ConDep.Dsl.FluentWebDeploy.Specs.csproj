@@ -56,14 +56,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>NServiceBusProvider.feature</DependentUpon>
     </Compile>
-    <Compile Include="PowerShellDefinition.cs" />
+    <Compile Include="PowerShellExecutor.cs" />
     <Compile Include="Features\PowerShellFeature.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PowerShellFeature.feature</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RunCommandDefinition.cs" />
+    <Compile Include="WebDeployProviderDefinition.cs" />
     <Compile Include="Features\RunCommandFeature.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

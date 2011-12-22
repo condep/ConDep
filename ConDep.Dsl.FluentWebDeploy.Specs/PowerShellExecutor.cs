@@ -1,37 +1,9 @@
 ﻿using System.Diagnostics;
 using ConDep.Dsl.FluentWebDeploy.SemanticModel;
-using NUnit.Framework;
-using TechTalk.SpecFlow;
 
 namespace ConDep.Dsl.FluentWebDeploy.Specs
 {
-    [Binding]
-    public class PowerShellDefinition
-    {
-        private string _command;
-        private PowerShellExecutor _executor;
-
-        [Given(@"I have provided the powershell command (.*) to the powershell provider")]
-        public void GivenIHaveProvidedThePowershellCommandGet_DateToThePowershellProvider(string command)
-        {
-            _command = command;
-        }
-        
-        [When(@"I execute my DSL")]
-        public void WhenIExecuteMyDSL()
-        {
-            _executor = new PowerShellExecutor(_command);
-        }
-
-        [Then(@"an exception should occour")]
-        public void ThenAnExceptionShouldOccour()
-        {
-            Assert.That(_executor.DeploymentStatus.HasErrors);
-        }
-
-    }
-
-    public class PowerShellExecutor : WebDeployOperation
+    public class PowerShellExecutor : WebDeployOperation, IExecuteWebDeploy
     {
         private readonly DeploymentStatus _deploymentStatus;
 

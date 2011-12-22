@@ -75,10 +75,12 @@ this.ScenarioSetup(scenarioInfo);
 #line 7
  testRunner.Given("the WebDeploy Agent Service is running");
 #line 8
- testRunner.And("I have entered the command date /t");
+ testRunner.And("I am using the RunCommand provider");
 #line 9
- testRunner.When("I execute my Run Command");
+ testRunner.And("I have entered the command ipconfig /all");
 #line 10
+ testRunner.When("I execute my DSL");
+#line 11
  testRunner.Then("I would expect no errors");
 #line hidden
             this.ScenarioCleanup();
@@ -89,15 +91,17 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void ExitCodesGreaterThan0ShouldTriggerExceptions()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Exit codes greater than 0 should trigger exceptions", ((string[])(null)));
-#line 12
-this.ScenarioSetup(scenarioInfo);
 #line 13
- testRunner.Given("the WebDeploy Agent Service is running");
+this.ScenarioSetup(scenarioInfo);
 #line 14
- testRunner.And("I have entered the command bogus");
+ testRunner.Given("the WebDeploy Agent Service is running");
 #line 15
- testRunner.When("I execute my Run Command");
+ testRunner.And("I am using the RunCommand provider");
 #line 16
+ testRunner.And("I have entered the command bogus");
+#line 17
+ testRunner.When("I execute my DSL");
+#line 18
  testRunner.Then("I would expect an exit code error");
 #line hidden
             this.ScenarioCleanup();
