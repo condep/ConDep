@@ -42,5 +42,11 @@ namespace ConDep.Dsl.FluentWebDeploy.Builders
 			credentials(credBuilder);
 			return _syncBuilder;
 		}
+
+	    public SyncBuilder Package(string packagePath)
+	    {
+	        _source.PackagePath = packagePath;
+	        return _syncBuilder;
+	    }
 	}
 }

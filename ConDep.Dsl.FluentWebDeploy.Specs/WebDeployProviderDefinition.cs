@@ -13,6 +13,7 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
         private string _command;
         private IExecuteWebDeploy _executor;
         private string _provider;
+        private string _certificateThumbprint;
 
         [Given(@"the WebDeploy Agent Service is running")]
         public void GivenTheWebDeployAgentServiceIsRunning()
@@ -38,6 +39,13 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
             _provider = provider;
         }
 
+        [Given(@"I have entered the certificate thumbprint (.*)")]
+        public void GivenIHaveEnteredTheCertificateThumbprint(string thumbprint)
+        {
+            _certificateThumbprint = string.Format(@"my\{0}",thumbprint.Trim(' '));
+        }
+
+
         [When(@"I execute my DSL")]
         public void WhenIExecuteMyDSL()
         {
@@ -48,6 +56,9 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
                     break;
                 case "runcommand":
                     _executor = new RunCmdExecutor(_command);
+                    break;
+                case "certificate":
+                    _executor = new CertificateExecutor(_certificateThumbprint);
                     break;
                 default:
                     throw new Exception("Provider not known!");
@@ -70,6 +81,37 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
         public void ThenAnExceptionShouldOccour()
         {
             Assert.That(_executor.DeploymentStatus.HasErrors);
+        }
+    }
+
+    public class CertificateExecutor : WebDeployOperation, IExecuteWebDeploy
+    {
+        private readonly DeploymentStatus _deploymentStatus;
+
+        public CertificateExecutor(string certificateThumbprint)
+        {
+            _deploymentStatus = Sync(s => s
+                        .WithConfiguration(c => c.DoNotAutoDeployAgent())
+                        .From.Package(@"C:\package.zip")
+                        .UsingProvider(p => p
+                            .Certificate(certificateThumbprint))
+                        .To.LocalHost()
+                     );
+        }
+
+        protected override void OnWebDeployMessage(object sender, WebDeployMessageEventArgs e)
+        {
+            Trace.TraceInformation(e.Message);
+        }
+
+        protected override void OnWebDeployErrorMessage(object sender, WebDeployMessageEventArgs e)
+        {
+            Trace.TraceInformation(e.Message);
+        }
+
+        public DeploymentStatus DeploymentStatus
+        {
+            get { return _deploymentStatus; }
         }
     }
 

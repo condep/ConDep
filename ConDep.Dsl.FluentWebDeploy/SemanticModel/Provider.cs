@@ -23,7 +23,7 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
                 webDeployOptions.DestBaseOptions.RetryInterval = WaitInterval * 1000;
             }
 
-            var sourceDepObject = GetWebDeploySourceObject(webDeployOptions.SourceBaseOptions);
+            var sourceDepObject = webDeployOptions.FromPackage ? DeploymentManager.CreateObject(DeploymentWellKnownProvider.Package, webDeployOptions.PackagePath, webDeployOptions.SourceBaseOptions) : GetWebDeploySourceObject(webDeployOptions.SourceBaseOptions);
             var destProviderOptions = GetWebDeployDestinationObject();
 
             var summery = sourceDepObject.SyncTo(destProviderOptions, webDeployOptions.DestBaseOptions, webDeployOptions.SyncOptions);

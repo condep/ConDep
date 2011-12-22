@@ -83,14 +83,18 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 			  DeploymentBaseOptions destBaseOptions = null;
 
 			  var syncOptions = new DeploymentSyncOptions();
-			  var sourceBaseOptions = Source.GetSourceBaseOptions();
+
+              var sourceBaseOptions = Source.GetSourceBaseOptions();
+              sourceBaseOptions.Trace += OnWebDeployTraceMessage;
+              sourceBaseOptions.TraceLevel = TraceLevel.Verbose;
 
 			  destBaseOptions = Destination.GetDestinationBaseOptions();
 			  destBaseOptions.TempAgent = !Configuration.DoNotAutoDeployAgent;
 			  destBaseOptions.Trace += OnWebDeployTraceMessage;
 			  destBaseOptions.TraceLevel = TraceLevel.Verbose;
 
-			  return new WebDeployOptions(sourceBaseOptions, destBaseOptions, syncOptions);
+
+			  return new WebDeployOptions(Source.PackagePath, sourceBaseOptions, destBaseOptions, syncOptions);
 		  }
 
 		  private void HandleSyncException(DeploymentStatus deploymentStatus, Exception ex)

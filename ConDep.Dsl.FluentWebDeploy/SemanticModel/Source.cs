@@ -1,4 +1,5 @@
-﻿using Microsoft.Web.Deployment;
+﻿using System;
+using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 {
@@ -20,7 +21,9 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 			}
 		}
 
-		public DeploymentBaseOptions GetSourceBaseOptions()
+	    public string PackagePath { get; set; }
+
+	    public DeploymentBaseOptions GetSourceBaseOptions()
 		{
 			var sourceBaseOptions = new DeploymentBaseOptions();
 			if (!LocalHost)
@@ -40,7 +43,7 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 		{
 			_credentials.IsValid(notification);
 
-			if (!LocalHost && string.IsNullOrWhiteSpace(ComputerName))
+			if (!LocalHost && string.IsNullOrWhiteSpace(ComputerName) && string.IsNullOrWhiteSpace(PackagePath))
 			{
 				notification.AddError(new SemanticValidationError("Neither localhost or computer name is defined for source.", ValidationErrorType.NoSource));
 				return true;
