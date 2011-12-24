@@ -23,6 +23,8 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 
 	    public string PackagePath { get; set; }
 
+	    public string EncryptionPassword { get; set; }
+
 	    public DeploymentBaseOptions GetSourceBaseOptions()
 		{
 			var sourceBaseOptions = new DeploymentBaseOptions();
@@ -36,10 +38,20 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 				sourceBaseOptions.UserName = Credentials.UserName;
 				sourceBaseOptions.Password = Credentials.Password;
 			}
+
+            if(HasEncryptionPassword)
+            {
+                sourceBaseOptions.EncryptPassword = EncryptionPassword;
+            }
 			return sourceBaseOptions;
 		}
 
-		public bool IsValid(Notification notification)
+	    protected bool HasEncryptionPassword
+	    {
+            get { return !string.IsNullOrWhiteSpace(EncryptionPassword); }
+	    }
+
+	    public bool IsValid(Notification notification)
 		{
 			_credentials.IsValid(notification);
 

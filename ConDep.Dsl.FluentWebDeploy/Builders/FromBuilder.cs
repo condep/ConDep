@@ -43,9 +43,10 @@ namespace ConDep.Dsl.FluentWebDeploy.Builders
 			return _syncBuilder;
 		}
 
-	    public SyncBuilder Package(string packagePath)
+	    public SyncBuilder Package(string packagePath, string encryptionPassword)
 	    {
 	        _source.PackagePath = packagePath;
+	        _source.EncryptionPassword = encryptionPassword;
 	        return _syncBuilder;
 	    }
 	}

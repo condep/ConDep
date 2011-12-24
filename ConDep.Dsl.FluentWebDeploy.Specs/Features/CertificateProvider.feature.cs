@@ -67,42 +67,40 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs.Features
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Deploy certificate from package")]
+        [NUnit.Framework.CategoryAttribute("package")]
         public virtual void DeployCertificateFromPackage()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Deploy certificate from package", ((string[])(null)));
-#line 6
-this.ScenarioSetup(scenarioInfo);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Deploy certificate from package", new string[] {
+                        "package"});
 #line 7
- testRunner.Given("the WebDeploy Agent Service is running");
+this.ScenarioSetup(scenarioInfo);
 #line 8
- testRunner.And("I am using the Certificate provider");
+ testRunner.Given("I am using the Certificate provider");
 #line 9
- testRunner.And("I have entered the certificate thumbprint 6b c8 3f d8 4c 0f 1f 90 e7 76 d8 6a f6 " +
-                    "23 0d 44 e6 ea 0a cb");
+ testRunner.When("I deploy from package");
 #line 10
- testRunner.When("I execute my DSL");
-#line 11
- testRunner.Then("I would expect no errors");
+ testRunner.Then("I would expect the certificate with thumbprint 6bc83fd84c0f1f90e776d86af6230d44e6" +
+                    "ea0acb to be found in the cert store");
 #line hidden
             this.ScenarioCleanup();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Deploy invalid certificate")]
-        public virtual void DeployInvalidCertificate()
+        [NUnit.Framework.DescriptionAttribute("Deploy certificate with bogus thumbprint")]
+        public virtual void DeployCertificateWithBogusThumbprint()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Deploy invalid certificate", ((string[])(null)));
-#line 13
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Deploy certificate with bogus thumbprint", ((string[])(null)));
+#line 12
 this.ScenarioSetup(scenarioInfo);
-#line 14
+#line 13
  testRunner.Given("the WebDeploy Agent Service is running");
-#line 15
+#line 14
  testRunner.And("I am using the Certificate provider");
-#line 16
+#line 15
  testRunner.And("I have entered the certificate thumbprint bogus");
-#line 17
+#line 16
  testRunner.When("I execute my DSL");
-#line 18
+#line 17
  testRunner.Then("an exception should occour");
 #line hidden
             this.ScenarioCleanup();

@@ -23,10 +23,20 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
                 webDeployOptions.DestBaseOptions.RetryInterval = WaitInterval * 1000;
             }
 
-            var sourceDepObject = webDeployOptions.FromPackage ? DeploymentManager.CreateObject(DeploymentWellKnownProvider.Package, webDeployOptions.PackagePath, webDeployOptions.SourceBaseOptions) : GetWebDeploySourceObject(webDeployOptions.SourceBaseOptions);
-            var destProviderOptions = GetWebDeployDestinationObject();
+            DeploymentChangeSummary summery;
+            using (var sourceDepObject = webDeployOptions.FromPackage ? GetPackageSourceObject(webDeployOptions) : GetWebDeploySourceObject(webDeployOptions.SourceBaseOptions))
+            {
+                var destProviderOptions = GetWebDeployDestinationObject();
 
-            var summery = sourceDepObject.SyncTo(destProviderOptions, webDeployOptions.DestBaseOptions, webDeployOptions.SyncOptions);
+                //if(webDeployOptions.FromPackage)
+                //{
+                //    summery = sourceDepObject.SyncTo(DeploymentWellKnownProvider.Auto, "", webDeployOptions.DestBaseOptions, webDeployOptions.SyncOptions);
+                //}
+                //else
+                //{
+                    summery = sourceDepObject.SyncTo(destProviderOptions, webDeployOptions.DestBaseOptions, webDeployOptions.SyncOptions);
+                //}
+            }
 
             deploymentStatus.AddSummery(summery);
 
@@ -38,5 +48,10 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
             }
             return deploymentStatus;
         }
+
+	    private static DeploymentObject GetPackageSourceObject(WebDeployOptions webDeployOptions)
+	    {
+            return DeploymentManager.CreateObject(DeploymentWellKnownProvider.Package, webDeployOptions.PackagePath, webDeployOptions.SourceBaseOptions);
+	    }
 	}
 }

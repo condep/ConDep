@@ -72,8 +72,9 @@ namespace ConDep.Dsl.FluentWebDeploy.SemanticModel
 			  }
 			  finally
 			  {
-				  if (options != null && options.DestBaseOptions != null) options.DestBaseOptions.Trace -= OnWebDeployTraceMessage;
-			  }
+                  if (options != null && options.DestBaseOptions != null) options.DestBaseOptions.Trace -= OnWebDeployTraceMessage;
+                  if (options != null && options.SourceBaseOptions != null) options.SourceBaseOptions.Trace -= OnWebDeployTraceMessage;
+              }
 
 			  return deploymentStatus;
 		  }
