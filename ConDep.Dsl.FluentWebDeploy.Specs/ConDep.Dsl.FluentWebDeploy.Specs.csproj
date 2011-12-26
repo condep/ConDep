@@ -56,6 +56,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CertificateProvider.feature</DependentUpon>
     </Compile>
+    <Compile Include="Features\WebSite.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebSite.feature</DependentUpon>
+    </Compile>
     <Compile Include="NServiceBusDefinition.cs" />
     <Compile Include="Features\NServiceBusProvider.feature.cs">
       <AutoGen>True</AutoGen>
@@ -92,6 +97,10 @@
     <None Include="Features\RunCommandFeature.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>RunCommandFeature.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\WebSite.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>WebSite.feature.cs</LastGenOutput>
     </None>
     <None Include="SpecTestCert.pfx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
