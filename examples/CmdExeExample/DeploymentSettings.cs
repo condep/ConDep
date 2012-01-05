@@ -1,5 +1,5 @@
-using ConDep.Dsl.FluentWebDeploy;
-using ConDep.Dsl.FluentWebDeploy.Console;
+using ConDep.Dsl;
+using ConDep.Dsl.Console;
 
 namespace TestWebDeployApp
 {

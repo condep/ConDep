@@ -1,4 +1,4 @@
-﻿using ConDep.Dsl.FluentWebDeploy;
+﻿using ConDep.Dsl;
 
 namespace TestWebDeployApp
 {

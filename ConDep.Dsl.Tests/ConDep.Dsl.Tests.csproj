@@ -2,17 +2,15 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{875FC631-3060-499C-BFA4-B82373ADE135}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{1A131274-45B3-47EE-A48D-8310FDB3C332}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestWebDeployApp</RootNamespace>
-    <AssemblyName>TestWebDeployApp</AssemblyName>
+    <RootNamespace>ConDep.Dsl.FluentWebDeploy.Tests</RootNamespace>
+    <AssemblyName>ConDep.Dsl.FluentWebDeploy.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
     </SccProjectName>
@@ -23,8 +21,7 @@
     <SccProvider>
     </SccProvider>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -33,8 +30,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,6 +39,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Web.Delegation, Version=7.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Web.Deployment, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Moq">
+      <HintPath>..\lib\moq\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\lib\nunit\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -53,15 +57,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DeploymentSettings.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="..\AssemblyVersionInfo.cs">
+      <Link>Properties\AssemblyVersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="CompositeProviders\NServiceBus.cs" />
+    <Compile Include="Providers\Certificate.cs" />
+    <Compile Include="Providers\CopyDir.cs" />
+    <Compile Include="Providers\CopyFile.cs" />
+    <Compile Include="CompositeProviders\PowerShell.cs" />
+    <Compile Include="Providers\SetAcl.cs" />
+    <Compile Include="Providers\WebApp.cs" />
+    <Compile Include="ProviderTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SematicModel\SemanticModelTests.cs" />
+    <Compile Include="SemanticTestFixture.cs" />
+    <Compile Include="WebDeployOptionsTestFixture.cs" />
+    <Compile Include="SimpleTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\ConDep.Dsl\ConDep.Dsl.csproj">
+    <ProjectReference Include="..\ConDep.Dsl\ConDep.Dsl.csproj">
       <Project>{9928C9C8-EB7A-48ED-BD3B-BEAAE05787FE}</Project>
       <Name>ConDep.Dsl</Name>
     </ProjectReference>
