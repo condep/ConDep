@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using ConDep.Dsl.FluentWebDeploy.Operations.WebDeploy.Model;
 using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 using NUnit.Framework;
 using TechTalk.SpecFlow;
@@ -32,34 +33,40 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
         }
     }
 
-    public class NServiceBusExecutor : WebDeployOperation
+    public class NServiceBusExecutor : ConDepOperation
     {
-        private readonly DeploymentStatus _deploymentStatus;
+        private readonly WebDeploymentStatus _deploymentStatus;
 
         public NServiceBusExecutor()
         {
-            _deploymentStatus = Sync(s => s
-                        .From.LocalHost()
-                        .UsingProvider(p => p
-                            .NServiceBus(@"C:\Temp\Frende.Customer.Endpoint", "Frende.Customer.Endpoint", c => c
-                                .DestinationDir(@"C:\Temp\Frende.Customer.Endpoint2")
-							    .ServiceInstaller("NServiceBus.Host.exe")
-							    .ServiceGroup("MyFrendeGroup")))
-                        .To.LocalHost()
-                     );
+        	_deploymentStatus = Setup(setup => setup.WebDeploy(s => s
+        	                                                        	.From.LocalHost()
+        	                                                        	.UsingProvider(p => p
+        	                                                        	                    	.NServiceBus(
+        	                                                        	                    		@"C:\Temp\Frende.Customer.Endpoint",
+        	                                                        	                    		"Frende.Customer.Endpoint",
+        	                                                        	                    		c => c
+        	                                                        	                    		     	.DestinationDir(
+        	                                                        	                    		     		@"C:\Temp\Frende.Customer.Endpoint2")
+        	                                                        	                    		     	.ServiceInstaller(
+        	                                                        	                    		     		"NServiceBus.Host.exe")
+        	                                                        	                    		     	.ServiceGroup(
+        	                                                        	                    		     		"MyFrendeGroup")))
+        	                                                        	.To.LocalHost()
+        	                                   	));
         }
 
-        public DeploymentStatus DeploymentStatus
+        public WebDeploymentStatus DeploymentStatus
         {
             get { return _deploymentStatus; }
         }
 
-        protected override void OnWebDeployMessage(object sender, WebDeployMessageEventArgs e)
+        protected override void OnMessage(object sender, WebDeployMessageEventArgs e)
         {
         	Trace.TraceInformation(e.Message);
         }
 
-        protected override void OnWebDeployErrorMessage(object sender, WebDeployMessageEventArgs e)
+        protected override void OnErrorMessage(object sender, WebDeployMessageEventArgs e)
         {
         	Trace.TraceError(e.Message);
         }

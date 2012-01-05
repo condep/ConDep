@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ConDep.Dsl.FluentWebDeploy.Builders;
+using ConDep.Dsl.FluentWebDeploy.Operations.WebDeploy.Model;
 using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 using NUnit.Framework;
 

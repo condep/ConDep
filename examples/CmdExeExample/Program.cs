@@ -10,14 +10,28 @@ namespace TestWebDeployApp
             Initialize(args);
         }
 
-        protected override void Execute()   
+        protected override void Execute()
         {
-            Sync(s => s
-                          .From.Server(Settings.FromServer, c => c
-									  .WithUserName("asdf")
-									  .WithPassword("asdf"))
-                          .UsingProvider(p => p.WebApp(Settings.WebAppName, Settings.RemoteWebApp, Settings.RemoteWebSite))
-                          .To.Server(Settings.ToServer));
+            Setup(setup =>
+                      {
+                          setup.TransformWebConfig(@"C:\Temp\MyApp", "Test");
+                          setup.PreCompile("MyApp", @"C:\Temp\MyApp", @"C:\temp\MyApp2");
+                          setup.ApplicationRequestRouting("server",
+                                                          arr => arr.TakeFarmOfflineForServer("10.0.0.21", "Farm1"));
+                          setup.WebDeploy(wd => wd
+                                                    .From.Server(Settings.FromServer, c => c
+                                                                                               .WithUserName("asdf")
+                                                                                               .WithPassword("asdf"))
+                                                    .UsingProvider(p => p
+                                                                            .WebApp(
+                                                                                Settings.WebAppName,
+                                                                                Settings.RemoteWebApp,
+                                                                                Settings.RemoteWebSite)
+                                                    )
+                                                    .To.Server(Settings.ToServer));
+                          setup.ApplicationRequestRouting("server",
+                                                          arr => arr.TakeFarmOnlineForServer("10.0.0.21", "Farm1"));
+                      });
         }
     }
 }

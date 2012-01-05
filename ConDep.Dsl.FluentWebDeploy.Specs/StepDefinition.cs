@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using System.ServiceProcess;
-using ConDep.Dsl.FluentWebDeploy.SemanticModel;
+using ConDep.Dsl.FluentWebDeploy.Operations.WebDeploy.Model;
 using NUnit.Framework;
 using TechTalk.SpecFlow;
 
@@ -14,8 +14,7 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
         private string _command;
         private string _provider;
         private string _certificateThumbprint;
-        private bool _deployFromPackage;
-        private DeploymentStatus _deploymentStatus;
+        private WebDeploymentStatus _deploymentStatus;
 
 
         [Given(@"the WebDeploy Agent Service is running")]
@@ -132,41 +131,42 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
         }
     }
 
-    public class WebSiteExecutor : WebDeployOperation, IExecuteWebDeploy
+    public class WebSiteExecutor : ConDepOperation, IExecuteWebDeploy
     {
-        public DeploymentStatus Execute()
+        public WebDeploymentStatus Execute()
         {
-            return Sync(s => s
-                                 .WithConfiguration(c => c.DoNotAutoDeployAgent())
-                                 .From.LocalHost()
-                                 .UsingProvider(p => p
-                                                         .WebSite("Default Web Site", "Default Web Site 2")
-                                                         .Exclude.AppPools()
-                                                                 .Certificates()
-                                                                 .CertificatesOnIisBindings()
-                                                                 .Content()
-                                                                 .FrameworkConfig())
-                                 .To.LocalHost()
-                );
+            return Setup(setup => setup.WebDeploy(s => s
+                                                           .WithConfiguration(c => c.DoNotAutoDeployAgent())
+                                                           .From.LocalHost()
+                                                           .UsingProvider(p => p
+                                                                                   .WebSite("Default Web Site",
+                                                                                            "Default Web Site 2")
+                                                                                   .Exclude.AppPools()
+                                                                                   .Certificates()
+                                                                                   .CertificatesOnIisBindings()
+                                                                                   .Content()
+                                                                                   .FrameworkConfig())
+                                                           .To.LocalHost()
+                                      ));
         }
 
-        public DeploymentStatus ExecuteFromPackage()
+        public WebDeploymentStatus ExecuteFromPackage()
         {
             throw new NotImplementedException();
         }
 
-        protected override void OnWebDeployMessage(object sender, WebDeployMessageEventArgs e)
+        protected override void OnMessage(object sender, WebDeployMessageEventArgs e)
         {
             Trace.TraceInformation(e.Message);
         }
 
-        protected override void OnWebDeployErrorMessage(object sender, WebDeployMessageEventArgs e)
+        protected override void OnErrorMessage(object sender, WebDeployMessageEventArgs e)
         {
             Trace.TraceInformation(e.Message);
         }
     }
 
-    public class CertificateExecutor : WebDeployOperation, IExecuteWebDeploy
+    public class CertificateExecutor : ConDepOperation, IExecuteWebDeploy
     {
         private readonly string _certificateThumbprint;
 
@@ -175,35 +175,35 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
             _certificateThumbprint = certificateThumbprint;
         }
 
-        public DeploymentStatus ExecuteFromPackage()
+        public WebDeploymentStatus ExecuteFromPackage()
         {
-            return Sync(s => s
-                                 .WithConfiguration(c => c.DoNotAutoDeployAgent())
-                                 .From.Package(@"C:\package.zip", "test123")
-                                 .UsingProvider(p => p
-                                                         .Certificate(_certificateThumbprint))
-                                 .To.LocalHost()
-                );
+            return Setup(setup => setup.WebDeploy(s => s
+                                                           .WithConfiguration(c => c.DoNotAutoDeployAgent())
+                                                           .From.Package(@"C:\package.zip", "test123")
+                                                           .UsingProvider(p => p
+                                                                                   .Certificate(_certificateThumbprint))
+                                                           .To.LocalHost()
+                                      ));
 
         }
 
-        public DeploymentStatus Execute()
+        public WebDeploymentStatus Execute()
         {
-            return Sync(s => s
-                                 .WithConfiguration(c => c.DoNotAutoDeployAgent())
-                                 .From.LocalHost()
-                                 .UsingProvider(p => p
-                                                         .Certificate(_certificateThumbprint))
-                                 .To.LocalHost()
-                );
+            return Setup(setup => setup.WebDeploy(s => s
+                                                           .WithConfiguration(c => c.DoNotAutoDeployAgent())
+                                                           .From.LocalHost()
+                                                           .UsingProvider(p => p
+                                                                                   .Certificate(_certificateThumbprint))
+                                                           .To.LocalHost()
+                                      ));
         }
 
-        protected override void OnWebDeployMessage(object sender, WebDeployMessageEventArgs e)
+        protected override void OnMessage(object sender, WebDeployMessageEventArgs e)
         {
             Trace.TraceInformation(e.Message);
         }
 
-        protected override void OnWebDeployErrorMessage(object sender, WebDeployMessageEventArgs e)
+        protected override void OnErrorMessage(object sender, WebDeployMessageEventArgs e)
         {
             Trace.TraceInformation(e.Message);
         }
@@ -211,11 +211,11 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
 
     public interface IExecuteWebDeploy
     {
-        DeploymentStatus Execute();
-        DeploymentStatus ExecuteFromPackage();
+        WebDeploymentStatus Execute();
+        WebDeploymentStatus ExecuteFromPackage();
     }
 
-    public class RunCmdExecutor : WebDeployOperation, IExecuteWebDeploy
+    public class RunCmdExecutor : ConDepOperation, IExecuteWebDeploy
     {
         private readonly string _command;
 
@@ -224,29 +224,29 @@ namespace ConDep.Dsl.FluentWebDeploy.Specs
             _command = command;
         }
 
-        protected override void OnWebDeployMessage(object sender, WebDeployMessageEventArgs e)
+        protected override void OnMessage(object sender, WebDeployMessageEventArgs e)
         {
             Trace.TraceInformation(e.Message);
         }
 
-        protected override void OnWebDeployErrorMessage(object sender, WebDeployMessageEventArgs e)
+        protected override void OnErrorMessage(object sender, WebDeployMessageEventArgs e)
         {
             Trace.TraceError(e.Message);
         }
 
-        public DeploymentStatus Execute()
+        public WebDeploymentStatus Execute()
         {
-            return Sync(s => s
-                        .WithConfiguration(c => c.DoNotAutoDeployAgent())
-                        .From.LocalHost()
-                        .UsingProvider(p => p
-                            .RunCmd(_command))
-                        .To.LocalHost()
-                     );
+            return Setup(setup => setup.WebDeploy(s => s
+                                                           .WithConfiguration(c => c.DoNotAutoDeployAgent())
+                                                           .From.LocalHost()
+                                                           .UsingProvider(p => p
+                                                                                   .RunCmd(_command))
+                                                           .To.LocalHost()
+                                      ));
 
         }
 
-        public DeploymentStatus ExecuteFromPackage()
+        public WebDeploymentStatus ExecuteFromPackage()
         {
             throw new NotImplementedException();
         }

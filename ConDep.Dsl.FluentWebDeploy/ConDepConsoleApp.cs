@@ -6,12 +6,13 @@ using System.Security;
 using System.Reflection;
 using System.Collections.Generic;
 using ConDep.Dsl.FluentWebDeploy.Console;
+using ConDep.Dsl.FluentWebDeploy.Operations.WebDeploy.Model;
 using ConDep.Dsl.FluentWebDeploy.SemanticModel;
 
 namespace ConDep.Dsl.FluentWebDeploy
 {
 	//ToDo: Refactor -> Violates SRP (...and probably quite a few other things)
-	public abstract class ConDepConsoleApp<TConsoleOwner, TSettings> : WebDeployOperation 
+	public abstract class ConDepConsoleApp<TConsoleOwner, TSettings> : ConDepOperation 
 		where TConsoleOwner : ConDepConsoleApp<TConsoleOwner, TSettings>, new()
 		where TSettings : ConDepConfiguration, new()
 	{
@@ -130,7 +131,7 @@ namespace ConDep.Dsl.FluentWebDeploy
 
 		protected abstract void Execute();
 
-		protected override void OnWebDeployMessage(object sender, WebDeployMessageEventArgs e)
+		protected override void OnMessage(object sender, WebDeployMessageEventArgs e)
 		{
 			if(e.Level == System.Diagnostics.TraceLevel.Warning)
 			{
@@ -145,7 +146,7 @@ namespace ConDep.Dsl.FluentWebDeploy
 			}
 		}
 
-		protected override void OnWebDeployErrorMessage(object sender, WebDeployMessageEventArgs e)
+		protected override void OnErrorMessage(object sender, WebDeployMessageEventArgs e)
 		{
 			var currentConsoleColor = System.Console.ForegroundColor;
 			System.Console.ForegroundColor = ConsoleColor.Red;

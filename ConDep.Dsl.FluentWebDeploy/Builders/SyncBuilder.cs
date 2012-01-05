@@ -1,5 +1,5 @@
 using System;
-using ConDep.Dsl.FluentWebDeploy.SemanticModel;
+using ConDep.Dsl.FluentWebDeploy.Operations.WebDeploy.Model;
 
 namespace ConDep.Dsl.FluentWebDeploy.Builders
 {
