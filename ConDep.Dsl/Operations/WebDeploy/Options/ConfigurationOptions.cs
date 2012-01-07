@@ -1,17 +1,17 @@
 ﻿using ConDep.Dsl.Operations.WebDeploy.Model;
 
-namespace ConDep.Dsl.Builders
+namespace ConDep.Dsl.Operations.WebDeploy.Options
 {
-	public class ConfigurationBuilder
+	public class ConfigurationOptions
 	{
 		private readonly Configuration _configuration;
 
-		public ConfigurationBuilder(Configuration configuration)
+		public ConfigurationOptions(Configuration configuration)
 		{
 			_configuration = configuration;
 		}
 		
-		public ConfigurationBuilder DoNotAutoDeployAgent()
+		public ConfigurationOptions DoNotAutoDeployAgent()
 		{
 			_configuration.DoNotAutoDeployAgent = true;
 			return this;

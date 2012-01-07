@@ -1,14 +1,14 @@
 using System;
 using ConDep.Dsl.Operations.WebDeploy.Model;
 
-namespace ConDep.Dsl.Builders
+namespace ConDep.Dsl.Operations.WebDeploy.Options
 {
-	public class ToBuilder
+	public class ToOptions
 	{
 		private readonly WebDeployDefinition _definition;
 		private readonly Destination _destination;
 
-		public ToBuilder(WebDeployDefinition definition)
+		public ToOptions(WebDeployDefinition definition)
 		{
 			_definition = definition;
 			_destination = definition.Destination;
@@ -19,10 +19,10 @@ namespace ConDep.Dsl.Builders
 			_destination.ComputerName = "127.0.0.1";
 		}
 
-		public void LocalHost(Action<CredentialsBuilder> credentials)
+		public void LocalHost(Action<CredentialsOptions> credentials)
 		{
 			_destination.ComputerName = "127.0.0.1";
-			var credBuilder = new CredentialsBuilder(_destination.Credentials);
+			var credBuilder = new CredentialsOptions(_destination.Credentials);
 			credentials(credBuilder);
 		}
 
@@ -31,10 +31,10 @@ namespace ConDep.Dsl.Builders
 			_destination.ComputerName = serverName;
 		}
 
-		public void Server(string serverName, Action<CredentialsBuilder> credentials)
+		public void Server(string serverName, Action<CredentialsOptions> credentials)
 		{
 			_destination.ComputerName = serverName;
-			var credBuilder = new CredentialsBuilder(_destination.Credentials);
+			var credBuilder = new CredentialsOptions(_destination.Credentials);
 			credentials(credBuilder);
 		}
 

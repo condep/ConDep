@@ -1,15 +1,16 @@
 using System;
 using ConDep.Dsl.Builders;
+using ConDep.Dsl.Operations.WebDeploy.Options;
 
 namespace ConDep.Dsl
 {
 	public static class SetAclExtension
 	{
-		public static void SetAcl(this ProviderCollectionBuilder providerCollectionBuilder, string path, Action<SetAclOptions> options)
+		public static void SetAcl(this ProviderCollection providerCollection, string path, Action<SetAclOptions> options)
 		{
 			var setAclProvider = new SetAclProvider(path);
 			options(new SetAclOptions(setAclProvider));
-			providerCollectionBuilder.AddProvider(setAclProvider);
+			providerCollection.AddProvider(setAclProvider);
 		}
 	}
 }

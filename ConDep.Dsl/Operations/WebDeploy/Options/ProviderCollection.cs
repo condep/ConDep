@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using ConDep.Dsl.Operations.WebDeploy.Model;
 
-namespace ConDep.Dsl.Builders
+namespace ConDep.Dsl.Operations.WebDeploy.Options
 {
-	public class ProviderCollectionBuilder
+	public class ProviderCollection
 	{
 		private readonly List<IProvide> _providers;
 
-		public ProviderCollectionBuilder(List<IProvide> providers)
+		public ProviderCollection(List<IProvide> providers)
 		{
 			_providers = providers;
 		}

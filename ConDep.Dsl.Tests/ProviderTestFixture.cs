@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Operations.WebDeploy.Model;
+using ConDep.Dsl.Operations.WebDeploy.Options;
 using NUnit.Framework;
 
 namespace ConDep.Dsl.Tests
@@ -8,18 +9,18 @@ namespace ConDep.Dsl.Tests
 	[TestFixture]
 	public abstract class ProviderTestFixture<TProvider> : SimpleTestFixture where TProvider : class, IProvide
 	{
-		private ProviderCollectionBuilder _providers;
+		private ProviderCollection _providers;
 		private List<IProvide> _internalProviders;
 		private readonly Notification _notification = new Notification();
 
-		protected ProviderCollectionBuilder Providers
+		protected ProviderCollection Providers
 		{
 			get
 			{
 				if (_providers == null)
 				{
 					_internalProviders = new List<IProvide>();
-					_providers = new ProviderCollectionBuilder(_internalProviders);
+					_providers = new ProviderCollection(_internalProviders);
 				}
 				return _providers;
 			}

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ConDep.Dsl.Builders;
+using ConDep.Dsl.Operations.WebDeploy.Options;
 
 namespace ConDep.Dsl.Operations.WebDeploy.Model
 {
@@ -19,9 +20,9 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
 
 		public abstract void Configure();
 
-		protected void Configure(Action<ProviderCollectionBuilder> action)
+		protected void Configure(Action<ProviderCollection> action)
 		{
-			action(new ProviderCollectionBuilder(_childProviders));
+			action(new ProviderCollection(_childProviders));
 		}
 
         public WebDeploymentStatus Sync(WebDeployOptions webDeployOptions, WebDeploymentStatus deploymentStatus)

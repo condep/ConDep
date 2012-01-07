@@ -1,23 +1,23 @@
 ﻿using ConDep.Dsl.Operations.WebDeploy.Model;
 
-namespace ConDep.Dsl.Builders
+namespace ConDep.Dsl.Operations.WebDeploy.Options
 {
-	public class CredentialsBuilder
+	public class CredentialsOptions
 	{
 		private readonly Credentials _credentials;
 
-		public CredentialsBuilder(Credentials credentials)
+		public CredentialsOptions(Credentials credentials)
 		{
 			_credentials = credentials;
 		}
 
-		public CredentialsBuilder WithUserName(string userName)
+		public CredentialsOptions WithUserName(string userName)
 		{
 			_credentials.UserName = userName;
 			return this;
 		}
 
-		public CredentialsBuilder WithPassword(string password)
+		public CredentialsOptions WithPassword(string password)
 		{
 			_credentials.Password = password;
 			return this;

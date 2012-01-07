@@ -2,11 +2,11 @@
 
 namespace ConDep.Dsl.Builders
 {
-	public class SetupBuilder
+	public class SetupOptions
 	{
 		private readonly SetupOperation _setupOperation;
 
-		public SetupBuilder(SetupOperation setupOperation)
+		public SetupOptions(SetupOperation setupOperation)
 		{
 			_setupOperation = setupOperation;
 		}

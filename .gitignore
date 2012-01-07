@@ -25,4 +25,5 @@ _ReSharper.*/
 *.log
 *.TeamCity.user
 *.DotSettings.user
+packages/
 NDependOut

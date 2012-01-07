@@ -31,6 +31,7 @@ namespace TestWebDeployApp
                                                     .To.Server(Settings.ToServer));
                           setup.ApplicationRequestRouting("server",
                                                           arr => arr.TakeFarmOnlineForServer("10.0.0.21", "Farm1"));
+                          setup.SmokeTest(smokeTest => smokeTest.Url("http://www.google.com"));
                       });
         }
     }
