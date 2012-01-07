@@ -102,6 +102,7 @@
     <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\WmiNetworkAdapter.cs" />
     <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\ServerState.cs" />
     <Compile Include="Operations\SmokeTest\SmokeTestExtension.cs" />
+    <Compile Include="Operations\SmokeTest\SmokeTestOperation.cs" />
     <Compile Include="Operations\TransformWebConfig\TransformWebConfigExtension.cs" />
     <Compile Include="Operations\TransformWebConfig\TransformWebConfigOperation.cs" />
     <Compile Include="Operations\WebDeploy\WebDeployExtension.cs" />
@@ -173,6 +174,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Builders\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="chromedriver.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
