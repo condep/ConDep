@@ -20,7 +20,7 @@ namespace ConDep.Dsl.Operations.WebDeploy
 
 		public bool IsValid(Notification notification)
 		{
-			throw new NotImplementedException();
+			return _webDeployDefinition.IsValid(notification);
 		}
 	}
 }

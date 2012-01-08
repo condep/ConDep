@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.Operations.WebDeploy.Model
@@ -34,7 +35,8 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
                 //}
                 //else
                 //{
-                    summery = sourceDepObject.SyncTo(destProviderOptions, webDeployOptions.DestBaseOptions, webDeployOptions.SyncOptions);
+                Backup(webDeployOptions);
+                summery = sourceDepObject.SyncTo(destProviderOptions, webDeployOptions.DestBaseOptions, webDeployOptions.SyncOptions);
                 //}
             }
 
@@ -48,6 +50,29 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
             }
             return deploymentStatus;
         }
+
+	    private void Backup(WebDeployOptions webDeployOptions)
+	    {
+	        bool existOnDestination = true;
+            try
+            {
+                var dest = DeploymentManager.CreateObject(Name, DestinationPath, webDeployOptions.DestBaseOptions);
+                var children = dest.GetChildren();
+                if (children.Count() == 0)
+                    existOnDestination = false;
+            }
+            catch
+            {
+                existOnDestination = false;
+            }
+
+            if(existOnDestination)
+            {
+                var backupSource = DeploymentManager.CreateObject(Name, DestinationPath, webDeployOptions.DestBaseOptions);
+                backupSource.SyncTo(DeploymentWellKnownProvider.Package, @"C:\Temp\PackageBackup.zip",
+                                    webDeployOptions.DestBaseOptions, webDeployOptions.SyncOptions);
+            }
+	    }
 
 	    private static DeploymentObject GetPackageSourceObject(WebDeployOptions webDeployOptions)
 	    {
