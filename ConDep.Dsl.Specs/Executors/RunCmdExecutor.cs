@@ -2,13 +2,13 @@
 using System.Diagnostics;
 using ConDep.Dsl.Operations.WebDeploy.Model;
 
-namespace ConDep.Dsl.Specs
+namespace ConDep.Dsl.Specs.Executors
 {
-    public class PowerShellExecutor : ConDepOperation, IExecuteWebDeploy
+    public class RunCmdExecutor : ConDepOperation, IExecuteWebDeploy
     {
         private readonly string _command;
 
-        public PowerShellExecutor(string command)
+        public RunCmdExecutor(string command)
         {
             _command = command;
         }
@@ -26,12 +26,13 @@ namespace ConDep.Dsl.Specs
         public WebDeploymentStatus Execute()
         {
             return Setup(setup => setup.WebDeploy(s => s
-                                              .WithConfiguration(c => c.DoNotAutoDeployAgent())
-                                              .From.LocalHost()
-                                              .UsingProvider(p => p
-                                                                      .PowerShell(_command))
-                                              .To.LocalHost()
-                ));
+                                                           .WithConfiguration(c => c.DoNotAutoDeployAgent())
+                                                           .From.LocalHost()
+                                                           .UsingProvider(p => p
+                                                                                   .RunCmd(_command))
+                                                           .To.LocalHost()
+                                      ));
+
         }
 
         public WebDeploymentStatus ExecuteFromPackage()
@@ -39,5 +40,4 @@ namespace ConDep.Dsl.Specs
             throw new NotImplementedException();
         }
     }
-
 }

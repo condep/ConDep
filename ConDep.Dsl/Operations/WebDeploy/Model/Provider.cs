@@ -35,7 +35,8 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
                 //}
                 //else
                 //{
-                Backup(webDeployOptions);
+
+                //Backup(webDeployOptions);
                 summery = sourceDepObject.SyncTo(destProviderOptions, webDeployOptions.DestBaseOptions, webDeployOptions.SyncOptions);
                 //}
             }

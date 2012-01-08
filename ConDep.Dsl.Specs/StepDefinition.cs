@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using System.ServiceProcess;
 using ConDep.Dsl.Operations.WebDeploy.Model;
+using ConDep.Dsl.Specs.Executors;
 using NUnit.Framework;
 using TechTalk.SpecFlow;
 
@@ -128,127 +128,6 @@ namespace ConDep.Dsl.Specs
         public void ThenAnExceptionShouldOccour()
         {
             Assert.That(_deploymentStatus.HasErrors);
-        }
-    }
-
-    public class WebSiteExecutor : ConDepOperation, IExecuteWebDeploy
-    {
-        public WebDeploymentStatus Execute()
-        {
-            return Setup(setup => setup.WebDeploy(s => s
-                                                           .WithConfiguration(c => c.DoNotAutoDeployAgent())
-                                                           .From.LocalHost()
-                                                           .UsingProvider(p => p
-                                                                                   .WebSite("Default Web Site",
-                                                                                            "Default Web Site 2")
-                                                                                   .Exclude.AppPools()
-                                                                                   .Certificates()
-                                                                                   .CertificatesOnIisBindings()
-                                                                                   .Content()
-                                                                                   .FrameworkConfig())
-                                                           .To.LocalHost()
-                                      ));
-        }
-
-        public WebDeploymentStatus ExecuteFromPackage()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void OnMessage(object sender, WebDeployMessageEventArgs e)
-        {
-            Trace.TraceInformation(e.Message);
-        }
-
-        protected override void OnErrorMessage(object sender, WebDeployMessageEventArgs e)
-        {
-            Trace.TraceInformation(e.Message);
-        }
-    }
-
-    public class CertificateExecutor : ConDepOperation, IExecuteWebDeploy
-    {
-        private readonly string _certificateThumbprint;
-
-        public CertificateExecutor(string certificateThumbprint)
-        {
-            _certificateThumbprint = certificateThumbprint;
-        }
-
-        public WebDeploymentStatus ExecuteFromPackage()
-        {
-            return Setup(setup => setup.WebDeploy(s => s
-                                                           .WithConfiguration(c => c.DoNotAutoDeployAgent())
-                                                           .From.Package(@"C:\package.zip", "test123")
-                                                           .UsingProvider(p => p
-                                                                                   .Certificate(_certificateThumbprint))
-                                                           .To.LocalHost()
-                                      ));
-
-        }
-
-        public WebDeploymentStatus Execute()
-        {
-            return Setup(setup => setup.WebDeploy(s => s
-                                                           .WithConfiguration(c => c.DoNotAutoDeployAgent())
-                                                           .From.LocalHost()
-                                                           .UsingProvider(p => p
-                                                                                   .Certificate(_certificateThumbprint))
-                                                           .To.LocalHost()
-                                      ));
-        }
-
-        protected override void OnMessage(object sender, WebDeployMessageEventArgs e)
-        {
-            Trace.TraceInformation(e.Message);
-        }
-
-        protected override void OnErrorMessage(object sender, WebDeployMessageEventArgs e)
-        {
-            Trace.TraceInformation(e.Message);
-        }
-    }
-
-    public interface IExecuteWebDeploy
-    {
-        WebDeploymentStatus Execute();
-        WebDeploymentStatus ExecuteFromPackage();
-    }
-
-    public class RunCmdExecutor : ConDepOperation, IExecuteWebDeploy
-    {
-        private readonly string _command;
-
-        public RunCmdExecutor(string command)
-        {
-            _command = command;
-        }
-
-        protected override void OnMessage(object sender, WebDeployMessageEventArgs e)
-        {
-            Trace.TraceInformation(e.Message);
-        }
-
-        protected override void OnErrorMessage(object sender, WebDeployMessageEventArgs e)
-        {
-            Trace.TraceError(e.Message);
-        }
-
-        public WebDeploymentStatus Execute()
-        {
-            return Setup(setup => setup.WebDeploy(s => s
-                                                           .WithConfiguration(c => c.DoNotAutoDeployAgent())
-                                                           .From.LocalHost()
-                                                           .UsingProvider(p => p
-                                                                                   .RunCmd(_command))
-                                                           .To.LocalHost()
-                                      ));
-
-        }
-
-        public WebDeploymentStatus ExecuteFromPackage()
-        {
-            throw new NotImplementedException();
         }
     }
 }
