@@ -82,9 +82,9 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
 		  {
 			  DeploymentBaseOptions destBaseOptions = null;
 
-			  var syncOptions = new DeploymentSyncOptions();
+			  var syncOptions = new DeploymentSyncOptions {WhatIf = Configuration.UseWhatIf};
 
-              var sourceBaseOptions = Source.GetSourceBaseOptions();
+		      var sourceBaseOptions = Source.GetSourceBaseOptions();
               sourceBaseOptions.Trace += OnWebDeployTraceMessage;
               sourceBaseOptions.TraceLevel = TraceLevel.Verbose;
 

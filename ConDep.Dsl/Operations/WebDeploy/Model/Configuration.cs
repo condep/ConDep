@@ -1,4 +1,6 @@
-﻿namespace ConDep.Dsl.Operations.WebDeploy.Model
+﻿using System;
+
+namespace ConDep.Dsl.Operations.WebDeploy.Model
 {
 	public class Configuration : IValidate
 	{
@@ -10,7 +12,9 @@
 			set { _doNotAutoDeployAgent = value; }
 		}
 
-		public bool IsValid(Notification notification)
+	    public bool UseWhatIf { get; set; }
+
+	    public bool IsValid(Notification notification)
 		{
 			return true;
 		}

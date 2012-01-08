@@ -9,7 +9,11 @@ namespace ConDep.Dsl.Specs.Executors
         public WebDeploymentStatus Execute()
         {
             return Setup(setup => setup.WebDeploy(s => s
-                                                           .WithConfiguration(c => c.DoNotAutoDeployAgent())
+                                                           .WithConfiguration(c =>
+                                                                                  {
+                                                                                      c.DoNotAutoDeployAgent();
+                                                                                      c.UseWhatIf();
+                                                                                  })
                                                            .From.LocalHost()
                                                            .UsingProvider(p => p
                                                                                    .WebSite("Default Web Site",

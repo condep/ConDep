@@ -1,4 +1,5 @@
-﻿using ConDep.Dsl.Operations.WebDeploy.Model;
+﻿using System;
+using ConDep.Dsl.Operations.WebDeploy.Model;
 
 namespace ConDep.Dsl.Operations.WebDeploy.Options
 {
@@ -16,5 +17,11 @@ namespace ConDep.Dsl.Operations.WebDeploy.Options
 			_configuration.DoNotAutoDeployAgent = true;
 			return this;
 		}
+
+	    public ConfigurationOptions UseWhatIf()
+	    {
+	        _configuration.UseWhatIf = true;
+	        return this;
+	    }
 	}
 }
