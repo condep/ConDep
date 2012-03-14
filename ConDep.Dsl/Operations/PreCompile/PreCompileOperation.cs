@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Web.Compilation;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Operations.WebDeploy.Model;
@@ -23,6 +24,9 @@ namespace ConDep.Dsl
 		{
 			try
 			{
+				if(Directory.Exists(_preCompileOutputpath))
+					Directory.Delete(_preCompileOutputpath, true);
+
 				var buildManager = new ClientBuildManager(_webApplicationName, _webApplicationPhysicalPath, _preCompileOutputpath);
 				buildManager.PrecompileApplication(new PreCompileCallback(output, outputError));
 			}
@@ -37,7 +41,7 @@ namespace ConDep.Dsl
 
 		public bool IsValid(Notification notification)
 		{
-			throw new NotImplementedException();
+			return true;
 		}
 	}
 }

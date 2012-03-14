@@ -9,23 +9,38 @@ namespace ConDep.Dsl
 {
 	public class TransformWebConfigOperation : IOperateConDep
 	{
-		private readonly string _webConfigDirPath;
-		private readonly string _buildConfigName;
+		private readonly string _configDirPath;
+		private readonly string _configName;
+		private readonly string _transformName;
 
-		public TransformWebConfigOperation(string webConfigDirPath, string buildConfigName)
+		public TransformWebConfigOperation(string configDirPath, string configName, string transformName)
 		{
-			_webConfigDirPath = webConfigDirPath;
-			_buildConfigName = buildConfigName;
+			_configDirPath = configDirPath;
+			_configName = configName;
+			_transformName = transformName;
 		}
 
 		public WebDeploymentStatus Execute(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
 		{
 			var document = new XmlDocument();
-			document.Load(Path.Combine(_webConfigDirPath, "web.config"));
+			var configFilePath = Path.Combine(_configDirPath, _configName);
+			var transformFilePath = Path.Combine(_configDirPath, _transformName);
 
-			var transformation = new XmlTransformation(Path.Combine(_webConfigDirPath, string.Format("web.{0}.config", _buildConfigName)), new WebTransformLogger(output, outputError));
-			bool success = transformation.Apply(document);
-			document.Save(Path.Combine(_webConfigDirPath, "webNew.config"));
+			if(!File.Exists(configFilePath))
+			{
+				throw new FileNotFoundException(string.Format("File [{0}] does not exist.", configFilePath));
+			}
+
+			if (!File.Exists(transformFilePath))
+			{
+				throw new FileNotFoundException(string.Format("File [{0}] does not exist.", transformFilePath));
+			}
+
+			document.Load(configFilePath);
+
+			var transformation = new XmlTransformation(transformFilePath, new WebTransformLogger(output, outputError));
+			var success = transformation.Apply(document);
+			document.Save(configFilePath);
 
 			if(!success)
 				throw new Exception("Failed to transform web.config file.");
@@ -35,7 +50,7 @@ namespace ConDep.Dsl
 
 		public bool IsValid(Notification notification)
 		{
-			throw new NotImplementedException();
+			return true;
 		}
 	}
 }
