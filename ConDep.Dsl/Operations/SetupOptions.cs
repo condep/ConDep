@@ -11,7 +11,7 @@ namespace ConDep.Dsl.Builders
 			_setupOperation = setupOperation;
 		}
 
-		protected internal void AddOperation(IOperateConDep operation)
+		public void AddOperation(IOperateConDep operation)
 		{
 			_setupOperation.AddOperation(operation);
 		}
