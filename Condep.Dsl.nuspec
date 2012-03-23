@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Condep.Dsl</id>
+    <version>1.0.0</version>
+    <authors>Jon Arild Tørresdal</authors>
+    <owners>fanoyv</owners>
+    <projectUrl>https://github.com/torresdal/ConDep</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Continous deployment DSL</description>
+    <copyright>Copyright 2012</copyright>
+    <dependencies>
+      <dependency id="DotNetZip" version="1.9.1.8"  />
+    </dependencies>
+	<frameworkAssemblies>
+        <frameworkAssembly assemblyName="Microsoft.Web.Administration" targetFramework="net40"  />
+        <frameworkAssembly assemblyName="Microsoft.Web.Deployment"  targetFramework="net40" />
+        <frameworkAssembly assemblyName="Microsoft.Web.Publishing.Tasks"  targetFramework="net40" />
+	</frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="ConDep.Dsl\bin\Release\ConDep.Dsl.dll" target="lib\net40" />
+  </files>
+</package>
