@@ -8,13 +8,18 @@ namespace ConDep.Dsl
 	{
 		public static void RunCmd(this ProviderCollection providerCollection, string command)
 		{
-			var runCmdProvider = new RunCmdProvider(command);
+            RunCmd(providerCollection,command, false);		    
+		}
+
+        public static void RunCmd(this ProviderCollection providerCollection, string command, bool continueOnError)
+		{
+			var runCmdProvider = new RunCmdProvider(command, continueOnError);
 			providerCollection.AddProvider(runCmdProvider);
 		}
 
-		public static void RunCmd(this ProviderCollection providerCollection, string command, Action<RunCmdOptions> options)
+		public static void RunCmd(this ProviderCollection providerCollection, string command, bool continueOnError, Action<RunCmdOptions> options)
 		{
-			var runCmdProvider = new RunCmdProvider(command);
+			var runCmdProvider = new RunCmdProvider(command, continueOnError);
 			options(new RunCmdOptions(runCmdProvider));
 			providerCollection.AddProvider(runCmdProvider);
 		}

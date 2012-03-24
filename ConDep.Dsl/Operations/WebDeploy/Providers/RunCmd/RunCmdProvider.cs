@@ -6,15 +6,17 @@ namespace ConDep.Dsl
 {
 	public class RunCmdProvider : Provider
 	{
-        private Exception _untrappedExitCodeException;
+	    private readonly bool _continueOnError;
+	    private Exception _untrappedExitCodeException;
         private const string NAME = "runCommand";
 
-		public RunCmdProvider(string command)
+		public RunCmdProvider(string command, bool continueOnError)
 		{
-			DestinationPath = command;
+		    _continueOnError = continueOnError;
+		    DestinationPath = command;
 		}
 
-		public override DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions)
+	    public override DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions)
 		{
 			return DeploymentManager.CreateObject(Name, "", sourceBaseOptions);
 		}
@@ -27,7 +29,6 @@ namespace ConDep.Dsl
 		public override DeploymentProviderOptions GetWebDeployDestinationObject()
 		{
 			var destProviderOptions = new DeploymentProviderOptions(Name) { Path = DestinationPath };
-        
             //DeploymentProviderSetting dontUseCmdExe;
             //if (destProviderOptions.ProviderSettings.TryGetValue("dontUseCommandExe", out dontUseCmdExe))
             //{
@@ -49,11 +50,18 @@ namespace ConDep.Dsl
                 webDeployOptions.DestBaseOptions.Trace += CheckForUntrappedRunCommandExitCodes;
                 base.Sync(webDeployOptions, deploymentStatus);
             }
+            catch
+            {
+                if(!_continueOnError)
+                {
+                    throw;
+                }
+            }
             finally
             {
                 webDeployOptions.DestBaseOptions.Trace -= CheckForUntrappedRunCommandExitCodes;
 
-                if (_untrappedExitCodeException != null)
+                if (_untrappedExitCodeException != null && !_continueOnError)
                 {
                     throw _untrappedExitCodeException;
                 }

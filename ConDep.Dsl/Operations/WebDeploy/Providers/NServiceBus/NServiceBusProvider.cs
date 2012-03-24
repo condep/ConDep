@@ -1,3 +1,4 @@
+using System;
 using ConDep.Dsl.Operations.WebDeploy.Model;
 
 namespace ConDep.Dsl
@@ -31,17 +32,17 @@ namespace ConDep.Dsl
 			var stop = string.Format("stop-service {0}", ServiceName);
 			var install = string.Format("{0} /install /serviceName:\"{1}\" /displayName:\"{1}\" NServiceBus.Frende", System.IO.Path.Combine(destinationPath, ServiceInstallerName), ServiceName);
 			var failureConfig = string.Format("{0} failure \"{1}\" reset= 300 actions= restart/5000", SERVICE_CONTROLLER_EXE, ServiceName);
-			var userConfig = string.Format("{0} config \"{1}\" obj= \"{2}\" password= \"{3}\" group= {4}", SERVICE_CONTROLLER_EXE, ServiceName, UserName, Password, ServiceGroup);
+			var userConfig = string.Format("{0} config \"{1}\" obj= \"{2}\" password= \"{3}\" group= \"{4}\"", SERVICE_CONTROLLER_EXE, ServiceName, UserName, Password, ServiceGroup);
 			var start = string.Format("start-service {0}", ServiceName);
 
 			Configure(p =>
 			            {
-			            	p.PowerShell(stop);
+			            	p.PowerShell(stop, o => o.ContinueOnError().WaitIntervalInSeconds(10));
                             p.CopyDir(SourcePath, c => c.DestinationDir(destinationPath));
 			            	p.RunCmd(install);
 			            	p.RunCmd(failureConfig);
 			            	p.RunCmd(userConfig);
-			            	p.PowerShell(start);
+                            p.PowerShell(start, o => o.WaitIntervalInSeconds(10));
 			            });
 		}
 
