@@ -1,4 +1,5 @@
-﻿using ConDep.Dsl.Operations.WebDeploy.Model;
+﻿using System.IO;
+using ConDep.Dsl.Operations.WebDeploy.Model;
 using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl
@@ -9,7 +10,7 @@ namespace ConDep.Dsl
 
 		public WebAppProvider(string sourceDir, string webAppName, string destinationWebSiteName)
 		{
-			SourcePath = sourceDir;
+			SourcePath = Path.GetFullPath(sourceDir);
 		    DestinationAppName = webAppName;
 		    DestinationWebSite = destinationWebSiteName;
 		}

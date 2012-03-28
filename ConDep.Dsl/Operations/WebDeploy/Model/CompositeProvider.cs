@@ -27,6 +27,11 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
 
         public WebDeploymentStatus Sync(WebDeployOptions webDeployOptions, WebDeploymentStatus deploymentStatus)
         {
+			  if (WaitInterval > 0)
+			  {
+				  webDeployOptions.DestBaseOptions.RetryInterval = WaitInterval * 1000;
+			  }
+
             foreach (var childProvider in ChildProviders)
             {
                 childProvider.Sync(webDeployOptions, deploymentStatus);

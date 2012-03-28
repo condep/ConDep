@@ -10,12 +10,19 @@ namespace ConDep.Dsl.Operations.ApplicationRequestRouting
 	public class ApplicationReqeustRoutingOperation : IOperateConDep
 	{
 		private readonly string _webServerName;
+		private readonly UserInfo _userInfo;
 		private readonly ArrFarmManager _arrFarmManager = new ArrFarmManager();
 		private readonly List<Farm> _farms = new List<Farm>();
 
 		public ApplicationReqeustRoutingOperation(string webServerName)
+			: this(webServerName, null)
+		{
+		}
+
+		public ApplicationReqeustRoutingOperation(string webServerName, UserInfo userInfo)
 		{
 			_webServerName = webServerName;
+			_userInfo = userInfo;
 		}
 
 		public WebDeploymentStatus Execute(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
@@ -25,10 +32,10 @@ namespace ConDep.Dsl.Operations.ApplicationRequestRouting
 				switch(farm.ServerState)
 				{
 					case ServerState.Offline:
-						_arrFarmManager.TakeOffline(_webServerName, farm.FarmName, farm.ServerIp);
+						_arrFarmManager.TakeOffline(_webServerName, farm.FarmName, farm.ServerIp, _userInfo);
 						break;
 					case ServerState.Online:
-						_arrFarmManager.TakeOnline(_webServerName, farm.FarmName, farm.ServerIp);
+						_arrFarmManager.TakeOnline(_webServerName, farm.FarmName, farm.ServerIp, _userInfo);
 						break;
 					default:
 						throw new NotImplementedException(string.Format("State {0} is not supported.", farm.ServerState));

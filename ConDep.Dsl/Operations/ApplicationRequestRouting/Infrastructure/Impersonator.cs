@@ -12,6 +12,7 @@ namespace ConDep.Dsl.Operations.ApplicationRequestRouting.Infrastructure
 
 		public Impersonator(UserInfo user)
 		{
+			if (user == null) return;
 			ImpersonateValidUser(user);
 		}
 

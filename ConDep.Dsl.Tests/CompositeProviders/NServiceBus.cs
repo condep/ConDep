@@ -1,3 +1,4 @@
+using System.IO;
 using NUnit.Framework;
 
 namespace ConDep.Dsl.Tests.CompositeProviders
@@ -22,9 +23,9 @@ namespace ConDep.Dsl.Tests.CompositeProviders
         }
 
         [Test]
-        public void should_have_valid_source_path()
+        public void fully_qualifies_source_path()
         {
-            Assert.That(SourcePath, Is.EqualTo(Provider.SourcePath));
+            Assert.That(Provider.SourcePath, Is.EqualTo(Path.GetFullPath(SourcePath)));
         }
 
         [Test]

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using ConDep.Dsl.Operations.WebDeploy.Model;
 
 namespace ConDep.Dsl
@@ -8,11 +9,11 @@ namespace ConDep.Dsl
 		internal const string SERVICE_CONTROLLER_EXE = @"C:\WINDOWS\system32\sc.exe";
         private string _serviceInstallerName = "NServiceBus.Host.exe";
 
-		public NServiceBusProvider(string path, string serviceName)
-        {
-            SourcePath = path;
-		    ServiceName = serviceName;
-        }
+		  public NServiceBusProvider(string path, string serviceName)
+		  {
+		  	SourcePath = Path.GetFullPath(path);
+		  	ServiceName = serviceName;
+		  }
 
     	public string ServiceName { get; set; }
     	public string ServiceGroup { get; set; }

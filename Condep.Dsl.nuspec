@@ -12,13 +12,17 @@
     <dependencies>
       <dependency id="DotNetZip" version="1.9.1.8"  />
     </dependencies>
-	<frameworkAssemblies>
-        <frameworkAssembly assemblyName="Microsoft.Web.Administration" targetFramework="net40"  />
-        <frameworkAssembly assemblyName="Microsoft.Web.Deployment"  targetFramework="net40" />
-        <frameworkAssembly assemblyName="Microsoft.Web.Publishing.Tasks"  targetFramework="net40" />
-	</frameworkAssemblies>
+    <references>
+      <reference file="ConDep.Dsl.dll" />
+      <reference file="Microsoft.Web.Administration.dll" />
+      <reference file="Microsoft.Web.Deployment.dll" />
+      <reference file="Microsoft.Web.Publishing.Tasks.dll" />
+    </references>
   </metadata>
   <files>
     <file src="ConDep.Dsl\bin\Release\ConDep.Dsl.dll" target="lib\net40" />
+    <file src="ConDep.Dsl\bin\Release\Microsoft.Web.Administration.dll" target="lib\net40" />
+    <file src="ConDep.Dsl\bin\Release\Microsoft.Web.Deployment.dll" target="lib\net40" />
+    <file src="ConDep.Dsl\bin\Release\Microsoft.Web.Publishing.Tasks.dll" target="lib\net40" />
   </files>
 </package>
