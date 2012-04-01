@@ -16,14 +16,13 @@ namespace ConDep.Dsl.Specs.Executors
                                                                                  c.UseWhatIf();
                                                                              });
                                                      s.From.LocalHost();
-                                                     s.Using(p => p
-                                                                      .WebSite("Default Web Site",
+                                                     s.Using.WebSite("Default Web Site",
                                                                                "Default Web Site 2")
                                                                       .Exclude.AppPools()
                                                                       .Certificates()
                                                                       .CertificatesOnIisBindings()
                                                                       .Content()
-                                                                      .FrameworkConfig());
+                                                                      .FrameworkConfig();
                                                      s.To.LocalHost();
                                                  }));
         }

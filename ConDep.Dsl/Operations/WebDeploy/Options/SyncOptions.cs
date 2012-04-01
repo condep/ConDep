@@ -6,8 +6,11 @@ namespace ConDep.Dsl.Operations.WebDeploy.Options
 	public class SyncOptions
 	{
 		private readonly WebDeployDefinition _webDeployDefinition;
+	    private ProviderCollection _providerCollection;
+	    private FromOptions _fromOptions;
+	    private ToOptions _toOptions;
 
-		public SyncOptions(WebDeployDefinition webDeployDefinition)
+	    public SyncOptions(WebDeployDefinition webDeployDefinition)
 		{
 			_webDeployDefinition = webDeployDefinition;
 		}
@@ -18,20 +21,19 @@ namespace ConDep.Dsl.Operations.WebDeploy.Options
 			action(configBuilder);
 		}
 
-		public void Using(Action<ProviderCollection> action)
-		{
-			var providerBuilder = new ProviderCollection(_webDeployDefinition.Providers);
-			action(providerBuilder);
-		}
+	    public ProviderCollection Using
+	    {
+	        get { return _providerCollection ?? (_providerCollection = new ProviderCollection(_webDeployDefinition.Providers)); }
+	    }
 
 		public FromOptions From
 		{
-			get { return new FromOptions(_webDeployDefinition.Source, this); }
+			get { return _fromOptions ?? (_fromOptions = new FromOptions(_webDeployDefinition.Source, this)); }
 		}
 
 		public ToOptions To
 		{
-			get { return new ToOptions(_webDeployDefinition); }
+			get { return _toOptions ?? (_toOptions = new ToOptions(_webDeployDefinition)); }
 		}
 	}
 }

@@ -29,7 +29,7 @@ namespace ConDep.Dsl.Specs.Executors
                                                  {
                                                      s.WithConfiguration(c => c.DoNotAutoDeployAgent());
                                                      s.From.LocalHost();
-                                                     s.Using(p => p.RunCmd(_command));
+                                                     s.Using.RunCmd(_command);
                                                      s.To.LocalHost();
                                                  }
                                       ));

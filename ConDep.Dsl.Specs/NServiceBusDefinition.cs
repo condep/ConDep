@@ -41,7 +41,7 @@ namespace ConDep.Dsl.Specs
             _deploymentStatus = Setup(setup => setup.Sync(s =>
                                                               {
                                                                   s.From.LocalHost();
-                                                                  s.Using(p => p.NServiceBus(
+                                                                  s.Using.NServiceBus(
                                                                       @"C:\Temp\Frende.Customer.Endpoint",
                                                                       "Frende.Customer.Endpoint",
                                                                       c => c
@@ -50,7 +50,7 @@ namespace ConDep.Dsl.Specs
                                                                                .ServiceInstaller(
                                                                                    "NServiceBus.Host.exe")
                                                                                .ServiceGroup(
-                                                                                   "MyFrendeGroup")));
+                                                                                   "MyFrendeGroup"));
                                                                   s.To.LocalHost();
                                                               }
                                                    ));

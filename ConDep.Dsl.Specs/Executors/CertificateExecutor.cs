@@ -18,7 +18,7 @@ namespace ConDep.Dsl.Specs.Executors
                                                  {
                                                      s.WithConfiguration(c => c.DoNotAutoDeployAgent());
                                                      s.From.Package(@"C:\package.zip", "test123");
-                                                     s.Using(p => p.Certificate(_certificateThumbprint));
+                                                     s.Using.Certificate(_certificateThumbprint);
                                                      s.To.LocalHost();
                                                  }
                                       ));
@@ -31,7 +31,7 @@ namespace ConDep.Dsl.Specs.Executors
                                                  {
                                                      s.WithConfiguration(c => c.DoNotAutoDeployAgent());
                                                      s.From.LocalHost();
-                                                     s.Using(p => p.Certificate(_certificateThumbprint));
+                                                     s.Using.Certificate(_certificateThumbprint);
                                                      s.To.LocalHost();
                                                  }
                                       ));
