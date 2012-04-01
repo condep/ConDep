@@ -8,7 +8,7 @@ namespace ConDep.Dsl
 {
 	public static class WebDeployExtension
 	{
-		public static void WebDeploy(this SetupOptions setupOptions, Action<SyncOptions> action)
+		public static void Sync(this SetupOptions setupOptions, Action<SyncOptions> action)
 		{
 			var webDeployDefinition = new WebDeployDefinition();
 

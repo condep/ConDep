@@ -12,18 +12,16 @@ namespace ConDep.Dsl.Operations.WebDeploy.Options
 			_webDeployDefinition = webDeployDefinition;
 		}
 
-		public SyncOptions WithConfiguration(Action<ConfigurationOptions> action)
+		public void WithConfiguration(Action<ConfigurationOptions> action)
 		{
 			var configBuilder = new ConfigurationOptions(_webDeployDefinition.Configuration);
 			action(configBuilder);
-			return this;
 		}
 
-		public SyncOptions UsingProvider(Action<ProviderCollection> action)
+		public void Using(Action<ProviderCollection> action)
 		{
 			var providerBuilder = new ProviderCollection(_webDeployDefinition.Providers);
 			action(providerBuilder);
-			return this;
 		}
 
 		public FromOptions From

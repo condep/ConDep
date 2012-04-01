@@ -38,21 +38,22 @@ namespace ConDep.Dsl.Specs
 
         public NServiceBusExecutor()
         {
-        	_deploymentStatus = Setup(setup => setup.WebDeploy(s => s
-        	                                                        	.From.LocalHost()
-        	                                                        	.UsingProvider(p => p
-        	                                                        	                    	.NServiceBus(
-        	                                                        	                    		@"C:\Temp\Frende.Customer.Endpoint",
-        	                                                        	                    		"Frende.Customer.Endpoint",
-        	                                                        	                    		c => c
-        	                                                        	                    		     	.DestinationDir(
-        	                                                        	                    		     		@"C:\Temp\Frende.Customer.Endpoint2")
-        	                                                        	                    		     	.ServiceInstaller(
-        	                                                        	                    		     		"NServiceBus.Host.exe")
-        	                                                        	                    		     	.ServiceGroup(
-        	                                                        	                    		     		"MyFrendeGroup")))
-        	                                                        	.To.LocalHost()
-        	                                   	));
+            _deploymentStatus = Setup(setup => setup.Sync(s =>
+                                                              {
+                                                                  s.From.LocalHost();
+                                                                  s.Using(p => p.NServiceBus(
+                                                                      @"C:\Temp\Frende.Customer.Endpoint",
+                                                                      "Frende.Customer.Endpoint",
+                                                                      c => c
+                                                                               .DestinationDir(
+                                                                                   @"C:\Temp\Frende.Customer.Endpoint2")
+                                                                               .ServiceInstaller(
+                                                                                   "NServiceBus.Host.exe")
+                                                                               .ServiceGroup(
+                                                                                   "MyFrendeGroup")));
+                                                                  s.To.LocalHost();
+                                                              }
+                                                   ));
         }
 
         public WebDeploymentStatus DeploymentStatus

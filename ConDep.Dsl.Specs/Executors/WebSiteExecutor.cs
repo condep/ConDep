@@ -8,23 +8,24 @@ namespace ConDep.Dsl.Specs.Executors
     {
         public WebDeploymentStatus Execute()
         {
-            return Setup(setup => setup.WebDeploy(s => s
-                                                           .WithConfiguration(c =>
-                                                                                  {
-                                                                                      c.DoNotAutoDeployAgent();
-                                                                                      c.UseWhatIf();
-                                                                                  })
-                                                           .From.LocalHost()
-                                                           .UsingProvider(p => p
-                                                                                   .WebSite("Default Web Site",
-                                                                                            "Default Web Site 2")
-                                                                                   .Exclude.AppPools()
-                                                                                   .Certificates()
-                                                                                   .CertificatesOnIisBindings()
-                                                                                   .Content()
-                                                                                   .FrameworkConfig())
-                                                           .To.LocalHost()
-                                      ));
+            return Setup(setup => setup.Sync(s =>
+                                                 {
+                                                     s.WithConfiguration(c =>
+                                                                             {
+                                                                                 c.DoNotAutoDeployAgent();
+                                                                                 c.UseWhatIf();
+                                                                             });
+                                                     s.From.LocalHost();
+                                                     s.Using(p => p
+                                                                      .WebSite("Default Web Site",
+                                                                               "Default Web Site 2")
+                                                                      .Exclude.AppPools()
+                                                                      .Certificates()
+                                                                      .CertificatesOnIisBindings()
+                                                                      .Content()
+                                                                      .FrameworkConfig());
+                                                     s.To.LocalHost();
+                                                 }));
         }
 
         public WebDeploymentStatus ExecuteFromPackage()

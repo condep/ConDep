@@ -14,24 +14,26 @@ namespace ConDep.Dsl.Specs.Executors
 
         public WebDeploymentStatus ExecuteFromPackage()
         {
-            return Setup(setup => setup.WebDeploy(s => s
-                                                           .WithConfiguration(c => c.DoNotAutoDeployAgent())
-                                                           .From.Package(@"C:\package.zip", "test123")
-                                                           .UsingProvider(p => p
-                                                                                   .Certificate(_certificateThumbprint))
-                                                           .To.LocalHost()
+            return Setup(setup => setup.Sync(s =>
+                                                 {
+                                                     s.WithConfiguration(c => c.DoNotAutoDeployAgent());
+                                                     s.From.Package(@"C:\package.zip", "test123");
+                                                     s.Using(p => p.Certificate(_certificateThumbprint));
+                                                     s.To.LocalHost();
+                                                 }
                                       ));
 
         }
 
         public WebDeploymentStatus Execute()
         {
-            return Setup(setup => setup.WebDeploy(s => s
-                                                           .WithConfiguration(c => c.DoNotAutoDeployAgent())
-                                                           .From.LocalHost()
-                                                           .UsingProvider(p => p
-                                                                                   .Certificate(_certificateThumbprint))
-                                                           .To.LocalHost()
+            return Setup(setup => setup.Sync(s =>
+                                                 {
+                                                     s.WithConfiguration(c => c.DoNotAutoDeployAgent());
+                                                     s.From.LocalHost();
+                                                     s.Using(p => p.Certificate(_certificateThumbprint));
+                                                     s.To.LocalHost();
+                                                 }
                                       ));
         }
 

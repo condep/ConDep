@@ -25,12 +25,13 @@ namespace ConDep.Dsl.Specs.Executors
 
         public WebDeploymentStatus Execute()
         {
-            return Setup(setup => setup.WebDeploy(s => s
-                                                           .WithConfiguration(c => c.DoNotAutoDeployAgent())
-                                                           .From.LocalHost()
-                                                           .UsingProvider(p => p
-                                                                                   .RunCmd(_command))
-                                                           .To.LocalHost()
+            return Setup(setup => setup.Sync(s =>
+                                                 {
+                                                     s.WithConfiguration(c => c.DoNotAutoDeployAgent());
+                                                     s.From.LocalHost();
+                                                     s.Using(p => p.RunCmd(_command));
+                                                     s.To.LocalHost();
+                                                 }
                                       ));
 
         }
