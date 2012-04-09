@@ -87,6 +87,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ConDep.Dsl.Operations.ApplicationRequestRouting\ConDep.Dsl.Operations.ApplicationRequestRouting.csproj">
+      <Project>{9FB29E13-3223-4154-AEDE-0D384A935949}</Project>
+      <Name>ConDep.Dsl.Operations.ApplicationRequestRouting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ConDep.Dsl.Operations.TransformConfig\ConDep.Dsl.Operations.TransformConfig.csproj">
       <Project>{975A49C5-DEB5-4F47-8655-63164EC4F258}</Project>
       <Name>ConDep.Dsl.Operations.TransformConfig</Name>

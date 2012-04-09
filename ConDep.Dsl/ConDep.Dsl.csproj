@@ -42,9 +42,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Web.Deployment, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files\IIS\Microsoft Web Deploy V2\Microsoft.Web.Deployment.dll</HintPath>
@@ -72,19 +69,6 @@
     <Compile Include="Operations\PreCompile\PreCompileExtension.cs" />
     <Compile Include="Operations\PreCompile\PreCompileOperation.cs" />
     <Compile Include="Operations\SetupOptions.cs" />
-    <Compile Include="Operations\ApplicationRequestRouting\ApplicationReqeustRoutingOperation.cs" />
-    <Compile Include="Operations\ApplicationRequestRouting\ApplicationRequestRoutingExtension.cs" />
-    <Compile Include="Operations\ApplicationRequestRouting\ApplicationRequestRoutingOptions.cs" />
-    <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\ArrFarmManager.cs" />
-    <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\Counters.cs" />
-    <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\Impersonator.cs" />
-    <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\ArrServerManager.cs" />
-    <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\State.cs" />
-    <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\StateAction.cs" />
-    <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\StateExecutor.cs" />
-    <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\UserInfo.cs" />
-    <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\WmiNetworkAdapter.cs" />
-    <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\ServerState.cs" />
     <Compile Include="Operations\WebDeploy\WebDeployExtension.cs" />
     <Compile Include="Operations\WebDeploy\WebDeployOperation.cs" />
     <Compile Include="Operations\SetupOperation.cs" />
