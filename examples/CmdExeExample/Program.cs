@@ -2,38 +2,48 @@
 
 namespace TestWebDeployApp
 {
-    //ToDo: Use ILMerge to get everything into one .exe
-    public class Program : ConDepConsoleApp<Program, DeploymentSettings>
+    public class Program : ConDepConsoleApp<Program, ISettings>
     {
         static void Main(string[] args)
         {
             Initialize(args);
         }
 
-        protected override void Execute()
+        protected override void Execute(ISettings settings)
         {
             Setup(setup =>
                       {
-                          setup.TransformWebConfig(@"C:\Temp\MyApp", "web.config", "web.test.config");
-                          setup.PreCompile("MyApp", @"C:\Temp\MyApp", @"C:\temp\Test\MyApp");
-								  //setup.ApplicationRequestRouting("server",
-								  //                                arr => arr.TakeFarmOfflineForServer("10.0.0.21", "Farm1"));
-								  setup.ApplicationRequestRouting("ffdevnlb01").LoadBalancer.Farm("Sikker").TakeServerOffline("10.70.148.72"); //, a => a.TakeFarmOfflineForServer(Settings.ArrServers.DevServers[Settings.WebServer], Settings.ArrFarmName));
+                          setup.PreCompile(settings.AppName, settings.BaseWebPath, settings.PreCompiledWebPath);
+                          setup.TransformWebConfig(settings.PreCompiledWebPath, "web.config", "web." + settings.Environment + ".config");
 
-                          setup.WebDeploy(wd => wd
-                                                    .From.Server(Settings.FromServer, c => c.WithUserName("asdf")
-                                                                                               .WithPassword("asdf"))
-                                                    .UsingProvider(p => p
-                                                                            .WebApp(
-                                                                                Settings.WebAppName,
-                                                                                Settings.RemoteWebApp,
-                                                                                Settings.RemoteWebSite)
-                                                    )
-                                                    .To.Server(Settings.ToServer));
-                          setup.SmokeTest("http://blog.torresdal.net");
-								  setup.ApplicationRequestRouting("ffdevnlb01").LoadBalancer.Farm("Sikker").TakeServerOnline("ffdevweb01"); //, a => a.TakeFarmOfflineForServer(Settings.ArrServers.DevServers[Settings.WebServer], Settings.ArrFarmName));
-								 //setup.ApplicationRequestRouting("server",
-								  //                                arr => arr.TakeFarmOnlineForServer("10.0.0.21", "Farm1"));
+                          setup
+                              .ApplicationRequestRouting(settings.ArrServer)
+                              .LoadBalancer
+                              .Farm(settings.WebFarm)
+                              .TakeServerOffline(settings.Servers[0].Ip);
+
+                          setup.Sync(s =>
+                                         {
+                                             s.From.LocalHost();
+                                             s.Using.WebApp(settings.PreCompiledWebPath, settings.AppName,
+                                                            settings.WebSiteName);
+                                             s.Using.NServiceBus(settings.BaseSvcPath, settings.SvcName,
+                                                                 o =>
+                                                                 o.DestinationDir(settings.DestSvcPath).UserName(
+                                                                     settings.ServiceUser).Password(
+                                                                         settings.ServicePassword));
+                                             s.To.Server(settings.Servers[0].Name,
+                                                         c =>
+                                                         c.WithUserName(settings.Servers[0].UserName).WithPassword(
+                                                             settings.Servers[0].Password));
+                                         }
+                              );
+
+                          setup
+                              .ApplicationRequestRouting(settings.ArrServer)
+                              .LoadBalancer
+                              .Farm(settings.WebFarm)
+                              .TakeServerOnline(settings.Servers[0].Ip);
                       });
         }
     }

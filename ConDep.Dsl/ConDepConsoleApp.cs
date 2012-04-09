@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,6 @@ using System.Security;
 using System.Reflection;
 using System.Collections.Generic;
 using ConDep.Dsl.Console;
-using ConDep.Dsl;
 using ConDep.Dsl.Operations.WebDeploy.Model;
 
 namespace ConDep.Dsl
@@ -14,33 +14,88 @@ namespace ConDep.Dsl
 	//ToDo: Refactor -> Violates SRP (...and probably quite a few other things)
 	public abstract class ConDepConsoleApp<TConsoleOwner, TSettings> : ConDepOperation 
 		where TConsoleOwner : ConDepConsoleApp<TConsoleOwner, TSettings>, new()
-		where TSettings : ConDepConfiguration, new()
+		where TSettings : class
 	{
-
-		protected ConDepConsoleApp() 
+	    protected ConDepConsoleApp() 
 		{
-			Settings = new TSettings();
-
 			var cmdParams = GetCmdParams();
-			if (UserNeedsHelp(cmdParams))
+            var cmdParams2 = ExtractSettingsParams(cmdParams);
+
+	        var env = GetEnvFromCmdLine(cmdParams2);
+
+	        //Should support not by convention as well. E.g. concrete class.
+            var settings = CreateEnvSettingsByConvention(env);
+
+            if (UserNeedsHelp(cmdParams))
 			{
-				PrintHelp();
+				PrintHelp(settings);
 				return;
 			}
 
-			AddSettingsFromCmdLine(cmdParams);
+            AddSettingsFromCmdLine(cmdParams, settings);
 
-			Execute();
+			Execute(settings);
 		}
 
-		protected TSettings Settings { get; private set; }
+	    private TSettings CreateEnvSettingsByConvention(string env)
+	    {
+	        var interfaceType = typeof (TSettings);
 
-		private void AddSettingsFromCmdLine(IEnumerable<string> cmdParams)
+            if(!interfaceType.IsInterface)
+            {
+                throw new ArgumentException(string.Format("Not an interface [{0}].", interfaceType.Name));
+            }
+
+            return GetImplementersOfInterfaceForEnvironment(interfaceType, env);
+	    }
+
+	    private static TSettings GetImplementersOfInterfaceForEnvironment(Type interfaceType, string env)
+	    {
+	        var implementers = AppDomain.CurrentDomain.GetAssemblies()
+	            .SelectMany(assembly => assembly.GetTypes())
+	            .Where(type =>
+	                   interfaceType.IsAssignableFrom(type)
+	                   &&
+                       type.IsClass
+                       &&
+	                   type.Name.StartsWith(env, true, CultureInfo.InvariantCulture)
+	            ).ToList();
+
+            if (implementers == null || implementers.Count() == 0)
+            {
+                throw new ArgumentException(string.Format("No implementor of the interface [{0}] starting with [{1}] was found.", interfaceType.Name, env));
+            }
+
+            if (implementers.Count() > 1)
+            {
+                throw new ArgumentException(string.Format("More than one implementor of the interface [{0}] starting with [{1}] was found.", interfaceType.Name, env));
+            }
+
+	        return implementers.First() as TSettings;
+	    }
+
+	    private string GetEnvFromCmdLine(IEnumerable<CmdParam> cmdParams)
+	    {
+	        var param = cmdParams.FirstOrDefault(x => x.ParamName == "env");
+            if(param == null)
+            {
+                throw new ArgumentNullException("Command line argument for environment [env] is missing.");
+            }
+
+	        return param.ParamValue;
+	    }
+
+	    protected static void Initialize(string[] args)
+        {
+            new TConsoleOwner();
+        }
+
+		private void AddSettingsFromCmdLine(IEnumerable<string> cmdParams, object settings)
 		{
 			var settingParams = ExtractSettingsParams(cmdParams);
 			foreach(var param in settingParams)
 			{
-				Settings.GetType().GetField(param.ParamName).SetValue(Settings, param.ParamValue);
+				settings.GetType().GetField(param.ParamName).SetValue(settings, param.ParamValue);
 			}
 		}
 
@@ -87,22 +142,17 @@ namespace ConDep.Dsl
 			return commandLine;
 		}
 
-		protected static void Initialize(string[] args)
-		{
-			new TConsoleOwner();
-		}
-
-		private void PrintHelp()
+		private void PrintHelp(TSettings settings)
 		{
 		    System.Console.WriteLine(string.Format("\n" +
 		                                           "{0} {1}"
-		                                           , FileName, GetCmdHelpForSettings()));
+		                                           , FileName, GetCmdHelpForSettings(settings)));
 		}
 
-		private StringBuilder GetCmdHelpForSettings()
+		private StringBuilder GetCmdHelpForSettings(TSettings settings)
 		{
 			var validSettings = new StringBuilder();
-			foreach (var setting in Settings.GetType().GetFields().Where(setting => setting.IsDefined(typeof (CmdParamAttribute), false)))
+			foreach (var setting in settings.GetType().GetFields().Where(setting => setting.IsDefined(typeof (CmdParamAttribute), false)))
 			{
 			    var attrib = setting.GetCustomAttributes(typeof (CmdParamAttribute), false).FirstOrDefault() as CmdParamAttribute;
 			    string settingHelp;
@@ -129,7 +179,7 @@ namespace ConDep.Dsl
 			}
 		}
 
-		protected abstract void Execute();
+		protected abstract void Execute(TSettings setting);
 
 		protected override void OnMessage(object sender, WebDeployMessageEventArgs e)
 		{

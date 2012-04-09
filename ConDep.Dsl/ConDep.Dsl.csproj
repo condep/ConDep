@@ -125,7 +125,6 @@
     <Compile Include="Operations\WebDeploy\Options\ToOptions.cs" />
     <Compile Include="Console\CmdParamAttribute.cs" />
     <Compile Include="Console\CmdParameterParser.cs" />
-    <Compile Include="ConDepConfiguration.cs" />
     <Compile Include="ConDepConsoleApp.cs" />
     <Compile Include="Operations\WebDeploy\Providers\General\GeneralProviderExtension.cs" />
     <Compile Include="Operations\WebDeploy\Providers\Certificate\CertificateExtension.cs" />
@@ -173,6 +172,7 @@
     <Compile Include="Operations\WebDeploy\Model\WebDeployMessageEventArgs.cs" />
     <Compile Include="ConDepOperation.cs" />
     <Compile Include="Operations\TransformWebConfig\Infrastructure\WebTransformLogger.cs" />
+    <Compile Include="Server.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
