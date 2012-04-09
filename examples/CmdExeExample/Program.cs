@@ -14,7 +14,7 @@ namespace TestWebDeployApp
             Setup(setup =>
                       {
                           setup.PreCompile(settings.AppName, settings.BaseWebPath, settings.PreCompiledWebPath);
-                          setup.TransformWebConfig(settings.PreCompiledWebPath, "web.config", "web." + settings.Environment + ".config");
+                          setup.TransformConfig(settings.PreCompiledWebPath, "web.config", "web." + settings.Environment + ".config");
 
                           setup
                               .ApplicationRequestRouting(settings.ArrServer)

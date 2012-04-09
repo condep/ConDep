@@ -7,13 +7,13 @@ using Microsoft.Web.Publishing.Tasks;
 
 namespace ConDep.Dsl
 {
-	public class TransformWebConfigOperation : IOperateConDep
+	public class TransformConfigOperation : IOperateConDep
 	{
 		private readonly string _configDirPath;
 		private readonly string _configName;
 		private readonly string _transformName;
 
-		public TransformWebConfigOperation(string configDirPath, string configName, string transformName)
+		public TransformConfigOperation(string configDirPath, string configName, string transformName)
 		{
 			_configDirPath = configDirPath;
 			_configName = configName;
