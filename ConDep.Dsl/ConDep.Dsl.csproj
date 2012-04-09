@@ -42,18 +42,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core">
-      <HintPath>..\packages\Castle.Core.2.5.2\lib\NET35\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentAutomation">
-      <HintPath>..\packages\FluentAutomation.SeleniumWebDriver.1.0.0.85\lib\net40\FluentAutomation.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentAutomation.SeleniumWebDriver">
-      <HintPath>..\packages\FluentAutomation.SeleniumWebDriver.1.0.0.85\lib\net40\FluentAutomation.SeleniumWebDriver.dll</HintPath>
-    </Reference>
-    <Reference Include="Ionic.Zip">
-      <HintPath>..\packages\DotNetZip.1.9.1.8\lib\net20\Ionic.Zip.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
@@ -65,9 +53,6 @@
     <Reference Include="Microsoft.Web.Publishing.Tasks">
       <HintPath>..\..\..\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v10.0\Web\Microsoft.Web.Publishing.Tasks.Dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -78,12 +63,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WebDriver">
-      <HintPath>..\packages\Selenium.WebDriver.2.16.0\lib\net40\WebDriver.dll</HintPath>
-    </Reference>
-    <Reference Include="WebDriver.Support">
-      <HintPath>..\packages\Selenium.Support.2.8.0\lib\net40\WebDriver.Support.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersionInfo.cs">
@@ -106,8 +85,6 @@
     <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\UserInfo.cs" />
     <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\WmiNetworkAdapter.cs" />
     <Compile Include="Operations\ApplicationRequestRouting\Infrastructure\ServerState.cs" />
-    <Compile Include="Operations\SmokeTest\SmokeTestExtension.cs" />
-    <Compile Include="Operations\SmokeTest\SmokeTestOperation.cs" />
     <Compile Include="Operations\TransformWebConfig\TransformWebConfigExtension.cs" />
     <Compile Include="Operations\TransformWebConfig\TransformWebConfigOperation.cs" />
     <Compile Include="Operations\WebDeploy\WebDeployExtension.cs" />
