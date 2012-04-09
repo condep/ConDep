@@ -71,6 +71,9 @@
     <Compile Include="Console\CmdLineHandler.cs" />
     <Compile Include="Console\CmdParam.cs" />
     <Compile Include="Operations\IOperateConDep.cs" />
+    <Compile Include="Operations\PreCompile\Infrastructure\PreCompileCallback.cs" />
+    <Compile Include="Operations\PreCompile\PreCompileExtension.cs" />
+    <Compile Include="Operations\PreCompile\PreCompileOperation.cs" />
     <Compile Include="Operations\SetupOptions.cs" />
     <Compile Include="Operations\ApplicationRequestRouting\ApplicationReqeustRoutingOperation.cs" />
     <Compile Include="Operations\ApplicationRequestRouting\ApplicationRequestRoutingExtension.cs" />
@@ -89,10 +92,7 @@
     <Compile Include="Operations\TransformWebConfig\TransformWebConfigOperation.cs" />
     <Compile Include="Operations\WebDeploy\WebDeployExtension.cs" />
     <Compile Include="Operations\WebDeploy\WebDeployOperation.cs" />
-    <Compile Include="Operations\PreCompile\Infrastructure\PreCompileCallback.cs" />
     <Compile Include="Operations\SetupOperation.cs" />
-    <Compile Include="Operations\PreCompile\PreCompileExtension.cs" />
-    <Compile Include="Operations\PreCompile\PreCompileOperation.cs" />
     <Compile Include="Operations\WebDeploy\Providers\WebSite\WebSiteExcludeOptions.cs" />
     <Compile Include="Operations\WebDeploy\Providers\WebSite\WebSiteExtension.cs" />
     <Compile Include="Operations\WebDeploy\Providers\WebSite\WebSiteOptions.cs" />
