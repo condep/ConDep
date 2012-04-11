@@ -21,8 +21,10 @@
   </metadata>
   <files>
     <file src="ConDep.Dsl\bin\Release\ConDep.Dsl.dll" target="lib\net40" />
-    <file src="ConDep.Dsl\bin\Release\Microsoft.Web.Administration.dll" target="lib\net40" />
+    <file src="ConDep.Dsl.Operations.TransformConfig\bin\Release\ConDep.Dsl.Operations.TransformConfig.dll" target="lib\net40" />
+    <file src="ConDep.Dsl.Operations.TransformConfig\bin\Release\Microsoft.Web.Publishing.Tasks.dll" target="lib\net40" />
+    <file src="ConDep.Dsl.Operations.ApplicationRequestRouting\bin\Release\ConDep.Dsl.Operations.ApplicationRequestRouting.dll" target="lib\net40" />
+    <file src="ConDep.Dsl.Operations.ApplicationRequestRouting\bin\Release\Microsoft.Web.Administration.dll" target="lib\net40" />
     <file src="ConDep.Dsl\bin\Release\Microsoft.Web.Deployment.dll" target="lib\net40" />
-    <file src="ConDep.Dsl\bin\Release\Microsoft.Web.Publishing.Tasks.dll" target="lib\net40" />
   </files>
 </package>
