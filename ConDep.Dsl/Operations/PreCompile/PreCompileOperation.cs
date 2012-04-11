@@ -27,7 +27,7 @@ namespace ConDep.Dsl
 				if(Directory.Exists(_preCompileOutputpath))
 					Directory.Delete(_preCompileOutputpath, true);
 
-				var buildManager = new ClientBuildManager(_webApplicationName, _webApplicationPhysicalPath, _preCompileOutputpath);
+				var buildManager = new ClientBuildManager(_webApplicationName, _webApplicationPhysicalPath, _preCompileOutputpath, new ClientBuildManagerParameter{ PrecompilationFlags = PrecompilationFlags.Updatable });
 				buildManager.PrecompileApplication(new PreCompileCallback(output, outputError));
 			}
 			catch (Exception ex)
