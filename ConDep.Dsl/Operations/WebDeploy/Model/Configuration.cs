@@ -4,7 +4,7 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
 {
 	public class Configuration : IValidate
 	{
-		private bool _doNotAutoDeployAgent = true;
+		private bool _doNotAutoDeployAgent = false;
 
 		public bool DoNotAutoDeployAgent
 		{
