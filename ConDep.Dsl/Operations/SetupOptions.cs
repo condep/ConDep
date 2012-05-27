@@ -6,12 +6,12 @@ namespace ConDep.Dsl.Builders
 	{
 		private readonly SetupOperation _setupOperation;
 
-		public SetupOptions(SetupOperation setupOperation)
+	    public SetupOptions(SetupOperation setupOperation)
 		{
 			_setupOperation = setupOperation;
 		}
 
-		public void AddOperation(IOperateConDep operation)
+	    public void AddOperation(IOperateConDep operation)
 		{
 			_setupOperation.AddOperation(operation);
 		}

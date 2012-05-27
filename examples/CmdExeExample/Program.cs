@@ -1,4 +1,5 @@
-﻿using ConDep.Dsl;
+﻿using System.Security.AccessControl;
+using ConDep.Dsl;
 
 namespace TestWebDeployApp
 {
@@ -13,37 +14,50 @@ namespace TestWebDeployApp
         {
             Setup(setup =>
                       {
-                          setup.PreCompile(settings.AppName, settings.BaseWebPath, settings.PreCompiledWebPath);
-                          setup.TransformConfig(settings.PreCompiledWebPath, "web.config", "web." + settings.Environment + ".config");
-
-                          setup
-                              .ApplicationRequestRouting(settings.ArrServer)
+                          setup.TransformConfig("", "web.config", "web.dev.config");
+                          setup.PreCompile("MyApp", @"C:\", "C:\temp");
+                          setup.ApplicationRequestRouting("MyNLBServer")
                               .LoadBalancer
-                              .Farm(settings.WebFarm)
-                              .TakeServerOffline(settings.Servers[0].Ip);
+                              .Farm("Sikker")
+                              .TakeServerOffline("10.0.0.12");
 
-                          setup.Sync(s =>
-                                         {
-                                             s.From.LocalHost();
-                                             s.Using.WebApp(settings.PreCompiledWebPath, settings.AppName,
-                                                            settings.WebSiteName);
-                                             s.Using.NServiceBus(settings.BaseSvcPath, settings.SvcName,
-                                                                 o =>
-                                                                 o.DestinationDir(settings.DestSvcPath).UserName(
-                                                                     settings.ServiceUser).Password(
-                                                                         settings.ServicePassword));
-                                             s.To.Server(settings.Servers[0].Name,
-                                                         c =>
-                                                         c.WithUserName(settings.Servers[0].UserName).WithPassword(
-                                                             settings.Servers[0].Password));
-                                         }
-                              );
+                          setup.Deployment("serverName", serverSetup =>
+                                                         {
+                                                             serverSetup.IIS.FromExistingServer("srcServer", iisSetup =>
+                                                                                                           {
+                                                                                                               iisSetup.WebApp("MyWebApp","","");
+                                                                                                               iisSetup.WebSite("MySite","MyNewDestSite");
+                                                                                                           });
 
-                          setup
-                              .ApplicationRequestRouting(settings.ArrServer)
-                              .LoadBalancer
-                              .Farm(settings.WebFarm)
-                              .TakeServerOnline(settings.Servers[0].Ip);
+                                                             serverSetup.IIS.FromCustomDefinition(iisSetup =>
+                                                                                                {
+                                                                                                    //iisSetup.AppPool("", "", "");
+                                                                                                    iisSetup.WebApp("MyWebApp","MyWebSite", "");
+                                                                                                    iisSetup.WebSite("MyWebSite", "", options =>
+                                                                                                                {
+                                                                                                                    //options.Binding("type","ipAddress","port","hostName","certificate");
+                                                                                                                    //options.AppPool("MyAppPool","classic","4.0");
+                                                                                                                    //options.WebApp("","","",waOptions=>
+                                                                                                                    //{
+                                                                                                                    //    waOptions.AppPool("","");
+                                                                                                                    //});
+                                                                                                                });
+                                                                                                });
+
+
+                                                             serverSetup.Certificate(@"C:\cert.cer");
+                                                             //serverSetup.Certificate("srcServer", "thumbprint");
+                                                             //serverSetup.CopyDir("srcServer", "srcDir", "dstDir");
+                                                             //serverSetup.CopyDir("srcDir", "dstDir");
+                                                             //serverSetup.CopyFile("srcServer", "srcFile", "dstFile");
+                                                             //serverSetup.CopyFile("srcFile", "dstFile");
+                                                             serverSetup.RunCmd("ipconfig /flushdns");
+                                                             serverSetup.PowerShell("Get-IPConfig");
+                                                             serverSetup.SetAcl("", o=>o.Permissions(FileSystemRights.Read, ""));
+                                                             serverSetup.NServiceBus("", "", o=>o.DestinationDir(""));
+                                                             //serverSetup.WindowsService("");
+
+                                                         });
                       });
         }
     }
