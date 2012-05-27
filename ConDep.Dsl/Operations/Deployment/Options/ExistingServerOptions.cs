@@ -15,7 +15,7 @@ namespace ConDep.Dsl.Builders
 
         public IProvideForExistingIisServer Using
         {
-            get { return _providerCollection ?? (_providerCollection = new ProviderCollection(_webDeployDefinition.Providers)); }
+            get { return _providerCollection ?? (_providerCollection = new ProviderOptions(_webDeployDefinition.Providers)); }
         }
     }
 }   

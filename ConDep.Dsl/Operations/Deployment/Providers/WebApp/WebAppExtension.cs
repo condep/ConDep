@@ -11,7 +11,7 @@ namespace ConDep.Dsl
 		    AddProvider(sourceDir, webAppName, destinationWebSiteName, providerCollection);
 		}
 
-	    public static void WebApp(this IProvideForCustomIis providerCollection, string sourceDir, string webAppName, string destinationWebSiteName)
+	    public static void WebApp(this IProvideForCustomIisDefinition providerCollection, string sourceDir, string webAppName, string destinationWebSiteName)
         {
             AddProvider(sourceDir, webAppName, destinationWebSiteName, providerCollection);
         }

@@ -66,13 +66,14 @@
     <Compile Include="Console\CmdParam.cs" />
     <Compile Include="Operations\Deployment\Options\ExistingServerOptions.cs" />
     <Compile Include="Operations\Deployment\Options\CustomDefinitionOptions.cs" />
+    <Compile Include="Operations\Deployment\Options\IProviderCollection.cs" />
     <Compile Include="Operations\Deployment\Providers\PowerShell\PowerShellOptions.cs" />
     <Compile Include="Operations\Deployment\Options\IisOptions.cs" />
     <Compile Include="Operations\IOperateConDep.cs" />
     <Compile Include="Operations\PreCompile\Infrastructure\PreCompileCallback.cs" />
     <Compile Include="Operations\PreCompile\PreCompileExtension.cs" />
     <Compile Include="Operations\PreCompile\PreCompileOperation.cs" />
-    <Compile Include="Operations\SetupOptions.cs" />
+    <Compile Include="Operations\DeploymentOptions.cs" />
     <Compile Include="Operations\Deployment\DeploymentExtension.cs" />
     <Compile Include="Operations\Deployment\DeploymentOperation.cs" />
     <Compile Include="Operations\SetupOperation.cs" />
@@ -83,7 +84,6 @@
     <Compile Include="Operations\Deployment\Model\WebDeploymentStatus.cs" />
     <Compile Include="Operations\Deployment\Model\WebDeployOptions.cs" />
     <Compile Include="Operations\Deployment\Providers\General\GeneralProviderOptions.cs" />
-    <Compile Include="Operations\Deployment\Options\FromOptions.cs" />
     <Compile Include="Operations\Deployment\Options\ToOptions.cs" />
     <Compile Include="Console\CmdParamAttribute.cs" />
     <Compile Include="Console\CmdParameterParser.cs" />
@@ -97,7 +97,7 @@
     <Compile Include="Operations\Deployment\Providers\CopyFile\CopyFileExtension.cs" />
     <Compile Include="Operations\Deployment\Providers\CopyFile\CopyFileOptions.cs" />
     <Compile Include="Operations\Deployment\Options\CredentialsOptions.cs" />
-    <Compile Include="Operations\Deployment\Options\ExistingServerProviderCollection.cs" />
+    <Compile Include="Operations\Deployment\Options\ProviderOptions.cs" />
     <Compile Include="Operations\Deployment\Providers\NServiceBus\NServiceBusBuilder.cs" />
     <Compile Include="Operations\Deployment\Providers\NServiceBus\NServicebusExtension.cs" />
     <Compile Include="Operations\Deployment\Providers\NServiceBus\NServiceBusProvider.cs" />
@@ -109,7 +109,6 @@
     <Compile Include="Operations\Deployment\Providers\SetAcl\SetAclExtension.cs" />
     <Compile Include="Operations\Deployment\Providers\WebApp\WebAppExtension.cs" />
     <Compile Include="Operations\Deployment\Providers\SetAcl\SetAclOptions.cs" />
-    <Compile Include="Operations\Deployment\Options\SyncOptions.cs" />
     <Compile Include="Operations\WebRequest\WebRequestExtension.cs" />
     <Compile Include="Operations\WebRequest\WebRequestOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -9,18 +9,18 @@ namespace ConDep.Dsl.Tests
 	[TestFixture]
 	public abstract class ProviderTestFixture<TProvider> : SimpleTestFixture where TProvider : class, IProvide
 	{
-		private ProviderCollection _providers;
+		private ProviderOptions _providers;
 		private List<IProvide> _internalProviders;
 		private readonly Notification _notification = new Notification();
 
-		protected ProviderCollection Providers
+		protected ProviderOptions Providers
 		{
 			get
 			{
 				if (_providers == null)
 				{
 					_internalProviders = new List<IProvide>();
-					_providers = new ProviderCollection(_internalProviders);
+					_providers = new ProviderOptions(_internalProviders);
 				}
 				return _providers;
 			}

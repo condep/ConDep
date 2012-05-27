@@ -19,11 +19,11 @@ namespace ConDep.Dsl
 		protected abstract void OnMessage(object sender, WebDeployMessageEventArgs e);
 		protected abstract void OnErrorMessage(object sender, WebDeployMessageEventArgs e);
 
-		protected WebDeploymentStatus Setup(Action<SetupOptions> action)
+		protected WebDeploymentStatus Setup(Action<DeploymentOptions> action)
 		{
 			var status = new WebDeploymentStatus();
 
-			action(new SetupOptions(_setupOperation));
+			action(new DeploymentOptions(_setupOperation));
 			if (!_setupOperation.IsValid(_notification))
 			{
 				_notification.Throw();

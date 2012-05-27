@@ -20,9 +20,9 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
 
 		public abstract void Configure();
 
-		protected void Configure(Action<ProviderCollection> action)
+		protected void Configure(Action<ProviderOptions> action)
 		{
-			action(new ProviderCollection(_childProviders));
+			action(new ProviderOptions(_childProviders));
 		}
 
         public WebDeploymentStatus Sync(WebDeployOptions webDeployOptions, WebDeploymentStatus deploymentStatus)

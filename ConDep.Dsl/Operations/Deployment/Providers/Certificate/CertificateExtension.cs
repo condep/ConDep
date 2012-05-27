@@ -5,13 +5,13 @@ namespace ConDep.Dsl
 {
 	public static class CertificateExtension
 	{
-        public static void Certificate(this ProviderCollection providerCollection, string thumbprint)
+        public static void Certificate(this ProviderOptions providerOptions, string thumbprint)
 		{
 			var certificateProvider = new CertficiateProvider(thumbprint);
-			providerCollection.AddProvider(certificateProvider);
+			providerOptions.AddProvider(certificateProvider);
 		}
 
-        public static void Certificate(this IProvideForServer serverOptions, string thumbprint)
+        public static void Certificate(this IProvideForDeployment serverOptions, string thumbprint)
         {
             var certificateProvider = new CertficiateProvider(thumbprint);
             serverOptions.AddProvider(certificateProvider);

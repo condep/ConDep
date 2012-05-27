@@ -8,24 +8,24 @@ namespace ConDep.Dsl
 {
 	public static class DeploymentExtension
 	{
-		public static void Sync(this SetupOptions setupOptions, Action<SyncOptions> action)
-		{
-			var webDeployDefinition = new WebDeployDefinition();
+        //public static void Sync(this SetupOptions setupOptions, Action<SyncOptions> action)
+        //{
+        //    var webDeployDefinition = new WebDeployDefinition();
 
-			var webDeployOperation = new DeploymentOperation(webDeployDefinition);
-			setupOptions.AddOperation(webDeployOperation);
+        //    var webDeployOperation = new DeploymentOperation(webDeployDefinition);
+        //    setupOptions.AddOperation(webDeployOperation);
 
-			action(new SyncOptions(webDeployDefinition));
-		}
+        //    action(new SyncOptions(webDeployDefinition));
+        //}
 
-        public static void Deployment(this SetupOptions setupOptions, string serverName, Action<ServerOptions> action)
+        public static void Deployment(this DeploymentOptions deploymentOptions, string serverName, Action<IProvideForDeployment> action)
         {
             var webDeployDefinition = new WebDeployDefinition();
 
             var webDeployOperation = new DeploymentOperation(webDeployDefinition);
-            setupOptions.AddOperation(webDeployOperation);
+            deploymentOptions.AddOperation(webDeployOperation);
 
-            action(new ServerOptions(webDeployDefinition, webDeployDefinition.Providers));
+            action(new DeploymentProviderOptions(webDeployDefinition));
         }
 
 	}
