@@ -73,7 +73,7 @@
     <Compile Include="Operations\PreCompile\Infrastructure\PreCompileCallback.cs" />
     <Compile Include="Operations\PreCompile\PreCompileExtension.cs" />
     <Compile Include="Operations\PreCompile\PreCompileOperation.cs" />
-    <Compile Include="Operations\DeploymentOptions.cs" />
+    <Compile Include="Operations\Deployment\Options\DeploymentOptions.cs" />
     <Compile Include="Operations\Deployment\DeploymentExtension.cs" />
     <Compile Include="Operations\Deployment\DeploymentOperation.cs" />
     <Compile Include="Operations\SetupOperation.cs" />

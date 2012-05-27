@@ -13,12 +13,12 @@ namespace ConDep.Dsl.Builders
             _webDeployDefinition = webDeployDefinition;
         }
 
-        public void FromExistingServer(string sourceServer, Action<IProvideForExistingIisServer> action)
+        public void Define(Action<IProvideForCustomIisDefinition> iisDefinition)
         {
             throw new NotImplementedException();
         }
 
-        public void FromCustomDefinition(Action<IProvideForCustomIisDefinition> action)
+        public void SyncFromExistingServer(string iisServer, Action<IProvideForExistingIisServer> sync)
         {
             throw new NotImplementedException();
         }

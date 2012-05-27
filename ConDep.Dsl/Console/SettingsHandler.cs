@@ -20,8 +20,11 @@ namespace ConDep.Dsl.Console
             return GetImplementersOfInterfaceForEnvironment<TSettings>(interfaceType, env);
         }
 
-        public static void AddSettingsFromCmdLine<TSettings>(IEnumerable<CmdParam> settingParams, TSettings settings)
+        public static void AddSettingsFromCmdLine<TSettings>(IEnumerable<CmdParam> settingParams, TSettings settings) where TSettings : class
         {
+            if (settings == null)
+                return;
+
             foreach (var param in settingParams)
             {
                 settings.GetType().GetField(param.ParamName).SetValue(settings, param.ParamValue);

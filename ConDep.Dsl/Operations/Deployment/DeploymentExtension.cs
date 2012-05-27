@@ -18,14 +18,14 @@ namespace ConDep.Dsl
         //    action(new SyncOptions(webDeployDefinition));
         //}
 
-        public static void Deployment(this DeploymentOptions deploymentOptions, string serverName, Action<IProvideForDeployment> action)
+        public static void Deployment(this DeploymentOptions deploymentOptions, string destinationServerName, Action<IProvideForDeployment> serverSetup)
         {
             var webDeployDefinition = new WebDeployDefinition();
 
             var webDeployOperation = new DeploymentOperation(webDeployDefinition);
             deploymentOptions.AddOperation(webDeployOperation);
 
-            action(new DeploymentProviderOptions(webDeployDefinition));
+            serverSetup(new DeploymentProviderOptions(webDeployDefinition));
         }
 
 	}

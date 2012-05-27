@@ -1,4 +1,5 @@
-﻿using ConDep.Dsl.Builders;
+﻿using System;
+using ConDep.Dsl.Builders;
 using ConDep.Dsl.Operations.WebDeploy.Model;
 
 namespace ConDep.Dsl.Operations.WebDeploy.Options
@@ -24,5 +25,7 @@ namespace ConDep.Dsl.Operations.WebDeploy.Options
     public interface IProvideForDeployment : IProviderCollection
     {
         IisOptions IIS { get; }
+        //IisOptions IIS(Action<IProvideForCustomIisDefinition> customIISDefinition);
+        //IisOptions IIS(string iisServerToSyncFrom, Action<IProvideForExistingIisServer> sync);
     }
 }
