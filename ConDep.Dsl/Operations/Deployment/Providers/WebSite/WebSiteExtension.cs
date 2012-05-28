@@ -6,20 +6,30 @@ namespace ConDep.Dsl
 {
     public static class WebSiteExtension
     {
-        public static WebSiteOptions WebSite(this IProvideForExistingIisServer providerCollection, string sourceWebsiteName, string destWebSiteName)
+        public static void WebSite(this IProvideForExistingIisServer providerCollection, string sourceWebsiteName, string destWebSiteName)
         {
             var webSiteProvider = new WebSiteProvider(sourceWebsiteName, destWebSiteName);
             providerCollection.AddProvider(webSiteProvider);
-
-            return new WebSiteOptions(webSiteProvider);
         }
 
-        public static WebSiteOptions WebSite(this IProvideForExistingIisServer providerCollection, string sourceWebsiteName, string destWebSiteName, string destFilePath)
+        public static void WebSite(this IProvideForExistingIisServer providerCollection, string sourceWebsiteName, string destWebSiteName, Action<WebSiteOptions> options)
+        {
+            var webSiteProvider = new WebSiteProvider(sourceWebsiteName, destWebSiteName);
+            options(new WebSiteOptions(webSiteProvider));
+            providerCollection.AddProvider(webSiteProvider);
+        }
+
+        public static void WebSite(this IProvideForExistingIisServer providerCollection, string sourceWebsiteName, string destWebSiteName, string destFilePath)
         {
             var webSiteProvider = new WebSiteProvider(sourceWebsiteName, destWebSiteName, destFilePath);
             providerCollection.AddProvider(webSiteProvider);
+        }
 
-            return new WebSiteOptions(webSiteProvider);
+        public static void WebSite(this IProvideForExistingIisServer providerCollection, string sourceWebsiteName, string destWebSiteName, string destFilePath, Action<WebSiteOptions> options)
+        {
+            var webSiteProvider = new WebSiteProvider(sourceWebsiteName, destWebSiteName, destFilePath);
+            options(new WebSiteOptions(webSiteProvider));
+            providerCollection.AddProvider(webSiteProvider);
         }
 
         public static WebSiteOptions WebSite(this IProvideForCustomIisDefinition providerCollection, string sourceWebsiteName, string destWebSiteName, Action<IProvideForCustomWebSite> options)

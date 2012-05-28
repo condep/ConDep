@@ -9,7 +9,7 @@ namespace ConDep.Dsl
     public class WebSiteProvider : ExistingServerProvider
     {
         private readonly string _destFilePath;
-        private readonly Dictionary<string, bool> _disabledLinkExtensions = new Dictionary<string, bool>();
+        private readonly Dictionary<string, bool> _linkExtensions = new Dictionary<string, bool>();
 
         //private readonly string _sourceWebsiteName;
         //private readonly string _destWebSiteName;
@@ -72,11 +72,18 @@ namespace ConDep.Dsl
         public override DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions)
         {
             var excludedLinks = (from link in sourceBaseOptions.LinkExtensions
-                                from excludedLink in _disabledLinkExtensions
+                                from excludedLink in _linkExtensions
                                 where excludedLink.Value && link.Name == excludedLink.Key
                                 select link).ToList();
 
             excludedLinks.ForEach(x => x.Enabled = false);
+
+            var includedLinks = (from link in sourceBaseOptions.LinkExtensions
+                                 from excludedLink in _linkExtensions
+                                 where !excludedLink.Value && link.Name == excludedLink.Key
+                                 select link).ToList();
+
+            includedLinks.ForEach(x => x.Enabled = true);
 
             return DeploymentManager.CreateObject(Name, SourcePath, sourceBaseOptions);
             
@@ -100,18 +107,18 @@ namespace ConDep.Dsl
 
         private bool GetExcludeValue(string extensionExcludeName)
         {
-            return _disabledLinkExtensions.ContainsKey(extensionExcludeName) ? _disabledLinkExtensions[extensionExcludeName] : false;
+            return _linkExtensions.ContainsKey(extensionExcludeName) ? _linkExtensions[extensionExcludeName] : false;
         }
 
         private void SetExcludeValue(string extensionExcludeName, bool value)
         {
-            if (_disabledLinkExtensions.ContainsKey(extensionExcludeName))
+            if (_linkExtensions.ContainsKey(extensionExcludeName))
             {
-                _disabledLinkExtensions[extensionExcludeName] = value;
+                _linkExtensions[extensionExcludeName] = value;
             }
             else
             {
-                _disabledLinkExtensions.Add(extensionExcludeName, value);
+                _linkExtensions.Add(extensionExcludeName, value);
             }
         }
 

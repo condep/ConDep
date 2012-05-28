@@ -42,4 +42,44 @@ namespace ConDep.Dsl
             return this;
         }
     }
+
+    public class WebSiteIncludeOptions : IProvideOptions<WebSiteIncludeOptions>
+    {
+        private readonly WebSiteProvider _webSiteProvider;
+
+        public WebSiteIncludeOptions(WebSiteProvider webSiteProvider)
+        {
+            _webSiteProvider = webSiteProvider;
+        }
+
+        public WebSiteIncludeOptions AppPools()
+        {
+            _webSiteProvider.ExcludeAppPools = false;
+            return this;
+        }
+
+        public WebSiteIncludeOptions Certificates()
+        {
+            _webSiteProvider.ExcludeCertificates = false;
+            return this;
+        }
+
+        public WebSiteIncludeOptions Content()
+        {
+            _webSiteProvider.ExcludeContent = false;
+            return this;
+        }
+
+        public WebSiteIncludeOptions FrameworkConfig()
+        {
+            _webSiteProvider.ExcludeFrameworkConfig = false;
+            return this;
+        }
+
+        public WebSiteIncludeOptions CertificatesOnIisBindings()
+        {
+            _webSiteProvider.ExcludeHttpCertConfig = false;
+            return this;
+        }
+    }
 }
