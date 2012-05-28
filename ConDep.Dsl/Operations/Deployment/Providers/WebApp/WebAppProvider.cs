@@ -4,7 +4,7 @@ using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl
 {
-	public class WebAppProvider : ExistingServerProvider
+	public class WebAppProvider : WebDeployProvider
 	{
 		private const string NAME = "iisApp";
 

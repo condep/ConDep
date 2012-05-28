@@ -4,7 +4,7 @@ using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl
 {
-	public class GeneralProvider : ExistingServerProvider
+	public class GeneralProvider : WebDeployProvider
 	{
 		private readonly Dictionary<string, string> _providerSettings = new Dictionary<string,string>();
 		private readonly string _name;

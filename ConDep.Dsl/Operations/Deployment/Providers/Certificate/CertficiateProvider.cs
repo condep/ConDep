@@ -3,7 +3,7 @@ using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl
 {
-	public class CertficiateProvider : ExistingServerProvider
+	public class CertficiateProvider : WebDeployProvider
 	{
 		private const string NAME = "cert";
 

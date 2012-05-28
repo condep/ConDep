@@ -35,18 +35,6 @@ namespace ConDep.Dsl.Operations.WebDeploy.Options
             _webDeployDefinition = webDeployDefinition;
         }
 
-
-        //IisOptions IProvideForDeployment.IIS(Action<IProvideForCustomIisDefinition> customIISDefinition)
-        //{
-        //    //ToDo: Handle action
-        //    return _iisOptions ?? (_iisOptions = new IisOptions(_webDeployDefinition));
-        //}
-
-        //IisOptions IProvideForDeployment.IIS(string iisServerToSyncFrom, Action<IProvideForExistingIisServer> sync)
-        //{
-        //    //ToDo: Handle action
-        //    return _iisOptions ?? (_iisOptions = new IisOptions(_webDeployDefinition));
-        //}
         public IisOptions IIS
         {
             get { return _iisOptions ?? (_iisOptions = new IisOptions(_webDeployDefinition)); }

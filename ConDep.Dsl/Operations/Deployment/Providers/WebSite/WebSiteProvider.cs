@@ -6,20 +6,15 @@ using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl
 {
-    public class WebSiteProvider : ExistingServerProvider
+    public class WebSiteProvider : WebDeployProvider
     {
         private readonly string _destFilePath;
         private readonly Dictionary<string, bool> _linkExtensions = new Dictionary<string, bool>();
-
-        //private readonly string _sourceWebsiteName;
-        //private readonly string _destWebSiteName;
 
         public WebSiteProvider(string sourceWebsiteName, string destWebSiteName)
         {
             DestinationPath = destWebSiteName;
             SourcePath = sourceWebsiteName;
-            //_sourceWebsiteName = sourceWebsiteName;
-            //_destWebSiteName = destWebSiteName;
         }
 
         public WebSiteProvider(string sourceWebsiteName, string destWebSiteName, string destFilePath)

@@ -4,7 +4,7 @@ using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl
 {
-	public class RunCmdProvider : ExistingServerProvider
+	public class RunCmdProvider : WebDeployProvider
 	{
 	    private readonly bool _continueOnError;
 	    private Exception _untrappedExitCodeException;

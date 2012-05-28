@@ -5,7 +5,7 @@ using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.Operations.WebDeploy.Model
 {
-	public abstract class ExistingServerProvider : IProvide, IValidate
+	public abstract class WebDeployProvider : IProvide, IValidate
 	{
         public string SourcePath { get; set; }
 		public virtual string DestinationPath { get; set; }

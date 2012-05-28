@@ -6,10 +6,10 @@ namespace ConDep.Dsl
 {
     public static class NServicebusExtension
     {
-        public static void NServiceBus(this IProvideForDeployment providerCollection, string sourceDir, string serviceName, Action<NServiceBusBuilder> options)
+        public static void NServiceBus(this IProvideForDeployment providerCollection, string sourceDir, string serviceName, Action<NServiceBusOptions> options)
         {
             var nservicebusProvider = new NServiceBusProvider(sourceDir, serviceName);
-	        options(new NServiceBusBuilder(nservicebusProvider));
+	        options(new NServiceBusOptions(nservicebusProvider));
 			providerCollection.AddProvider(nservicebusProvider);
         }
     }

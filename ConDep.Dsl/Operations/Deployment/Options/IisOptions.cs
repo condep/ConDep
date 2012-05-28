@@ -15,6 +15,7 @@ namespace ConDep.Dsl.Builders
 
         public void Define(Action<IProvideForCustomIisDefinition> iisDefinition)
         {
+            _webDeployDefinition.Source.LocalHost = true;
             iisDefinition(new ProviderOptions(_webDeployDefinition.Providers));
         }
 

@@ -4,7 +4,7 @@ using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl
 {
-	public class SetAclProvider : ExistingServerProvider
+	public class SetAclProvider : WebDeployProvider
 	{
 		public SetAclProvider(string destinationPath)
 		{

@@ -70,6 +70,7 @@
     <Compile Include="Operations\Deployment\Options\IProviderCollection.cs" />
     <Compile Include="Operations\Deployment\Providers\PowerShell\PowerShellOptions.cs" />
     <Compile Include="Operations\Deployment\Options\IisOptions.cs" />
+    <Compile Include="Operations\Deployment\Providers\WebSite\CustomWebSiteProvider.cs" />
     <Compile Include="Operations\IOperateConDep.cs" />
     <Compile Include="Operations\PreCompile\Infrastructure\PreCompileCallback.cs" />
     <Compile Include="Operations\PreCompile\PreCompileExtension.cs" />
@@ -99,7 +100,7 @@
     <Compile Include="Operations\Deployment\Providers\CopyFile\CopyFileOptions.cs" />
     <Compile Include="Operations\Deployment\Options\CredentialsOptions.cs" />
     <Compile Include="Operations\Deployment\Options\ProviderOptions.cs" />
-    <Compile Include="Operations\Deployment\Providers\NServiceBus\NServiceBusBuilder.cs" />
+    <Compile Include="Operations\Deployment\Providers\NServiceBus\NServiceBusOptions.cs" />
     <Compile Include="Operations\Deployment\Providers\NServiceBus\NServicebusExtension.cs" />
     <Compile Include="Operations\Deployment\Providers\NServiceBus\NServiceBusProvider.cs" />
     <Compile Include="Operations\Deployment\Providers\PowerShell\PowerShellExtension.cs" />
@@ -124,7 +125,7 @@
     <Compile Include="Operations\Deployment\Model\IProvide.cs" />
     <Compile Include="Operations\Deployment\Model\IValidate.cs" />
     <Compile Include="Operations\Deployment\Model\Notification.cs" />
-    <Compile Include="Operations\Deployment\Model\ExistingServerProvider.cs" />
+    <Compile Include="Operations\Deployment\Model\WebDeployProvider.cs" />
     <Compile Include="Operations\Deployment\Providers\SetAcl\SetAclProvider.cs" />
     <Compile Include="Operations\Deployment\Model\SemanticValidationError.cs" />
     <Compile Include="Operations\Deployment\Model\Source.cs" />

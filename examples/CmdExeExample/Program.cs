@@ -25,6 +25,23 @@ namespace TestWebDeployApp
                               "127.0.0.1", 
                               serverSetup =>
                                     {
+                                        //serverSetup.IIS.SyncFromExistingServer("jat-web02", sync =>
+                                        //{
+                                        //    sync.WebSite("ConDep", "MyNewDestSite", @"C:\Web\MyWebSite", options =>
+                                        //    {
+                                        //        options.Include.AppPools();
+                                        //        options.Include.Certificates();
+                                        //    });
+
+                                        //});
+
+
+                                        serverSetup.IIS.Define(iisDefinition =>
+                                                                   {
+                                                                       iisDefinition.WebSite("MyFirstCustomWebSite");
+                                                                   });
+
+
                                         //serverSetup.IIS.Define(customIisDefinition =>
                                         //{
                                         //    //iisSetup.AppPool("", "", "");
@@ -46,15 +63,6 @@ namespace TestWebDeployApp
                                         //                                        //sync.WebSite("MySite", "MyNewDestSite");
                                         //                                    });
 
-                                        serverSetup.IIS.SyncFromExistingServer("jat-web02", sync =>
-                                        {
-                                            sync.WebSite("ConDep", "MyNewDestSite", @"C:\Web\MyWebSite", options =>
-                                            {
-                                                options.Include.AppPools();
-                                                options.Include.Certificates();
-                                            });
-                                                
-                                        });
 
                                         //serverSetup.Certificate(@"C:\cert.cer");
                                         ////serverSetup.Certificate("srcServer", "thumbprint");

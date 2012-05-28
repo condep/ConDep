@@ -3,7 +3,7 @@ using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl
 {
-	public class CopyDirProvider : ExistingServerProvider
+	public class CopyDirProvider : WebDeployProvider
 	{
 		private const string NAME = "dirPath";
 
