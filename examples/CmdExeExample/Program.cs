@@ -48,7 +48,7 @@ namespace TestWebDeployApp
 
                                         serverSetup.IIS.SyncFromExistingServer("jat-web02", sync =>
                                         {
-                                            sync.WebSite("ConDep", "MyNewDestSite", @"C:\Web\MyWebSite").Exclude.AppPools().FrameworkConfig();
+                                            sync.WebSite("ConDep", "MyNewDestSite", @"C:\Web\MyWebSite").Exclude.AppPools().FrameworkConfig().Content();
                                         });
 
                                         //serverSetup.Certificate(@"C:\cert.cer");
