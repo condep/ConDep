@@ -14,6 +14,14 @@ namespace ConDep.Dsl
             return new WebSiteOptions(webSiteProvider);
         }
 
+        public static WebSiteOptions WebSite(this IProvideForExistingIisServer providerCollection, string sourceWebsiteName, string destWebSiteName, string destFilePath)
+        {
+            var webSiteProvider = new WebSiteProvider(sourceWebsiteName, destWebSiteName, destFilePath);
+            providerCollection.AddProvider(webSiteProvider);
+
+            return new WebSiteOptions(webSiteProvider);
+        }
+
         public static WebSiteOptions WebSite(this IProvideForCustomIisDefinition providerCollection, string sourceWebsiteName, string destWebSiteName, Action<IProvideForCustomWebSite> options)
         {
             var webSiteProvider = new WebSiteProvider(sourceWebsiteName, destWebSiteName);

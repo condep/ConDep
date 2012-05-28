@@ -85,6 +85,7 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
 			  var syncOptions = new DeploymentSyncOptions {WhatIf = Configuration.UseWhatIf};
 
 		      var sourceBaseOptions = Source.GetSourceBaseOptions();
+		      sourceBaseOptions.TempAgent = !Configuration.DoNotAutoDeployAgent;
               sourceBaseOptions.Trace += OnWebDeployTraceMessage;
               sourceBaseOptions.TraceLevel = TraceLevel.Verbose;
 

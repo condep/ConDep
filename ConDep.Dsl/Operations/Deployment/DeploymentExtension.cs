@@ -21,12 +21,14 @@ namespace ConDep.Dsl
         public static void Deployment(this DeploymentOptions deploymentOptions, string destinationServerName, Action<IProvideForDeployment> serverSetup)
         {
             var webDeployDefinition = new WebDeployDefinition();
+            webDeployDefinition.Destination.ComputerName = destinationServerName;
+
+            //ToDo: Add overload for username and password
 
             var webDeployOperation = new DeploymentOperation(webDeployDefinition);
             deploymentOptions.AddOperation(webDeployOperation);
 
             serverSetup(new DeploymentProviderOptions(webDeployDefinition));
         }
-
 	}
 }

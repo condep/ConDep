@@ -15,12 +15,22 @@ namespace ConDep.Dsl.Builders
 
         public void Define(Action<IProvideForCustomIisDefinition> iisDefinition)
         {
-            throw new NotImplementedException();
+            iisDefinition(new ProviderOptions(_webDeployDefinition.Providers));
         }
 
         public void SyncFromExistingServer(string iisServer, Action<IProvideForExistingIisServer> sync)
         {
-            throw new NotImplementedException();
+            _webDeployDefinition.Source.ComputerName = iisServer;
+            sync(new ProviderOptions(_webDeployDefinition.Providers));
         }
+
+        public void SyncFromExistingServer(string iisServer, string serverUserName, string serverPassword, Action<IProvideForExistingIisServer> sync)
+        {
+            _webDeployDefinition.Destination.Credentials.UserName = serverUserName;
+            _webDeployDefinition.Destination.Credentials.Password = serverPassword;
+
+            SyncFromExistingServer(iisServer, sync);
+        }
+
     }
 }

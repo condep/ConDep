@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Web.Deployment;
 
@@ -13,8 +14,13 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
 
 		public abstract DeploymentProviderOptions GetWebDeployDestinationObject();
 		public abstract DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions);
-		public abstract bool IsValid(Notification notification);
+        public virtual IList<DeploymentRule> GetReplaceRules()
+        {
+            return new List<DeploymentRule>();
+        }
 
+		public abstract bool IsValid(Notification notification);
+        
         public virtual WebDeploymentStatus Sync(WebDeployOptions webDeployOptions, WebDeploymentStatus deploymentStatus)
         {
             var defaultWaitInterval = webDeployOptions.DestBaseOptions.RetryInterval;
@@ -28,6 +34,11 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
             using (var sourceDepObject = webDeployOptions.FromPackage ? GetPackageSourceObject(webDeployOptions) : GetWebDeploySourceObject(webDeployOptions.SourceBaseOptions))
             {
                 var destProviderOptions = GetWebDeployDestinationObject();
+
+                foreach (var rule in GetReplaceRules())
+                {
+                    webDeployOptions.SyncOptions.Rules.Add(rule);
+                }
 
                 //if(webDeployOptions.FromPackage)
                 //{

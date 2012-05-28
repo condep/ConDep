@@ -15,6 +15,13 @@ namespace ConDep.Dsl
 		    DestinationWebSite = destinationWebSiteName;
 		}
 
+        public WebAppProvider(string sourceWebSiteName, string sourceWebAppName, string destinationWebSiteName, string destinationWebAppName)
+        {
+            SourcePath = string.Format("{0}/{1}", sourceWebSiteName, sourceWebAppName);
+            DestinationAppName = destinationWebAppName;
+            DestinationWebSite = destinationWebSiteName;
+        }
+
 		public string DestinationWebSite { get; set; }
 		public string DestinationAppName { get; set; }
 

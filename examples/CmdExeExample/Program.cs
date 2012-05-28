@@ -22,7 +22,7 @@ namespace TestWebDeployApp
                           //    .TakeServerOffline("10.0.0.12");
 
                           setup.Deployment(
-                              "myServer", 
+                              "127.0.0.1", 
                               serverSetup =>
                                     {
                                         //serverSetup.IIS.Define(customIisDefinition =>
@@ -40,11 +40,16 @@ namespace TestWebDeployApp
                                         //    });
                                         //});
 
-                                        serverSetup.IIS.SyncFromExistingServer("someIISServer", sync =>
-                                                                            {
-                                                                                sync.WebApp("MyWebApp", "", "");
-                                                                                //sync.WebSite("MySite", "MyNewDestSite");
-                                                                            });
+                                        //serverSetup.IIS.SyncFromExistingServer("127.0.0.1", sync =>
+                                        //                                    {
+                                        //                                        sync.WebApp("Default Web Site", "MailChimpIntegration", "Default Web Site", "ConDepTestMailChimp");
+                                        //                                        //sync.WebSite("MySite", "MyNewDestSite");
+                                        //                                    });
+
+                                        serverSetup.IIS.SyncFromExistingServer("jat-web02", sync =>
+                                        {
+                                            sync.WebSite("ConDep", "MyNewDestSite", @"C:\Web\MyWebSite").Exclude.AppPools().FrameworkConfig();
+                                        });
 
                                         //serverSetup.Certificate(@"C:\cert.cer");
                                         ////serverSetup.Certificate("srcServer", "thumbprint");
