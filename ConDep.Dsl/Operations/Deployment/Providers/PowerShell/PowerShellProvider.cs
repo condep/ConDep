@@ -14,7 +14,7 @@ namespace ConDep.Dsl
 
         public override void Configure()
         {
-            Configure(p => p.RunCmd(string.Format(@"powershell.exe -NonInteractive -InputFormat none -Command $ErrorActionPreference='stop'; {0}; exit $LASTEXITCODE", DestinationPath), this.ContinueOnError, o => o.WaitIntervalInSeconds(this.WaitInterval)));
+            Configure(p => p.RunCmd(string.Format(@"powershell.exe -NonInteractive -InputFormat none -Command ""& {{ $ErrorActionPreference='stop'; {0}; exit $LASTEXITCODE }}""", DestinationPath), this.ContinueOnError, o => o.WaitIntervalInSeconds(this.WaitInterval)));
         }
 
         public override bool IsValid(Notification notification)

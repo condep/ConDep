@@ -12,6 +12,7 @@ namespace TestWebDeployApp
 
         protected override void Execute(ISettings settings)
         {
+            // ReSharper disable ConvertToLambdaExpression
             Setup(setup =>
                       
                           //setup.TransformConfig("", "web.config", "web.dev.config");
@@ -35,11 +36,22 @@ namespace TestWebDeployApp
 
                                         //});
 
-
-                                        serverSetup.IIS.Define(iisDefinition =>
+                                        serverSetup.IIS.Define(iis =>
                                                                    {
-                                                                       iisDefinition.WebSite("MyFirstCustomWebSite");
+                                                                       iis.WebSite("YallaSite22", 2, options =>
+                                                                                                                         {
+                                                                                                                             options.HttpBinding(8080, o => o.HostHeader("HostName").Ip("10.0.0.11"));
+                                                                                                                             options.HttpsBinding(444, "localhost", o => o.HostHeader("HostName").Ip("10.0.0.12"));
+                                                                                                                             options.PhysicalPath(@"C:\Web\MyFirstCustomWebSite");
+                                                                                                                             //options.ApplicationPool("MyFirstCustomAppPool", o =>
+                                                                                                                             //                                                    {
+                                                                                                                             //                                                        o.NetFrameworkVersion(NetFrameworkVersion.Net4_0);
+                                                                                                                             //                                                        o.ManagedPipeline(ManagedPipeline.Integrated);
+                                                                                                                             //                                                        o.Identity.UserName("").Password("");
+                                                                                                                             //                                                    });
+                                                                                                                         });
                                                                    });
+        // ReSharper restore ConvertToLambdaExpression
 
 
                                         //serverSetup.IIS.Define(customIisDefinition =>

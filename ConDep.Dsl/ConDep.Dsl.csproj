@@ -70,7 +70,15 @@
     <Compile Include="Operations\Deployment\Options\IProviderCollection.cs" />
     <Compile Include="Operations\Deployment\Providers\PowerShell\PowerShellOptions.cs" />
     <Compile Include="Operations\Deployment\Options\IisOptions.cs" />
+    <Compile Include="Operations\Deployment\Providers\WebSite\Options\AppPoolOptions.cs" />
+    <Compile Include="Operations\Deployment\Providers\WebSite\Options\BindingOptions.cs" />
+    <Compile Include="Operations\Deployment\Providers\WebSite\BindingType.cs" />
+    <Compile Include="Operations\Deployment\Providers\WebSite\Options\CustomWebSiteOptions.cs" />
     <Compile Include="Operations\Deployment\Providers\WebSite\CustomWebSiteProvider.cs" />
+    <Compile Include="Operations\Deployment\Providers\WebSite\Options\IdentityOptions.cs" />
+    <Compile Include="Operations\Deployment\Providers\WebSite\IisBinding.cs" />
+    <Compile Include="Operations\Deployment\Providers\WebSite\ManagedPipeline.cs" />
+    <Compile Include="Operations\Deployment\Providers\WebSite\NetFrameworkVersion.cs" />
     <Compile Include="Operations\IOperateConDep.cs" />
     <Compile Include="Operations\PreCompile\Infrastructure\PreCompileCallback.cs" />
     <Compile Include="Operations\PreCompile\PreCompileExtension.cs" />
@@ -79,9 +87,9 @@
     <Compile Include="Operations\Deployment\DeploymentExtension.cs" />
     <Compile Include="Operations\Deployment\DeploymentOperation.cs" />
     <Compile Include="Operations\SetupOperation.cs" />
-    <Compile Include="Operations\Deployment\Providers\WebSite\WebSiteExcludeOptions.cs" />
+    <Compile Include="Operations\Deployment\Providers\WebSite\Options\WebSiteExcludeOptions.cs" />
     <Compile Include="Operations\Deployment\Providers\WebSite\WebSiteExtension.cs" />
-    <Compile Include="Operations\Deployment\Providers\WebSite\WebSiteOptions.cs" />
+    <Compile Include="Operations\Deployment\Providers\WebSite\Options\WebSiteOptions.cs" />
     <Compile Include="Operations\Deployment\Providers\WebSite\WebSiteProvider.cs" />
     <Compile Include="Operations\Deployment\Model\WebDeploymentStatus.cs" />
     <Compile Include="Operations\Deployment\Model\WebDeployOptions.cs" />

@@ -32,27 +32,17 @@ namespace ConDep.Dsl
             providerCollection.AddProvider(webSiteProvider);
         }
 
-        public static void WebSite(this IProvideForCustomIisDefinition providerCollection, string webSiteName)
+        public static void WebSite(this IProvideForCustomIisDefinition providerCollection, string webSiteName, int id)
         {
-            var customWebSiteProvider = new CustomWebSiteProvider(webSiteName);
+            var customWebSiteProvider = new CustomWebSiteProvider(webSiteName, id);
             providerCollection.AddProvider(customWebSiteProvider);
-            //providerCollection.AddProvider(webSiteProvider);
-
-            ////throw new NotImplementedException("Not implemented CustomDefinitionWebSiteOptions");
-            //return new WebSiteOptions(webSiteProvider);
         }
 
-        public static void WebSite(this IProvideForCustomIisDefinition providerCollection, string webSiteName, Action<IProvideForCustomWebSite> options)
+        public static void WebSite(this IProvideForCustomIisDefinition providerCollection, string webSiteName, int id, Action<CustomWebSiteOptions> options)
         {
-            //var webSiteProvider = new CustomIisWebSiteProvider(webSiteName);
-            //providerCollection.AddProvider(webSiteProvider);
-
-            ////throw new NotImplementedException("Not implemented CustomDefinitionWebSiteOptions");
-            //return new WebSiteOptions(webSiteProvider);
+            var customWebSiteProvider = new CustomWebSiteProvider(webSiteName, id);
+            options(new CustomWebSiteOptions(customWebSiteProvider));
+            providerCollection.AddProvider(customWebSiteProvider);
         }
-    }
-
-    public class CustomDefinitionWebSiteOptions
-    {
     }
 }

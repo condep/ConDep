@@ -17,15 +17,10 @@ namespace ConDep.Dsl.Operations.WebDeploy.Options
     {
     }
 
-    public interface IProvideForCustomWebSite : IProviderCollection
-    {
-
-    }
+    public interface IProvideForCustomWebSite : IProviderCollection {}
 
     public interface IProvideForDeployment : IProviderCollection
     {
         IisOptions IIS { get; }
-        //IisOptions IIS(Action<IProvideForCustomIisDefinition> customIISDefinition);
-        //IisOptions IIS(string iisServerToSyncFrom, Action<IProvideForExistingIisServer> sync);
     }
 }
