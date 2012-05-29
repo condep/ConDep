@@ -54,7 +54,9 @@ namespace ConDep.Dsl
                 {
                     var bindingIp = string.IsNullOrWhiteSpace(binding.Ip) ? "0.0.0.0" : binding.Ip;
                     command += string.Format("Set-Location IIS:\\SslBindings; Remove-Item {0}!{1} -ErrorAction SilentlyContinue; ", bindingIp, binding.Port);
-                    command += string.Format("Get-ChildItem cert:\\LocalMachine\\MY | Where-Object {{$_.Subject -match 'CN=*{0}*'}} | Select-Object -First 1 | New-Item {1}!{2}; ", binding.CertificateCommonName,  bindingIp, binding.Port);
+                    command += string.Format("$webSiteCert = Get-ChildItem cert:\\LocalMachine\\MY | Where-Object {{$_.Subject -match 'CN=*{0}*'}} | Select-Object -First 1; ", binding.CertificateCommonName);
+                    command += string.Format("if($webSiteCert -eq $null) {{ throw 'No Certificate with CN=''*{0}*'' found.' }}; ", binding.CertificateCommonName);
+                    command += string.Format("$webSiteCert | New-Item {0}!{1}; ", bindingIp, binding.Port);
                 }
             }
             return command;
