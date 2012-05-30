@@ -9,6 +9,7 @@ namespace ConDep.Dsl
         private readonly string _webSiteName;
         private readonly int _id;
         private readonly IList<IisBinding> _bindings = new List<IisBinding>();
+        private readonly ApplicationPool _applicationPool = new ApplicationPool();
 
         public CustomWebSiteProvider(string webSiteName, int id)
         {
@@ -20,6 +21,13 @@ namespace ConDep.Dsl
 
         public string PhysicalPath { get; set; }
 
+        public ApplicationPool ApplicationPool
+        {
+            get {
+                return _applicationPool;
+            }
+        }
+
         public override bool IsValid(Notification notification)
         {
             return !string.IsNullOrWhiteSpace(_webSiteName);
@@ -28,11 +36,52 @@ namespace ConDep.Dsl
         public override void Configure()
         {
             string psCommand = GetRemoveExistingWebSiteCommand(_id);
+            psCommand += GetCreateAppPoolCommand();
             psCommand += GetCreateWebSiteDirCommand(PhysicalPath);
             psCommand += GetCreateWebSiteCommand(_webSiteName);
             psCommand += GetCreateBindings();
             psCommand += GetCertificateCommand();
             Configure(p => p.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(10)));
+        }
+
+        private string GetCreateAppPoolCommand()
+        {
+            if (!string.IsNullOrWhiteSpace(_applicationPool.Name))
+            {
+                var psCommand = _applicationPool.Name != null ? string.Format("Set-Location IIS:\\AppPools; try {{ Remove-WebAppPool '{0}' }} catch {{ }}; $newAppPool = New-WebAppPool '{0}'; ", _applicationPool.Name) : "";
+
+                psCommand += _applicationPool.Enable32Bit != null ? string.Format("$newAppPool.enable32BitAppOnWin64 = {0}; ", _applicationPool.Enable32Bit.Value ? "$true" : "$false") : "";
+                psCommand += _applicationPool.IdentityUsername != null ? string.Format("$newAppPool.processModel.identityType = 'SpecificUser'; $newAppPool.processModel.username = '{0}'; $newAppPool.processModel.password = '{1}'; ", _applicationPool.IdentityUsername, _applicationPool.IdentityPassword) : "";
+                psCommand += _applicationPool.IdleTimeoutInMinutes != null ? string.Format("$newAppPool.processModel.idleTimeout = [TimeSpan]::FromMinutes({0}); ", _applicationPool.IdleTimeoutInMinutes) : "";
+                psCommand += _applicationPool.LoadUserProfile != null ? string.Format("$newAppPool.processModel.loadUserProfile = {0}; ", _applicationPool.LoadUserProfile.Value ? "$true" : "$false") : "";
+                psCommand += _applicationPool.ManagedPipeline != null ? string.Format("$newAppPool.managedPipelineMode = '{0}'; ", _applicationPool.ManagedPipeline) : "";
+                psCommand += _applicationPool.NetFrameworkVersion != null ? string.Format("$newAppPool.managedRuntimeVersion = '{0}'; ", ExtractNetFrameworkVersion()) : "";
+                psCommand += _applicationPool.RecycleTimeInMinutes != null ? string.Format("$newAppPool.recycling.periodicrestart.time = [TimeSpan]::FromMinutes({0}); ", _applicationPool.RecycleTimeInMinutes) : "";
+
+                psCommand += "$newAppPool | set-item;";
+                return psCommand;
+            }
+            return "";
+        }
+
+        private string ExtractNetFrameworkVersion()
+        {
+            switch (_applicationPool.NetFrameworkVersion)
+            {
+                case NetFrameworkVersion.Net1_0:
+                    return "v1.0";
+                case NetFrameworkVersion.Net1_1:
+                    return "v1.1";
+                case NetFrameworkVersion.Net2_0:
+                    return "v2.0";
+                case NetFrameworkVersion.Net4_0:
+                    return "v4.0";
+                case NetFrameworkVersion.Net5_0:
+                    return "v5.0";
+                default:
+                    throw new Exception("Framework version unknown to ConDep.");
+            } 
+
         }
 
         private string GetCreateWebSiteDirCommand(string webSiteDir)
@@ -95,6 +144,7 @@ namespace ConDep.Dsl
                 bindingString += binding.BindingType == BindingType.https ? "-Ssl " : "";
                 bindingString += !string.IsNullOrWhiteSpace(binding.Ip) ? "-IPAddress \"" + binding.Ip +"\" " : "";
                 bindingString += !string.IsNullOrWhiteSpace(binding.HostHeader) ? "-HostHeader \"" + binding.HostHeader + "\" " : "";
+                bindingString += _applicationPool.Name != null ? string.Format("-ApplicationPool '{0}' ", _applicationPool.Name) : "";
             } 
 
             var physicalPath = string.IsNullOrWhiteSpace(PhysicalPath) ? "" : string.Format("-PhysicalPath \"{0}\" ", PhysicalPath);

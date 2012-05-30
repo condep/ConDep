@@ -50,12 +50,13 @@ namespace ConDep.Dsl
 
         public void ApplicationPool(string appPoolName)
         {
-            
+            _customWebSiteProvider.ApplicationPool.Name = appPoolName;
         }
 
         public void ApplicationPool(string appPoolName, Action<AppPoolOptions> appPoolOptions)
         {
-
+            _customWebSiteProvider.ApplicationPool.Name = appPoolName;
+            appPoolOptions(new AppPoolOptions(_customWebSiteProvider));
         }
     }
 }

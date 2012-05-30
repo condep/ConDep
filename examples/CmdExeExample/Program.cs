@@ -35,20 +35,31 @@ namespace TestWebDeployApp
                                         //    });
 
                                         //});
-
+                                        
+                                        //serverSetup.Windows.InstallIIS(o=>
+                                        //                                   {
+                                        //                                   });
+                                        //serverSetup.Windows.InstallMSMQ();
+                                        //serverSetup.Windows.InstallMSDTC();
+                                        //serverSetup.SqlServer.MigrateTo2012();
+                                        //serverSetup.Windows.Install();
                                         serverSetup.IIS.Define(iis =>
                                                                    {
                                                                        iis.WebSite("YallaSite22", 2, options =>
                                                                                                                          {
-                                                                                                                             options.HttpBinding(8080, o => o.HostHeader("HostName").Ip("10.0.0.11"));
-                                                                                                                             options.HttpsBinding(444, "localhost", o => o.HostHeader("HostName").Ip("10.0.0.12"));
+                                                                                                                             options.HttpBinding(8080, o => o.HostHeader("blog.torresdal.net").Ip("10.0.0.11"));
+                                                                                                                             options.HttpsBinding(444, "localhost", o => o.HostHeader("www.con-dep.net").Ip("10.0.0.12"));
                                                                                                                              options.PhysicalPath(@"C:\Web\MyFirstCustomWebSite");
-                                                                                                                             //options.ApplicationPool("MyFirstCustomAppPool", o =>
-                                                                                                                             //                                                    {
-                                                                                                                             //                                                        o.NetFrameworkVersion(NetFrameworkVersion.Net4_0);
-                                                                                                                             //                                                        o.ManagedPipeline(ManagedPipeline.Integrated);
-                                                                                                                             //                                                        o.Identity.UserName("").Password("");
-                                                                                                                             //                                                    });
+                                                                                                                             options.ApplicationPool("MyFirstCustomAppPool", o =>
+                                                                                                                                                                                 {
+                                                                                                                                                                                     o.NetFrameworkVersion(NetFrameworkVersion.Net4_0);
+                                                                                                                                                                                     o.Enable32Bit = true;
+                                                                                                                                                                                     o.ManagedPipeline(ManagedPipeline.Integrated);
+                                                                                                                                                                                     o.Identity.UserName("torresdal\\jat").Password("asdfasdf");
+                                                                                                                                                                                     o.IdleTimeoutInMinutes = 10;
+                                                                                                                                                                                     o.LoadUserProfile = false;
+                                                                                                                                                                                     o.RecycleTimeIntervalInMinutes = 1000;
+                                                                                                                                                                                 });
                                                                                                                          });
                                                                    });
         // ReSharper restore ConvertToLambdaExpression
