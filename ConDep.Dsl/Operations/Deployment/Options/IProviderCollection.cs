@@ -17,7 +17,10 @@ namespace ConDep.Dsl.Operations.WebDeploy.Options
     {
     }
 
-    public interface IProvideForCustomWebSite : IProviderCollection {}
+    public interface IProvideForCustomWebSite : IProviderCollection
+    {
+        string WebSiteName { get; }
+    }
 
     public interface IProvideForDeployment : IProviderCollection
     {

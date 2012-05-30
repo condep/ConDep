@@ -1,5 +1,3 @@
-using System;
-using ConDep.Dsl.Builders;
 using ConDep.Dsl.Operations.WebDeploy.Options;
 
 namespace ConDep.Dsl
@@ -22,9 +20,10 @@ namespace ConDep.Dsl
             AddProvider(sourceDir, webAppName, destinationWebSiteName, providerCollection);
         }
 
-        public static void WebApp(this IProvideForCustomWebSite providerCollection, string sourceDir, string webAppName, string destinationWebSiteName)
+        public static void WebApp(this IProvideForCustomWebSite providerCollection, string webAppName)
         {
-            AddProvider(sourceDir, webAppName, destinationWebSiteName, providerCollection);
+            var webAppProvider = new CustomWebAppProvider(webAppName, providerCollection.WebSiteName);
+            providerCollection.AddProvider(webAppProvider);
         }
 
         private static void AddProvider(string sourceDir, string webAppName, string destinationWebSiteName, IProviderCollection providerCollection)

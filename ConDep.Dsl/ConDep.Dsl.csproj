@@ -71,6 +71,7 @@
     <Compile Include="Operations\Deployment\Providers\PowerShell\PowerShellOptions.cs" />
     <Compile Include="Operations\Deployment\Options\IisOptions.cs" />
     <Compile Include="Operations\Deployment\Model\ApplicationPool.cs" />
+    <Compile Include="Operations\Deployment\Providers\WebApp\CustomWebAppProvider.cs" />
     <Compile Include="Operations\Deployment\Providers\WebSite\Options\AppPoolOptions.cs" />
     <Compile Include="Operations\Deployment\Providers\WebSite\Options\BindingOptions.cs" />
     <Compile Include="Operations\Deployment\Model\BindingType.cs" />

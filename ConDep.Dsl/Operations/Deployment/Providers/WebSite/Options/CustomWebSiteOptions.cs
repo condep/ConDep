@@ -1,8 +1,10 @@
 ﻿using System;
+using ConDep.Dsl.Operations.WebDeploy.Model;
+using ConDep.Dsl.Operations.WebDeploy.Options;
 
 namespace ConDep.Dsl
 {
-    public class CustomWebSiteOptions
+    public class CustomWebSiteOptions : IProvideForCustomWebSite
     {
         private readonly CustomWebSiteProvider _customWebSiteProvider;
 
@@ -57,6 +59,21 @@ namespace ConDep.Dsl
         {
             _customWebSiteProvider.ApplicationPool.Name = appPoolName;
             appPoolOptions(new AppPoolOptions(_customWebSiteProvider));
+        }
+
+        public void AddProvider(IProvide provider)
+        {
+            _customWebSiteProvider.ChildProviders.Add(provider);
+
+            if (provider is CompositeProvider)
+            {
+                ((CompositeProvider)provider).Configure();
+            }
+        }
+
+        public string WebSiteName
+        {
+            get { return _customWebSiteProvider.WebSiteName; }
         }
     }
 }

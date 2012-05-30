@@ -5,7 +5,7 @@ using ConDep.Dsl.Operations.WebDeploy.Model;
 
 namespace ConDep.Dsl.Operations.WebDeploy.Options
 {
-    public class ProviderOptions : IProvideForExistingIisServer, IProvideForCustomIisDefinition, IProvideForCustomWebSite
+    public class ProviderOptions : IProvideForExistingIisServer, IProvideForCustomIisDefinition
     {
         private readonly List<IProvide> _providers;
 

@@ -9,7 +9,7 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
 	{
 		private readonly List<IProvide> _childProviders = new List<IProvide>();
 
-		public IEnumerable<IProvide> ChildProviders { get { return _childProviders; } }
+		public List<IProvide> ChildProviders { get { return _childProviders; } }
 
 		public string SourcePath { get; set; }
 		public virtual string DestinationPath { get; set; }

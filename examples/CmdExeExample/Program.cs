@@ -60,6 +60,7 @@ namespace TestWebDeployApp
                                                                                                                                                                                      o.LoadUserProfile = false;
                                                                                                                                                                                      o.RecycleTimeIntervalInMinutes = 1000;
                                                                                                                                                                                  });
+                                                                                                                             options.WebApp("MyWebApp");
                                                                                                                          });
                                                                    });
         // ReSharper restore ConvertToLambdaExpression

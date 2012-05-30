@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ConDep.Dsl.Operations.WebDeploy.Model;
+using ConDep.Dsl.Operations.WebDeploy.Options;
 
 namespace ConDep.Dsl
 {
@@ -16,6 +17,8 @@ namespace ConDep.Dsl
             _webSiteName = webSiteName;
             _id = id;
         }
+
+        public string WebSiteName { get { return _webSiteName; } }
 
         public IList<IisBinding> Bindings { get { return _bindings; } }
 
