@@ -61,6 +61,11 @@ namespace TestWebDeployApp
                                                                                                                                                                                      o.RecycleTimeIntervalInMinutes = 1000;
                                                                                                                                                                                  });
                                                                                                                              options.WebApp("MyWebApp");
+                                                                                                                             options.WebApp("MyWebApp2", o =>
+                                                                                                                                                             {
+                                                                                                                                                                 o.PhysicalPath = @"C:\Web\MyWebApp2_2";
+                                                                                                                                                                 o.ApplicationPool = "MyFirstCustomAppPool";
+                                                                                                                                                             });
                                                                                                                          });
                                                                    });
         // ReSharper restore ConvertToLambdaExpression

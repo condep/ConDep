@@ -1,3 +1,4 @@
+using System;
 using ConDep.Dsl.Operations.WebDeploy.Options;
 
 namespace ConDep.Dsl
@@ -23,6 +24,13 @@ namespace ConDep.Dsl
         public static void WebApp(this IProvideForCustomWebSite providerCollection, string webAppName)
         {
             var webAppProvider = new CustomWebAppProvider(webAppName, providerCollection.WebSiteName);
+            providerCollection.AddProvider(webAppProvider);
+        }
+
+        public static void WebApp(this IProvideForCustomWebSite providerCollection, string webAppName, Action<CustomWebAppOptions> options)
+        {
+            var webAppProvider = new CustomWebAppProvider(webAppName, providerCollection.WebSiteName);
+            options(new CustomWebAppOptions(webAppProvider));
             providerCollection.AddProvider(webAppProvider);
         }
 
