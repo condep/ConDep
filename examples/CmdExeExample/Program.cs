@@ -35,8 +35,8 @@ namespace TestWebDeployApp
                                         //    });
 
                                         //});
-                                        
-                                        //serverSetup.Windows.InstallIIS(o=>
+
+                                        //serverSetup.Windows.InstallIIS(o =>
                                         //                                   {
                                         //                                   });
                                         //serverSetup.Windows.InstallMSMQ();

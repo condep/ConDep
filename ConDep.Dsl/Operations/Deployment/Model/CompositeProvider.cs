@@ -32,6 +32,7 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
 				  webDeployOptions.DestBaseOptions.RetryInterval = WaitInterval * 1000;
 			  }
 
+            ChildProviders.Reverse();
             foreach (var childProvider in ChildProviders)
             {
                 childProvider.Sync(webDeployOptions, deploymentStatus);

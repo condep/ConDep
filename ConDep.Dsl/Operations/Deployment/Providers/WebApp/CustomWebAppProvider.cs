@@ -22,7 +22,9 @@ namespace ConDep.Dsl
 
         public override void Configure()
         {
-            var command = string.Format("New-WebApplication -Name \"{0}\" -Site \"{1}\"; ", _webAppName, _webSiteName);
+            var command = string.Format("$webSite = Get-WebSite | where-object {{ $_.Name -eq '{0}' }}; ", _webSiteName);
+            command += string.Format("if((Test-Path -path ($webSite.physicalPath + '\\{0}')) -ne $True) {{ New-Item ($webSite.physicalPath + '\\{0}') -type Directory }}; ", _webAppName);
+            command += string.Format("New-WebApplication -Name \"{0}\" -Site \"{1}\" -PhysicalPath ($webSite.physicalPath + '\\{0}'); ", _webAppName, _webSiteName);
             Configure(p => p.PowerShell("Import-Module WebAdministration; " + command, o => o.WaitIntervalInSeconds(10)));
         }
     }
