@@ -19,9 +19,9 @@ namespace ConDep.Dsl
             serverOptions.AddProvider(certificateProvider);
         }
 
-        public static void Certificate(this IProvideForDeployment serverOptions, string certFile, X509ContentType contentType, StoreName storeName, StoreLocation storeLocation)
+        public static void Certificate(this IProvideForDeployment serverOptions, string certFile)
         {
-            var certificateProvider = new CustomCertificateProvider(certFile, contentType, storeName, storeLocation);
+            var certificateProvider = new CustomCertificateProvider(certFile);
             serverOptions.AddProvider(certificateProvider);
         }
     }

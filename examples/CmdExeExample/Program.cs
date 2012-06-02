@@ -15,6 +15,12 @@ namespace TestWebDeployApp
         protected override void Execute(ISettings settings)
         {
             // ReSharper disable ConvertToLambdaExpression
+
+            
+            
+            
+            //SetupInfrastructure
+            //DeployContent
             Setup(setup =>
                       
                           //setup.TransformConfig("", "web.config", "web.dev.config");
@@ -43,8 +49,8 @@ namespace TestWebDeployApp
                                         //serverSetup.Windows.InstallMSDTC();
                                         //serverSetup.SqlServer.MigrateTo2012();
                                         //serverSetup.Windows.Install();
-                                        serverSetup.Certificate(@"C:\temp\myCert.cer", X509ContentType.Cert, StoreName.My, StoreLocation.LocalMachine);
-
+                                        serverSetup.Certificate(@"C:\temp\myCert.cer");
+                                        serverSetup.Certificate("71ce12870b7517d04dbb7497de992a6a8c69a435", X509FindType.FindByThumbprint);
                                         
                                         
                                         
