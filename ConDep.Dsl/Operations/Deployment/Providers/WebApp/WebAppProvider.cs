@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using ConDep.Dsl.Operations.WebDeploy.Model;
 using Microsoft.Web.Deployment;
 
@@ -22,7 +23,7 @@ namespace ConDep.Dsl
             DestinationWebSite = destinationWebSiteName;
         }
 
-		public string DestinationWebSite { get; set; }
+	    public string DestinationWebSite { get; set; }
 		public string DestinationAppName { get; set; }
 
 		public override string DestinationPath

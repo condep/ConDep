@@ -20,5 +20,11 @@
             _powerShellProvider.WaitInterval = seconds;
             return this;
         }
+
+        public PowerShellOptions RetryAttempts(int attempts)
+        {
+            _powerShellProvider.RetryAttempts = attempts;
+            return this;
+        }
     }
 }

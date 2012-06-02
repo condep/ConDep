@@ -68,6 +68,7 @@
     <Compile Include="Operations\Deployment\Options\ExistingServerOptions.cs" />
     <Compile Include="Operations\Deployment\Options\CustomDefinitionOptions.cs" />
     <Compile Include="Operations\Deployment\Options\IProviderCollection.cs" />
+    <Compile Include="Operations\Deployment\Providers\Certificate\CustomCertificateProvider.cs" />
     <Compile Include="Operations\Deployment\Providers\PowerShell\PowerShellOptions.cs" />
     <Compile Include="Operations\Deployment\Options\IisOptions.cs" />
     <Compile Include="Operations\Deployment\Model\ApplicationPool.cs" />

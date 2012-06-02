@@ -1,5 +1,7 @@
+using System;
 using ConDep.Dsl.Operations.WebDeploy.Model;
 using Microsoft.Web.Deployment;
+using System.Linq;
 
 namespace ConDep.Dsl
 {

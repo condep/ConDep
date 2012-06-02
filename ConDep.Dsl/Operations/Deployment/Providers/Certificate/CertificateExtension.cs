@@ -1,3 +1,5 @@
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Operations.WebDeploy.Options;
 
@@ -11,9 +13,15 @@ namespace ConDep.Dsl
 			providerOptions.AddProvider(certificateProvider);
 		}
 
-        public static void Certificate(this IProvideForDeployment serverOptions, string thumbprint)
+        public static void Certificate(this IProvideForDeployment serverOptions, string searchString, X509FindType findType)
         {
-            var certificateProvider = new CertficiateProvider(thumbprint);
+            var certificateProvider = new CustomCertificateProvider(searchString, findType);
+            serverOptions.AddProvider(certificateProvider);
+        }
+
+        public static void Certificate(this IProvideForDeployment serverOptions, string certFile, X509ContentType contentType, StoreName storeName, StoreLocation storeLocation)
+        {
+            var certificateProvider = new CustomCertificateProvider(certFile, contentType, storeName, storeLocation);
             serverOptions.AddProvider(certificateProvider);
         }
     }

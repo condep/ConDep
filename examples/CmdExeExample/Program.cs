@@ -1,4 +1,6 @@
-﻿using System.Security.AccessControl;
+﻿using System.IO;
+using System.Security.AccessControl;
+using System.Security.Cryptography.X509Certificates;
 using ConDep.Dsl;
 
 namespace TestWebDeployApp
@@ -22,9 +24,7 @@ namespace TestWebDeployApp
                           //    .Farm("Sikker")
                           //    .TakeServerOffline("10.0.0.12");
 
-                          setup.Deployment(
-                              "127.0.0.1", 
-                              serverSetup =>
+                          setup.Deployment("127.0.0.1", serverSetup =>
                                     {
                                         //serverSetup.IIS.SyncFromExistingServer("jat-web02", sync =>
                                         //{
@@ -36,38 +36,58 @@ namespace TestWebDeployApp
 
                                         //});
 
-                                        //serverSetup.Windows.InstallIIS(o =>
+                                        //serverSetup.Windows.InstallIIS();
                                         //                                   {
                                         //                                   });
                                         //serverSetup.Windows.InstallMSMQ();
                                         //serverSetup.Windows.InstallMSDTC();
                                         //serverSetup.SqlServer.MigrateTo2012();
                                         //serverSetup.Windows.Install();
-                                        serverSetup.IIS.Define(iis =>
-                                                                   {
-                                                                       iis.WebSite("YallaSite22", 2, options =>
-                                                                                                                         {
-                                                                                                                             options.HttpBinding(8080, o => o.HostHeader("blog.torresdal.net").Ip("10.0.0.11"));
-                                                                                                                             options.HttpsBinding(444, "localhost", o => o.HostHeader("www.con-dep.net").Ip("10.0.0.12"));
-                                                                                                                             options.PhysicalPath(@"C:\Web\MyFirstCustomWebSite");
-                                                                                                                             options.ApplicationPool("MyFirstCustomAppPool", o =>
-                                                                                                                                                                                 {
-                                                                                                                                                                                     o.NetFrameworkVersion(NetFrameworkVersion.Net4_0);
-                                                                                                                                                                                     o.Enable32Bit = true;
-                                                                                                                                                                                     o.ManagedPipeline(ManagedPipeline.Integrated);
-                                                                                                                                                                                     o.Identity.UserName("torresdal\\jat").Password("asdfasdf");
-                                                                                                                                                                                     o.IdleTimeoutInMinutes = 10;
-                                                                                                                                                                                     o.LoadUserProfile = false;
-                                                                                                                                                                                     o.RecycleTimeIntervalInMinutes = 1000;
-                                                                                                                                                                                 });
-                                                                                                                             options.WebApp("MyWebApp");
-                                                                                                                             options.WebApp("MyWebApp2", o =>
-                                                                                                                                                             {
-                                                                                                                                                                 o.PhysicalPath = @"C:\Web\MyWebApp2_2";
-                                                                                                                                                                 o.ApplicationPool = "MyFirstCustomAppPool";
-                                                                                                                                                             });
-                                                                                                                         });
-                                                                   });
+                                        serverSetup.Certificate(@"C:\temp\myCert.cer", X509ContentType.Cert, StoreName.My, StoreLocation.LocalMachine);
+
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        //serverSetup.IIS.Define(iis =>
+                                        //    {
+                                        //        iis.WebSite("ConDepSite1", 2, @"C:\Web\MyFirstCustomWebSite", options =>
+                                        //            {
+                                        //                options.HttpBinding(8080, o => o.HostHeader("blog.torresdal.net").Ip("10.0.0.11"));
+                                        //                options.HttpsBinding(444, "localhost", o => o.HostHeader("www.con-dep.net").Ip("10.0.0.12"));
+                                        //                options.ApplicationPool("MyFirstCustomAppPool", o =>
+                                        //                                                                    {
+                                        //                                                                        o.NetFrameworkVersion(NetFrameworkVersion.Net4_0);
+                                        //                                                                        o.Enable32Bit = true;
+                                        //                                                                        o.ManagedPipeline(ManagedPipeline.Integrated);
+                                        //                                                                        o.Identity.UserName("torresdal\\jat").Password("asdfasdf");
+                                        //                                                                        o.IdleTimeoutInMinutes = 10;
+                                        //                                                                        o.LoadUserProfile = false;
+                                        //                                                                        o.RecycleTimeIntervalInMinutes = 1000;
+                                        //                                                                    });
+                                        //                options.WebApp("MyWebApp");
+                                        //                options.WebApp("MyWebApp2", o =>
+                                        //                                                {
+                                        //                                                    o.PhysicalPath = @"C:\Web\MyWebApp2_2";
+                                        //                                                    o.ApplicationPool = "MyFirstCustomAppPool";
+                                        //                                                });
+                                        //            });
+
+                                        //        iis.WebSite("ConDepSite2", 3, @"C:\Web\MySecondCustomWebSite", o=>
+                                        //                                          {
+                                        //                                              o.HttpBinding(81);
+                                        //                                          });
+                                        //        iis.WebApp("MyWebApp3", "ConDepSite2");
+                                        //    });
+
+
+
+
+
+
+
+
         // ReSharper restore ConvertToLambdaExpression
 
 

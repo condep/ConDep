@@ -9,20 +9,20 @@ namespace ConDep.Dsl
     {
         private readonly string _webSiteName;
         private readonly int _id;
+        private readonly string _physicalDir;
         private readonly IList<IisBinding> _bindings = new List<IisBinding>();
         private readonly ApplicationPool _applicationPool = new ApplicationPool();
 
-        public CustomWebSiteProvider(string webSiteName, int id)
+        public CustomWebSiteProvider(string webSiteName, int id, string physicalDir)
         {
             _webSiteName = webSiteName;
             _id = id;
+            _physicalDir = physicalDir;
         }
 
         public string WebSiteName { get { return _webSiteName; } }
 
         public IList<IisBinding> Bindings { get { return _bindings; } }
-
-        public string PhysicalPath { get; set; }
 
         public ApplicationPool ApplicationPool
         {
@@ -40,11 +40,11 @@ namespace ConDep.Dsl
         {
             string psCommand = GetRemoveExistingWebSiteCommand(_id);
             psCommand += GetCreateAppPoolCommand();
-            psCommand += GetCreateWebSiteDirCommand(PhysicalPath);
+            psCommand += GetCreateWebSiteDirCommand(_physicalDir);
             psCommand += GetCreateWebSiteCommand(_webSiteName);
             psCommand += GetCreateBindings();
             psCommand += GetCertificateCommand();
-            Configure(p => p.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(10)));
+            Configure(p => p.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
         }
 
         private string GetCreateAppPoolCommand()
@@ -150,7 +150,7 @@ namespace ConDep.Dsl
                 bindingString += _applicationPool.Name != null ? string.Format("-ApplicationPool '{0}' ", _applicationPool.Name) : "";
             } 
 
-            var physicalPath = string.IsNullOrWhiteSpace(PhysicalPath) ? "" : string.Format("-PhysicalPath \"{0}\" ", PhysicalPath);
+            var physicalPath = string.IsNullOrWhiteSpace(_physicalDir) ? "" : string.Format("-PhysicalPath \"{0}\" ", _physicalDir);
             return string.Format("New-Website -Name \"{0}\" -Id {1} {2}{3}-force; ", webSiteName, _id, physicalPath, bindingString);
         }
     }

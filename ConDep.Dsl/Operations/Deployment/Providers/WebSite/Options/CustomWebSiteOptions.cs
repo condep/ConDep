@@ -45,11 +45,6 @@ namespace ConDep.Dsl
             bindingOptions(new BindingOptions(binding));
         }
 
-        public void PhysicalPath(string physicalPath)
-        {
-            _customWebSiteProvider.PhysicalPath = physicalPath;
-        }
-
         public void ApplicationPool(string appPoolName)
         {
             _customWebSiteProvider.ApplicationPool.Name = appPoolName;

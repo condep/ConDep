@@ -7,8 +7,15 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
 		private readonly Credentials _credentials = new Credentials();
 
 		public string ComputerName { get; set; }
-		public bool LocalHost { get; set; }
-		public bool HasCredentials
+	    private bool _localHost = true;
+
+        public bool LocalHost
+	    {
+	        get { return _localHost; }
+	        set { _localHost = value; }
+	    }
+
+	    public bool HasCredentials
 		{
 			get { return !string.IsNullOrWhiteSpace(Credentials.UserName); }
 		}

@@ -17,6 +17,7 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
 		public abstract bool IsValid(Notification notification);
 
 		public int WaitInterval { get; set; }
+        public int RetryAttempts { get; set; }
 
 		public abstract void Configure();
 
@@ -31,6 +32,10 @@ namespace ConDep.Dsl.Operations.WebDeploy.Model
 			  {
 				  webDeployOptions.DestBaseOptions.RetryInterval = WaitInterval * 1000;
 			  }
+
+              if (RetryAttempts > 0)
+                  webDeployOptions.DestBaseOptions.RetryAttempts = RetryAttempts;
+
 
             ChildProviders.Reverse();
             foreach (var childProvider in ChildProviders)

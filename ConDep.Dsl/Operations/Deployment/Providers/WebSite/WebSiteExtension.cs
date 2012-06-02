@@ -32,15 +32,15 @@ namespace ConDep.Dsl
             providerCollection.AddProvider(webSiteProvider);
         }
 
-        public static void WebSite(this IProvideForCustomIisDefinition providerCollection, string webSiteName, int id)
+        public static void WebSite(this IProvideForCustomIisDefinition providerCollection, string webSiteName, int id, string physicalDir)
         {
-            var customWebSiteProvider = new CustomWebSiteProvider(webSiteName, id);
+            var customWebSiteProvider = new CustomWebSiteProvider(webSiteName, id, physicalDir);
             providerCollection.AddProvider(customWebSiteProvider);
         }
 
-        public static void WebSite(this IProvideForCustomIisDefinition providerCollection, string webSiteName, int id, Action<CustomWebSiteOptions> options)
+        public static void WebSite(this IProvideForCustomIisDefinition providerCollection, string webSiteName, int id, string physicalDir, Action<CustomWebSiteOptions> options)
         {
-            var customWebSiteProvider = new CustomWebSiteProvider(webSiteName, id);
+            var customWebSiteProvider = new CustomWebSiteProvider(webSiteName, id, physicalDir);
             options(new CustomWebSiteOptions(customWebSiteProvider));
             providerCollection.AddProvider(customWebSiteProvider);
         }
