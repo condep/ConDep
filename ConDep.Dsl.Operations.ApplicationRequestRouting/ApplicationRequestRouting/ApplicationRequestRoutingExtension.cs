@@ -7,19 +7,19 @@ namespace ConDep.Dsl
 {
 	public static class ApplicationRequestRoutingExtension
 	{
-		public static ApplicationRequestRoutingOptions ApplicationRequestRouting(this DeploymentOptions deploymentOptions, string webServerName)//, Action<ApplicationRequestRoutingOptions> options)
+        public static ArrLoadBalancerOptions ApplicationRequestRouting(this LoadBalancerOptions loadBalancerOptions, string webServerName)//, Action<ApplicationRequestRoutingOptions> options)
 		{
 			var arrOperation = new ApplicationReqeustRoutingOperation(webServerName);
-			deploymentOptions.AddOperation(arrOperation);
-			return new ApplicationRequestRoutingOptions(arrOperation);
+			loadBalancerOptions.AddOperation(arrOperation);
+            return new ArrLoadBalancerOptions(arrOperation);
 			//options(new ApplicationRequestRoutingOptions(arrOperation));
 		}
 
-		public static ApplicationRequestRoutingOptions ApplicationRequestRouting(this DeploymentOptions deploymentOptions, string webServerName, UserInfo userInfo)
+        public static ArrLoadBalancerOptions ApplicationRequestRouting(this LoadBalancerOptions loadBalancerOptions, string webServerName, UserInfo userInfo)
 		{
 			var arrOperation = new ApplicationReqeustRoutingOperation(webServerName, userInfo);
-			deploymentOptions.AddOperation(arrOperation);
-			return new ApplicationRequestRoutingOptions(arrOperation);
+			loadBalancerOptions.AddOperation(arrOperation);
+            return new ArrLoadBalancerOptions(arrOperation);
 			//options(new ApplicationRequestRoutingOptions(arrOperation));
 		}
 	}

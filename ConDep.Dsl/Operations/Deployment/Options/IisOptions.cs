@@ -13,10 +13,15 @@ namespace ConDep.Dsl.Builders
             _webDeployDefinition = webDeployDefinition;
         }
 
-        public void Define(Action<IProvideForCustomIisDefinition> iisDefinition)
-        {
-            iisDefinition(new ProviderOptions(_webDeployDefinition.Providers));
-        }
+        //public void Define(Action<IProvideForCustomIisDefinition> iisDefinition)
+        //{
+        //    iisDefinition(new ProviderOptions(_webDeployDefinition.Providers));
+        //}
+
+        //public void Define(Action<IProvideForInfrastructureIis> iisDefinition)
+        //{
+        //    iisDefinition(new ProviderOptions(_webDeployDefinition.Providers));
+        //}
 
         public void SyncFromExistingServer(string iisServer, Action<IProvideForExistingIisServer> sync)
         {

@@ -2,12 +2,14 @@
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using ConDep.Dsl.Operations.WebDeploy.Model;
+using System.Linq;
 
 namespace ConDep.Dsl
 {
     public class CustomCertificateProvider : CompositeProvider
     {
         private readonly string _searchString;
+        private readonly string _certFriendlyName;
         private readonly X509FindType _findType;
         private readonly string _certFile;
         private readonly bool _copyCertFromFile;
@@ -16,6 +18,13 @@ namespace ConDep.Dsl
         {
             _searchString = searchString;
             _findType = findType;
+            _copyCertFromFile = false;
+        }
+
+        public CustomCertificateProvider(string searchString, string certFriendlyName)
+        {
+            _searchString = searchString;
+            _certFriendlyName = certFriendlyName;
             _copyCertFromFile = false;
         }
 
@@ -41,16 +50,34 @@ namespace ConDep.Dsl
             {
                 var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
                 store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-                var certs = store.Certificates.Find(_findType, _searchString, true);
-                if(certs.Count != 1)
-                {
-                    if(certs.Count < 1)
-                        throw new ApplicationException("Certificate not found");
-                    
-                    throw new ApplicationException("More than one certificate found in search");
-                }
 
-                ConfigureCertInstall(certs[0]);
+                try
+                {
+                    var certs = new X509Certificate2Collection();
+                
+                    if(_certFriendlyName != null)
+                    {
+                        certs.AddRange(store.Certificates.Cast<X509Certificate2>().Where(cert => cert.FriendlyName == _certFriendlyName).ToArray());
+                    }
+                    else
+                    {
+                        certs.AddRange(store.Certificates.Find(_findType, _searchString, true));
+                    }
+
+                    if(certs.Count != 1)
+                    {
+                        if(certs.Count < 1)
+                            throw new ApplicationException("Certificate not found");
+                    
+                        throw new ApplicationException("More than one certificate found in search");
+                    }
+
+                    ConfigureCertInstall(certs[0]);
+                }
+                finally
+                {
+                    store.Close();
+                }
             }
         }
 

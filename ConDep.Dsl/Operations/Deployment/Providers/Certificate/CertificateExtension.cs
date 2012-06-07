@@ -19,6 +19,12 @@ namespace ConDep.Dsl
             serverOptions.AddProvider(certificateProvider);
         }
 
+        public static void Certificate(this IProvideForDeployment serverOptions, string searchString, string certFriendlyName)
+        {
+            var certificateProvider = new CustomCertificateProvider(searchString, certFriendlyName);
+            serverOptions.AddProvider(certificateProvider);
+        }
+
         public static void Certificate(this IProvideForDeployment serverOptions, string certFile)
         {
             var certificateProvider = new CustomCertificateProvider(certFile);
