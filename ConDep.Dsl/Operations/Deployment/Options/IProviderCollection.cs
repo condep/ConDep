@@ -28,14 +28,13 @@ namespace ConDep.Dsl.Operations.WebDeploy.Options
 
     public interface IProvideForInfrastructure : IProviderCollection
     {
-        IisOptions IIS { get; }
+        IisDeploymentOptions IIS { get; }
         WindowsOptions Windows { get; }
     }
 
     public interface IProvideForDeployment : IProviderCollection
     {
-        IisOptions IIS { get; }
-        WindowsOptions Windows { get; }
+        IisDeploymentOptions IIS { get; }
     }
 
     public class WindowsOptions

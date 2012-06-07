@@ -30,5 +30,17 @@ namespace ConDep.Dsl
 
             serverSetup(new DeploymentProviderOptions(webDeployDefinition));
         }
-	}
+
+        public static void Deployment(this DeploymentOptions deploymentOptions, Action<IProvideForDeployment> serverSetup)
+        {
+            var webDeployDefinition = new WebDeployDefinition();
+
+            //ToDo: Add overload for username and password
+
+            var webDeployOperation = new DeploymentOperation(webDeployDefinition);
+            deploymentOptions.AddOperation(webDeployOperation);
+
+            serverSetup(new DeploymentProviderOptions(webDeployDefinition));
+        }
+    }
 }

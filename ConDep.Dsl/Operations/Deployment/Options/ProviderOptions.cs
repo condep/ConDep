@@ -28,7 +28,7 @@ namespace ConDep.Dsl.Operations.WebDeploy.Options
     public class DeploymentProviderOptions : ProviderOptions, IProvideForDeployment, IProvideForInfrastructure
     {
         private readonly WebDeployDefinition _webDeployDefinition;
-        private IisOptions _iisOptions;
+        private IisDeploymentOptions _iisOptions;
         private WindowsOptions _windowsOptions;
 
         public DeploymentProviderOptions(WebDeployDefinition webDeployDefinition) : base(webDeployDefinition.Providers)
@@ -36,9 +36,9 @@ namespace ConDep.Dsl.Operations.WebDeploy.Options
             _webDeployDefinition = webDeployDefinition;
         }
 
-        public IisOptions IIS
+        public IisDeploymentOptions IIS
         {
-            get { return _iisOptions ?? (_iisOptions = new IisOptions(_webDeployDefinition)); }
+            get { return _iisOptions ?? (_iisOptions = new IisDeploymentOptions(_webDeployDefinition)); }
         }
 
         public WindowsOptions Windows

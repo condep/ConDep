@@ -4,24 +4,14 @@ using ConDep.Dsl.Operations.WebDeploy.Options;
 
 namespace ConDep.Dsl.Builders
 {
-    public class IisOptions
+    public class IisDeploymentOptions
     {
         private readonly WebDeployDefinition _webDeployDefinition;
 
-        public IisOptions(WebDeployDefinition webDeployDefinition)
+        public IisDeploymentOptions(WebDeployDefinition webDeployDefinition)
         {
             _webDeployDefinition = webDeployDefinition;
         }
-
-        //public void Define(Action<IProvideForCustomIisDefinition> iisDefinition)
-        //{
-        //    iisDefinition(new ProviderOptions(_webDeployDefinition.Providers));
-        //}
-
-        //public void Define(Action<IProvideForInfrastructureIis> iisDefinition)
-        //{
-        //    iisDefinition(new ProviderOptions(_webDeployDefinition.Providers));
-        //}
 
         public void SyncFromExistingServer(string iisServer, Action<IProvideForExistingIisServer> sync)
         {

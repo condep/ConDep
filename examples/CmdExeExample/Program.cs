@@ -28,7 +28,12 @@ namespace TestWebDeployApp
 
             Setup(setup =>
                       {
+                          setup.PreCompile("MyWebApp", "MyWebAppPath", "outputPath");
+                          setup.TransformConfig("", "web.config", "web.dev.config");
+
                           setup.LoadBalancer.ApplicationRequestRouting("").Farm("").TakeServerOffline("asdfasdf");
+
+                          //What if this is what's applicable for all servers in the definition?
                           setup.Infrastructure.IIS.Define(iisDefinition =>
                                                               {
                                                                   iisDefinition.WebSite("MyNewWebSite", 3, @"C:\Web\MyNewWebSite", webSiteOptions =>
@@ -41,99 +46,23 @@ namespace TestWebDeployApp
                                                                                                                                            webSiteOptions.WebApp("MyWebApp3");
                                                                                                                                        });
                                                               });
-
-                          
-                          
-                          setup.Deployment("Server1", serverSetup =>
-                                                          {
-                                                              serverSetup.IIS.Define(iisDef =>
-                                                                                         {
-                                                                                             iisDef.WebSite("MyWebSite", 5, @"C:\asdfasdf", webSiteOpt =>
-                                                                                                                                                {
-                                                                                                                                                    webSiteOpt.WebApp("MyWebApp");
-                                                                                                                                                    webSiteOpt.WebApp("MyWebApp2");
-
-                                                                                                                                                });
-                                                                                         });
-                                                          });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                          setup.LoadBalancer.ApplicationRequestRouting("MyArrServer").Farm("MyFarm").TakeServerOffline("MyNode");
-
-                          setup.TransformConfig("", "web.config", "web.dev.config");
-                          setup.Infrastructure.
-                              //setup.PreCompile("MyApp", @"C:\", "C:\temp");
-                              //setup.ApplicationRequestRouting("MyNLBServer")
-                              //    .LoadBalancer
-                              //    .Farm("Sikker")
-                              //    .TakeServerOffline("10.0.0.12");
-
-                              setup.Deployment("127.0.0.1", serverSetup =>
+                          //setup.Deployment.
+                              setup.Deployment(serverSetup =>
                                                                 {
-                                                                    //serverSetup.IIS.SyncFromExistingServer("jat-web02", sync =>
-                                                                    //{
-                                                                    //    sync.WebSite("ConDep", "MyNewDestSite", @"C:\Web\MyWebSite", options =>
-                                                                    //    {
-                                                                    //        options.Include.AppPools();
-                                                                    //        options.Include.Certificates();
-                                                                    //    });
+                                                                    //serverSetup.
+                                                                    serverSetup.IIS.SyncFromExistingServer("jat-web02", sync =>
+                                                                    {
+                                                                        sync.Certificate("MyThumbprint");
+                                                                        sync.WebSite("ConDep", "MyNewDestSite", @"C:\Web\MyWebSite", options =>
+                                                                        {
+                                                                            options.Include.AppPools();
+                                                                            options.Include.Certificates();
+                                                                        });
 
-                                                                    //});
+                                                                    });
 
-                                                                    serverSetup.Windows.InstallIIS();
-
-                                                                    //                                   {
-                                                                    //                                   });
-                                                                    //serverSetup.Windows.InstallMSMQ();
-                                                                    //serverSetup.Windows.InstallMSDTC();
-                                                                    //serverSetup.SqlServer.MigrateTo2012();
-                                                                    //serverSetup.Windows.Install();
-                                                                    serverSetup.Certificate(@"C:\temp\myCert.cer");
-                                                                    serverSetup.Certificate("jat",
-                                                                                            X509FindType.
-                                                                                                FindBySubjectName);
-
+                                                                    serverSetup.CopyCertificate(@"C:\temp\myCert.cer");
+                                                                    serverSetup.CopyCertificate("jat", X509FindType. FindBySubjectName);
 
 
 

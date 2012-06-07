@@ -9,6 +9,7 @@ namespace ConDep.Dsl.Builders
 	{
 		private readonly SetupOperation _setupOperation;
         private LoadBalancerOptions _loadBalancer;
+	    private WebDeploymentStatus _webDeploymentStatus;
 
 	    public DeploymentOptions(SetupOperation setupOperation)
 		{
@@ -19,6 +20,18 @@ namespace ConDep.Dsl.Builders
 	    {
 	        get { return _loadBalancer ?? (_loadBalancer = new LoadBalancerOptions(new LoadBalancerOperation())); }
 	    }
+
+        public IProvideForDeployment Deployment
+        {
+            get
+            {
+                var webDeployDefinition = new WebDeployDefinition();
+                var webDeployOperation = new DeploymentOperation(webDeployDefinition);
+                AddOperation(webDeployOperation);
+
+                return new DeploymentProviderOptions(webDeployDefinition);
+            }
+        }
 
         public InfrastructureOptions Infrastructure { get; set; }
 

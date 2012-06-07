@@ -7,25 +7,25 @@ namespace ConDep.Dsl
 {
 	public static class CertificateExtension
 	{
-        public static void Certificate(this ProviderOptions providerOptions, string thumbprint)
+        public static void Certificate(this IProvideForExistingIisServer providerOptions, string thumbprint)
 		{
 			var certificateProvider = new CertficiateProvider(thumbprint);
 			providerOptions.AddProvider(certificateProvider);
 		}
 
-        public static void Certificate(this IProvideForDeployment serverOptions, string searchString, X509FindType findType)
+        public static void CopyCertificate(this IProvideForDeployment serverOptions, string searchString, X509FindType findType)
         {
             var certificateProvider = new CustomCertificateProvider(searchString, findType);
             serverOptions.AddProvider(certificateProvider);
         }
 
-        public static void Certificate(this IProvideForDeployment serverOptions, string searchString, string certFriendlyName)
+        public static void CopyCertificate(this IProvideForDeployment serverOptions, string searchString, string certFriendlyName)
         {
             var certificateProvider = new CustomCertificateProvider(searchString, certFriendlyName);
             serverOptions.AddProvider(certificateProvider);
         }
 
-        public static void Certificate(this IProvideForDeployment serverOptions, string certFile)
+        public static void CopyCertificate(this IProvideForDeployment serverOptions, string certFile)
         {
             var certificateProvider = new CustomCertificateProvider(certFile);
             serverOptions.AddProvider(certificateProvider);
