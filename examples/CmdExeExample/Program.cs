@@ -28,6 +28,62 @@ namespace TestWebDeployApp
 
             Setup(setup =>
                       {
+                          setup.Infrastructure.Windows.InstallIIS();
+
+                          setup.Infrastructure.IIS.Define(iisDef =>
+                                                              {
+                                                                  iisDef.WebSite("MyWebSite", 5, @"C:\Web\MyWebSite", webSiteOpt =>
+                                                                                                                          {
+                                                                                                                              webSiteOpt.ApplicationPool("MyAppPool");
+                                                                                                                              webSiteOpt.WebApp("MyWebApp1");
+                                                                                                                              webSiteOpt.WebApp("MyWebApp2");
+                                                                                                                              webSiteOpt.WebApp("MyWebApp3");
+                                                                                                                          });
+                                                              });
+                          setup.Deployment(dep =>
+                                               {
+                                                   dep.CopyDir();
+                                               });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                           setup.PreCompile("MyWebApp", "MyWebAppPath", "outputPath");
                           setup.TransformConfig("", "web.config", "web.dev.config");
 
@@ -35,17 +91,18 @@ namespace TestWebDeployApp
 
                           //What if this is what's applicable for all servers in the definition?
                           setup.Infrastructure.IIS.Define(iisDefinition =>
-                                                              {
-                                                                  iisDefinition.WebSite("MyNewWebSite", 3, @"C:\Web\MyNewWebSite", webSiteOptions =>
-                                                                                                                                       {
-                                                                                                                                           webSiteOptions.ApplicationPool("MyAppPool");
-                                                                                                                                           webSiteOptions.HttpsBinding(443, "MyCert");
-                                                                                                                                           webSiteOptions.HttpBinding(8080);
-                                                                                                                                           webSiteOptions.WebApp("MyWebApp1");
-                                                                                                                                           webSiteOptions.WebApp("MyWebApp2");
-                                                                                                                                           webSiteOptions.WebApp("MyWebApp3");
-                                                                                                                                       });
-                                                              });
+                            {
+                                iisDefinition.WebSite("MyNewWebSite", 3, @"C:\Web\MyNewWebSite", webSiteOptions =>
+                                {
+                                    webSiteOptions.ApplicationPool("MyAppPool");
+                                    webSiteOptions.HttpsBinding(443, "MyCert");
+                                    webSiteOptions.HttpBinding(8080);
+                                    webSiteOptions.WebApp("MyWebApp1");
+                                    webSiteOptions.WebApp("MyWebApp2");
+                                    webSiteOptions.WebApp("MyWebApp3");
+                                });
+                            });
+
                           //setup.Deployment.
                               setup.Deployment(serverSetup =>
                                                                 {

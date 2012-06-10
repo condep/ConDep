@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="Console\CmdLineHandler.cs" />
     <Compile Include="Console\CmdParam.cs" />
+    <Compile Include="Executor.cs" />
     <Compile Include="Operations\Deployment\Options\ExistingServerOptions.cs" />
     <Compile Include="Operations\Deployment\Options\CustomDefinitionOptions.cs" />
     <Compile Include="Operations\Deployment\Options\IProviderCollection.cs" />

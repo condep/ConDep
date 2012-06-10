@@ -9,7 +9,7 @@ namespace ConDep.Dsl.Builders
 	{
 		private readonly SetupOperation _setupOperation;
         private LoadBalancerOptions _loadBalancer;
-	    private WebDeploymentStatus _webDeploymentStatus;
+        //private WebDeploymentStatus _webDeploymentStatus;
 
 	    public DeploymentOptions(SetupOperation setupOperation)
 		{
