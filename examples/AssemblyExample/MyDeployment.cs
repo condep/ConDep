@@ -15,28 +15,28 @@ namespace AssemblyExample
                                                    infra.IIS.Define(
                                                        iisDef =>
                                                            {
-                                                               iisDef.WebSite("agent.frende.no", 2,
-                                                                              @"C:\agent.frende.no",
+                                                               iisDef.WebSite("WebSite1", 2,
+                                                                              @"C:\website1",
                                                                               webSiteOpt =>
                                                                                   {
                                                                                       webSiteOpt.HttpBinding(8088);
                                                                                       webSiteOpt.ApplicationPool(
-                                                                                          "agent.frende.no");
-                                                                                      webSiteOpt.WebApp("Finansportalen");
-                                                                                      webSiteOpt.WebApp("Front");
-                                                                                      webSiteOpt.WebApp("STS");
+                                                                                          "website1");
+                                                                                      webSiteOpt.WebApp("webapp1");
+                                                                                      webSiteOpt.WebApp("webapp2");
+                                                                                      webSiteOpt.WebApp("webapp3");
                                                                                   });
 
-                                                               iisDef.WebSite("sikker.frende.no", 3,
-                                                                              @"C:\sikker.frende.no",
+                                                               iisDef.WebSite("WebSite2", 3,
+                                                                              @"C:\website2",
                                                                               webSiteOpt =>
                                                                                   {
                                                                                       webSiteOpt.ApplicationPool(
-                                                                                          "sikker.frende.no");
-                                                                                      webSiteOpt.WebApp("Selvbetjent");
+                                                                                          "website2");
+                                                                                      webSiteOpt.WebApp("webapp1");
                                                                                   });
 
-                                                               iisDef.WebSite("tjenester.frende.no", 4, @"C:\tjenester.frende.no");
+                                                               iisDef.WebSite("WebSite3", 4, @"C:\website3");
                                                            }
                                                        );
                                                } 
