@@ -28,12 +28,26 @@ namespace TestWebDeployApp
 
             Setup(setup =>
                       {
+                          //Import-Module Servermanager
+                          //Add-WindowsFeature Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Request-Monitor,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Performance,Web-Stat-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Scripting-Tools,Web-Mgmt-Service
+                          //
+                          //start /w pkgmgr /iu:IIS-WebServerRole;IIS-WebServer;IIS-CommonHttpFeatures;IIS-StaticContent;IIS-DefaultDocument;IIS-DirectoryBrowsing;IIS-HttpErrors;IIS-ApplicationDevelopment;IIS-ASPNET;IIS-NetFxExtensibility;IIS-ISAPIExtensions;IIS-ISAPIFilter;IIS-HealthAndDiagnostics;IIS-HttpLogging;IIS-RequestMonitor;IIS-Security;IIS-BasicAuthentication;IIS-WindowsAuthentication;IIS-RequestFiltering;IIS-Performance;IIS-HttpCompressionStatic;IIS-WebServerManagementTools;IIS-ManagementConsole;IIS-ManagementService
                           setup.Infrastructure.Windows.InstallIIS();
+                          setup.Infrastructure.IIS.EnableRemoteManagement();
 
                           setup.Infrastructure.IIS.Define(iisDef =>
                                                               {
                                                                   iisDef.WebSite("MyWebSite", 5, @"C:\Web\MyWebSite", webSiteOpt =>
                                                                                                                           {
+                                                                                                                              webSiteOpt.HttpsBinding(443, "tjenester.frende.no", binding =>
+                                                                                                                                                                                      {
+                                                                                                                                                                                          binding.Ip = settings.Ip;
+                                                                                                                                                                                          binding.HostName = settings.HostName;
+                                                                                                                                                                                      });
+                                                                                                                              webSiteOpt.HttpBinding(50, bo=>
+                                                                                                                                                             {
+                                                                                                                                                                 bo.
+                                                                                                                                                             });
                                                                                                                               webSiteOpt.ApplicationPool("MyAppPool");
                                                                                                                               webSiteOpt.WebApp("MyWebApp1");
                                                                                                                               webSiteOpt.WebApp("MyWebApp2");

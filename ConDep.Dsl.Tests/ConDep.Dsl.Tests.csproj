@@ -82,9 +82,13 @@
     <Compile Include="SimpleTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConDep.Dsl\ConDep.Dsl.csproj">
+    <ProjectReference Include="..\ConDep.Dsl.Core\ConDep.Dsl.Core.csproj">
+      <Project>{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}</Project>
+      <Name>ConDep.Dsl.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConDep.Dsl.Operations\ConDep.Dsl.Operations.csproj">
       <Project>{9928C9C8-EB7A-48ED-BD3B-BEAAE05787FE}</Project>
-      <Name>ConDep.Dsl</Name>
+      <Name>ConDep.Dsl.Operations</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

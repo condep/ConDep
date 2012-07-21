@@ -1,0 +1,8 @@
+﻿{
+    Servers         :
+    [
+        {
+            Name        : "localhost"
+        }
+    ]
+}

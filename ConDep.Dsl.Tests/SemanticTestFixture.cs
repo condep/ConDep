@@ -1,4 +1,4 @@
-using ConDep.Dsl.Operations.WebDeploy.Model;
+using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl.Tests
 {

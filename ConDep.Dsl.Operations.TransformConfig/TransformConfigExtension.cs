@@ -1,13 +1,13 @@
-﻿using ConDep.Dsl.Builders;
+﻿using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl
 {
 	public static class TransformConfigExtension
 	{
-		public static void TransformConfig(this DeploymentOptions deploymentOptions, string configDirPath, string configName, string transformName)
+		public static void TransformConfig(this SetupOptions setupOptions, string configDirPath, string configName, string transformName)
 		{
 			var transformWebConfigOperation = new TransformConfigOperation(configDirPath, configName, transformName);
-			deploymentOptions.AddOperation(transformWebConfigOperation);
+			setupOptions.AddOperation(transformWebConfigOperation);
 		}
 
 	}

@@ -1,8 +1,7 @@
 using System;
 using System.IO;
 using System.Xml;
-using ConDep.Dsl.Builders;
-using ConDep.Dsl.Operations.WebDeploy.Model;
+using ConDep.Dsl.Core;
 using Microsoft.Web.Publishing.Tasks;
 
 namespace ConDep.Dsl

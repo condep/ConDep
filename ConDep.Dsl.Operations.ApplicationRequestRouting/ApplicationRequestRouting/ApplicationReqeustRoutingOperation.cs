@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConDep.Dsl.Builders;
-using ConDep.Dsl.Operations.WebDeploy.Model;
+using ConDep.Dsl.Core;
 using ConDep.Dsl.Operations.ApplicationRequestRouting.Infrastructure;
 
 namespace ConDep.Dsl.Operations.ApplicationRequestRouting

@@ -1,4 +1,4 @@
-using ConDep.Dsl.Operations.WebDeploy.Model;
+using ConDep.Dsl.Core;
 using Microsoft.Web.Deployment;
 using NUnit.Framework;
 

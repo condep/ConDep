@@ -79,14 +79,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Settings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\..\ConDep.Dsl.Core\ConDep.Dsl.Core.csproj">
+      <Project>{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}</Project>
+      <Name>ConDep.Dsl.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ConDep.Dsl.Operations.ApplicationRequestRouting\ConDep.Dsl.Operations.ApplicationRequestRouting.csproj">
       <Project>{9FB29E13-3223-4154-AEDE-0D384A935949}</Project>
       <Name>ConDep.Dsl.Operations.ApplicationRequestRouting</Name>
