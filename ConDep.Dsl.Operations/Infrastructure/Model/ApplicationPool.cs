@@ -4,8 +4,6 @@ namespace ConDep.Dsl
 {
     public class ApplicationPool
     {
-        public string Name { get; set; }
-
         public NetFrameworkVersion? NetFrameworkVersion { get; set; }
 
         public ManagedPipeline? ManagedPipeline { get; set; }

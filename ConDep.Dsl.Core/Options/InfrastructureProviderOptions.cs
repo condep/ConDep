@@ -1,6 +1,6 @@
 ﻿namespace ConDep.Dsl.Core
 {
-    public class InfrastructureProviderOptions : ProviderOptions
+    public class InfrastructureProviderOptions : ProviderOptions, IProvideForInfrastructure
     {
         private readonly WebDeployDefinition _webDeployDefinition;
         private readonly DeploymentServer _server;

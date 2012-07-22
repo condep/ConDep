@@ -13,7 +13,7 @@ namespace ConDep.Dsl.Core
             _server = server;
         }
 
-        public void Define(Action<IProvideForCustomIisDefinition> iisDefinition)
+        public void Define(Action<IProvideForInfrastructureIis> iisDefinition)
         {
             iisDefinition(new ProviderOptions(_webDeployDefinition.Providers, _server));
         }

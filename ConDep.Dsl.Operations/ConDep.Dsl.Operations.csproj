@@ -64,7 +64,10 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="Deployment\Options\ExistingServerOptions.cs" />
-    <Compile Include="Deployment\Providers\Certificate\CustomCertificateProvider.cs" />
+    <Compile Include="Infrastructure\Providers\Certificate\CertificateInfrastructureExtension.cs" />
+    <Compile Include="Infrastructure\Providers\Certificate\CertificateInfrastructureProvider.cs" />
+    <Compile Include="Infrastructure\Providers\IIS\AppPool\AppPoolInfrastructureProvider.cs" />
+    <Compile Include="Infrastructure\Providers\IIS\AppPool\AppPoolInfrastructureExtension.cs" />
     <Compile Include="Infrastructure\Providers\IIS\Binding\HttpBindingInfrastructureProvider.cs" />
     <Compile Include="Infrastructure\Providers\IIS\Binding\HttpsBindingInfrastructureProvider.cs" />
     <Compile Include="Infrastructure\Providers\IIS\Binding\IisBindingInfrastructureExtension.cs" />
@@ -74,10 +77,10 @@
     <Compile Include="Infrastructure\Providers\IIS\WebApp\WebAppInfrastructureExtension.cs" />
     <Compile Include="Infrastructure\Providers\IIS\WebApp\WebAppInfrastructureProvider.cs" />
     <Compile Include="Infrastructure\Providers\IIS\WebApp\WebAppInfrastructureOptions.cs" />
-    <Compile Include="Infrastructure\Providers\IIS\WebSite\AppPoolInfrastructureOptions.cs" />
+    <Compile Include="Infrastructure\Providers\IIS\AppPool\AppPoolInfrastructureOptions.cs" />
     <Compile Include="Infrastructure\Providers\IIS\Binding\IisBindingInfrastructureOptions.cs" />
     <Compile Include="Infrastructure\Model\BindingType.cs" />
-    <Compile Include="Infrastructure\Providers\IIS\WebSite\WebSiteInfrastructureOptions.cs" />
+    <Compile Include="Infrastructure\Providers\IIS\WebSite\WebSiteInfrastructureProviderOptions.cs" />
     <Compile Include="Infrastructure\Providers\IIS\WebSite\WebSiteInfrastructureExtension.cs" />
     <Compile Include="Infrastructure\Providers\IIS\WebSite\WebSiteInfrastructureProvider.cs" />
     <Compile Include="Infrastructure\Providers\IIS\WebSite\IdentityInfrastructureOptions.cs" />
@@ -87,7 +90,7 @@
     <Compile Include="PreCompile\PreCompileCallback.cs" />
     <Compile Include="PreCompile\PreCompileExtension.cs" />
     <Compile Include="PreCompile\PreCompileOperation.cs" />
-    <Compile Include="Deployment\SetupExtensions.cs" />
+    <Compile Include="SetupExtensions.cs" />
     <Compile Include="Deployment\Providers\IIS\WebSite\WebSiteDeploymentExcludeOptions.cs" />
     <Compile Include="Deployment\Providers\IIS\WebSite\WebSiteDeploymentExtension.cs" />
     <Compile Include="Deployment\Providers\IIS\WebSite\WebSiteDeploymentOptions.cs" />
@@ -95,7 +98,7 @@
     <Compile Include="Deployment\Providers\General\GeneralProviderOptions.cs" />
     <Compile Include="Deployment\Options\ToOptions.cs" />
     <Compile Include="Deployment\Providers\General\GeneralProviderExtension.cs" />
-    <Compile Include="Deployment\Providers\Certificate\CertificateExtension.cs" />
+    <Compile Include="Deployment\Providers\Certificate\CertificateDeploymentExtension.cs" />
     <Compile Include="Deployment\Options\ConfigurationOptions.cs" />
     <Compile Include="Deployment\Providers\CopyDir\CopyDirOptions.cs" />
     <Compile Include="Deployment\Providers\CopyDir\CopyDirExtension.cs" />
@@ -117,7 +120,7 @@
     <Compile Include="WebRequest\WebRequestExtension.cs" />
     <Compile Include="WebRequest\WebRequestOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Deployment\Providers\Certificate\CertficiateProvider.cs" />
+    <Compile Include="Deployment\Providers\Certificate\CertficiateDeploymentProvider.cs" />
     <Compile Include="Deployment\Providers\CopyFile\CopyFileProvider.cs" />
     <Compile Include="Deployment\Providers\CopyDir\CopyDirProvider.cs" />
     <Compile Include="Deployment\Providers\General\GeneralProvider.cs" />

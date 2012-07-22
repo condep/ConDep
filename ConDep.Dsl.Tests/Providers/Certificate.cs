@@ -2,7 +2,7 @@ using NUnit.Framework;
 
 namespace ConDep.Dsl.Tests.Providers
 {
-	public class when_using_certificate_provider : ProviderTestFixture<CertficiateProvider>
+	public class when_using_certificate_provider : ProviderTestFixture<CertficiateDeploymentProvider>
 	{
 		protected override void When()
 		{

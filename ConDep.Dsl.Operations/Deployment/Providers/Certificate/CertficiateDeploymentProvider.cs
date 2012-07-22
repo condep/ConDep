@@ -1,16 +1,14 @@
-using System;
 using ConDep.Dsl.Core;
 using Microsoft.Web.Deployment;
-using System.Linq;
 using DeploymentProviderOptions = Microsoft.Web.Deployment.DeploymentProviderOptions;
 
 namespace ConDep.Dsl
 {
-	public class CertficiateProvider : WebDeployProvider
+	public class CertficiateDeploymentProvider : WebDeployProvider
 	{
 		private const string NAME = "cert";
 
-		public CertficiateProvider(string thumbprint)
+		public CertficiateDeploymentProvider(string thumbprint)
 		{
 			SourcePath = thumbprint;
 		}

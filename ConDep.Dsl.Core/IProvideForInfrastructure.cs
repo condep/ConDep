@@ -2,7 +2,7 @@
 {
     public interface IProvideForInfrastructure : IProviderCollection
     {
-        IisDeploymentOptions IIS { get; }
-        WindowsOptions Windows { get; }
+        InfrastructureIisOptions IIS { get; }
+        InfrastructureWindowsOptions Windows { get; }
     }
 }

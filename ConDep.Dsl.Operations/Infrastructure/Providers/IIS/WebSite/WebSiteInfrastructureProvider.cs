@@ -11,25 +11,20 @@ namespace ConDep.Dsl
         private readonly int _id;
         private readonly string _physicalDir;
         private readonly IList<IisBinding> _bindings = new List<IisBinding>();
-        private readonly ApplicationPool _applicationPool = new ApplicationPool();
 
         public WebSiteInfrastructureProvider(string webSiteName, int id, string physicalDir)
         {
             _webSiteName = webSiteName;
             _id = id;
             _physicalDir = physicalDir;
+
         }
 
         public string WebSiteName { get { return _webSiteName; } }
 
         public IList<IisBinding> Bindings { get { return _bindings; } }
 
-        public ApplicationPool ApplicationPool
-        {
-            get {
-                return _applicationPool;
-            }
-        }
+        public string AppPoolName { get; set; }
 
         public override bool IsValid(Notification notification)
         {
@@ -38,55 +33,16 @@ namespace ConDep.Dsl
 
         public override void Configure(DeploymentServer server)
         {
+
             var webSiteSettings = server.WebSites.SingleOrDefault(x => x.WebSiteName == WebSiteName);
 
             string psCommand = GetRemoveExistingWebSiteCommand(_id);
-            psCommand += GetCreateAppPoolCommand();
+            //psCommand += GetCreateAppPoolCommand();
             psCommand += GetCreateWebSiteDirCommand(_physicalDir);
-            psCommand += GetCreateWebSiteCommand(_webSiteName, webSiteSettings.Bindings);
+            psCommand += GetCreateWebSiteCommand(_webSiteName, AppPoolName, webSiteSettings.Bindings);
             psCommand += GetCreateBindings(_webSiteName, Bindings, webSiteSettings.Bindings);
             psCommand += GetCertificateCommand();
             Configure(p => p.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
-        }
-
-        private string GetCreateAppPoolCommand()
-        {
-            if (!string.IsNullOrWhiteSpace(_applicationPool.Name))
-            {
-                var psCommand = _applicationPool.Name != null ? string.Format("Set-Location IIS:\\AppPools; try {{ Remove-WebAppPool '{0}' }} catch {{ }}; $newAppPool = New-WebAppPool '{0}'; ", _applicationPool.Name) : "";
-
-                psCommand += _applicationPool.Enable32Bit != null ? string.Format("$newAppPool.enable32BitAppOnWin64 = {0}; ", _applicationPool.Enable32Bit.Value ? "$true" : "$false") : "";
-                psCommand += _applicationPool.IdentityUsername != null ? string.Format("$newAppPool.processModel.identityType = 'SpecificUser'; $newAppPool.processModel.username = '{0}'; $newAppPool.processModel.password = '{1}'; ", _applicationPool.IdentityUsername, _applicationPool.IdentityPassword) : "";
-                psCommand += _applicationPool.IdleTimeoutInMinutes != null ? string.Format("$newAppPool.processModel.idleTimeout = [TimeSpan]::FromMinutes({0}); ", _applicationPool.IdleTimeoutInMinutes) : "";
-                psCommand += _applicationPool.LoadUserProfile != null ? string.Format("$newAppPool.processModel.loadUserProfile = {0}; ", _applicationPool.LoadUserProfile.Value ? "$true" : "$false") : "";
-                psCommand += _applicationPool.ManagedPipeline != null ? string.Format("$newAppPool.managedPipelineMode = '{0}'; ", _applicationPool.ManagedPipeline) : "";
-                psCommand += _applicationPool.NetFrameworkVersion != null ? string.Format("$newAppPool.managedRuntimeVersion = '{0}'; ", ExtractNetFrameworkVersion()) : "";
-                psCommand += _applicationPool.RecycleTimeInMinutes != null ? string.Format("$newAppPool.recycling.periodicrestart.time = [TimeSpan]::FromMinutes({0}); ", _applicationPool.RecycleTimeInMinutes) : "";
-
-                psCommand += "$newAppPool | set-item;";
-                return psCommand;
-            }
-            return "";
-        }
-
-        private string ExtractNetFrameworkVersion()
-        {
-            switch (_applicationPool.NetFrameworkVersion)
-            {
-                case NetFrameworkVersion.Net1_0:
-                    return "v1.0";
-                case NetFrameworkVersion.Net1_1:
-                    return "v1.1";
-                case NetFrameworkVersion.Net2_0:
-                    return "v2.0";
-                case NetFrameworkVersion.Net4_0:
-                    return "v4.0";
-                case NetFrameworkVersion.Net5_0:
-                    return "v5.0";
-                default:
-                    throw new Exception("Framework version unknown to ConDep.");
-            } 
-
         }
 
         private string GetCreateWebSiteDirCommand(string webSiteDir)
@@ -161,7 +117,7 @@ namespace ConDep.Dsl
 
         }
 
-        private string GetCreateWebSiteCommand(string webSiteName, IList<ConDepWebSiteBinding> serverWebSiteBindings)
+        private string GetCreateWebSiteCommand(string webSiteName, string appPoolName, IList<ConDepWebSiteBinding> serverWebSiteBindings)
         {
 
             string bindingString = "";
@@ -177,8 +133,10 @@ namespace ConDep.Dsl
                 bindingString = GetFirstWebSiteBinding(binding.Port, bindingType, binding.Ip, binding.HostHeader);
             }
 
+            var appPool = !string.IsNullOrWhiteSpace(appPoolName) ? string.Format(" -ApplicationPool \"{0}\" ", appPoolName) : "";
             var physicalPath = string.IsNullOrWhiteSpace(_physicalDir) ? "" : string.Format("-PhysicalPath \"{0}\" ", _physicalDir);
-            return string.Format("New-Website -Name \"{0}\" -Id {1} {2}{3}-force; ", webSiteName, _id, physicalPath, bindingString);
+
+            return string.Format("New-Website -Name \"{0}\" -Id {1} {2}{3}{4}-force; ", webSiteName, _id, physicalPath, bindingString, appPool);
         }
 
         private string GetFirstWebSiteBinding(string port, BindingType bindingType, string ip, string hostHeader)

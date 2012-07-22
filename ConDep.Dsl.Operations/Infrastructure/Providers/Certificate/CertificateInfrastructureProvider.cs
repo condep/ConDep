@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ConDep.Dsl
 {
-    public class CustomCertificateProvider : CompositeProvider
+    public class CertificateInfrastructureProvider : CompositeProvider
     {
         private readonly string _searchString;
         private readonly string _certFriendlyName;
@@ -14,21 +14,21 @@ namespace ConDep.Dsl
         private readonly string _certFile;
         private readonly bool _copyCertFromFile;
 
-        public CustomCertificateProvider(string searchString, X509FindType findType)
+        public CertificateInfrastructureProvider(string searchString, X509FindType findType)
         {
             _searchString = searchString;
             _findType = findType;
             _copyCertFromFile = false;
         }
 
-        public CustomCertificateProvider(string searchString, string certFriendlyName)
+        public CertificateInfrastructureProvider(string searchString, string certFriendlyName)
         {
             _searchString = searchString;
             _certFriendlyName = certFriendlyName;
             _copyCertFromFile = false;
         }
 
-        public CustomCertificateProvider(string certFile)
+        public CertificateInfrastructureProvider(string certFile)
         {
             _certFile = certFile;
             _copyCertFromFile = true;

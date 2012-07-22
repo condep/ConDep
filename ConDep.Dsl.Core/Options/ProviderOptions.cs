@@ -2,7 +2,7 @@
 
 namespace ConDep.Dsl.Core
 {
-    public class ProviderOptions : IProvideForExistingIisServer, IProvideForCustomIisDefinition, IProvideForInfrastructureIis
+    public class ProviderOptions : IProvideForExistingIisServer, IProvideForInfrastructureIis
     {
         private readonly List<IProvide> _providers;
         private readonly DeploymentServer _server;
