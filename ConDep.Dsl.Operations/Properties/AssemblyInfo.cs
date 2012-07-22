@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("ConDep.WebDeploy.Configuration.Dsl")]
+[assembly: AssemblyTitle("ConDep.Dsl.Operations")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: ComVisible(false)]
