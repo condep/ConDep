@@ -12,4 +12,4 @@ ConDep is short for Continuous Deployment, but it really does allow for much mor
 * Precompile .NET Web Applications
 * Load balance with Application Request Routing (support for other LB's are coming)
 
-In addition its built with extensibillity in mind and you can easily extend it with your own Operations or Providers. And also, not a single prerequisite is needed on the remote server. For now it's only tested with Windows Server 2008 R2 and Windows 7, but probably also work with earlier versions of Windows Server.
+In addition its built with extensibillity in mind and you can easily extend it with your own [Operations or Providers](Code concepts for extending ConDep). And also, not a single prerequisite is needed on the remote server. For now it's only tested with Windows Server 2008 R2 and Windows 7, but probably also work with earlier versions of Windows Server.
