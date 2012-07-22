@@ -15,18 +15,18 @@ namespace ConDep.Dsl
         //    action(new SyncOptions(webDeployDefinition));
         //}
 
-        public static void Deployment(this SetupOptions setupOptions, string destinationServerName, Action<IProvideForDeployment> serverSetup)
-        {
-            var webDeployDefinition = new WebDeployDefinition();
-            webDeployDefinition.Destination.ComputerName = destinationServerName;
+        //public static void Deployment(this SetupOptions setupOptions, string destinationServerName, Action<IProvideForDeployment> serverSetup)
+        //{
+        //    var webDeployDefinition = new WebDeployDefinition();
+        //    webDeployDefinition.Destination.ComputerName = destinationServerName;
 
-            //ToDo: Add overload for username and password
+        //    //ToDo: Add overload for username and password
 
-            var webDeployOperation = new DeploymentOperation(webDeployDefinition);
-            setupOptions.AddOperation(webDeployOperation);
+        //    var webDeployOperation = new DeploymentOperation(webDeployDefinition);
+        //    setupOptions.AddOperation(webDeployOperation);
 
-            serverSetup(new DeploymentProviderOptions(webDeployDefinition));
-        }
+        //    serverSetup(new DeploymentProviderOptions(webDeployDefinition));
+        //}
 
         public static void Deployment(this SetupOptions setupOptions, Action<IProvideForDeployment> deployment)
         {

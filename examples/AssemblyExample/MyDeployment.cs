@@ -25,6 +25,7 @@ namespace AssemblyExample
                                                                iisDef.WebSite("WebSite1", 2, @"C:\website1",
                                                                               webSiteOpt =>
                                                                                   {
+                                                                                      webSiteOpt.CopyDir(@"C:\Temp\Frende.Customer.Endpoint2", o => o.DestinationDir(@"C:\website1"));
                                                                                       webSiteOpt.AppPoolName = "website1";
                                                                                       webSiteOpt.HttpBinding(8088);
                                                                                       webSiteOpt.WebApp("webapp1");
@@ -40,7 +41,6 @@ namespace AssemblyExample
                                                                                   });
 
                                                                iisDef.WebSite("WebSite3", 4, @"C:\website3");
-
                                                            }
                                                        );
 
@@ -48,10 +48,10 @@ namespace AssemblyExample
                                                } 
                             );
 
-                          s.Deployment(dep =>
-                                           {
-                                               dep.CopyDir(@"C:\Temp\Frende.Customer.Endpoint2", o => o.DestinationDir(@"C:\website1"));
-                                           });
+                          //s.Deployment(dep =>
+                          //                 {
+                          //                     dep.CopyDir(@"C:\Temp\Frende.Customer.Endpoint2", o => o.DestinationDir(@"C:\website1"));
+                          //                 });
 // ReSharper restore ConvertToLambdaExpression
 
                           //s.Deployment(deploy => deploy.CopyDir());

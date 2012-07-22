@@ -20,7 +20,7 @@ namespace ConDep.Dsl.Core
         //public abstract void Configure();
         public abstract void Configure(DeploymentServer server);
 
-		protected void Configure(Action<IProviderForAll> action)
+		protected void Configure(Action<IProvideForAll> action)
 		{
 			action(new ProviderOptions(_childProviders));
 		}

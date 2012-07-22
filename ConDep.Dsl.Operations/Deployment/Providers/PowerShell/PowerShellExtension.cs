@@ -5,13 +5,13 @@ namespace ConDep.Dsl
 {
     public static class PowerShellExtension
     {
-        public static void PowerShell(this IProviderForAll providerOptions, string command)
+        public static void PowerShell(this IProvideForAll providerOptions, string command)
         {
             var powerShellProvider = new PowerShellProvider(command);
             providerOptions.AddProvider(powerShellProvider);
         }
 
-        public static void PowerShell(this IProviderForAll providerOptions, string command, Action<PowerShellOptions> options)
+        public static void PowerShell(this IProvideForAll providerOptions, string command, Action<PowerShellOptions> options)
         {
             var powerShellProvider = new PowerShellProvider(command);
             options(new PowerShellOptions(powerShellProvider));
