@@ -1,5 +1,0 @@
-Prerequisites
--------------
-* Web Deploy 2.0 : http://www.iis.net/download/webdeploy
-
-Unless Web Deploy 2.0 is installed you will get missing dependencies in project files.
