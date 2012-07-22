@@ -2,25 +2,25 @@
 
 namespace ConDep.Dsl.Core
 {
-    public class IisDeploymentOptions
+    public class DeploymentIisOptions
     {
         private readonly WebDeployDefinition _webDeployDefinition;
 
-        public IisDeploymentOptions(WebDeployDefinition webDeployDefinition)
+        public DeploymentIisOptions(WebDeployDefinition webDeployDefinition)
         {
             _webDeployDefinition = webDeployDefinition;
         }
 
         public void SyncFromExistingServer(string iisServer, Action<IProvideForExistingIisServer> sync)
         {
-            _webDeployDefinition.Source.ComputerName = iisServer;
+            _webDeployDefinition.WebDeploySource.ComputerName = iisServer;
             sync(new ProviderOptions(_webDeployDefinition.Providers));
         }
 
         public void SyncFromExistingServer(string iisServer, string serverUserName, string serverPassword, Action<IProvideForExistingIisServer> sync)
         {
-            _webDeployDefinition.Destination.Credentials.UserName = serverUserName;
-            _webDeployDefinition.Destination.Credentials.Password = serverPassword;
+            _webDeployDefinition.WebDeployDestination.Credentials.UserName = serverUserName;
+            _webDeployDefinition.WebDeployDestination.Credentials.Password = serverPassword;
 
             SyncFromExistingServer(iisServer, sync);
         }

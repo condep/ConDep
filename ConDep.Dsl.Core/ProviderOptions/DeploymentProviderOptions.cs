@@ -3,7 +3,7 @@
     public class DeploymentProviderOptions : ProviderOptions, IProvideForDeployment
     {
         private readonly WebDeployDefinition _webDeployDefinition;
-        private IisDeploymentOptions _iisOptions;
+        private DeploymentIisOptions _iisOptions;
         private WindowsOptions _windowsOptions;
 
         public DeploymentProviderOptions(WebDeployDefinition webDeployDefinition) : base(webDeployDefinition.Providers)
@@ -11,9 +11,9 @@
             _webDeployDefinition = webDeployDefinition;
         }
 
-        public IisDeploymentOptions IIS
+        public DeploymentIisOptions IIS
         {
-            get { return _iisOptions ?? (_iisOptions = new IisDeploymentOptions(_webDeployDefinition)); }
+            get { return _iisOptions ?? (_iisOptions = new DeploymentIisOptions(_webDeployDefinition)); }
         }
 
         public WindowsOptions Windows

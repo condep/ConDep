@@ -4,7 +4,7 @@ using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl
 {
-    public class NServiceBusProvider : CompositeProvider
+    public class NServiceBusProvider : WebDeployCompositeProvider
     {
 		internal const string SERVICE_CONTROLLER_EXE = @"C:\WINDOWS\system32\sc.exe";
         private string _serviceInstallerName = "NServiceBus.Host.exe";

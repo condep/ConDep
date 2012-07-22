@@ -2,11 +2,11 @@ using System;
 
 namespace ConDep.Dsl.Core
 {
-	public class DeploymentOperation : IOperateConDep
+	public class WebDeployOperation : IOperateConDep
 	{
 		private readonly WebDeployDefinition _webDeployDefinition;
 
-		public DeploymentOperation(WebDeployDefinition webDeployDefinition)
+		public WebDeployOperation(WebDeployDefinition webDeployDefinition)
 		{
 			_webDeployDefinition = webDeployDefinition;
 		}

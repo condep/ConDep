@@ -1,6 +1,6 @@
 ﻿using ConDep.Dsl.Core;
 
-namespace ConDep.Dsl.Builders
+namespace ConDep.Dsl.Core
 {
     public class LoadBalancerOptions
     {

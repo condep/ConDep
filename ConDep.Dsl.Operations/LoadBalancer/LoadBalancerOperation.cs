@@ -1,7 +1,7 @@
 ﻿using System;
 using ConDep.Dsl.Core;
 
-namespace ConDep.Dsl.Builders
+namespace ConDep.Dsl.Core
 {
     public class LoadBalancerOperation : IOperateConDep
     {

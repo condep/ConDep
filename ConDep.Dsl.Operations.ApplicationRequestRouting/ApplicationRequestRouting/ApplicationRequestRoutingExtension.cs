@@ -1,6 +1,5 @@
 ﻿using System;
-using ConDep.Dsl.Builders;
-using ConDep.Dsl.Operations.ApplicationRequestRouting;
+using ConDep.Dsl.Core;
 using ConDep.Dsl.Operations.ApplicationRequestRouting.Infrastructure;
 
 namespace ConDep.Dsl

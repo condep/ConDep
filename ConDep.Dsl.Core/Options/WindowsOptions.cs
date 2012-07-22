@@ -11,7 +11,7 @@
 
         public void InstallIIS()
         {
-            _webDeployDefinition.Source.LocalHost = true;
+            _webDeployDefinition.WebDeploySource.LocalHost = true;
             //iisDefinition(new ProviderOptions(_webDeployDefinition.Providers));
         }
     }

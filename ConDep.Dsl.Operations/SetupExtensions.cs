@@ -5,29 +5,6 @@ namespace ConDep.Dsl
 {
 	public static class SetupExtensions
 	{
-        //public static void Sync(this SetupOptions setupOptions, Action<SyncOptions> action)
-        //{
-        //    var webDeployDefinition = new WebDeployDefinition();
-
-        //    var webDeployOperation = new DeploymentOperation(webDeployDefinition);
-        //    setupOptions.AddOperation(webDeployOperation);
-
-        //    action(new SyncOptions(webDeployDefinition));
-        //}
-
-        //public static void Deployment(this SetupOptions setupOptions, string destinationServerName, Action<IProvideForDeployment> serverSetup)
-        //{
-        //    var webDeployDefinition = new WebDeployDefinition();
-        //    webDeployDefinition.Destination.ComputerName = destinationServerName;
-
-        //    //ToDo: Add overload for username and password
-
-        //    var webDeployOperation = new DeploymentOperation(webDeployDefinition);
-        //    setupOptions.AddOperation(webDeployOperation);
-
-        //    serverSetup(new DeploymentProviderOptions(webDeployDefinition));
-        //}
-
         public static void Deployment(this SetupOptions setupOptions, Action<IProvideForDeployment> deployment)
         {
             if (ConDepConfigurator.EnvSettings.LoadBalancer.IsDefined)
@@ -59,19 +36,19 @@ namespace ConDep.Dsl
 	    private static WebDeployDefinition ConfigureWebDeploy(DeploymentServer deploymentServer, SetupOptions setupOptions)
 	    {
 	        var webDeployDefinition = new WebDeployDefinition();
-	        webDeployDefinition.Destination.ComputerName = deploymentServer.ServerName;
-	        webDeployDefinition.Source.LocalHost = true;
+	        webDeployDefinition.WebDeployDestination.ComputerName = deploymentServer.ServerName;
+	        webDeployDefinition.WebDeploySource.LocalHost = true;
 
 	        if(ConDepConfigurator.EnvSettings.DeploymentUser.IsDefined)
 	        {
-	            webDeployDefinition.Destination.Credentials.UserName = ConDepConfigurator.EnvSettings.DeploymentUser.UserName;
-	            webDeployDefinition.Destination.Credentials.Password = ConDepConfigurator.EnvSettings.DeploymentUser.Password;
+	            webDeployDefinition.WebDeployDestination.Credentials.UserName = ConDepConfigurator.EnvSettings.DeploymentUser.UserName;
+	            webDeployDefinition.WebDeployDestination.Credentials.Password = ConDepConfigurator.EnvSettings.DeploymentUser.Password;
 
-	            webDeployDefinition.Source.Credentials.UserName = ConDepConfigurator.EnvSettings.DeploymentUser.UserName;
-	            webDeployDefinition.Source.Credentials.Password = ConDepConfigurator.EnvSettings.DeploymentUser.Password;
+	            webDeployDefinition.WebDeploySource.Credentials.UserName = ConDepConfigurator.EnvSettings.DeploymentUser.UserName;
+	            webDeployDefinition.WebDeploySource.Credentials.Password = ConDepConfigurator.EnvSettings.DeploymentUser.Password;
 	        }
 
-	        var webDeployOperation = new DeploymentOperation(webDeployDefinition);
+	        var webDeployOperation = new WebDeployOperation(webDeployDefinition);
 	        setupOptions.AddOperation(webDeployOperation);
 	        return webDeployDefinition;
 	    }

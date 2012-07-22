@@ -3,7 +3,7 @@ using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl
 {
-    public class HttpsBindingInfrastructureProvider : CompositeProvider
+    public class HttpsBindingInfrastructureProvider : WebDeployCompositeProvider
     {
         public HttpsBindingInfrastructureProvider(int port, string certificateCommonName)
         {

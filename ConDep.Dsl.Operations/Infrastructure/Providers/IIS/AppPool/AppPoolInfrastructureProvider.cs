@@ -3,7 +3,7 @@ using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl
 {
-    public class AppPoolInfrastructureProvider : CompositeProvider
+    public class AppPoolInfrastructureProvider : WebDeployCompositeProvider
     {
         private readonly string _appPoolName;
         private readonly ApplicationPool _appPool = new ApplicationPool();

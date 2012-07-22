@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ConDep.Dsl
 {
-    public class CertificateInfrastructureProvider : CompositeProvider
+    public class CertificateInfrastructureProvider : WebDeployCompositeProvider
     {
         private readonly string _searchString;
         private readonly string _certFriendlyName;

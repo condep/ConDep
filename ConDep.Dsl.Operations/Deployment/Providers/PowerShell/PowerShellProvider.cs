@@ -3,7 +3,7 @@ using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl
 {
-    public class PowerShellProvider : CompositeProvider
+    public class PowerShellProvider : WebDeployCompositeProvider
     {
         public PowerShellProvider(string command)
         {

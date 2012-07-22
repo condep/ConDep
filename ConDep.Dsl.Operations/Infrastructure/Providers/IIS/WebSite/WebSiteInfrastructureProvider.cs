@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ConDep.Dsl
 {
-    public class WebSiteInfrastructureProvider : CompositeProvider
+    public class WebSiteInfrastructureProvider : WebDeployCompositeProvider
     {
         private readonly string _webSiteName;
         private readonly int _id;

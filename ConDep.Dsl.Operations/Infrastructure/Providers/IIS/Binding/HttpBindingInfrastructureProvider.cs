@@ -3,7 +3,7 @@ using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl.Providers.IIS.Binding
 {
-    public class HttpBindingInfrastructureProvider : CompositeProvider
+    public class HttpBindingInfrastructureProvider : WebDeployCompositeProvider
     {
         private readonly string _webSiteName;
         private readonly int _port;

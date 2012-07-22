@@ -7,24 +7,24 @@ namespace ConDep.Dsl.Core
 {
     public class WebDeployDefinition : IValidate
 	{
-		private readonly Source _source = new Source();
-		private readonly Destination _destination = new Destination();
+		private readonly WebDeploySource _webDeploySource = new WebDeploySource();
+		private readonly WebDeployDestination _webDeployDestination = new WebDeployDestination();
 		private readonly Configuration _configuration = new Configuration();
 		private readonly List<IProvide> _providers = new List<IProvide>();
 
     	private EventHandler<WebDeployMessageEventArgs> _output;
     	private EventHandler<WebDeployMessageEventArgs> _outputError;
 
-        public Source Source
+        public WebDeploySource WebDeploySource
 		{
-			get { return _source; }
+			get { return _webDeploySource; }
 		}
 
 		public List<IProvide> Providers { get { return _providers; } }
 
-		public Destination Destination
+		public WebDeployDestination WebDeployDestination
 		{
-			get { return _destination; }
+			get { return _webDeployDestination; }
 		}
 
 		public Configuration Configuration
@@ -43,8 +43,8 @@ namespace ConDep.Dsl.Core
 
 		private void ValidateChildren(Notification notification)
 		{
-			_source.IsValid(notification);
-			_destination.IsValid(notification);
+			_webDeploySource.IsValid(notification);
+			_webDeployDestination.IsValid(notification);
 			_configuration.IsValid(notification);
 			_providers.ForEach(p => p.IsValid(notification));
 		}
@@ -84,18 +84,18 @@ namespace ConDep.Dsl.Core
 
 			  var syncOptions = new DeploymentSyncOptions {WhatIf = Configuration.UseWhatIf};
 
-		      var sourceBaseOptions = Source.GetSourceBaseOptions();
+		      var sourceBaseOptions = WebDeploySource.GetSourceBaseOptions();
 		      sourceBaseOptions.TempAgent = !Configuration.DoNotAutoDeployAgent;
               sourceBaseOptions.Trace += OnWebDeployTraceMessage;
               sourceBaseOptions.TraceLevel = TraceLevel.Verbose;
 
-			  destBaseOptions = Destination.GetDestinationBaseOptions();
+			  destBaseOptions = WebDeployDestination.GetDestinationBaseOptions();
 			  destBaseOptions.TempAgent = !Configuration.DoNotAutoDeployAgent;
 			  destBaseOptions.Trace += OnWebDeployTraceMessage;
 			  destBaseOptions.TraceLevel = TraceLevel.Verbose;
 
 
-			  return new WebDeployOptions(Source.PackagePath, sourceBaseOptions, destBaseOptions, syncOptions);
+			  return new WebDeployOptions(WebDeploySource.PackagePath, sourceBaseOptions, destBaseOptions, syncOptions);
 		  }
 
 		  private void HandleSyncException(WebDeploymentStatus deploymentStatus, Exception ex)

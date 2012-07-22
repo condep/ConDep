@@ -2,7 +2,7 @@
 
 namespace ConDep.Dsl.Core
 {
-	public class Source : IValidate
+	public class WebDeploySource : IValidate
 	{
 		private readonly Credentials _credentials = new Credentials();
         private bool _localHost = true;

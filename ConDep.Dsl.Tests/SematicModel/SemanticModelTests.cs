@@ -40,14 +40,14 @@ namespace ConDep.Dsl.Tests.SematicModel
 
         protected override void When()
         {
-            _webDeployOptions = _definition.Source.GetSourceBaseOptions();
-            _definition.Source.IsValid(_notification);
+            _webDeployOptions = _definition.WebDeploySource.GetSourceBaseOptions();
+            _definition.WebDeploySource.IsValid(_notification);
         }
 
         [Test]
         public void should_default_to_localhost()
         {
-            Assert.That(_definition.Source.LocalHost, Is.True);
+            Assert.That(_definition.WebDeploySource.LocalHost, Is.True);
         }
     }
 
@@ -56,17 +56,17 @@ namespace ConDep.Dsl.Tests.SematicModel
 		protected override void Given()
 		{
 			_definition = new WebDeployDefinition();
-			_definition.Destination.ComputerName = COMPUTER_NAME;
-			_definition.Destination.Credentials.UserName = USERNAME;
-			_definition.Destination.Credentials.Password = PASSWORD;
+			_definition.WebDeployDestination.ComputerName = COMPUTER_NAME;
+			_definition.WebDeployDestination.Credentials.UserName = USERNAME;
+			_definition.WebDeployDestination.Credentials.Password = PASSWORD;
 
 			_notification = new Notification();
 		}
 
 		protected override void When()
 		{
-			_webDeployOptions = _definition.Destination.GetDestinationBaseOptions();
-			_definition.Destination.IsValid(_notification);
+			_webDeployOptions = _definition.WebDeployDestination.GetDestinationBaseOptions();
+			_definition.WebDeployDestination.IsValid(_notification);
 		}
 	}
 
@@ -75,17 +75,17 @@ namespace ConDep.Dsl.Tests.SematicModel
 		protected override void Given()
 		{
 			_definition = new WebDeployDefinition();
-			_definition.Source.ComputerName = COMPUTER_NAME;
-			_definition.Source.Credentials.UserName = USERNAME;
-			_definition.Source.Credentials.Password = PASSWORD;
+			_definition.WebDeploySource.ComputerName = COMPUTER_NAME;
+			_definition.WebDeploySource.Credentials.UserName = USERNAME;
+			_definition.WebDeploySource.Credentials.Password = PASSWORD;
 
 			_notification = new Notification();
 		}
 
 		protected override void When()
 		{
-			_webDeployOptions = _definition.Source.GetSourceBaseOptions();
-			_definition.Source.IsValid(_notification);
+			_webDeployOptions = _definition.WebDeploySource.GetSourceBaseOptions();
+			_definition.WebDeploySource.IsValid(_notification);
 		}
 	}
 

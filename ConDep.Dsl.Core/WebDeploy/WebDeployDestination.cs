@@ -2,7 +2,7 @@
 
 namespace ConDep.Dsl.Core
 {
-	public class Destination : IValidate
+	public class WebDeployDestination : IValidate
 	{
 		private readonly Credentials _credentials = new Credentials();
 

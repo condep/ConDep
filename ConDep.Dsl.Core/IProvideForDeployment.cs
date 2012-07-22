@@ -2,6 +2,6 @@
 {
     public interface IProvideForDeployment : IProvideForAll
     {
-        IisDeploymentOptions IIS { get; }
+        DeploymentIisOptions IIS { get; }
     }
 }

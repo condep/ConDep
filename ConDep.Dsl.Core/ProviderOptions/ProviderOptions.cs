@@ -22,9 +22,9 @@ namespace ConDep.Dsl.Core
         {
             _providers.Add(provider);
 
-            if (provider is CompositeProvider)
+            if (provider is WebDeployCompositeProvider)
             {
-                ((CompositeProvider)provider).Configure(_server);
+                ((WebDeployCompositeProvider)provider).Configure(_server);
             }
         }
     }

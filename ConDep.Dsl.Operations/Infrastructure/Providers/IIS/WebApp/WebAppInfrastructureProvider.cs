@@ -3,7 +3,7 @@ using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl
 {
-    public class WebAppInfrastructureProvider : CompositeProvider
+    public class WebAppInfrastructureProvider : WebDeployCompositeProvider
     {
         private readonly string _webAppName;
         private readonly string _webSiteName;

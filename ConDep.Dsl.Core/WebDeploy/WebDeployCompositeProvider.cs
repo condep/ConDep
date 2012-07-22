@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ConDep.Dsl.Core
 {
-	public abstract class CompositeProvider : IProvide
+	public abstract class WebDeployCompositeProvider : IProvide
 	{
 	    private readonly List<IProvide> _childProviders = new List<IProvide>();
 
@@ -17,10 +17,9 @@ namespace ConDep.Dsl.Core
 		public int WaitInterval { get; set; }
         public int RetryAttempts { get; set; }
 
-        //public abstract void Configure();
         public abstract void Configure(DeploymentServer server);
 
-		protected void Configure(Action<IProvideForAll> action)
+        protected void Configure(Action<ProviderOptions> action)
 		{
 			action(new ProviderOptions(_childProviders));
 		}
