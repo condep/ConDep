@@ -5,9 +5,18 @@ namespace ConDep.Dsl.Core
 	public class Source : IValidate
 	{
 		private readonly Credentials _credentials = new Credentials();
+        private bool _localHost = true;
+	    private string _computerName;
 
-		public string ComputerName { get; set; }
-	    private bool _localHost = true;
+	    public string ComputerName
+	    {
+	        get { return _computerName; }
+	        set
+	        {
+	            _localHost = false;
+	            _computerName = value;
+	        }
+	    }
 
         public bool LocalHost
 	    {

@@ -1,4 +1,6 @@
-﻿using ConDep.Dsl.Core;
+﻿using System;
+using ConDep.Dsl.Core;
+using Microsoft.Web.Deployment;
 using NUnit.Framework;
 
 namespace ConDep.Dsl.Tests.SematicModel
@@ -15,15 +17,6 @@ namespace ConDep.Dsl.Tests.SematicModel
 		}
 	}
 	
-	public class when_no_source_are_specified : SemanticTestFixture
-	{
-		[Test]
-		public void should_notify_about_missing_source()
-		{
-			Assert.That(Notification.HasErrorOfType(ValidationErrorType.NoSource));
-		}
-	}
-
 	public class when_no_configuration_are_specified : SemanticTestFixture
 	{
 		[Test]
@@ -33,7 +26,32 @@ namespace ConDep.Dsl.Tests.SematicModel
 		}
 	}
 
-	public class when_destination_is_defined_correct : WebDeployOptionsTestFixture
+    public class when_no_source_computer_is_defined : SemanticTestFixture
+    {
+        private WebDeployDefinition _definition;
+        private DeploymentBaseOptions _webDeployOptions;
+        private Notification _notification;
+
+        protected override void Given()
+        {
+            _definition = new WebDeployDefinition();
+            _notification = new Notification();
+        }
+
+        protected override void When()
+        {
+            _webDeployOptions = _definition.Source.GetSourceBaseOptions();
+            _definition.Source.IsValid(_notification);
+        }
+
+        [Test]
+        public void should_default_to_localhost()
+        {
+            Assert.That(_definition.Source.LocalHost, Is.True);
+        }
+    }
+
+    public class when_destination_is_defined_correct : WebDeployOptionsTestFixture
 	{
 		protected override void Given()
 		{
