@@ -6,8 +6,7 @@ namespace ConDep.Dsl.Tests.Providers
 	{
 		protected override void When()
 		{
-			Providers
-				.Certificate(SourcePath);
+			Providers.Certificate(SourcePath);
 		}
 
 		[Test]

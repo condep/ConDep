@@ -75,7 +75,7 @@
     <Compile Include="Options\InfrastructureWindowsOptions.cs" />
     <Compile Include="IOperateConDep.cs" />
     <Compile Include="IProvide.cs" />
-    <Compile Include="IProviderCollection.cs" />
+    <Compile Include="IProviderForAll.cs" />
     <Compile Include="IValidate.cs" />
     <Compile Include="Model\LoadBalancerSettings.cs" />
     <Compile Include="Model\Notification.cs" />

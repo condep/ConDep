@@ -1,6 +1,6 @@
 ﻿namespace ConDep.Dsl.Core
 {
-    public interface IProvideForInfrastructureIis : IProviderCollection
+    public interface IProvideForInfrastructureIis : IProviderForAll
     {
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using ConDep.Dsl.Core;
+﻿using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl
 {
