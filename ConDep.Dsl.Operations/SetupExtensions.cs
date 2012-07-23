@@ -7,13 +7,19 @@ namespace ConDep.Dsl
 	{
         public static void Deployment(this SetupOptions setupOptions, Action<IProvideForDeployment> deployment)
         {
-            if (ConDepConfigurator.EnvSettings.LoadBalancer.IsDefined)
-            {
-                throw new NotImplementedException("Support for load balancer not yet implemented.");
-            }
+            DeploymentServer previousDeploymentServer = null;
 
             foreach (var deploymentServer in ConDepConfigurator.EnvSettings.Servers)
             {
+                if (ConDepConfigurator.EnvSettings.LoadBalancer.IsDefined)
+                {
+                    var lb = ConDepConfigurator.EnvSettings.LoadBalancer;
+                    var lbOperation = new LoadBalancerOperation(lb.Name, lb.Provider, deploymentServer, previousDeploymentServer);
+                    setupOptions.AddOperation(lbOperation);
+
+                    previousDeploymentServer = deploymentServer;
+                }
+
                 var webDeployDefinition = ConfigureWebDeploy(deploymentServer, setupOptions);
                 deployment(new DeploymentProviderOptions(webDeployDefinition));
             }
