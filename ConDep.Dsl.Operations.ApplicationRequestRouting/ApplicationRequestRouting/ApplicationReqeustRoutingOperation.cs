@@ -6,22 +6,26 @@ using ConDep.Dsl.Operations.ApplicationRequestRouting.Infrastructure;
 
 namespace ConDep.Dsl.Operations.ApplicationRequestRouting
 {
-	public class ApplicationReqeustRoutingOperation : IOperateConDep
+	public class ApplicationReqeustRoutingOperation : IOperateConDep, ILoadBalance
 	{
-		private readonly string _webServerName;
-		private readonly UserInfo _userInfo;
+		private readonly string _arrServerName;
+	    private readonly string _serverToDeployTo;
+	    private readonly string _serverToBringBackOnline;
+	    private readonly UserInfo _userInfo;
 		private readonly ArrFarmManager _arrFarmManager = new ArrFarmManager();
 		private readonly List<Farm> _farms = new List<Farm>();
 
-		public ApplicationReqeustRoutingOperation(string webServerName)
-			: this(webServerName, null)
+		public ApplicationReqeustRoutingOperation(string arrServerName, string serverToDeployTo, string serverToBringBackOnline)
+			: this(arrServerName, serverToDeployTo, serverToBringBackOnline, null)
 		{
 		}
 
-		public ApplicationReqeustRoutingOperation(string webServerName, UserInfo userInfo)
+        public ApplicationReqeustRoutingOperation(string arrServerName, string serverToDeployTo, string serverToBringBackOnline, UserInfo userInfo)
 		{
-			_webServerName = webServerName;
-			_userInfo = userInfo;
+			_arrServerName = arrServerName;
+            _serverToDeployTo = serverToDeployTo;
+            _serverToBringBackOnline = serverToBringBackOnline;
+            _userInfo = userInfo;
 		}
 
 		public WebDeploymentStatus Execute(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
@@ -31,10 +35,10 @@ namespace ConDep.Dsl.Operations.ApplicationRequestRouting
 				switch(farm.ServerState)
 				{
 					case ServerState.Offline:
-						_arrFarmManager.TakeOffline(_webServerName, farm.FarmName, farm.ServerIp, _userInfo);
+						_arrFarmManager.TakeOffline(_arrServerName, farm.FarmName, farm.ServerIp, _userInfo);
 						break;
 					case ServerState.Online:
-						_arrFarmManager.TakeOnline(_webServerName, farm.FarmName, farm.ServerIp, _userInfo);
+						_arrFarmManager.TakeOnline(_arrServerName, farm.FarmName, farm.ServerIp, _userInfo);
 						break;
 					default:
 						throw new NotImplementedException(string.Format("State {0} is not supported.", farm.ServerState));
@@ -58,7 +62,7 @@ namespace ConDep.Dsl.Operations.ApplicationRequestRouting
 
 		public bool IsValid(Notification notification)
 		{
-			return !string.IsNullOrWhiteSpace(_webServerName)
+			return !string.IsNullOrWhiteSpace(_arrServerName)
                    && _farms.Any(x => !string.IsNullOrWhiteSpace(x.FarmName) && !string.IsNullOrWhiteSpace(x.ServerIp));
 		}
 	}

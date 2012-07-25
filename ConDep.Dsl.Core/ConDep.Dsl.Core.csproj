@@ -47,6 +47,7 @@
     <Compile Include="..\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="ILoadBalance.cs" />
     <Compile Include="WebDeploy\WebDeployCompositeProvider.cs" />
     <Compile Include="IProvideForInfrastrucutreWebSite.cs" />
     <Compile Include="IProvideForDeployment.cs" />

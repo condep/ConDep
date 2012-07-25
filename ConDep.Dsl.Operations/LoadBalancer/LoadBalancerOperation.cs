@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl.Core
@@ -9,6 +11,7 @@ namespace ConDep.Dsl.Core
         private readonly string _loadBalancerProvider;
         private readonly DeploymentServer _deploymentServer;
         private readonly DeploymentServer _previousDeploymentServer;
+        private IOperateConDep _loadBalancer;
 
         public LoadBalancerOperation(string loadBalancerServerName, string loadBalancerProvider, DeploymentServer deploymentServer, DeploymentServer previousDeploymentServer)
         {
@@ -16,6 +19,15 @@ namespace ConDep.Dsl.Core
             _loadBalancerProvider = loadBalancerProvider;
             _deploymentServer = deploymentServer;
             _previousDeploymentServer = previousDeploymentServer;
+
+            FindLoadBalancerProvider(loadBalancerProvider, loadBalancerServerName, deploymentServer, previousDeploymentServer);
+        }
+
+        private void FindLoadBalancerProvider(string loadBalancerProvider, string loadBalancerServerName, DeploymentServer deploymentServer, DeploymentServer previousDeploymentServer)
+        {
+            var assembly = Assembly.Load(loadBalancerProvider);
+            var type = assembly.GetTypes().Where(t => typeof(ILoadBalance).IsAssignableFrom(t)).FirstOrDefault();
+            _loadBalancer = Activator.CreateInstance(type, loadBalancerServerName, deploymentServer, previousDeploymentServer) as IOperateConDep;
         }
 
         //private readonly WebDeployDefinition _webDeployDefinition;
@@ -36,12 +48,12 @@ namespace ConDep.Dsl.Core
 
             //return _operations.All(operation => operation.IsValid(notification));
             //return _webDeployDefinition.IsValid(notification);
-            return true;
+            return _loadBalancer != null;
         }
 
         public WebDeploymentStatus Execute(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
         {
-            return null;
+            return _loadBalancer.Execute(output, outputError, webDeploymentStatus);
             //return _webDeployDefinition.Sync(output, outputError, webDeploymentStatus);
             //foreach (var operation in _operations)
             //{
