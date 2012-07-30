@@ -6,7 +6,7 @@ using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl
 {
-	public class PreCompileOperation : IOperateConDep
+	public class PreCompileOperation : ConDepOperation
 	{
 		private readonly string _webApplicationName;
 		private readonly string _webApplicationPhysicalPath;
@@ -19,7 +19,7 @@ namespace ConDep.Dsl
 			_preCompileOutputpath = preCompileOutputpath;
 		}
 
-		public WebDeploymentStatus Execute(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public override WebDeploymentStatus Execute(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
 		{
 			try
 			{
@@ -38,7 +38,7 @@ namespace ConDep.Dsl
 			return webDeploymentStatus;
 		}
 
-		public bool IsValid(Notification notification)
+        public override bool IsValid(Notification notification)
 		{
 			return true;
 		}

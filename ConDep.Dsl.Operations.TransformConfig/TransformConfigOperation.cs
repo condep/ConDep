@@ -6,7 +6,7 @@ using Microsoft.Web.Publishing.Tasks;
 
 namespace ConDep.Dsl
 {
-	public class TransformConfigOperation : IOperateConDep
+	public class TransformConfigOperation : ConDepOperation
 	{
 		private readonly string _configDirPath;
 		private readonly string _configName;
@@ -19,7 +19,7 @@ namespace ConDep.Dsl
 			_transformName = transformName;
 		}
 
-		public WebDeploymentStatus Execute(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public override WebDeploymentStatus Execute(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
 		{
 			var document = new XmlDocument();
 			var configFilePath = Path.Combine(_configDirPath, _configName);
@@ -47,7 +47,7 @@ namespace ConDep.Dsl
 			return webDeploymentStatus;
 		}
 
-		public bool IsValid(Notification notification)
+        public override bool IsValid(Notification notification)
 		{
 			return true;
 		}

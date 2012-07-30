@@ -49,7 +49,7 @@
     <Compile Include="..\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
-    <Compile Include="ApplicationRequestRouting\ApplicationReqeustRoutingOperation.cs" />
+    <Compile Include="ApplicationRequestRouting\ApplicationReqeustRoutingLoadBalancer.cs" />
     <Compile Include="ApplicationRequestRouting\ApplicationRequestRoutingExtension.cs" />
     <Compile Include="ApplicationRequestRouting\ApplicationRequestRoutingOptions.cs" />
     <Compile Include="ApplicationRequestRouting\Infrastructure\ArrFarmManager.cs" />

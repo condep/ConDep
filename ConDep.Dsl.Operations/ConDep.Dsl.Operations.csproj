@@ -87,8 +87,6 @@
     <Compile Include="Infrastructure\Model\IisBinding.cs" />
     <Compile Include="Infrastructure\Model\ManagedPipeline.cs" />
     <Compile Include="Infrastructure\Model\NetFrameworkVersion.cs" />
-    <Compile Include="LoadBalancer\LoadBalancerOperation.cs" />
-    <Compile Include="LoadBalancer\LoadBalancerOptions.cs" />
     <Compile Include="PreCompile\PreCompileCallback.cs" />
     <Compile Include="PreCompile\PreCompileExtension.cs" />
     <Compile Include="PreCompile\PreCompileOperation.cs" />

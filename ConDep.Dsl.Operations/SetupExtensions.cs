@@ -7,19 +7,8 @@ namespace ConDep.Dsl
 	{
         public static void Deployment(this SetupOptions setupOptions, Action<IProvideForDeployment> deployment)
         {
-            DeploymentServer previousDeploymentServer = null;
-
             foreach (var deploymentServer in ConDepConfigurator.EnvSettings.Servers)
             {
-                if (ConDepConfigurator.EnvSettings.LoadBalancer.IsDefined)
-                {
-                    var lb = ConDepConfigurator.EnvSettings.LoadBalancer;
-                    var lbOperation = new LoadBalancerOperation(lb.Name, lb.Provider, deploymentServer, previousDeploymentServer);
-                    setupOptions.AddOperation(lbOperation);
-
-                    previousDeploymentServer = deploymentServer;
-                }
-
                 var webDeployDefinition = ConfigureWebDeploy(deploymentServer, setupOptions);
                 deployment(new DeploymentProviderOptions(webDeployDefinition));
             }
@@ -27,19 +16,8 @@ namespace ConDep.Dsl
 
         public static void Infrastructure(this SetupOptions setupOptions, Action<IProvideForInfrastructure> infrastructure)
         {
-            DeploymentServer previousDeploymentServer = null;
-
             foreach (var deploymentServer in ConDepConfigurator.EnvSettings.Servers)
             {
-                if (ConDepConfigurator.EnvSettings.LoadBalancer.IsDefined)
-                {
-                    var lb = ConDepConfigurator.EnvSettings.LoadBalancer;
-                    var lbOperation = new LoadBalancerOperation(lb.Name, lb.Provider, deploymentServer, previousDeploymentServer);
-                    setupOptions.AddOperation(lbOperation);
-
-                    previousDeploymentServer = deploymentServer;
-                }
-
                 var webDeployDefinition = ConfigureWebDeploy(deploymentServer, setupOptions);
                 infrastructure(new InfrastructureProviderOptions(webDeployDefinition, deploymentServer));
             }

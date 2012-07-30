@@ -9,7 +9,7 @@
 	        _setupOperation = setupOperation;
 	    }
 
-	    public void AddOperation(IOperateConDep operation)
+	    public void AddOperation(ConDepOperation operation)
         {
             _setupOperation.AddOperation(operation);
         }

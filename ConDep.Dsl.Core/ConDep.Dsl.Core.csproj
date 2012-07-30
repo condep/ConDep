@@ -47,7 +47,10 @@
     <Compile Include="..\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
-    <Compile Include="ILoadBalance.cs" />
+    <Compile Include="LoadBalancer\ILoadBalance.cs" />
+    <Compile Include="LoadBalancer\DefaulLoadBalancer.cs" />
+    <Compile Include="LoadBalancer\LoadBalancerLookup.cs" />
+    <Compile Include="IRequireLoadBalancing.cs" />
     <Compile Include="WebDeploy\WebDeployCompositeProvider.cs" />
     <Compile Include="IProvideForInfrastrucutreWebSite.cs" />
     <Compile Include="IProvideForDeployment.cs" />
@@ -75,7 +78,7 @@
     <Compile Include="Options\InfrastructureIisOptions.cs" />
     <Compile Include="ProviderOptions\InfrastructureProviderOptions.cs" />
     <Compile Include="Options\InfrastructureWindowsOptions.cs" />
-    <Compile Include="IOperateConDep.cs" />
+    <Compile Include="ConDepOperation.cs" />
     <Compile Include="IProvide.cs" />
     <Compile Include="IProvideForAll.cs" />
     <Compile Include="IValidate.cs" />

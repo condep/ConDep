@@ -5,7 +5,7 @@ using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl.Operations.WebRequest
 {
-    public class WebRequestOperation : IOperateConDep
+    public class WebRequestOperation : ConDepOperation
     {
         private readonly string _url;
         private readonly string _method;
@@ -16,12 +16,12 @@ namespace ConDep.Dsl.Operations.WebRequest
             _method = method;
         }
 
-        public bool IsValid(Notification notification)
+        public override bool IsValid(Notification notification)
         {
             return true;
         }
 
-        public WebDeploymentStatus Execute(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public override WebDeploymentStatus Execute(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
         {
             var webRequest = System.Net.WebRequest.Create(_url);
             webRequest.Method = _method;
