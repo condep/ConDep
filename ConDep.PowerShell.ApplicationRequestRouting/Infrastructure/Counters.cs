@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Web.Administration;
 
-namespace ConDep.Dsl.Operations.ApplicationRequestRouting.Infrastructure
+namespace ConDep.PowerShell.ApplicationRequestRouting.Infrastructure
 {
 	public class Counters
 	{
@@ -20,11 +20,11 @@ namespace ConDep.Dsl.Operations.ApplicationRequestRouting.Infrastructure
 			}
 		}
 
-		public State State
+		public FarmServerState State
 		{
 			get
 			{
-				return (State)CountersConfig.GetAttributeValue("state");
+				return (FarmServerState)CountersConfig.GetAttributeValue("state");
 			}
 		}
 
@@ -77,5 +77,16 @@ namespace ConDep.Dsl.Operations.ApplicationRequestRouting.Infrastructure
 		{
 			get { return (bool) _serverConfig.GetAttributeValue("enabled"); }
 		}
+
+	    public FarmServerStats GetServerStats()
+	    {
+	        return new FarmServerStats
+	                   {
+	                       Name = _serverConfig["address"].ToString(),
+	                       Online = IsServerOnline,
+	                       State = State,
+	                       Healthy = IsHealthy
+	                   };
+	    }
 	}
 }

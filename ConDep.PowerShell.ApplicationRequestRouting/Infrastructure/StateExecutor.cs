@@ -1,6 +1,6 @@
 using Microsoft.Web.Administration;
 
-namespace ConDep.Dsl.Operations.ApplicationRequestRouting.Infrastructure
+namespace ConDep.PowerShell.ApplicationRequestRouting.Infrastructure
 {
 	public class StateExecutor
 	{
@@ -54,5 +54,17 @@ namespace ConDep.Dsl.Operations.ApplicationRequestRouting.Infrastructure
 		{
 			_server.SetAttributeValue("enabled", true);
 		}
-	}
+
+        public void MakeServerHealthy()
+        {
+            var setState = _server.ChildElements["applicationRequestRouting"].Methods["SetHealthy"].CreateInstance();
+            setState.Execute();
+        }
+    
+        public void MakeServerUnhealthy()
+        {
+            var setState = _server.ChildElements["applicationRequestRouting"].Methods["SetUnhealthy"].CreateInstance();
+            setState.Execute();
+        }
+    }
 }
