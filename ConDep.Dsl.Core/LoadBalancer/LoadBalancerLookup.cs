@@ -19,7 +19,8 @@ namespace ConDep.Dsl.Core.LoadBalancer
             {
                 if(!string.IsNullOrWhiteSpace(_loadBalancerSettings.Provider))
                 {
-                    var assembly = Assembly.Load(_loadBalancerSettings.Provider);
+                    var assembly = Assembly.LoadFrom(_loadBalancerSettings.Provider);
+                    //var assembly = Assembly.Load(_loadBalancerSettings.Provider);
 
                     var type = assembly.GetTypes().Where(t => typeof(ILoadBalance).IsAssignableFrom(t)).FirstOrDefault();
                     return Activator.CreateInstance(type, _loadBalancerSettings.Name) as ILoadBalance;

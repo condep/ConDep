@@ -14,19 +14,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C9CCCE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Dsl.Operations.TransformConfig", "ConDep.Dsl.Operations.TransformConfig\ConDep.Dsl.Operations.TransformConfig.csproj", "{975A49C5-DEB5-4F47-8655-63164EC4F258}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Dsl.Operations.ApplicationRequestRouting", "ConDep.Dsl.Operations.ApplicationRequestRouting\ConDep.Dsl.Operations.ApplicationRequestRouting.csproj", "{9FB29E13-3223-4154-AEDE-0D384A935949}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Console", "ConDep.Console\ConDep.Console.csproj", "{4DC12EF8-6E21-4749-AC5B-15BCBD097A38}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyExample", "examples\AssemblyExample\AssemblyExample.csproj", "{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Dsl.Core", "ConDep.Dsl.Core\ConDep.Dsl.Core.csproj", "{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Dsl.Operations.ApplicationRequestRouting.Tests", "ConDep.Dsl.Operations.ApplicationRequestRouting.Tests\ConDep.Dsl.Operations.ApplicationRequestRouting.Tests.csproj", "{14BAC603-2E76-424B-BACF-00233F1A6632}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.PowerShell.ApplicationRequestRouting", "ConDep.PowerShell.ApplicationRequestRouting\ConDep.PowerShell.ApplicationRequestRouting.csproj", "{56D21A91-4D6A-415B-A8E3-D4EADE287573}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmdLetHelpGen", "CmdLetHelpGen\CmdLetHelpGen.csproj", "{5EA139F3-F1D5-4494-8363-4BD4A2CC25C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting", "ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting\ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting.csproj", "{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,16 +66,6 @@ Global
 		{975A49C5-DEB5-4F47-8655-63164EC4F258}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{975A49C5-DEB5-4F47-8655-63164EC4F258}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{975A49C5-DEB5-4F47-8655-63164EC4F258}.Release|x86.ActiveCfg = Release|Any CPU
-		{9FB29E13-3223-4154-AEDE-0D384A935949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FB29E13-3223-4154-AEDE-0D384A935949}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9FB29E13-3223-4154-AEDE-0D384A935949}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{9FB29E13-3223-4154-AEDE-0D384A935949}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{9FB29E13-3223-4154-AEDE-0D384A935949}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9FB29E13-3223-4154-AEDE-0D384A935949}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9FB29E13-3223-4154-AEDE-0D384A935949}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9FB29E13-3223-4154-AEDE-0D384A935949}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{9FB29E13-3223-4154-AEDE-0D384A935949}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{9FB29E13-3223-4154-AEDE-0D384A935949}.Release|x86.ActiveCfg = Release|Any CPU
 		{4DC12EF8-6E21-4749-AC5B-15BCBD097A38}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{4DC12EF8-6E21-4749-AC5B-15BCBD097A38}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{4DC12EF8-6E21-4749-AC5B-15BCBD097A38}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -108,16 +96,6 @@ Global
 		{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}.Release|x86.ActiveCfg = Release|Any CPU
-		{14BAC603-2E76-424B-BACF-00233F1A6632}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14BAC603-2E76-424B-BACF-00233F1A6632}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14BAC603-2E76-424B-BACF-00233F1A6632}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{14BAC603-2E76-424B-BACF-00233F1A6632}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{14BAC603-2E76-424B-BACF-00233F1A6632}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{14BAC603-2E76-424B-BACF-00233F1A6632}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14BAC603-2E76-424B-BACF-00233F1A6632}.Release|Any CPU.Build.0 = Release|Any CPU
-		{14BAC603-2E76-424B-BACF-00233F1A6632}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{14BAC603-2E76-424B-BACF-00233F1A6632}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{14BAC603-2E76-424B-BACF-00233F1A6632}.Release|x86.ActiveCfg = Release|Any CPU
 		{56D21A91-4D6A-415B-A8E3-D4EADE287573}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{56D21A91-4D6A-415B-A8E3-D4EADE287573}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56D21A91-4D6A-415B-A8E3-D4EADE287573}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -138,6 +116,16 @@ Global
 		{5EA139F3-F1D5-4494-8363-4BD4A2CC25C4}.Release|Mixed Platforms.Build.0 = Release|x86
 		{5EA139F3-F1D5-4494-8363-4BD4A2CC25C4}.Release|x86.ActiveCfg = Release|x86
 		{5EA139F3-F1D5-4494-8363-4BD4A2CC25C4}.Release|x86.Build.0 = Release|x86
+		{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,7 +18,7 @@ namespace ConDep.Dsl.Core
 
 	    private void CheckLoadBalancerRequirement(ConDepOperation operation)
 	    {
-	        if (!operation.GetType().IsAssignableFrom(typeof (IRequireLoadBalancing))) return;
+	        if (!(operation is IRequireLoadBalancing)) return;
 	        
             if(_loadBalancer == null)
 	        {

@@ -15,6 +15,8 @@ namespace ConDep.PowerShell.ApplicationRequestRouting.Infrastructure
 	    private readonly bool _noParams;
 	    private IEnumerable<FarmServer> _farmServers;
 
+        private delegate bool WaitCondition(Counters counters);
+
 	    public WebFarmManager()
         {
             _noParams = true;
@@ -32,17 +34,16 @@ namespace ConDep.PowerShell.ApplicationRequestRouting.Infrastructure
 
 	    private static void ValidateParams(string server, bool useDnsLookup)
 	    {
-	        if (useDnsLookup)
-	        {
-	            if (string.IsNullOrEmpty(server))
-	            {
-	                throw new Exception("When using DNS lookup, Web Farm Server (Name) must be provided.");
-	            }
+	        if (!useDnsLookup) return;
 
-	            if (WildcardPattern.ContainsWildcard(server))
-	            {
-	                throw new Exception("You can't use DNS lookup together with wildcard (*) in server name.");
-	            }
+            if (string.IsNullOrEmpty(server))
+	        {
+	            throw new Exception("When using DNS lookup, Web Farm Server (Name) must be provided.");
+	        }
+
+	        if (WildcardPattern.ContainsWildcard(server))
+	        {
+	            throw new Exception("You can not use DNS lookup together with wildcards (*) in server name.");
 	        }
 	    }
 
@@ -103,13 +104,11 @@ namespace ConDep.PowerShell.ApplicationRequestRouting.Infrastructure
 
         public IEnumerable<FarmServerStats> TakeOnline(Action<object> writeObject)
         {
-            ChangeState(x => x.BringServerOnline(), null);
+            ChangeState(x => x.BringServerOnline());
             return ChangeState(x => x.MakeServerAvailable(), writeObject, y => y.State != FarmServerState.Available);
         }
 
-	    private delegate bool WaitCondition(Counters counters);
-
-        private IEnumerable<FarmServerStats> ChangeState(Action<StateExecutor> changeState, Action<object> writeObject, WaitCondition waitCondition = null)
+        private IEnumerable<FarmServerStats> ChangeState(Action<StateExecutor> changeState, Action<object> writeObject = null, WaitCondition waitCondition = null)
         {
             var stats = new List<FarmServerStats>();
 

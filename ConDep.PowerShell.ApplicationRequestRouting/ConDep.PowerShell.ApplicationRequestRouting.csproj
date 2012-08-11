@@ -13,6 +13,8 @@
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\ConDep\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -75,13 +77,14 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>$(SolutionDir)CmdLetHelpGen\bin\release\CmdLetHelpGen.exe $(TargetPath) $(TargetDir)
-xcopy /Y "$(TargetPath)" "\\z63os2snlb01-t\temp\ApplicationRequestRouting\"
-xcopy /Y "$(TargetDir)ApplicationRequestRouting.psd1" "\\z63os2snlb01-t\temp\ApplicationRequestRouting\"
-xcopy /Y "$(TargetDir)ApplicationRequestRouting.format.ps1xml" "\\z63os2snlb01-t\temp\ApplicationRequestRouting\"
-mkdir "\\z63os2snlb01-t\temp\ApplicationRequestRouting\en-US\"
-xcopy /Y "$(TargetDir)$(TargetName).Cmdlets.dll-help.xml" "\\z63os2snlb01-t\temp\ApplicationRequestRouting\en-US\$(TargetName).dll-help.xml"
-xcopy /Y "$(TargetDir)Lapointe.PowerShell.MamlGenerator.dll" "\\z63os2snlb01-t\temp\ApplicationRequestRouting\"</PostBuildEvent>
+REM xcopy /Y "$(TargetPath)" "\\z63os2snlb01-t\temp\ApplicationRequestRouting\"
+REM xcopy /Y "$(TargetDir)ApplicationRequestRouting.psd1" "\\z63os2snlb01-t\temp\ApplicationRequestRouting\"
+REM xcopy /Y "$(TargetDir)ApplicationRequestRouting.format.ps1xml" "\\z63os2snlb01-t\temp\ApplicationRequestRouting\"
+REM mkdir "\\z63os2snlb01-t\temp\ApplicationRequestRouting\en-US\"
+REM xcopy /Y "$(TargetDir)$(TargetName).Cmdlets.dll-help.xml" "\\z63os2snlb01-t\temp\ApplicationRequestRouting\en-US\$(TargetName).dll-help.xml"
+REM xcopy /Y "$(TargetDir)Lapointe.PowerShell.MamlGenerator.dll" "\\z63os2snlb01-t\temp\ApplicationRequestRouting\"</PostBuildEvent>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

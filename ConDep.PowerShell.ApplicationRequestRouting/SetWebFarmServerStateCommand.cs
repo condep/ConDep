@@ -4,7 +4,7 @@ using Lapointe.PowerShell.MamlGenerator.Attributes;
 
 namespace ConDep.PowerShell.ApplicationRequestRouting
 {
-    public delegate void WriteObject2(object obj);
+    public delegate void WritePowerShellObject(object obj);
 
     [Cmdlet(VerbsCommon.Set, "WebFarmServerState"),
      CmdletDescription("Change state of Web Farm Servers."),

@@ -1,8 +1,8 @@
 ﻿{
     LoadBalancer    : 
     {
-        Name              : "z63os2snlb01-t",
-        Provider          : "ConDep.Dsl.Operations.ApplicationRequestRouting",
+        Name              : "localhost",
+        Provider          : "C:\\GitHub\\ConDep\\ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting\\bin\\debug\\ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting.dll",
         DeploymentScheeme : "Sequential, Last, Half"
     },
     Servers         :

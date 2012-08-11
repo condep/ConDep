@@ -49,7 +49,7 @@ namespace ConDep.Console
                 return;
             }
 
-            environment = args[1].Split('=')[1];
+            environment = args[1];
 
             if(showHelp)
             {
@@ -113,10 +113,12 @@ namespace ConDep.Console
             {
                 envSettings.Servers.Add(new DeploymentServer(server["Name"].ToString()));
             }
-            if(envSettings.DeploymentUser.IsDefined)
+
+            var deploymentUser = json["DeploymentUser"];
+            if(deploymentUser != null)
             {
-                envSettings.DeploymentUser.UserName = json["DeploymentUser"]["UserName"].ToString();
-                envSettings.DeploymentUser.Password = json["DeploymentUser"]["Password"].ToString();
+                envSettings.DeploymentUser.UserName = deploymentUser["UserName"].ToString();
+                envSettings.DeploymentUser.Password = deploymentUser["Password"].ToString();
             }
             return envSettings;
         }
@@ -127,6 +129,11 @@ namespace ConDep.Console
             {
                 envSettings.LoadBalancer.Name = json["LoadBalancer"]["Name"].ToString();
                 envSettings.LoadBalancer.Provider = json["LoadBalancer"]["Provider"].ToString();
+                if(json["LoadBalancer"]["UserName"] != null)
+                {
+                    envSettings.LoadBalancer.UserName = json["LoadBalancer"]["UserName"].ToString();
+                    envSettings.LoadBalancer.Password = json["LoadBalancer"]["UserName"].ToString();
+                }
             }
         }
 
@@ -135,8 +142,7 @@ namespace ConDep.Console
             var assemblyName = args[0];
             //var currentPath = AppDomain.CurrentDomain.BaseDirectory;
 
-
-            var assemblyFileName = assemblyName;//Path.Combine(currentPath, assemblyName);
+            var assemblyFileName = Path.GetFullPath(assemblyName);
             return Assembly.LoadFile(assemblyFileName);
         }
 

@@ -15,14 +15,14 @@ namespace ConDep.Dsl.Core
 		{
             if(BeforeExecute != null)
             {
-                BeforeExecute(_webDeployDefinition.WebDeployDestination.ComputerName, output);
+                BeforeExecute(_webDeployDefinition.WebDeployDestination.ComputerName, output, outputError, webDeploymentStatus);
             }
 
             var status = _webDeployDefinition.Sync(output, outputError, webDeploymentStatus);
 
             if (AfterExecute != null)
             {
-                AfterExecute(_webDeployDefinition.WebDeployDestination.ComputerName, output);
+                AfterExecute(_webDeployDefinition.WebDeployDestination.ComputerName, output, outputError, webDeploymentStatus);
             }
 		    return status;
 		}
