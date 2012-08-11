@@ -44,7 +44,6 @@
   <ItemGroup>
     <Compile Include="ApplicationRequestRoutingLoadBalancer.cs" />
     <Compile Include="ApplicationRequestRoutingProvider.cs" />
-    <Compile Include="LoadBalanceState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

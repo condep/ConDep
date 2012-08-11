@@ -51,6 +51,7 @@
     <Compile Include="LoadBalancer\DefaulLoadBalancer.cs" />
     <Compile Include="LoadBalancer\LoadBalancerLookup.cs" />
     <Compile Include="IRequireLoadBalancing.cs" />
+    <Compile Include="LoadBalancer\LoadBalanceState.cs" />
     <Compile Include="WebDeploy\WebDeployCompositeProvider.cs" />
     <Compile Include="IProvideForInfrastrucutreWebSite.cs" />
     <Compile Include="IProvideForDeployment.cs" />
