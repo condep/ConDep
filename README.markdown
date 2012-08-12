@@ -1,9 +1,6 @@
 About ConDep
 ============
 
-About ConDep
-============
-
 ConDep is a highly extendable Domain Specific Language for Continuous Deployment, Continuous Delivery and Infrastructure as Code on Windows. It's main goal is to make it as simple as possible to define deployment and server configurations. ConDep can locally and remotely:
 * Configure IIS (Application Pools, Web Sites, Web Applications and more)
 * Deploy files and directories
