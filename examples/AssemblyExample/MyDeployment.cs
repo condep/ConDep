@@ -5,7 +5,7 @@ namespace AssemblyExample
 {
     public class MyDeployment : ConDepConfigurator
     {
-        protected override void Execute()
+        protected override void Configure()
         {
             Setup(s => s.Infrastructure(infra => infra.IIS.Define(
                 iisDef =>

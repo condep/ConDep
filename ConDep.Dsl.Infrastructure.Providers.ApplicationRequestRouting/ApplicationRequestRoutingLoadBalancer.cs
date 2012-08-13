@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using ConDep.Dsl.Core;
 using ConDep.Dsl.Core.LoadBalancer;
 
@@ -13,16 +14,16 @@ namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting
             _loadBalancerComputerName = loadBalancerComputerName;
         }
 
-        public void BringOnline(string serverName, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public void BringOnline(string serverName, TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
         {
             var operation = GetOperation(LoadBalanceState.Online, serverName);
-            operation.Execute(output, outputError, webDeploymentStatus);
+            operation.Execute(traceLevel, output, outputError, webDeploymentStatus);
         }
 
-        public void BringOffline(string serverName, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public void BringOffline(string serverName, TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
         {
             var operation = GetOperation(LoadBalanceState.Offline, serverName);
-            operation.Execute(output, outputError, webDeploymentStatus);
+            operation.Execute(traceLevel, output, outputError, webDeploymentStatus);
         }
 
         private WebDeployOperation GetOperation(LoadBalanceState state, string serverName)

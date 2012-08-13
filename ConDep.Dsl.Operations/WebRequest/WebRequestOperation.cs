@@ -21,7 +21,7 @@ namespace ConDep.Dsl.Operations.WebRequest
             return true;
         }
 
-        public override WebDeploymentStatus Execute(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public override WebDeploymentStatus Execute(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
         {
             var webRequest = System.Net.WebRequest.Create(_url);
             webRequest.Method = _method;

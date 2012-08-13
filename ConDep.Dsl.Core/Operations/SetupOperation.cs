@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using ConDep.Dsl.Core.LoadBalancer;
 
@@ -40,11 +41,11 @@ namespace ConDep.Dsl.Core
 			return _operations.All(operation => operation.IsValid(notification));
 		}
 
-        public override WebDeploymentStatus Execute(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public override WebDeploymentStatus Execute(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
 		{
             foreach (var operation in _operations)
             {
-                operation.Execute(output, outputError, webDeploymentStatus);
+                operation.Execute(traceLevel, output, outputError, webDeploymentStatus);
             }
 			return webDeploymentStatus;
 		}

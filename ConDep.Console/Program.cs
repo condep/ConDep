@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -22,6 +23,7 @@ namespace ConDep.Console
             string environment = "";
             string server = "";
             string application = "";
+            TraceLevel traceLevel = TraceLevel.Info;
             bool infraOnly = false;
             bool deployOnly = false;
             bool showHelp = false;
@@ -30,9 +32,10 @@ namespace ConDep.Console
                                 {
                                     {"s|server", "Server to deploy to", v => server = v},
                                     {"a|application", "Application to deploy", v => application = v},
+                                    {"t=|traceLevel=", "The level of verbosity on output. Valid values are Off, Info, Warning, Error, Verbose. Default is Info.", v => traceLevel = ConvertStringToTraceLevel(v)},
                                     {"i|infraOnly", "Deploy infrastructure only", v => infraOnly = v != null },
                                     {"d|deployOnly", "Deploy all except infrastructure", v => deployOnly = v != null},
-                                    {"h|help",  "show this message and exit", v => showHelp = v != null }
+                                    {"h|?|help",  "show this message and exit", v => showHelp = v != null }
                                 };
             try
             {
@@ -75,7 +78,21 @@ namespace ConDep.Console
             var envSettings = PopulateEnvSettings(envJson);
             PopulateWebSiteSettings(envSettings, webSiteJson);
 
-            Executor.ExecuteFromAssembly(assembly, envSettings);
+            Executor.ExecuteFromAssembly(assembly, envSettings, traceLevel);
+        }
+
+        private static TraceLevel ConvertStringToTraceLevel(string traceLevel)
+        {
+            if (traceLevel == null) return TraceLevel.Info;
+
+            switch (traceLevel.ToLower())
+            {
+                case "off": return TraceLevel.Off;
+                case "warning": return TraceLevel.Warning;
+                case "error": return TraceLevel.Error;
+                case "verbose": return TraceLevel.Verbose;
+                default: return TraceLevel.Info;
+            }
         }
 
         private static void PopulateWebSiteSettings(ConDepEnvironmentSettings envSettings, JObject json)

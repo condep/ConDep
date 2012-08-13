@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace ConDep.Dsl.Core
 {
@@ -11,18 +12,20 @@ namespace ConDep.Dsl.Core
 			_webDeployDefinition = webDeployDefinition;
 		}
 
-		public override WebDeploymentStatus Execute(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+		public override WebDeploymentStatus Execute(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
 		{
+		    _webDeployDefinition.TraceLevel = traceLevel;
+
             if(BeforeExecute != null)
             {
-                BeforeExecute(_webDeployDefinition.WebDeployDestination.ComputerName, output, outputError, webDeploymentStatus);
+                BeforeExecute(_webDeployDefinition.WebDeployDestination.ComputerName, traceLevel, output, outputError, webDeploymentStatus);
             }
 
             var status = _webDeployDefinition.Sync(output, outputError, webDeploymentStatus);
 
             if (AfterExecute != null)
             {
-                AfterExecute(_webDeployDefinition.WebDeployDestination.ComputerName, output, outputError, webDeploymentStatus);
+                AfterExecute(_webDeployDefinition.WebDeployDestination.ComputerName, traceLevel, output, outputError, webDeploymentStatus);
             }
 		    return status;
 		}

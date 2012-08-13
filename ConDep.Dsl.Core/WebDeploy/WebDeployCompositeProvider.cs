@@ -21,6 +21,15 @@ namespace ConDep.Dsl.Core
 
         public abstract void Configure(DeploymentServer server);
 
+        public virtual void BeforeExecute(EventHandler<WebDeployMessageEventArgs> output)
+        {
+            output(this, new WebDeployMessageEventArgs { Message = string.Format("Executing {0}", GetType().Name), Level = System.Diagnostics.TraceLevel.Info });
+        }
+        public virtual void AfterExecute(EventHandler<WebDeployMessageEventArgs> output)
+        {
+            //output(this, new WebDeployMessageEventArgs { Message = string.Format("{0} : Execution finished for provider [{1}]", DateTime.Now.ToLongTimeString(), this.GetType().Name), Level = System.Diagnostics.TraceLevel.Info });
+        }
+
         protected void Configure(Action<ProviderOptions> action)
 		{
 			action(new ProviderOptions(_childProviders));

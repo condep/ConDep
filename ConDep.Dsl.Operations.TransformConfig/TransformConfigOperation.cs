@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using ConDep.Dsl.Core;
@@ -19,7 +20,7 @@ namespace ConDep.Dsl
 			_transformName = transformName;
 		}
 
-        public override WebDeploymentStatus Execute(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public override WebDeploymentStatus Execute(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
 		{
 			var document = new XmlDocument();
 			var configFilePath = Path.Combine(_configDirPath, _configName);

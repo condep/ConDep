@@ -32,6 +32,8 @@ namespace ConDep.Dsl.Core
 			get { return _configuration; }
 		}
 
+        public TraceLevel TraceLevel { get; set; }
+
         public bool IsValid(Notification notification)
 		{
 			if (_providers.Count == 0) notification.AddError(new SemanticValidationError("No providers have been specified", ValidationErrorType.NoProviders));
@@ -62,8 +64,18 @@ namespace ConDep.Dsl.Core
 
 				  foreach (var provider in Providers)
 				  {
-					  provider.Sync(options, deploymentStatus);
-				  }
+                      if(provider is WebDeployCompositeProvider)
+                      {
+                          ((WebDeployCompositeProvider) provider).BeforeExecute(output);
+                      }
+					  
+                      provider.Sync(options, deploymentStatus);
+                  
+                      if (provider is WebDeployCompositeProvider)
+                      {
+                          ((WebDeployCompositeProvider)provider).AfterExecute(output);
+                      }
+                  }
 			  }
 			  catch (Exception ex)
 			  {
@@ -80,19 +92,17 @@ namespace ConDep.Dsl.Core
 
 		  WebDeployOptions GetWebDeployOptions()
 		  {
-			  DeploymentBaseOptions destBaseOptions = null;
-
 			  var syncOptions = new DeploymentSyncOptions {WhatIf = Configuration.UseWhatIf};
 
 		      var sourceBaseOptions = WebDeploySource.GetSourceBaseOptions();
 		      sourceBaseOptions.TempAgent = !Configuration.DoNotAutoDeployAgent;
               sourceBaseOptions.Trace += OnWebDeployTraceMessage;
-              sourceBaseOptions.TraceLevel = TraceLevel.Verbose;
+              sourceBaseOptions.TraceLevel = TraceLevel;
 
-			  destBaseOptions = WebDeployDestination.GetDestinationBaseOptions();
+			  var destBaseOptions = WebDeployDestination.GetDestinationBaseOptions();
 			  destBaseOptions.TempAgent = !Configuration.DoNotAutoDeployAgent;
 			  destBaseOptions.Trace += OnWebDeployTraceMessage;
-			  destBaseOptions.TraceLevel = TraceLevel.Verbose;
+			  destBaseOptions.TraceLevel = TraceLevel;
 
 
 			  return new WebDeployOptions(WebDeploySource.PackagePath, sourceBaseOptions, destBaseOptions, syncOptions);

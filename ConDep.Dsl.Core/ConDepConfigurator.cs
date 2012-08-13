@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace ConDep.Dsl.Core
 {
@@ -6,8 +8,9 @@ namespace ConDep.Dsl.Core
 	{
 	    private readonly Notification _notification;
 		private readonly SetupOperation _setupOperation;
+	    private TraceLevel _traceLevel = TraceLevel.Info;
 
-		protected ConDepConfigurator()
+	    protected ConDepConfigurator()
 		{
 		    _setupOperation = new SetupOperation();
 		    _notification = new Notification();
@@ -15,32 +18,48 @@ namespace ConDep.Dsl.Core
 
 	    public static ConDepEnvironmentSettings EnvSettings { get; set; }
 
+	    public TraceLevel TraceLevel
+	    {
+	        get {
+	            return _traceLevel;
+	        }
+	        set {
+	            _traceLevel = value;
+	        }
+	    }
+
 	    //Todo: Must be able to redirect output
 	    protected virtual void OnMessage(object sender, WebDeployMessageEventArgs e)
 	    {
-            if (e.Level == System.Diagnostics.TraceLevel.Warning)
+            if (e.Level == TraceLevel.Warning)
             {
-                var currentConsoleColor = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Out.WriteLine(e.Message);
-                Console.ForegroundColor = currentConsoleColor;
+                WriteColorMessage(e, ConsoleColor.Yellow, Console.Out);
+            }
+            else if(e.Level == TraceLevel.Info)
+            {
+                WriteColorMessage(e, ConsoleColor.Green, Console.Out);
             }
             else
             {
-                Console.Out.WriteLine(e.Message);
+                Console.Out.WriteLine(DateTime.Now.ToLongTimeString() + " - " + e.Message);
             }
         }
 
         //Todo: Must be able to redirect output
         protected virtual void OnErrorMessage(object sender, WebDeployMessageEventArgs e)
 		{
-            var currentConsoleColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Error.WriteLine(e.Message);
-            Console.ForegroundColor = currentConsoleColor;
+            WriteColorMessage(e, ConsoleColor.Red, Console.Error);
         }
 
-		protected internal WebDeploymentStatus Setup(Action<SetupOptions> action)
+	    private static void WriteColorMessage(WebDeployMessageEventArgs e, ConsoleColor color, TextWriter writer)
+	    {
+	        var currentConsoleColor = Console.ForegroundColor;
+	        Console.ForegroundColor = color;
+	        writer.WriteLine(DateTime.Now.ToLongTimeString() + " - " + e.Message);
+	        Console.ForegroundColor = currentConsoleColor;
+	    }
+
+	    protected internal WebDeploymentStatus Setup(Action<SetupOptions> action)
 		{
 			var status = new WebDeploymentStatus();
 
@@ -50,11 +69,11 @@ namespace ConDep.Dsl.Core
 				_notification.Throw();
 			}
 
-			_setupOperation.Execute(OnMessage, OnErrorMessage, status);
+			_setupOperation.Execute(TraceLevel, OnMessage, OnErrorMessage, status);
 			
 			return status;
 		}
 
-	    protected internal abstract void Execute();
+	    protected internal abstract void Configure();
 	}
 }
