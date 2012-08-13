@@ -7,10 +7,10 @@ namespace ConDep.Dsl.Core
 	public abstract class WebDeployCompositeProvider : IProvide
 	{
 	    private readonly List<IProvide> _childProviders = new List<IProvide>();
-	    private readonly List<ExecuteCondition> _conditions = new List<ExecuteCondition>();
+	    private readonly List<WebDeployExecuteCondition> _conditions = new List<WebDeployExecuteCondition>();
 
 	    public List<IProvide> ChildProviders { get { return _childProviders; } }
-        public IEnumerable<ExecuteCondition> ExecuteConditions { get { return _conditions; } }
+        public IEnumerable<WebDeployExecuteCondition> ExecuteConditions { get { return _conditions; } }
 		public string SourcePath { get; set; }
 		public virtual string DestinationPath { get; set; }
 
@@ -26,14 +26,14 @@ namespace ConDep.Dsl.Core
 			action(new ProviderOptions(_childProviders));
 		}
 
-        protected void Configure(Action<ProviderOptions> action, ExecuteCondition executeCondition)
+        protected void Configure(Action<ProviderOptions> action, WebDeployExecuteCondition webDeployExecuteCondition)
         {
             var providerOptions = new ProviderOptions(_childProviders);
 
             action(providerOptions);
             
-            executeCondition.Configure();
-            _conditions.Add(executeCondition);
+            webDeployExecuteCondition.Configure();
+            _conditions.Add(webDeployExecuteCondition);
         }
 
         public WebDeploymentStatus Sync(WebDeployOptions webDeployOptions, WebDeploymentStatus deploymentStatus)

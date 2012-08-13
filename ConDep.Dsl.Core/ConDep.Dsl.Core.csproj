@@ -52,7 +52,7 @@
     <Compile Include="LoadBalancer\LoadBalancerLookup.cs" />
     <Compile Include="IRequireLoadBalancing.cs" />
     <Compile Include="LoadBalancer\LoadBalanceState.cs" />
-    <Compile Include="WebDeploy\ExecuteCondition.cs" />
+    <Compile Include="WebDeploy\WebDeployExecuteCondition.cs" />
     <Compile Include="WebDeploy\WebDeployCompositeProvider.cs" />
     <Compile Include="IProvideForInfrastrucutreWebSite.cs" />
     <Compile Include="IProvideForDeployment.cs" />
@@ -64,11 +64,6 @@
     <Compile Include="Model\ConDepWebSiteBinding.cs" />
     <Compile Include="Model\ConDepWebSiteSettings.cs" />
     <Compile Include="Model\Configuration.cs" />
-    <Compile Include="IntConsole\CmdLineHandler.cs" />
-    <Compile Include="IntConsole\CmdParam.cs" />
-    <Compile Include="IntConsole\CmdParamAttribute.cs" />
-    <Compile Include="IntConsole\CmdParameterParser.cs" />
-    <Compile Include="IntConsole\SettingsHandler.cs" />
     <Compile Include="Model\Credentials.cs" />
     <Compile Include="Operations\WebDeployOperation.cs" />
     <Compile Include="ProviderOptions\DeploymentProviderOptions.cs" />

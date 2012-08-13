@@ -22,13 +22,13 @@ namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting
             //{
             //    Execute();
             //}
-            var condition = ExecuteCondition.IsSuccess(p => p.PowerShell("throw"));
+            var condition = WebDeployExecuteCondition.IsSuccess(p => p.PowerShell("throw"));
             DeployPsCmdLet(condition);
             Execute(_state, server.ServerName);
             RemovePsCmdLet(condition);
         }
 
-        private void DeployPsCmdLet(ExecuteCondition condition)
+        private void DeployPsCmdLet(WebDeployExecuteCondition condition)
         {
             Configure(p => p.CopyDir(@"C:\GitHub\ConDep\ConDep.PowerShell.ApplicationRequestRouting\bin\Release", opt => opt.DestinationDir(@"%temp%\ApplicationRequestRouting")), condition);
         }
@@ -38,7 +38,7 @@ namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting
             Configure(p => p.PowerShell(string.Format(@"import-module $env:temp\ApplicationRequestRouting; Set-WebFarmServerState -State {0} -Name {1} -UseDnsLookup;", state.ToString(), serverName)));
         }
 
-        private void RemovePsCmdLet(ExecuteCondition condition)
+        private void RemovePsCmdLet(WebDeployExecuteCondition condition)
         {
             Configure(p => p.PowerShell(@"remove-item $env:temp\ApplicationRequestRouting -force -recurse"), condition);
         }

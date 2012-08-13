@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ConDep.Dsl.Core
 {
-    public class ExecuteCondition
+    public class WebDeployExecuteCondition
     {
         private enum ExpectedOutcome
         {
@@ -15,7 +15,7 @@ namespace ConDep.Dsl.Core
         private readonly ExpectedOutcome _expectedOutcome;
         private readonly List<IProvide> _providers = new List<IProvide>();
 
-        private ExecuteCondition(Action<ProviderOptions> action, ExpectedOutcome expectedOutcome)
+        private WebDeployExecuteCondition(Action<ProviderOptions> action, ExpectedOutcome expectedOutcome)
         {
             _action = action;
             _expectedOutcome = expectedOutcome;
@@ -27,14 +27,14 @@ namespace ConDep.Dsl.Core
             _action(providerOptions);
         }
 
-        public static ExecuteCondition IsSuccess(Action<ProviderOptions> action)
+        public static WebDeployExecuteCondition IsSuccess(Action<ProviderOptions> action)
         {
-            return new ExecuteCondition(action, ExpectedOutcome.Success);
+            return new WebDeployExecuteCondition(action, ExpectedOutcome.Success);
         }
 
-        public static ExecuteCondition IsFailure(Action<ProviderOptions> action)
+        public static WebDeployExecuteCondition IsFailure(Action<ProviderOptions> action)
         {
-            return new ExecuteCondition(action, ExpectedOutcome.Failure);
+            return new WebDeployExecuteCondition(action, ExpectedOutcome.Failure);
         }
 
         public bool IsNotExpectedOutcome(WebDeployOptions webDeployOptions)
