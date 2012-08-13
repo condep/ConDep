@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace ConDep.Dsl.Core
@@ -6,9 +7,10 @@ namespace ConDep.Dsl.Core
 	public abstract class WebDeployCompositeProvider : IProvide
 	{
 	    private readonly List<IProvide> _childProviders = new List<IProvide>();
+	    private readonly List<ExecuteCondition> _conditions = new List<ExecuteCondition>();
 
 	    public List<IProvide> ChildProviders { get { return _childProviders; } }
-
+        public IEnumerable<ExecuteCondition> ExecuteConditions { get { return _conditions; } }
 		public string SourcePath { get; set; }
 		public virtual string DestinationPath { get; set; }
 
@@ -24,6 +26,16 @@ namespace ConDep.Dsl.Core
 			action(new ProviderOptions(_childProviders));
 		}
 
+        protected void Configure(Action<ProviderOptions> action, ExecuteCondition executeCondition)
+        {
+            var providerOptions = new ProviderOptions(_childProviders);
+
+            action(providerOptions);
+            
+            executeCondition.Configure();
+            _conditions.Add(executeCondition);
+        }
+
         public WebDeploymentStatus Sync(WebDeployOptions webDeployOptions, WebDeploymentStatus deploymentStatus)
         {
 			  if (WaitInterval > 0)
@@ -34,14 +46,23 @@ namespace ConDep.Dsl.Core
               if (RetryAttempts > 0)
                   webDeployOptions.DestBaseOptions.RetryAttempts = RetryAttempts;
 
+            if(HasConditions())
+            {
+                if (_conditions.Any(x => x.IsExpectedOutcome(webDeployOptions)))
+                {
+                    deploymentStatus.AddConditionMessage(string.Format("Skipped provider [{0}], because one or more conditions evaluated to false.]", GetType().Name));
+                    return deploymentStatus;
+                }
+            }
 
             ChildProviders.Reverse();
-            foreach (var childProvider in ChildProviders)
-            {
-                childProvider.Sync(webDeployOptions, deploymentStatus);
-            }
+            ChildProviders.ForEach(provider => provider.Sync(webDeployOptions, deploymentStatus));
             return deploymentStatus;
         }
 
+	    private bool HasConditions()
+	    {
+	        return _conditions.Count > 0;
+	    }
 	}
 }

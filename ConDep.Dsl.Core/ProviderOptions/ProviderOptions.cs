@@ -2,6 +2,7 @@
 
 namespace ConDep.Dsl.Core
 {
+    //Todo: Is this class needed at all? Could this be integrated into each provider?
     public class ProviderOptions : IProvideForExistingIisServer, IProvideForInfrastructureIis
     {
         private readonly List<IProvide> _providers;

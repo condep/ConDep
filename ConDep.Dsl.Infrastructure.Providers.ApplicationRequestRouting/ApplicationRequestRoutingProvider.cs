@@ -22,24 +22,25 @@ namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting
             //{
             //    Execute();
             //}
-            DeployPsCmdLet();
+            var condition = ExecuteCondition.IsSuccess(p => p.PowerShell("throw"));
+            DeployPsCmdLet(condition);
             Execute(_state, server.ServerName);
-            RemovePsCmdLet();
+            RemovePsCmdLet(condition);
         }
 
-        private void DeployPsCmdLet()
+        private void DeployPsCmdLet(ExecuteCondition condition)
         {
-            Configure(p => p.CopyDir(@"C:\GitHub\ConDep\ConDep.PowerShell.ApplicationRequestRouting\bin\Release", opt => opt.DestinationDir(@"C:\ConDepTemp\ApplicationRequestRouting")));
+            Configure(p => p.CopyDir(@"C:\GitHub\ConDep\ConDep.PowerShell.ApplicationRequestRouting\bin\Release", opt => opt.DestinationDir(@"%temp%\ApplicationRequestRouting")), condition);
         }
 
         private void Execute(LoadBalanceState state, string serverName)
         {
-            Configure(p => p.PowerShell(string.Format(@"import-module C:\ConDepTemp\ApplicationRequestRouting; Set-WebFarmServerState -State {0} -Name {1} -UseDnsLookup;", state.ToString(), serverName)));
+            Configure(p => p.PowerShell(string.Format(@"import-module $env:temp\ApplicationRequestRouting; Set-WebFarmServerState -State {0} -Name {1} -UseDnsLookup;", state.ToString(), serverName)));
         }
 
-        private void RemovePsCmdLet()
+        private void RemovePsCmdLet(ExecuteCondition condition)
         {
-            Configure(p => p.PowerShell(@"remove-item C:\ConDepTemp\ApplicationRequestRouting -force -recurse"));
+            Configure(p => p.PowerShell(@"remove-item $env:temp\ApplicationRequestRouting -force -recurse"), condition);
         }
 
         //private bool ArrPsCmdletExist()
