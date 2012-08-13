@@ -37,7 +37,7 @@ namespace ConDep.Dsl.Core
             return new ExecuteCondition(action, ExpectedOutcome.Failure);
         }
 
-        public bool IsExpectedOutcome(WebDeployOptions webDeployOptions)
+        public bool IsNotExpectedOutcome(WebDeployOptions webDeployOptions)
         {
             var deploymentStatus = new WebDeploymentStatus();
             bool exception = false;

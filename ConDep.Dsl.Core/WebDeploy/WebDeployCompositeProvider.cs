@@ -48,7 +48,7 @@ namespace ConDep.Dsl.Core
 
             if(HasConditions())
             {
-                if (_conditions.Any(x => x.IsExpectedOutcome(webDeployOptions)))
+                if (_conditions.Any(x => x.IsNotExpectedOutcome(webDeployOptions)))
                 {
                     deploymentStatus.AddConditionMessage(string.Format("Skipped provider [{0}], because one or more conditions evaluated to false.]", GetType().Name));
                     return deploymentStatus;
