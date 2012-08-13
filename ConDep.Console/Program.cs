@@ -30,8 +30,8 @@ namespace ConDep.Console
 
             var optionSet = new OptionSet()
                                 {
-                                    {"s|server", "Server to deploy to", v => server = v},
-                                    {"a|application", "Application to deploy", v => application = v},
+                                    {"s=|server=", "Server to deploy to", v => server = v},
+                                    {"a=|application=", "Application to deploy", v => application = v},
                                     {"t=|traceLevel=", "The level of verbosity on output. Valid values are Off, Info, Warning, Error, Verbose. Default is Info.", v => traceLevel = ConvertStringToTraceLevel(v)},
                                     {"i|infraOnly", "Deploy infrastructure only", v => infraOnly = v != null },
                                     {"d|deployOnly", "Deploy all except infrastructure", v => deployOnly = v != null},
