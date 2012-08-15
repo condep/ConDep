@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>ConDep.Dsl</id>
+    <id>ConDep.Dsl.Core</id>
     <version>0.2.2-pre</version>
-    <title>ConDep.Dsl</title>
+    <title>ConDep.Dsl.Core</title>
     <authors>Jon Arild Tørresdal</authors>
     <owners>Jon Arild Tørresdal</owners>
     <licenseUrl>https://github.com/torresdal/ConDep/blob/master/LICENSE</licenseUrl>
@@ -13,16 +13,8 @@
     <releaseNotes>Initial pre-release.</releaseNotes>
     <copyright>Copyright 2012</copyright>
     <tags>Continuous Deployment Delivery Infrastructure WebDeploy Deploy</tags>
-    <dependencies>
-      <dependency id="ConDep.Dsl.Core" version="0.2.0-pre"  />
-      <dependency id="NDesk.Options" version="0.2.1"  />
-      <dependency id="Newtonsoft.Json" version="4.5.8"  />
-    </dependencies>
   </metadata>
   <files>
-    <file src="ConDep.Dsl.Operations\bin\Release\ConDep.Dsl.Operations.dll" target="lib\net40" />
-    <file src="ConDep.Console\bin\Release\ConDep.exe" target="lib\net40" />
-    <file src="ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting\bin\Release\ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting.dll" target="lib\net40" />
-    <file src="ConDep.Dsl.Operations.TransformConfig\bin\Release\ConDep.Dsl.Operations.TransformConfig.dll" target="lib\net40" />
+    <file src="ConDep.Dsl.Core\bin\Release\ConDep.Dsl.Core.dll" target="lib\net40" />
   </files>
 </package>

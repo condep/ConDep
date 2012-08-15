@@ -39,8 +39,11 @@ namespace AssemblyExample
                                                          });
 
                                       iisDef.WebSite("WebSite3", 4, @"C:\website3");
+
+                                      iisDef.WebApp("Webapp1", "WebSite3");
                                   }
                                                         ));
+
                           //s.Deployment(dep => dep.)
                       });
         }

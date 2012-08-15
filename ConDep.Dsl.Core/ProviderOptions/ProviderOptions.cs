@@ -19,7 +19,7 @@ namespace ConDep.Dsl.Core
             _server = server;
         }
 
-        public void AddProvider(IProvide provider)
+        void IProvideForAll.AddProvider(IProvide provider)
         {
             _providers.Add(provider);
 

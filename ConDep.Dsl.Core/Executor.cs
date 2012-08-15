@@ -11,9 +11,9 @@ namespace ConDep.Dsl.Core
         {
             var type = assembly.GetTypes().Where(t => typeof(ConDepConfigurator).IsAssignableFrom(t)).FirstOrDefault();
             var depObject = assembly.CreateInstance(type.FullName) as ConDepConfigurator;
-            depObject.TraceLevel = traceLevel;
-
             if (depObject == null) throw new ArgumentException(string.Format("Unable to create instance of deployment class in assembly [{0}].", assembly.FullName));
+
+            depObject.TraceLevel = traceLevel;
             
             ConDepConfigurator.EnvSettings = envSettings;
 
