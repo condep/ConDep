@@ -69,14 +69,27 @@ namespace ConDep.Console
             var assembly = FindAssembly(args);
             var type = assembly.GetTypes().Where(t => typeof(ConDepConfigurator).IsAssignableFrom(t)).FirstOrDefault();
 
+            var executionPath = Path.GetDirectoryName(type.Assembly.Location);
+            var envFileName = string.Format("{0}.Env.js", environment);
+            var envFilePath = Path.Combine(executionPath, envFileName);
+            var webSitesFileName = string.Format("WebSites.{0}.Env.js", environment);
+            var webSitesFilePath = Path.Combine(executionPath, webSitesFileName);
+
+            if(!File.Exists(envFilePath))
+            {
+                throw new FileNotFoundException("Not found.", envFilePath);
+            }
             var envJsonText = File.ReadAllText(Path.Combine(Path.GetDirectoryName(type.Assembly.Location), string.Format("{0}.Env.js", environment)));
-            var webSiteJsonText = File.ReadAllText(Path.Combine(Path.GetDirectoryName(type.Assembly.Location), string.Format("WebSites.{0}.Env.js", environment)));
 
             var envJson = JObject.Parse(envJsonText);
-            var webSiteJson = JObject.Parse(webSiteJsonText);
+            var envSettings = PopulateEnvSettings(environment, envJson);
 
-            var envSettings = PopulateEnvSettings(envJson);
-            PopulateWebSiteSettings(envSettings, webSiteJson);
+            if (File.Exists(webSitesFilePath))
+            {
+                var webSiteJsonText = File.ReadAllText(Path.Combine(Path.GetDirectoryName(type.Assembly.Location), string.Format("WebSites.{0}.Env.js", environment)));
+                var webSiteJson = JObject.Parse(webSiteJsonText);
+                PopulateWebSiteSettings(envSettings, webSiteJson);
+            }
 
             Executor.ExecuteFromAssembly(assembly, envSettings, traceLevel);
         }
@@ -121,10 +134,10 @@ namespace ConDep.Console
             }
         }
 
-        private static ConDepEnvironmentSettings PopulateEnvSettings(JObject json)
+        private static ConDepEnvironmentSettings PopulateEnvSettings(string environment, JObject json)
         {
-            var envSettings = new ConDepEnvironmentSettings();
-            
+            var envSettings = new ConDepEnvironmentSettings(environment);
+
             PopulateLoadBalancer(envSettings, json);
             foreach(var server in json["Servers"])
             {

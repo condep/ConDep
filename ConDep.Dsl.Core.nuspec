@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ConDep.Dsl.Core</id>
-    <version>0.2.2-pre</version>
+    <version>0.2.7-pre</version>
     <title>ConDep.Dsl.Core</title>
     <authors>Jon Arild Tørresdal</authors>
     <owners>Jon Arild Tørresdal</owners>
