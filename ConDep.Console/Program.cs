@@ -23,7 +23,7 @@ namespace ConDep.Console
             string environment = "";
             string server = "";
             string application = "";
-            TraceLevel traceLevel = TraceLevel.Info;
+            var traceLevel = TraceLevel.Info;
             bool infraOnly = false;
             bool deployOnly = false;
             bool showHelp = false;
@@ -33,8 +33,8 @@ namespace ConDep.Console
                                     {"s=|server=", "Server to deploy to", v => server = v},
                                     {"a=|application=", "Application to deploy", v => application = v},
                                     {"t=|traceLevel=", "The level of verbosity on output. Valid values are Off, Info, Warning, Error, Verbose. Default is Info.", v => traceLevel = ConvertStringToTraceLevel(v)},
-                                    {"i|infraOnly", "Deploy infrastructure only", v => infraOnly = v != null },
-                                    {"d|deployOnly", "Deploy all except infrastructure", v => deployOnly = v != null},
+                                    {"infraOnly", "Deploy infrastructure only", v => infraOnly = v != null },
+                                    {"deployOnly", "Deploy all except infrastructure", v => deployOnly = v != null},
                                     {"h|?|help",  "show this message and exit", v => showHelp = v != null }
                                 };
             try
