@@ -1,6 +1,5 @@
 ﻿using System.Security.AccessControl;
-using ConDep.Dsl.Builders;
-using ConDep.Dsl.Operations.WebDeploy.Options;
+using ConDep.Dsl.Operations.Deployment.Options;
 
 namespace ConDep.Dsl
 {

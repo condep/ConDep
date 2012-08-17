@@ -1,6 +1,6 @@
 ﻿using ConDep.Dsl.Core;
 
-namespace ConDep.Dsl.Operations.WebDeploy.Options
+namespace ConDep.Dsl.Operations.Deployment.Options
 {
 	public class CredentialsOptions
 	{

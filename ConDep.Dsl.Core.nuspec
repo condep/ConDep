@@ -10,6 +10,7 @@
     <projectUrl>https://github.com/torresdal/ConDep/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>ConDep is a highly extendable Domain Specific Language for Continuous Deployment, Continuous Delivery and Infrastructure as Code on Windows</description>
+    <iconUrl>https://raw.github.com/torresdal/ConDep/master/images/ConDepNugetLogo.png</iconUrl>
     <releaseNotes>Initial pre-release.</releaseNotes>
     <copyright>Copyright 2012</copyright>
     <tags>Continuous Deployment Delivery Infrastructure WebDeploy Deploy</tags>
