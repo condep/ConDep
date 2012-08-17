@@ -30,7 +30,7 @@ namespace ConDep.Dsl
             command += string.Format("if((Test-Path -path ($webSite.physicalPath + '\\{0}')) -ne $True) {{ New-Item ($webSite.physicalPath + '\\{0}') -type Directory }}; ", _webAppName);
             command += PhysicalPath != null ? string.Format("if((Test-Path -path '{0}') -ne $True) {{ New-Item '{0}' -type Directory }}; ", PhysicalPath) : "";
             var path = PhysicalPath ?? string.Format("($webSite.physicalPath + '\\{0}')", _webAppName);
-            var appPool = ApplicationPool != null ? string.Format(" -ApplicationPool \"{0}\"", ApplicationPool) : string.Format(" -ApplicationPool {0}", "$webSite.applicationPool");
+            var appPool = ApplicationPool != null ? string.Format(" -ApplicationPool \"{0}\"", ApplicationPool) : string.Format(" -ApplicationPool ({0})", "$webSite.applicationPool");
             command += string.Format("New-WebApplication -Name \"{0}\" -Site \"{1}\" -PhysicalPath {2}{3} -force; ", _webAppName, _webSiteName, path, appPool);
             Configure(p => p.PowerShell("Import-Module WebAdministration; " + command, o => o.WaitIntervalInSeconds(10)));
         }
