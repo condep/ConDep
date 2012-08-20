@@ -6,7 +6,7 @@ using ConDep.Dsl.Core.LoadBalancer;
 
 namespace ConDep.Dsl.Core
 {
-	public class SetupOperation : ConDepOperation
+	public class ConDepSetup : ISetupCondep, IValidate
 	{
 		private readonly List<ConDepOperation> _operations = new List<ConDepOperation>();
 	    private ILoadBalance _loadBalancer;
@@ -36,12 +36,12 @@ namespace ConDep.Dsl.Core
             return loadBalancerLookup.GetLoadBalancer();
 	    }
 
-	    public override bool IsValid(Notification notification)
+	    public bool IsValid(Notification notification)
 		{
 			return _operations.All(operation => operation.IsValid(notification));
 		}
 
-        public override WebDeploymentStatus Execute(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public WebDeploymentStatus Execute(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
 		{
             foreach (var operation in _operations)
             {

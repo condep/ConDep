@@ -52,6 +52,7 @@
     <Compile Include="LoadBalancer\LoadBalancerLookup.cs" />
     <Compile Include="IRequireLoadBalancing.cs" />
     <Compile Include="LoadBalancer\LoadBalanceState.cs" />
+    <Compile Include="ISetupCondep.cs" />
     <Compile Include="WebDeploy\WebDeployExecuteCondition.cs" />
     <Compile Include="WebDeploy\WebDeployCompositeProvider.cs" />
     <Compile Include="IProvideForInfrastrucutreWebSite.cs" />
@@ -84,7 +85,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProviderOptions\ProviderOptions.cs" />
     <Compile Include="Model\SemanticValidationError.cs" />
-    <Compile Include="Operations\SetupOperation.cs" />
+    <Compile Include="ConDepSetup.cs" />
     <Compile Include="Options\SetupOptions.cs" />
     <Compile Include="WebDeploy\WebDeploySource.cs" />
     <Compile Include="Model\ValidationErrorType.cs" />

@@ -7,12 +7,12 @@ namespace ConDep.Dsl.Core
 	public abstract class ConDepConfigurator
 	{
 	    private readonly Notification _notification;
-		private readonly SetupOperation _setupOperation;
+		private readonly ConDepSetup _conDepSetup;
 	    private TraceLevel _traceLevel = TraceLevel.Info;
 
 	    protected ConDepConfigurator()
 		{
-		    _setupOperation = new SetupOperation();
+		    _conDepSetup = new ConDepSetup();
 		    _notification = new Notification();
 		}
 
@@ -63,13 +63,13 @@ namespace ConDep.Dsl.Core
 		{
 			var status = new WebDeploymentStatus();
 
-			action(new SetupOptions(_setupOperation));
-			if (!_setupOperation.IsValid(_notification))
+			action(new SetupOptions(_conDepSetup));
+			if (!_conDepSetup.IsValid(_notification))
 			{
 				_notification.Throw();
 			}
 
-			_setupOperation.Execute(TraceLevel, OnMessage, OnErrorMessage, status);
+			_conDepSetup.Execute(TraceLevel, OnMessage, OnErrorMessage, status);
 			
 			return status;
 		}

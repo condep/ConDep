@@ -2,16 +2,16 @@
 {
 	public class SetupOptions
 	{
-		private readonly SetupOperation _setupOperation;
+		private readonly ConDepSetup _conDepSetup;
 
-	    public SetupOptions(SetupOperation setupOperation)
+	    public SetupOptions(ConDepSetup conDepSetup)
 	    {
-	        _setupOperation = setupOperation;
+	        _conDepSetup = conDepSetup;
 	    }
 
 	    public void AddOperation(ConDepOperation operation)
         {
-            _setupOperation.AddOperation(operation);
+            _conDepSetup.AddOperation(operation);
         }
 	}
 }
