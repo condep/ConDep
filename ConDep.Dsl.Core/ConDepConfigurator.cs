@@ -6,15 +6,7 @@ namespace ConDep.Dsl.Core
 {
 	public abstract class ConDepConfigurator
 	{
-	    private readonly Notification _notification;
-		private readonly ConDepSetup _conDepSetup;
 	    private TraceLevel _traceLevel = TraceLevel.Info;
-
-	    protected ConDepConfigurator()
-		{
-		    _conDepSetup = new ConDepSetup();
-		    _notification = new Notification();
-		}
 
 	    public static ConDepEnvironmentSettings EnvSettings { get; set; }
 
@@ -59,17 +51,19 @@ namespace ConDep.Dsl.Core
 	        Console.ForegroundColor = currentConsoleColor;
 	    }
 
-	    protected internal WebDeploymentStatus Setup(Action<SetupOptions> action)
+	    protected internal WebDeploymentStatus Setup(Action<ISetupCondep> action)
 		{
 			var status = new WebDeploymentStatus();
+	        var conDepSetup = new ConDepSetup();
+            var notification = new Notification();
 
-			action(new SetupOptions(_conDepSetup));
-			if (!_conDepSetup.IsValid(_notification))
+			action(conDepSetup);
+			if (!conDepSetup.IsValid(notification))
 			{
-				_notification.Throw();
+				notification.Throw();
 			}
 
-			_conDepSetup.Execute(TraceLevel, OnMessage, OnErrorMessage, status);
+			conDepSetup.Execute(TraceLevel, OnMessage, OnErrorMessage, status);
 			
 			return status;
 		}

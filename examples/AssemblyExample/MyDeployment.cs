@@ -7,6 +7,9 @@ namespace AssemblyExample
     {
         protected override void Configure()
         {
+            Setup(setup =>
+                      {
+                      });
             Setup(s =>
                       {
                           s.Infrastructure(infra => infra.IIS.Define(

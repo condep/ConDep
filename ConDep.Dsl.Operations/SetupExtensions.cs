@@ -5,25 +5,25 @@ namespace ConDep.Dsl
 {
 	public static class SetupExtensions
 	{
-        public static void Deployment(this SetupOptions setupOptions, Action<IProvideForDeployment> deployment)
+        public static void Deployment(this ISetupCondep conDepSetup, Action<IProvideForDeployment> deployment)
         {
             foreach (var deploymentServer in ConDepConfigurator.EnvSettings.Servers)
             {
-                var webDeployDefinition = ConfigureWebDeploy(deploymentServer, setupOptions);
+                var webDeployDefinition = ConfigureWebDeploy(deploymentServer, (ConDepSetup)conDepSetup);
                 deployment(new DeploymentProviderOptions(webDeployDefinition));
             }
         }
 
-        public static void Infrastructure(this SetupOptions setupOptions, Action<IProvideForInfrastructure> infrastructure)
+        public static void Infrastructure(this ISetupCondep conDepSetup, Action<IProvideForInfrastructure> infrastructure)
         {
             foreach (var deploymentServer in ConDepConfigurator.EnvSettings.Servers)
             {
-                var webDeployDefinition = ConfigureWebDeploy(deploymentServer, setupOptions);
+                var webDeployDefinition = ConfigureWebDeploy(deploymentServer, (ConDepSetup)conDepSetup);
                 infrastructure(new InfrastructureProviderOptions(webDeployDefinition, deploymentServer));
             }
         }
 
-	    private static WebDeployDefinition ConfigureWebDeploy(DeploymentServer deploymentServer, SetupOptions setupOptions)
+	    private static WebDeployDefinition ConfigureWebDeploy(DeploymentServer deploymentServer, ConDepSetup setupOptions)
 	    {
 	        var webDeployDefinition = new WebDeployDefinition();
 	        webDeployDefinition.WebDeployDestination.ComputerName = deploymentServer.ServerName;
