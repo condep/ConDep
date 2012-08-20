@@ -89,7 +89,6 @@
     <Compile Include="PreCompile\PreCompileCallback.cs" />
     <Compile Include="PreCompile\PreCompileExtension.cs" />
     <Compile Include="PreCompile\PreCompileOperation.cs" />
-    <Compile Include="SetupExtensions.cs" />
     <Compile Include="Deployment\Providers\IIS\WebSite\WebSiteDeploymentExcludeOptions.cs" />
     <Compile Include="Deployment\Providers\IIS\WebSite\WebSiteDeploymentExtension.cs" />
     <Compile Include="Deployment\Providers\IIS\WebSite\WebSiteDeploymentOptions.cs" />

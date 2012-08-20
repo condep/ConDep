@@ -15,6 +15,22 @@ namespace ConDep.Dsl.Core
     	private EventHandler<WebDeployMessageEventArgs> _output;
     	private EventHandler<WebDeployMessageEventArgs> _outputError;
 
+        public WebDeployDefinition() { }
+
+        public WebDeployDefinition(ConDepEnvironmentSettings envSettings, DeploymentServer deploymentServer)
+        {
+            WebDeployDestination.ComputerName = deploymentServer.ServerName;
+            WebDeploySource.LocalHost = true;
+
+            if (!envSettings.DeploymentUser.IsDefined) return;
+            
+            WebDeployDestination.Credentials.UserName = envSettings.DeploymentUser.UserName;
+            WebDeployDestination.Credentials.Password = envSettings.DeploymentUser.Password;
+
+            WebDeploySource.Credentials.UserName = envSettings.DeploymentUser.UserName;
+            WebDeploySource.Credentials.Password = envSettings.DeploymentUser.Password;
+        }
+
         public WebDeploySource WebDeploySource
 		{
 			get { return _webDeploySource; }
@@ -137,7 +153,7 @@ namespace ConDep.Dsl.Core
 			  }
 		  }
 
-		  private string GetCompleteExceptionMessage(Exception exception)
+		  private static string GetCompleteExceptionMessage(Exception exception)
 		  {
 			  var message = exception.Message;
 			  if (exception.InnerException != null)
@@ -147,5 +163,18 @@ namespace ConDep.Dsl.Core
 			  return message;
 		  }
 
+        private static readonly Dictionary<string, WebDeployDefinition> ServerDefinitions = new Dictionary<string, WebDeployDefinition>();
+
+        public static WebDeployDefinition CreateOrGetForServer(ConDepEnvironmentSettings envSettings, DeploymentServer deploymentServer)
+        {
+            if (ServerDefinitions.ContainsKey(deploymentServer.ServerName))
+            {
+                return ServerDefinitions[deploymentServer.ServerName];
+            }
+            
+            var definition = new WebDeployDefinition(envSettings, deploymentServer);
+            ServerDefinitions.Add(deploymentServer.ServerName, definition);
+            return definition;
+        }
 	}
 }

@@ -34,5 +34,10 @@ namespace ConDep.Dsl.Core
 		{
 			return _webDeployDefinition.IsValid(notification);
 		}
+
+	    public WebDeployDefinition WebDeployDefinition
+	    {
+            get { return _webDeployDefinition; }
+	    }
     }
 }

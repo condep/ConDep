@@ -21,8 +21,8 @@ namespace ConDep.Console
             {
                 if(!_initialized)
                 {
-                    Init();
                     _initialized = true;
+                    Init();
                 }
                 return _params;
             }

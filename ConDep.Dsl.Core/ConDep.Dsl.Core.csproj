@@ -37,9 +37,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files\IIS\Microsoft Web Deploy V3\Microsoft.Web.Deployment.dll</HintPath>
     </Reference>
-    <Reference Include="StructureMap">
-      <HintPath>..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
@@ -56,6 +53,7 @@
     <Compile Include="IRequireLoadBalancing.cs" />
     <Compile Include="LoadBalancer\LoadBalanceState.cs" />
     <Compile Include="ISetupCondep.cs" />
+    <Compile Include="SetupExtensions.cs" />
     <Compile Include="WebDeploy\WebDeployExecuteCondition.cs" />
     <Compile Include="WebDeploy\WebDeployCompositeProvider.cs" />
     <Compile Include="IProvideForInfrastrucutreWebSite.cs" />
@@ -97,9 +95,6 @@
     <Compile Include="WebDeploy\WebDeployOptions.cs" />
     <Compile Include="WebDeploy\WebDeployProvider.cs" />
     <Compile Include="Options\WindowsOptions.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
