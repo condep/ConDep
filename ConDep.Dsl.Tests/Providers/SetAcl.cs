@@ -1,9 +1,10 @@
 using System.Security.AccessControl;
 using NUnit.Framework;
+using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl.Tests.Providers
 {
-	public class when_using_set_acl_provider : ProviderTestFixture<SetAclProvider>
+	public class when_using_set_acl_provider : ProviderTestFixture<SetAclProvider, IProvideForInfrastructure>
 	{
 		protected override void When()
 		{

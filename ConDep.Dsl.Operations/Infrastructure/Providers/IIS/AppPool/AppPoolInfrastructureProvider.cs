@@ -42,7 +42,7 @@ namespace ConDep.Dsl
             }
 
             psCommand += "$newAppPool | set-item;";
-            Configure(p => p.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
+            Configure<IProvideForInfrastructure>(p => p.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
         }
 
         private string ExtractNetFrameworkVersion()

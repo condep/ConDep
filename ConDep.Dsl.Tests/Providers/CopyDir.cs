@@ -1,8 +1,9 @@
 ﻿using NUnit.Framework;
+using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl.Tests.Providers
 {
-	public class when_using_copy_dir_provider : ProviderTestFixture<CopyDirProvider>
+	public class when_using_copy_dir_provider : ProviderTestFixture<CopyDirProvider, IProvideForDeployment>
 	{
 		protected override void When()
 		{

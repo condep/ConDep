@@ -1,8 +1,9 @@
 using NUnit.Framework;
+using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl.Tests.CompositeProviders
 {
-    public class when_using_PowerShell_provider : ProviderTestFixture<PowerShellProvider>
+    public class when_using_PowerShell_provider : ProviderTestFixture<PowerShellProvider, IProvideForInfrastructure>
     {
         protected override void When()
         {

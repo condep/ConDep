@@ -5,11 +5,12 @@ namespace ConDep.Dsl
 {
 	public static class SetAclExtension
 	{
-        public static void SetAcl(this IProvideForAll providerOptions, string path, Action<SetAclOptions> options)
-		{
+        public static void SetAcl(this IProvideForInfrastructure providerOptions, string path, Action<SetAclOptions> aclOptions)
+        {
+            var options = (InfrastructureProviderOptions) providerOptions;
 			var setAclProvider = new SetAclProvider(path);
-			options(new SetAclOptions(setAclProvider));
-			providerOptions.AddProvider(setAclProvider);
+			aclOptions(new SetAclOptions(setAclProvider));
+            options.WebDeploySetup.ConfigureProvider(setAclProvider);
 		}
     }
 }

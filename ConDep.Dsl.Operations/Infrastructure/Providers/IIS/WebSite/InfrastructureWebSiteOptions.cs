@@ -1,15 +1,22 @@
-﻿using ConDep.Dsl.Core;
+﻿using System;
+using ConDep.Dsl.Core;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.Core
 {
-    public class WebSiteInfrastructureProviderOptions : ProviderOptions, IProvideForInfrastrucutreWebSite
+    public class InfrastructureWebSiteOptions : IProvideForInfrastrucutreWebSite
     {
+        private readonly ISetupWebDeploy _webDeploySetup;
         private readonly WebSiteInfrastructureProvider _webSiteInfrastructureProvider;
 
-        //Todo: Somehow this should probably get DeployentServer injected
-        public WebSiteInfrastructureProviderOptions(WebSiteInfrastructureProvider webSiteInfrastructureProvider) : base(webSiteInfrastructureProvider.ChildProviders)
+        public InfrastructureWebSiteOptions(ISetupWebDeploy webDeploySetup, WebSiteInfrastructureProvider webSiteInfrastructureProvider)
         {
+            _webDeploySetup = webDeploySetup;
             _webSiteInfrastructureProvider = webSiteInfrastructureProvider;
+        }
+
+        public ISetupWebDeploy WebDeploySetup
+        {
+            get { return _webDeploySetup; }
         }
 
         public string WebSiteName

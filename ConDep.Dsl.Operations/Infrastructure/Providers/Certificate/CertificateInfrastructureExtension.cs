@@ -7,20 +7,23 @@ namespace ConDep.Dsl
     {
         public static void CopyCertificate(this IProvideForInfrastructure serverOptions, string searchString, X509FindType findType)
         {
+            var options = (InfrastructureProviderOptions) serverOptions;
             var certificateProvider = new CertificateInfrastructureProvider(searchString, findType);
-            serverOptions.AddProvider(certificateProvider);
+            options.WebDeploySetup.ConfigureProvider(certificateProvider);
         }
 
         public static void CopyCertificate(this IProvideForInfrastructure serverOptions, string searchString, string certFriendlyName)
         {
+            var options = (InfrastructureProviderOptions)serverOptions;
             var certificateProvider = new CertificateInfrastructureProvider(searchString, certFriendlyName);
-            serverOptions.AddProvider(certificateProvider);
+            options.WebDeploySetup.ConfigureProvider(certificateProvider);
         }
 
         public static void CopyCertificate(this IProvideForInfrastructure serverOptions, string certFile)
         {
+            var options = (InfrastructureProviderOptions)serverOptions;
             var certificateProvider = new CertificateInfrastructureProvider(certFile);
-            serverOptions.AddProvider(certificateProvider);
+            options.WebDeploySetup.ConfigureProvider(certificateProvider);
         }
     }
 }

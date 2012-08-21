@@ -2,20 +2,19 @@
 
 namespace ConDep.Dsl.Core
 {
-    public class InfrastructureIisOptions
+    public class InfrastructureIisOptions : IProvideForInfrastructureIis
     {
-        private WebDeployDefinition _webDeployDefinition;
-        private readonly DeploymentServer _server;
+        private readonly ISetupWebDeploy _webDeploySetup;
 
-        public InfrastructureIisOptions(WebDeployDefinition webDeployDefinition, DeploymentServer server)
+        public InfrastructureIisOptions(ISetupWebDeploy webDeploySetup)
         {
-            _webDeployDefinition = webDeployDefinition;
-            _server = server;
+            _webDeploySetup = webDeploySetup;
         }
 
-        public void Define(Action<IProvideForInfrastructureIis> iisDefinition)
+        public ISetupWebDeploy WebDeploySetup
         {
-            iisDefinition(new ProviderOptions(_webDeployDefinition.Providers, _server));
+            get { return _webDeploySetup; }
         }
     }
+
 }

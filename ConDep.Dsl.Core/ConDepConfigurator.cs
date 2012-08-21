@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using StructureMap;
 
 namespace ConDep.Dsl.Core
 {
@@ -54,7 +55,7 @@ namespace ConDep.Dsl.Core
 	    protected internal WebDeploymentStatus Setup(Action<ISetupCondep> action)
 		{
 			var status = new WebDeploymentStatus();
-	        var conDepSetup = new ConDepSetup();
+	        var conDepSetup = ObjectFactory.GetInstance<ISetupCondep>();
             var notification = new Notification();
 
 			action(conDepSetup);

@@ -6,17 +6,19 @@ namespace ConDep.Dsl
 	public static class CopyFileExtension
 	{
 
-        public static void CopyFile(this IProvideForAll providerOptions, string path)
+        public static void CopyFile(this IProvideForDeployment providerOptions, string path)
         {
+            var options = (DeploymentProviderOptions) providerOptions;
             var copyFileProvider = new CopyFileProvider(path);
-            providerOptions.AddProvider(copyFileProvider);
+            options.WebDeploySetup.ConfigureProvider(copyFileProvider);
         }
         
-        public static void CopyFile(this IProvideForAll providerOptions, string path, Action<CopyFileOptions> options)
+        public static void CopyFile(this IProvideForDeployment providerOptions, string path, Action<CopyFileOptions> copyFileOptions)
 		{
-			var copyFileProvider = new CopyFileProvider(path);
-			options(new CopyFileOptions(copyFileProvider));
-			providerOptions.AddProvider(copyFileProvider);
-		}
+            var options = (DeploymentProviderOptions)providerOptions;
+            var copyFileProvider = new CopyFileProvider(path);
+			copyFileOptions(new CopyFileOptions(copyFileProvider));
+            options.WebDeploySetup.ConfigureProvider(copyFileProvider);
+        }
     }
 }

@@ -1,24 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ConDep.Dsl.Core;
 using NUnit.Framework;
 
 namespace ConDep.Dsl.Tests
 {
 	[TestFixture]
-	public abstract class ProviderTestFixture<TProvider> : SimpleTestFixture where TProvider : class, IProvide
+	public abstract class ProviderTestFixture<TProvider, TProvideFor> : SimpleTestFixture 
+        where TProvider : class, IProvide
+        where TProvideFor : class
 	{
-		private ProviderOptions _providers;
+		private TProvideFor _providers;
 		private List<IProvide> _internalProviders;
 		private readonly Notification _notification = new Notification();
 
-		protected ProviderOptions Providers
+		protected TProvideFor Providers
 		{
 			get
 			{
 				if (_providers == null)
 				{
 					_internalProviders = new List<IProvide>();
-					_providers = new ProviderOptions(_internalProviders);
+
+                    //Todo: this can't be like this!!!
+                    if(typeof(TProvideFor) is IProvideForDeployment)
+                    {
+                        _providers = new DeploymentProviderOptions(null) as TProvideFor;
+                    }
+                    else if (typeof(TProvideFor) is IProvideForDeploymentExistingIis)
+                    {
+                        _providers = new DeploymentExistingIisOptions(null) as TProvideFor;
+                    }
+                    //etc....
+                    
+                    throw new NotImplementedException();
+                    //_providers = new ProviderOptions(_internalProviders);
 				}
 				return _providers;
 			}

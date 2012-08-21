@@ -5,7 +5,7 @@ using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.Core
 {
-    public class WebDeployDefinition : IValidate
+    public class WebDeployServerDefinition : IValidate
 	{
 		private readonly WebDeploySource _webDeploySource = new WebDeploySource();
 		private readonly WebDeployDestination _webDeployDestination = new WebDeployDestination();
@@ -15,9 +15,9 @@ namespace ConDep.Dsl.Core
     	private EventHandler<WebDeployMessageEventArgs> _output;
     	private EventHandler<WebDeployMessageEventArgs> _outputError;
 
-        public WebDeployDefinition() { }
+        public WebDeployServerDefinition() { }
 
-        public WebDeployDefinition(ConDepEnvironmentSettings envSettings, DeploymentServer deploymentServer)
+        public WebDeployServerDefinition(ConDepEnvironmentSettings envSettings, DeploymentServer deploymentServer)
         {
             WebDeployDestination.ComputerName = deploymentServer.ServerName;
             WebDeploySource.LocalHost = true;
@@ -163,16 +163,16 @@ namespace ConDep.Dsl.Core
 			  return message;
 		  }
 
-        private static readonly Dictionary<string, WebDeployDefinition> ServerDefinitions = new Dictionary<string, WebDeployDefinition>();
+        private static readonly Dictionary<string, WebDeployServerDefinition> ServerDefinitions = new Dictionary<string, WebDeployServerDefinition>();
 
-        public static WebDeployDefinition CreateOrGetForServer(ConDepEnvironmentSettings envSettings, DeploymentServer deploymentServer)
+        public static WebDeployServerDefinition CreateOrGetForServer(ConDepEnvironmentSettings envSettings, DeploymentServer deploymentServer)
         {
             if (ServerDefinitions.ContainsKey(deploymentServer.ServerName))
             {
                 return ServerDefinitions[deploymentServer.ServerName];
             }
             
-            var definition = new WebDeployDefinition(envSettings, deploymentServer);
+            var definition = new WebDeployServerDefinition(envSettings, deploymentServer);
             ServerDefinitions.Add(deploymentServer.ServerName, definition);
             return definition;
         }

@@ -2,11 +2,11 @@
 {
     public class InfrastructureWindowsOptions
     {
-        private readonly WebDeployDefinition _webDeployDefinition;
+        private readonly WebDeployServerDefinition _webDeployServerDefinition;
 
-        public InfrastructureWindowsOptions(WebDeployDefinition webDeployDefinition)
+        public InfrastructureWindowsOptions(WebDeployServerDefinition webDeployServerDefinition)
         {
-            _webDeployDefinition = webDeployDefinition;
+            _webDeployServerDefinition = webDeployServerDefinition;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace ConDep.Dsl.Tests
 {
 	public abstract class WebDeployOptionsTestFixture : SimpleTestFixture
 	{
-		protected WebDeployDefinition _definition;
+		protected WebDeployServerDefinition _serverDefinition;
 		protected DeploymentBaseOptions _webDeployOptions;
 		protected Notification _notification;
 

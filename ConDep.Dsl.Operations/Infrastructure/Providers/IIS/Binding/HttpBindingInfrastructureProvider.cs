@@ -29,14 +29,15 @@ namespace ConDep.Dsl.Providers.IIS.Binding
 
         public override bool IsValid(Notification notification)
         {
-            throw new NotImplementedException();
+            //todo: add validation
+            return true;
         }
 
         public override void Configure(DeploymentServer server)
         {
             //Todo: get bindingtype
             var psCommand = CreateBinding(_webSiteName, Ip, HostHeader, _port.ToString(), BindingType.http);
-            Configure(p => p.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
+            Configure<IProvideForInfrastructure>(p => p.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
         }
 
         private static string CreateBinding(string webSiteName, string ip, string hostHeader, string port, BindingType bindingType)
@@ -49,9 +50,12 @@ namespace ConDep.Dsl.Providers.IIS.Binding
                                  ? ""
                                  : "-HostHeader \"" + hostHeader + "\"";
 
-            return string.Format("New-WebBinding -Name \"{0}\" -Protocol \"{1}\" -Port {2} {3} {4} -force; ",
+            var commandParams = string.Format("-Name \"{0}\" -Protocol \"{1}\" -Port {2} {3} {4}; ",
                               webSiteName, bindingType, port, ipAddress, hostHeader2);
 
+            var newBinding = "New-WebBinding " + commandParams;
+            var getBinding = string.Format("$binding = Get-WebBinding " + commandParams + "; if($binding -eq $null) {{ {0} }}", newBinding);
+            return getBinding;
         }
     }
 }

@@ -16,6 +16,7 @@ namespace ConDep.Dsl.Core
             depObject.TraceLevel = traceLevel;
             
             ConDepConfigurator.EnvSettings = envSettings;
+            IoCBootstrapper.Bootstrap();
 
             //Check for load balancer
             //If load balancer found, take first server offline and deploy

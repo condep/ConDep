@@ -4,22 +4,22 @@ namespace ConDep.Dsl
 {
     public class IisBindingInfrastructureOptions
     {
-        private readonly HttpBindingInfrastructureProvider _binding;
+        private readonly HttpBindingInfrastructureProvider _httpBinding;
 
-        public IisBindingInfrastructureOptions(HttpBindingInfrastructureProvider binding)
+        public IisBindingInfrastructureOptions(HttpBindingInfrastructureProvider httpBinding)
         {
-            _binding = binding;
+            _httpBinding = httpBinding;
         }
 
-        public IisBindingInfrastructureOptions HostHeader(string hostname)
+        public IisBindingInfrastructureOptions HttpHostHeader(string hostname)
         {
-            _binding.HostHeader = hostname;
+            _httpBinding.HostHeader = hostname;
             return this;
         }
 
-        public IisBindingInfrastructureOptions Ip(string ip)
+        public IisBindingInfrastructureOptions HttpIp(string ip)
         {
-            _binding.Ip = ip;
+            _httpBinding.Ip = ip;
             return this;
         }
     }

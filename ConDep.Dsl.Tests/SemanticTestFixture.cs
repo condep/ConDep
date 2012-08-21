@@ -4,17 +4,17 @@ namespace ConDep.Dsl.Tests
 {
 	public abstract class SemanticTestFixture : SimpleTestFixture
 	{
-		private WebDeployDefinition _definition;
+		private WebDeployServerDefinition _serverDefinition;
 
 		protected override void Given()
 		{
-			_definition = new WebDeployDefinition();
+			_serverDefinition = new WebDeployServerDefinition();
 			Notification = new Notification();
 		}
 
 		protected override void When()
 		{
-			_definition.IsValid(Notification);
+			_serverDefinition.IsValid(Notification);
 		}
 
 		protected Notification Notification { get; private set; }

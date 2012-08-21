@@ -5,17 +5,19 @@ namespace ConDep.Dsl
 {
     public static class PowerShellExtension
     {
-        public static void PowerShell(this IProvideForAll providerOptions, string command)
+        public static void PowerShell(this IProvideForInfrastructure providerOptions, string command)
         {
+            var options = (InfrastructureProviderOptions)providerOptions;
             var powerShellProvider = new PowerShellProvider(command);
-            providerOptions.AddProvider(powerShellProvider);
+            options.WebDeploySetup.ConfigureProvider(powerShellProvider);
         }
 
-        public static void PowerShell(this IProvideForAll providerOptions, string command, Action<PowerShellOptions> options)
+        public static void PowerShell(this IProvideForInfrastructure providerOptions, string command, Action<PowerShellOptions> powerShellOptions)
         {
+            var options = (InfrastructureProviderOptions)providerOptions;
             var powerShellProvider = new PowerShellProvider(command);
-            options(new PowerShellOptions(powerShellProvider));
-            providerOptions.AddProvider(powerShellProvider);
+            powerShellOptions(new PowerShellOptions(powerShellProvider));
+            options.WebDeploySetup.ConfigureProvider(powerShellProvider);
         }
     }
 }

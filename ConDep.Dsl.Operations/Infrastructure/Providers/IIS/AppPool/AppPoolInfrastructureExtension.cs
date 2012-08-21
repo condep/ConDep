@@ -5,18 +5,20 @@ namespace ConDep.Dsl
 {
     public static class AppPoolInfrastructureExtension
     {
-        public static void AppPool(this IProvideForInfrastructureIis providerCollection, string appPoolName)
+        public static void AppPool(this IProvideForInfrastructureIis iisOptions, string appPoolName)
         {
+            var options = (InfrastructureIisOptions) iisOptions;
             var appPoolProvider = new AppPoolInfrastructureProvider(appPoolName);
-            providerCollection.AddProvider(appPoolProvider);
+            options.WebDeploySetup.ConfigureProvider(appPoolProvider);
         }
 
-        public static void AppPool(this IProvideForInfrastructureIis providerCollection, string appPoolName, Action<AppPoolInfrastructureOptions> options)
+        public static void AppPool(this IProvideForInfrastructureIis iisOptions, string appPoolName, Action<AppPoolInfrastructureOptions> appPoolOptions)
         {
+            var options = (InfrastructureIisOptions)iisOptions;
             var appPoolProvider = new AppPoolInfrastructureProvider(appPoolName);
 
-            options(new AppPoolInfrastructureOptions(appPoolProvider));
-            providerCollection.AddProvider(appPoolProvider);
+            appPoolOptions(new AppPoolInfrastructureOptions(appPoolProvider));
+            options.WebDeploySetup.ConfigureProvider(appPoolProvider);
         }
     }
 }

@@ -7,16 +7,18 @@ namespace ConDep.Dsl
     {
         public static void WebSite(this IProvideForInfrastructureIis providerCollection, string webSiteName, int id, string physicalDir)
         {
+            var options = (InfrastructureIisOptions) providerCollection;
             var customWebSiteProvider = new WebSiteInfrastructureProvider(webSiteName, id, physicalDir);
-            providerCollection.AddProvider(customWebSiteProvider);
+            options.WebDeploySetup.ConfigureProvider(customWebSiteProvider);
         }
 
-        public static void WebSite(this IProvideForInfrastructureIis providerCollection, string webSiteName, int id, string physicalDir, Action<IProvideForInfrastrucutreWebSite> options)
+        public static void WebSite(this IProvideForInfrastructureIis providerCollection, string webSiteName, int id, string physicalDir, Action<IProvideForInfrastrucutreWebSite> webSiteOptions)
         {
+            var options = (InfrastructureIisOptions)providerCollection;
             var customWebSiteProvider = new WebSiteInfrastructureProvider(webSiteName, id, physicalDir);
 
-            options(new WebSiteInfrastructureProviderOptions(customWebSiteProvider));
-            providerCollection.AddProvider(customWebSiteProvider);
+            webSiteOptions(new InfrastructureWebSiteOptions(options.WebDeploySetup, customWebSiteProvider));
+            options.WebDeploySetup.ConfigureProvider(customWebSiteProvider);
         }
     }
 }

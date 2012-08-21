@@ -5,22 +5,24 @@ namespace ConDep.Dsl
 {
 	public static class RunCmdExtension
 	{
-        public static void RunCmd(this IProvideForAll providerOptions, string command)
+        public static void RunCmd(this IProvideForInfrastructure providerOptions, string command)
 		{
             RunCmd(providerOptions, command, false);		    
 		}
 
-        public static void RunCmd(this IProvideForAll providerOptions, string command, bool continueOnError)
-		{
+        public static void RunCmd(this IProvideForInfrastructure providerOptions, string command, bool continueOnError)
+        {
+            var options = (InfrastructureProviderOptions) providerOptions;
 			var runCmdProvider = new RunCmdProvider(command, continueOnError);
-			providerOptions.AddProvider(runCmdProvider);
+            options.WebDeploySetup.ConfigureProvider(runCmdProvider);
 		}
 
-        public static void RunCmd(this IProvideForAll providerOptions, string command, bool continueOnError, Action<RunCmdOptions> options)
+        public static void RunCmd(this IProvideForInfrastructure providerOptions, string command, bool continueOnError, Action<RunCmdOptions> runCmdOptions)
 		{
-			var runCmdProvider = new RunCmdProvider(command, continueOnError);
-			options(new RunCmdOptions(runCmdProvider));
-			providerOptions.AddProvider(runCmdProvider);
-		}
+            var options = (InfrastructureProviderOptions)providerOptions;
+            var runCmdProvider = new RunCmdProvider(command, continueOnError);
+			runCmdOptions(new RunCmdOptions(runCmdProvider));
+            options.WebDeploySetup.ConfigureProvider(runCmdProvider);
+        }
 	}
 }

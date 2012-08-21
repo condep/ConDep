@@ -2,16 +2,16 @@
 {
     public class WindowsOptions
     {
-        private readonly WebDeployDefinition _webDeployDefinition;
+        private readonly WebDeployServerDefinition _webDeployServerDefinition;
 
-        public WindowsOptions(WebDeployDefinition webDeployDefinition)
+        public WindowsOptions(WebDeployServerDefinition webDeployServerDefinition)
         {
-            _webDeployDefinition = webDeployDefinition;
+            _webDeployServerDefinition = webDeployServerDefinition;
         }
 
         public void InstallIIS()
         {
-            _webDeployDefinition.WebDeploySource.LocalHost = true;
+            _webDeployServerDefinition.WebDeploySource.LocalHost = true;
             //iisDefinition(new ProviderOptions(_webDeployDefinition.Providers));
         }
     }

@@ -5,30 +5,34 @@ namespace ConDep.Dsl
 {
     public static class WebSiteDeploymentExtension
     {
-        public static void WebSite(this IProvideForExistingIisServer providerCollection, string sourceWebsiteName, string destWebSiteName)
+        public static void WebSite(this IProvideForDeploymentIis providerOptions, string sourceWebsiteName, string destWebSiteName)
         {
+            var options = (DeploymentIisOptions)providerOptions;
             var webSiteProvider = new WebSiteDeploymentProvider(sourceWebsiteName, destWebSiteName);
-            providerCollection.AddProvider(webSiteProvider);
+            options.WebDeploySetup.ConfigureProvider(webSiteProvider);
         }
 
-        public static void WebSite(this IProvideForExistingIisServer providerCollection, string sourceWebsiteName, string destWebSiteName, Action<WebSiteDeploymentOptions> options)
+        public static void WebSite(this IProvideForDeploymentIis providerOptions, string sourceWebsiteName, string destWebSiteName, Action<WebSiteDeploymentOptions> webSiteOptions)
         {
+            var options = (DeploymentIisOptions)providerOptions;
             var webSiteProvider = new WebSiteDeploymentProvider(sourceWebsiteName, destWebSiteName);
-            options(new WebSiteDeploymentOptions(webSiteProvider));
-            providerCollection.AddProvider(webSiteProvider);
+            webSiteOptions(new WebSiteDeploymentOptions(webSiteProvider));
+            options.WebDeploySetup.ConfigureProvider(webSiteProvider);
         }
 
-        public static void WebSite(this IProvideForExistingIisServer providerCollection, string sourceWebsiteName, string destWebSiteName, string destFilePath)
+        public static void WebSite(this IProvideForDeploymentIis providerOptions, string sourceWebsiteName, string destWebSiteName, string destFilePath)
         {
+            var options = (DeploymentIisOptions)providerOptions;
             var webSiteProvider = new WebSiteDeploymentProvider(sourceWebsiteName, destWebSiteName, destFilePath);
-            providerCollection.AddProvider(webSiteProvider);
+            options.WebDeploySetup.ConfigureProvider(webSiteProvider);
         }
 
-        public static void WebSite(this IProvideForExistingIisServer providerCollection, string sourceWebsiteName, string destWebSiteName, string destFilePath, Action<WebSiteDeploymentOptions> options)
+        public static void WebSite(this IProvideForDeploymentIis providerOptions, string sourceWebsiteName, string destWebSiteName, string destFilePath, Action<WebSiteDeploymentOptions> webSiteOptions)
         {
+            var options = (DeploymentIisOptions)providerOptions;
             var webSiteProvider = new WebSiteDeploymentProvider(sourceWebsiteName, destWebSiteName, destFilePath);
-            options(new WebSiteDeploymentOptions(webSiteProvider));
-            providerCollection.AddProvider(webSiteProvider);
+            webSiteOptions(new WebSiteDeploymentOptions(webSiteProvider));
+            options.WebDeploySetup.ConfigureProvider(webSiteProvider);
         }
     }
 }

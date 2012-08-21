@@ -10,6 +10,17 @@ namespace ConDep.Dsl.Core
 	{
 		private readonly List<ConDepOperation> _operations = new List<ConDepOperation>();
 	    private ILoadBalance _loadBalancer;
+        private readonly ISetupWebDeploy _webDeploySetup;
+
+        public ConDepSetup(ISetupWebDeploy webDeploySetup)
+        {
+            _webDeploySetup = webDeploySetup;
+        }
+
+	    public ISetupWebDeploy WebDeploySetup
+	    {
+	        get { return _webDeploySetup; }
+	    }
 
 	    public void AddOperation(ConDepOperation operation)
 	    {

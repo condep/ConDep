@@ -5,39 +5,34 @@ namespace ConDep.Dsl.Core
 {
 	public class WebDeployOperation : ConDepOperation, IRequireLoadBalancing
 	{
-		private readonly WebDeployDefinition _webDeployDefinition;
+		private readonly WebDeployServerDefinition _webDeployServerDefinition;
 
-		public WebDeployOperation(WebDeployDefinition webDeployDefinition)
+		public WebDeployOperation(WebDeployServerDefinition webDeployServerDefinition)
 		{
-			_webDeployDefinition = webDeployDefinition;
+			_webDeployServerDefinition = webDeployServerDefinition;
 		}
 
 		public override WebDeploymentStatus Execute(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
 		{
-		    _webDeployDefinition.TraceLevel = traceLevel;
+		    _webDeployServerDefinition.TraceLevel = traceLevel;
 
             if(BeforeExecute != null)
             {
-                BeforeExecute(_webDeployDefinition.WebDeployDestination.ComputerName, traceLevel, output, outputError, webDeploymentStatus);
+                BeforeExecute(_webDeployServerDefinition.WebDeployDestination.ComputerName, traceLevel, output, outputError, webDeploymentStatus);
             }
 
-            var status = _webDeployDefinition.Sync(output, outputError, webDeploymentStatus);
+            var status = _webDeployServerDefinition.Sync(output, outputError, webDeploymentStatus);
 
             if (AfterExecute != null)
             {
-                AfterExecute(_webDeployDefinition.WebDeployDestination.ComputerName, traceLevel, output, outputError, webDeploymentStatus);
+                AfterExecute(_webDeployServerDefinition.WebDeployDestination.ComputerName, traceLevel, output, outputError, webDeploymentStatus);
             }
 		    return status;
 		}
 
 		public override bool IsValid(Notification notification)
 		{
-			return _webDeployDefinition.IsValid(notification);
+			return _webDeployServerDefinition.IsValid(notification);
 		}
-
-	    public WebDeployDefinition WebDeployDefinition
-	    {
-            get { return _webDeployDefinition; }
-	    }
     }
 }

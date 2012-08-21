@@ -40,9 +40,9 @@ namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting
             return webOp;
         }
 
-        private WebDeployDefinition CreateWebDeployDefinition()
+        private WebDeployServerDefinition CreateWebDeployDefinition()
         {
-            var webDepDef = new WebDeployDefinition();
+            var webDepDef = new WebDeployServerDefinition();
             //Todo: Add credetials
             webDepDef.WebDeployDestination.ComputerName = _loadBalancerComputerName;
             webDepDef.WebDeploySource.LocalHost = true;

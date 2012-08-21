@@ -5,23 +5,26 @@ namespace ConDep.Dsl
 {
     public static class WebAppInfrastructureExtension
     {
-        public static void WebApp(this IProvideForInfrastructureIis providerCollection, string webAppName, string destinationWebSiteName)
+        public static void WebApp(this IProvideForInfrastructureIis providerOptions, string webAppName, string destinationWebSiteName)
         {
+            var options = (InfrastructureIisOptions)providerOptions;
             var webAppProvider = new WebAppInfrastructureProvider(webAppName, destinationWebSiteName);
-            providerCollection.AddProvider(webAppProvider);
+            options.WebDeploySetup.ConfigureProvider(webAppProvider);
         }
 
-        public static void WebApp(this IProvideForInfrastrucutreWebSite providerCollection, string webAppName)
+        public static void WebApp(this IProvideForInfrastrucutreWebSite providerOptions, string webAppName)
         {
-            var webAppProvider = new WebAppInfrastructureProvider(webAppName, providerCollection.WebSiteName);
-            providerCollection.AddProvider(webAppProvider);
+            var options = (InfrastructureWebSiteOptions)providerOptions;
+            var webAppProvider = new WebAppInfrastructureProvider(webAppName, providerOptions.WebSiteName);
+            options.WebDeploySetup.ConfigureProvider(webAppProvider);
         }
 
-        public static void WebApp(this IProvideForInfrastrucutreWebSite providerCollection, string webAppName, Action<WebAppInfrastructureOptions> options)
+        public static void WebApp(this IProvideForInfrastrucutreWebSite providerOptions, string webAppName, Action<WebAppInfrastructureOptions> webAppOptions)
         {
-            var webAppProvider = new WebAppInfrastructureProvider(webAppName, providerCollection.WebSiteName);
-            options(new WebAppInfrastructureOptions(webAppProvider));
-            providerCollection.AddProvider(webAppProvider);
+            var options = (InfrastructureWebSiteOptions)providerOptions;
+            var webAppProvider = new WebAppInfrastructureProvider(webAppName, providerOptions.WebSiteName);
+            webAppOptions(new WebAppInfrastructureOptions(webAppProvider));
+            options.WebDeploySetup.ConfigureProvider(webAppProvider);
         }
     }
 }

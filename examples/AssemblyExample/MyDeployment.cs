@@ -11,27 +11,29 @@ namespace AssemblyExample
             //          {
             //              setup.Infrastructure(infra =>
             //                                       {
+            //                                           //infra.
             //                                       });
             //              setup.Deployment(dep =>
             //                                   {
-                                                   
+
             //                                   });
             //              setup.PreCompile("", "", "");
             //              setup.WebRequest("", "");
             //          });
             Setup(s =>
                       {
-                          s.Infrastructure(infra => infra.IIS.Define(
-                              iisDef =>
+// ReSharper disable ConvertToLambdaExpression
+                          s.Infrastructure(infra => infra.Iis(
+                              iis =>
                                   {
-                                      iisDef.AppPool("appPool1", appPoolOpt =>
+                                      iis.AppPool("appPool1", appPoolOpt =>
                                                                      {
                                                                          appPoolOpt.LoadUserProfile = true;
                                                                          appPoolOpt.RecycleTimeIntervalInMinutes = 0;
                                                                      });
-                                      iisDef.AppPool("appPool2");
+                                      iis.AppPool("appPool2");
 
-                                      iisDef.WebSite("WebSite1", 2, @"C:\website1",
+                                      iis.WebSite("WebSite1", 2, @"C:\website1",
                                                      webSiteOpt =>
                                                          {
                                                              //webSiteOpt.CopyDir(@"C:\Temp\Frende.Customer.Endpoint2",
@@ -43,18 +45,19 @@ namespace AssemblyExample
                                                              webSiteOpt.WebApp("webapp3");
                                                          });
 
-                                      iisDef.WebSite("WebSite2", 3, @"C:\website2",
+                                      iis.WebSite("WebSite2", 3, @"C:\website2",
                                                      webSiteOpt =>
                                                          {
                                                              webSiteOpt.AppPoolName = "appPool2";
                                                              webSiteOpt.WebApp("webapp4");
                                                          });
 
-                                      iisDef.WebSite("WebSite3", 4, @"C:\website3");
+                                      iis.WebSite("WebSite3", 4, @"C:\website3");
 
-                                      iisDef.WebApp("Webapp1", "WebSite3");
+                                      iis.WebApp("Webapp1", "WebSite3");
                                   }
                                                         ));
+// ReSharper restore ConvertToLambdaExpression
 
                           //s.Deployment(dep => dep.)
                       });

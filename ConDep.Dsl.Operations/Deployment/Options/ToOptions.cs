@@ -5,13 +5,13 @@ namespace ConDep.Dsl.Operations.Deployment.Options
 {
 	public class ToOptions
 	{
-		private readonly WebDeployDefinition _definition;
+		private readonly WebDeployServerDefinition _serverDefinition;
 		private readonly WebDeployDestination _webDeployDestination;
 
-		public ToOptions(WebDeployDefinition definition)
+		public ToOptions(WebDeployServerDefinition serverDefinition)
 		{
-			_definition = definition;
-			_webDeployDestination = definition.WebDeployDestination;
+			_serverDefinition = serverDefinition;
+			_webDeployDestination = serverDefinition.WebDeployDestination;
 		}
 
 		public void LocalHost()

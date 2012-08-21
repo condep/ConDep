@@ -1,7 +1,6 @@
 ﻿namespace ConDep.Dsl.Core
 {
-    public interface IProvideForDeployment : IProvideForAll
+    public interface IProvideForDeployment
     {
-        DeploymentIisOptions IIS { get; }
     }
 }

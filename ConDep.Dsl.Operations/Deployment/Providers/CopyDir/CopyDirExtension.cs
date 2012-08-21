@@ -5,18 +5,19 @@ namespace ConDep.Dsl
 {
 	public static class CopyDirExtension
 	{
-        public static void CopyDir(this IProvideForAll providerCollection, string sourceDir)
+        public static void CopyDir(this IProvideForDeployment providerCollection, string sourceDir)
         {
+            var options = (DeploymentProviderOptions) providerCollection;
             var copyDirProvider = new CopyDirProvider(sourceDir);
-            providerCollection.AddProvider(copyDirProvider);
+            options.WebDeploySetup.ConfigureProvider(copyDirProvider);
         }
 
-        public static void CopyDir(this IProvideForAll providerCollection, string sourceDir, Action<CopyDirOptions> options)
+        public static void CopyDir(this IProvideForDeployment providerCollection, string sourceDir, Action<CopyDirOptions> copyDirOptions)
         {
+            var options = (DeploymentProviderOptions)providerCollection;
             var copyDirProvider = new CopyDirProvider(sourceDir);
-            options(new CopyDirOptions(copyDirProvider));
-            providerCollection.AddProvider(copyDirProvider);
+            copyDirOptions(new CopyDirOptions(copyDirProvider));
+            options.WebDeploySetup.ConfigureProvider(copyDirProvider);
         }
-
     }
 }

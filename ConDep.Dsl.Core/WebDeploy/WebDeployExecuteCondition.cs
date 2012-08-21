@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ConDep.Dsl.Core
 {
-    public class WebDeployExecuteCondition
+    public class WebDeployExecuteCondition<T>
     {
         private enum ExpectedOutcome
         {
@@ -11,11 +11,11 @@ namespace ConDep.Dsl.Core
             Failure
         }
 
-        private readonly Action<ProviderOptions> _action;
+        private readonly Action<T> _action;
         private readonly ExpectedOutcome _expectedOutcome;
         private readonly List<IProvide> _providers = new List<IProvide>();
 
-        private WebDeployExecuteCondition(Action<ProviderOptions> action, ExpectedOutcome expectedOutcome)
+        private WebDeployExecuteCondition(Action<T> action, ExpectedOutcome expectedOutcome)
         {
             _action = action;
             _expectedOutcome = expectedOutcome;
@@ -23,18 +23,21 @@ namespace ConDep.Dsl.Core
 
         public void Configure()
         {
-            var providerOptions = new ProviderOptions(_providers);
-            _action(providerOptions);
+            throw new NotImplementedException();
+            //var providerOptions = new ProviderOptions(_providers);
+            //_action(providerOptions);
         }
 
-        public static WebDeployExecuteCondition IsSuccess(Action<ProviderOptions> action)
+        public static WebDeployExecuteCondition<T> IsSuccess(Action<T> action)
         {
-            return new WebDeployExecuteCondition(action, ExpectedOutcome.Success);
+            throw new NotImplementedException();
+            //return new WebDeployExecuteCondition(action, ExpectedOutcome.Success);
         }
 
-        public static WebDeployExecuteCondition IsFailure(Action<ProviderOptions> action)
+        public static WebDeployExecuteCondition<T> IsFailure(Action<T> action)
         {
-            return new WebDeployExecuteCondition(action, ExpectedOutcome.Failure);
+            throw new NotImplementedException();
+            //return new WebDeployExecuteCondition(action, ExpectedOutcome.Failure);
         }
 
         public bool IsNotExpectedOutcome(WebDeployOptions webDeployOptions)

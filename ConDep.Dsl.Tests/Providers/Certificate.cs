@@ -1,8 +1,9 @@
 using NUnit.Framework;
+using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl.Tests.Providers
 {
-	public class when_using_certificate_provider : ProviderTestFixture<CertficiateDeploymentProvider>
+	public class when_using_certificate_provider : ProviderTestFixture<CertficiateDeploymentProvider, IProvideForDeploymentIis>
 	{
 		protected override void When()
 		{

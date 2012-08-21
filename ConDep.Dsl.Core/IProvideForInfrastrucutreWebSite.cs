@@ -1,6 +1,6 @@
 ﻿namespace ConDep.Dsl.Core
 {
-    public interface IProvideForInfrastrucutreWebSite : IProvideForAll
+    public interface IProvideForInfrastrucutreWebSite
     {
         string WebSiteName { get; }
         string AppPoolName { get; set; }
