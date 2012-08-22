@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace ConDep.Dsl.Tests
 {
 	[TestFixture]
-	public abstract class ProviderTestFixture<TProvider, TProvideFor> : SimpleTestFixture 
+	public abstract class ProviderTestFixture<TProvider, TProvideFor> : SimpleTestFixtureBase 
         where TProvider : class, IProvide
         where TProvideFor : class
 	{

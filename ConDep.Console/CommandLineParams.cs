@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace ConDep.Console
 {
-    internal class CommandLineParams
+    internal sealed class CommandLineParams
     {
         public string AssemblyName { get; set; }
 

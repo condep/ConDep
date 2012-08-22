@@ -7,7 +7,7 @@ using Microsoft.Web.Publishing.Tasks;
 
 namespace ConDep.Dsl
 {
-	public class TransformConfigOperation : ConDepOperation
+	public class TransformConfigOperation : ConDepOperationBase
 	{
 		private readonly string _configDirPath;
 		private readonly string _configName;
@@ -43,7 +43,7 @@ namespace ConDep.Dsl
 			document.Save(configFilePath);
 
 			if(!success)
-				throw new Exception("Failed to transform web.config file.");
+				throw new WebConfigTransformException("Failed to transform web.config file.");
 
 			return webDeploymentStatus;
 		}

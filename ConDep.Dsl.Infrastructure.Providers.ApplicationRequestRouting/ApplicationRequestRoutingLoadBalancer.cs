@@ -47,14 +47,14 @@ namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting
             webDepDef.WebDeployDestination.ComputerName = _loadBalancerComputerName;
             webDepDef.WebDeploySource.LocalHost = true;
 
-            if (ConDepConfigurator.EnvSettings.LoadBalancer.UserIsDefined)
+            if (ConDepConfiguratorBase.EnvSettings.LoadBalancer.UserIsDefined)
             {
-                webDepDef.WebDeployDestination.Credentials.UserName = ConDepConfigurator.EnvSettings.LoadBalancer.UserName;
-                webDepDef.WebDeployDestination.Credentials.Password = ConDepConfigurator.EnvSettings.LoadBalancer.Password;
+                webDepDef.WebDeployDestination.Credentials.UserName = ConDepConfiguratorBase.EnvSettings.LoadBalancer.UserName;
+                webDepDef.WebDeployDestination.Credentials.Password = ConDepConfiguratorBase.EnvSettings.LoadBalancer.Password;
 
                 //Todo: Use LoadBalancer user or deployment user for Source?
-                webDepDef.WebDeploySource.Credentials.UserName = ConDepConfigurator.EnvSettings.LoadBalancer.UserName;
-                webDepDef.WebDeploySource.Credentials.Password = ConDepConfigurator.EnvSettings.LoadBalancer.Password;
+                webDepDef.WebDeploySource.Credentials.UserName = ConDepConfiguratorBase.EnvSettings.LoadBalancer.UserName;
+                webDepDef.WebDeploySource.Credentials.Password = ConDepConfiguratorBase.EnvSettings.LoadBalancer.Password;
             }
             return webDepDef;
         }

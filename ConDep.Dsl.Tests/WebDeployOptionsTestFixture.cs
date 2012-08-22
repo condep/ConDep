@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace ConDep.Dsl.Tests
 {
-	public abstract class WebDeployOptionsTestFixture : SimpleTestFixture
+	public abstract class WebDeployOptionsTestFixture : SimpleTestFixtureBase
 	{
 		protected WebDeployServerDefinition _serverDefinition;
 		protected DeploymentBaseOptions _webDeployOptions;

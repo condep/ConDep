@@ -8,8 +8,8 @@
     <ProjectGuid>{1A131274-45B3-47EE-A48D-8310FDB3C332}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConDep.Dsl.FluentWebDeploy.Tests</RootNamespace>
-    <AssemblyName>ConDep.Dsl.FluentWebDeploy.Tests</AssemblyName>
+    <RootNamespace>ConDep.Dsl.Tests</RootNamespace>
+    <AssemblyName>ConDep.Dsl.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
@@ -81,16 +81,12 @@
     <Compile Include="SematicModel\SemanticModelTests.cs" />
     <Compile Include="SemanticTestFixture.cs" />
     <Compile Include="WebDeployOptionsTestFixture.cs" />
-    <Compile Include="SimpleTestFixture.cs" />
+    <Compile Include="SimpleTestFixtureBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConDep.Dsl.Core\ConDep.Dsl.Core.csproj">
+    <ProjectReference Include="..\ConDep.Dsl\ConDep.Dsl.csproj">
       <Project>{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}</Project>
-      <Name>ConDep.Dsl.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ConDep.Dsl.Operations\ConDep.Dsl.Operations.csproj">
-      <Project>{9928C9C8-EB7A-48ED-BD3B-BEAAE05787FE}</Project>
-      <Name>ConDep.Dsl.Operations</Name>
+      <Name>ConDep.Dsl</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

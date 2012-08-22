@@ -3,7 +3,7 @@ using ConDep.Dsl.Core;
 
 namespace AssemblyExample
 {
-    public class MyDeployment : ConDepConfigurator
+    public class MyDeployment : ConDepConfiguratorBase
     {
         protected override void Configure()
         {

@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 
 namespace ConDep.Console
 {
-    class Program
+    sealed class Program
     {
         //ConDep.exe MyAssembly.dll Env=Test [Server=web01] [Applications=Selvbetjent] [/InfraOnly] [/DeployOnly]
         //
@@ -19,7 +19,7 @@ namespace ConDep.Console
             var optionHandler = new CommandLineOptionHandler(args);
 
             var assembly = FindAssembly(optionHandler.Params.AssemblyName);
-            var type = assembly.GetTypes().Where(t => typeof(ConDepConfigurator).IsAssignableFrom(t)).FirstOrDefault();
+            var type = assembly.GetTypes().Where(t => typeof(ConDepConfiguratorBase).IsAssignableFrom(t)).FirstOrDefault();
 
             var executionPath = Path.GetDirectoryName(type.Assembly.Location);
             var envFileName = string.Format("{0}.Env.js", optionHandler.Params.Environment);
@@ -46,6 +46,7 @@ namespace ConDep.Console
             Executor.ExecuteFromAssembly(assembly, envSettings, optionHandler.Params.TraceLevel);
         }
 
+        //Todo: Must refactor!
         private static void PopulateWebSiteSettings(ConDepEnvironmentSettings envSettings, JObject json)
         {
             foreach(JProperty webSite in json["WebSites"].Children())
@@ -54,22 +55,30 @@ namespace ConDep.Console
 
                 foreach(JProperty server in webSite.Value)
                 {
-                    var envServer = envSettings.Servers.Where(x => x.ServerName == server.Name).FirstOrDefault();
-                    var envWebSite = new ConDepWebSiteSettings(webSiteName);
-
-                    foreach(var binding in server.Value)
-                    {
-                        var bindingType = binding["BindingType"].ToString();
-                        var port = binding["Port"].ToString();
-                        var ip = binding["Ip"].ToString();
-                        var hostHeader = binding["HostHeader"].ToString();
-
-                        envWebSite.Bindings.Add(new ConDepWebSiteBinding(bindingType, port, ip, hostHeader));
-                    }
-
-                    envServer.WebSites.Add(envWebSite);
+                    AddWebSiteServer(envSettings, server, webSiteName);
                 }
             }
+        }
+
+        private static void AddWebSiteServer(ConDepEnvironmentSettings envSettings, JProperty server, string webSiteName)
+        {
+            var envServer = envSettings.Servers.Where(x => x.ServerName == server.Name).FirstOrDefault();
+            var envWebSite = new ConDepWebSiteSettings(webSiteName);
+
+            foreach (var binding in server.Value)
+            {
+                envWebSite.Bindings.Add(CreateWebSiteBinding(binding));
+            }
+            envServer.WebSites.Add(envWebSite);
+        }
+
+        private static ConDepWebSiteBinding CreateWebSiteBinding(JToken binding)
+        {
+            var bindingType = binding["BindingType"].ToString();
+            var port = binding["Port"].ToString();
+            var ip = binding["Ip"].ToString();
+            var hostHeader = binding["HostHeader"].ToString();
+            return new ConDepWebSiteBinding(bindingType, port, ip, hostHeader);
         }
 
         private static ConDepEnvironmentSettings PopulateEnvSettings(string environment, JObject json)

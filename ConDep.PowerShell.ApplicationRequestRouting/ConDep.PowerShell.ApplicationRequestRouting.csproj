@@ -76,7 +76,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(SolutionDir)CmdLetHelpGen\bin\release\CmdLetHelpGen.exe $(TargetPath) $(TargetDir)
+    <PostBuildEvent>REM $(SolutionDir)CmdLetHelpGen\bin\release\CmdLetHelpGen.exe $(TargetPath) $(TargetDir)
 REM xcopy /Y "$(TargetPath)" "\\z63os2snlb01-t\temp\ApplicationRequestRouting\"
 REM xcopy /Y "$(TargetDir)ApplicationRequestRouting.psd1" "\\z63os2snlb01-t\temp\ApplicationRequestRouting\"
 REM xcopy /Y "$(TargetDir)ApplicationRequestRouting.format.ps1xml" "\\z63os2snlb01-t\temp\ApplicationRequestRouting\"

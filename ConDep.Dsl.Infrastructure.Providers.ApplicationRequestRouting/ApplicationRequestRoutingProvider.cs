@@ -1,9 +1,10 @@
 using System;
 using ConDep.Dsl.Core;
+using ConDep.Dsl.Core.LoadBalancer;
 
 namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting
 {
-    public class ApplicationRequestRoutingProvider : WebDeployCompositeProvider 
+    public class ApplicationRequestRoutingProvider : WebDeployCompositeProviderBase 
     {
         private readonly LoadBalanceState _state;
 

@@ -2,7 +2,7 @@ using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl.Tests
 {
-	public abstract class SemanticTestFixture : SimpleTestFixture
+	public abstract class SemanticTestFixture : SimpleTestFixtureBase
 	{
 		private WebDeployServerDefinition _serverDefinition;
 
