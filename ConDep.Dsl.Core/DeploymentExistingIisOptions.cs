@@ -11,7 +11,7 @@ namespace ConDep.Dsl
             _webDeploySetup = webDeploySetup;
         }
 
-        public ISetupWebDeploy WebDeploySetup1
+        public ISetupWebDeploy WebDeploySetup
         {
             get { return _webDeploySetup; }
         }

@@ -5,7 +5,7 @@ namespace ConDep.Dsl
 {
 	public static class SetupExtensions
 	{
-        public static void Deployment(this ISetupCondep conDepSetup, Action<IProvideForDeployment> deployment)
+        public static void Deployment(this IProvideForSetup conDepSetup, Action<IProvideForDeployment> deployment)
         {
             foreach (var deploymentServer in ConDepConfigurator.EnvSettings.Servers)
             {
@@ -16,7 +16,7 @@ namespace ConDep.Dsl
             }
         }
 
-        public static void Infrastructure(this ISetupCondep conDepSetup, Action<IProvideForInfrastructure> infrastructure)
+        public static void Infrastructure(this IProvideForSetup conDepSetup, Action<IProvideForInfrastructure> infrastructure)
         {
             foreach (var deploymentServer in ConDepConfigurator.EnvSettings.Servers)
             {
@@ -48,14 +48,15 @@ namespace ConDep.Dsl
 
     public static class DeploymentIisExtensions
     {
-        public static void SyncFromExistingServer(IProvideForDeploymentIis iis, string iisServer, Action<IProvideForDeploymentExistingIis> sync)
+        //Todo: Add provider for syncing from existing iis server
+        public static void SyncFromExistingServer(this IProvideForDeploymentIis iis, string iisServer, Action<IProvideForDeploymentExistingIis> sync)
         {
             var options = (DeploymentIisOptions) iis;
             options.WebDeploySetup.ActiveWebDeployServerDefinition.WebDeploySource.ComputerName = iisServer;
             sync(new DeploymentExistingIisOptions(options.WebDeploySetup));
         }
 
-        public static void SyncFromExistingServer(IProvideForDeploymentIis iis, string iisServer, string serverUserName, string serverPassword, Action<IProvideForDeploymentExistingIis> sync)
+        public static void SyncFromExistingServer(this IProvideForDeploymentIis iis, string iisServer, string serverUserName, string serverPassword, Action<IProvideForDeploymentExistingIis> sync)
         {
             var options = (DeploymentIisOptions)iis;
             options.WebDeploySetup.ActiveWebDeployServerDefinition.WebDeploySource.Credentials.UserName = serverUserName;

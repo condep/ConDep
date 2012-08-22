@@ -6,7 +6,7 @@ using ConDep.Dsl.Core.LoadBalancer;
 
 namespace ConDep.Dsl.Core
 {
-	public class ConDepSetup : ISetupCondep, IValidate
+    public class ConDepSetup : ISetupCondep, IProvideForSetup, IValidate
 	{
 		private readonly List<ConDepOperation> _operations = new List<ConDepOperation>();
 	    private ILoadBalance _loadBalancer;

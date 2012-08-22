@@ -26,6 +26,7 @@ namespace ConDep.Dsl
 
         public override void Configure(DeploymentServer server)
         {
+            //Todo: Remove web app before adding, cause -force have no effect.
             var command = string.Format("$webSite = Get-WebSite | where-object {{ $_.Name -eq '{0}' }}; ", _webSiteName);
             command += string.Format("if((Test-Path -path ($webSite.physicalPath + '\\{0}')) -ne $True) {{ New-Item ($webSite.physicalPath + '\\{0}') -type Directory }}; ", _webAppName);
             command += PhysicalPath != null ? string.Format("if((Test-Path -path '{0}') -ne $True) {{ New-Item '{0}' -type Directory }}; ", PhysicalPath) : "";

@@ -52,13 +52,13 @@ namespace ConDep.Dsl.Core
 	        Console.ForegroundColor = currentConsoleColor;
 	    }
 
-	    protected internal WebDeploymentStatus Setup(Action<ISetupCondep> action)
+	    protected internal WebDeploymentStatus Setup(Action<IProvideForSetup> action)
 		{
 			var status = new WebDeploymentStatus();
 	        var conDepSetup = ObjectFactory.GetInstance<ISetupCondep>();
             var notification = new Notification();
 
-			action(conDepSetup);
+            action((IProvideForSetup)conDepSetup);
 			if (!conDepSetup.IsValid(notification))
 			{
 				notification.Throw();
@@ -71,4 +71,8 @@ namespace ConDep.Dsl.Core
 
 	    protected internal abstract void Configure();
 	}
+
+    public interface IProvideForSetup
+    {
+    }
 }

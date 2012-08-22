@@ -31,7 +31,6 @@ namespace ConDep.Dsl.Core
             output(this, new WebDeployMessageEventArgs { Message = string.Format("{0} : Execution finished for provider [{1}]", DateTime.Now.ToLongTimeString(), this.GetType().Name), Level = System.Diagnostics.TraceLevel.Info });
         }
 
-        //Todo: Used to be ProviderOptions - need to find a replacement
         protected void Configure<T>(Action<T> action)
         {
             var options = ObjectFactory.GetInstance<T>();

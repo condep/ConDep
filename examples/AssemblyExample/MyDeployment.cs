@@ -7,19 +7,6 @@ namespace AssemblyExample
     {
         protected override void Configure()
         {
-            //Setup(setup =>
-            //          {
-            //              setup.Infrastructure(infra =>
-            //                                       {
-            //                                           //infra.
-            //                                       });
-            //              setup.Deployment(dep =>
-            //                                   {
-
-            //                                   });
-            //              setup.PreCompile("", "", "");
-            //              setup.WebRequest("", "");
-            //          });
             Setup(s =>
                       {
 // ReSharper disable ConvertToLambdaExpression
@@ -40,7 +27,10 @@ namespace AssemblyExample
                                                              //                   o => o.DestinationDir(@"C:\website1"));
                                                              webSiteOpt.AppPoolName = "appPool1";
                                                              webSiteOpt.HttpBinding(8088);
-                                                             webSiteOpt.WebApp("webapp1");
+                                                             webSiteOpt.WebApp("webapp1", webAppOpt =>
+                                                                                              {
+                                                                                                  webAppOpt.ApplicationPool = "appPool2";
+                                                                                              });
                                                              webSiteOpt.WebApp("webapp2");
                                                              webSiteOpt.WebApp("webapp3");
                                                          });
