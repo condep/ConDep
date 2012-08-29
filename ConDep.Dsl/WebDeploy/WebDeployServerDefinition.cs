@@ -17,18 +17,18 @@ namespace ConDep.Dsl.Core
 
         public WebDeployServerDefinition() { }
 
-        public WebDeployServerDefinition(ConDepEnvironmentSettings envSettings, DeploymentServer deploymentServer)
+        public WebDeployServerDefinition(DeploymentServer deploymentServer)
         {
             WebDeployDestination.ComputerName = deploymentServer.ServerName;
             WebDeploySource.LocalHost = true;
 
-            if (!envSettings.DeploymentUser.IsDefined) return;
-            
-            WebDeployDestination.Credentials.UserName = envSettings.DeploymentUser.UserName;
-            WebDeployDestination.Credentials.Password = envSettings.DeploymentUser.Password;
+            if (!deploymentServer.User.IsDefined) return;
 
-            WebDeploySource.Credentials.UserName = envSettings.DeploymentUser.UserName;
-            WebDeploySource.Credentials.Password = envSettings.DeploymentUser.Password;
+            WebDeployDestination.Credentials.UserName = deploymentServer.User.UserName;
+            WebDeployDestination.Credentials.Password = deploymentServer.User.Password;
+
+            WebDeploySource.Credentials.UserName = deploymentServer.User.UserName;
+            WebDeploySource.Credentials.Password = deploymentServer.User.Password;
         }
 
         public WebDeploySource WebDeploySource
@@ -163,17 +163,17 @@ namespace ConDep.Dsl.Core
 			  return message;
 		  }
 
-        private static readonly Dictionary<string, WebDeployServerDefinition> ServerDefinitions = new Dictionary<string, WebDeployServerDefinition>();
+        private readonly Dictionary<string, WebDeployServerDefinition> ServerDefinitions = new Dictionary<string, WebDeployServerDefinition>();
 
-        public static WebDeployServerDefinition CreateOrGetForServer(ConDepEnvironmentSettings envSettings, DeploymentServer deploymentServer)
+        public static WebDeployServerDefinition CreateOrGetForServer(DeploymentServer deploymentServer)
         {
-            if (ServerDefinitions.ContainsKey(deploymentServer.ServerName))
-            {
-                return ServerDefinitions[deploymentServer.ServerName];
-            }
+            //if (ServerDefinitions.ContainsKey(deploymentServer.ServerName))
+            //{
+            //    return ServerDefinitions[deploymentServer.ServerName];
+            //}
             
-            var definition = new WebDeployServerDefinition(envSettings, deploymentServer);
-            ServerDefinitions.Add(deploymentServer.ServerName, definition);
+            var definition = new WebDeployServerDefinition(deploymentServer);
+            definition.ServerDefinitions.Add(deploymentServer.ServerName, definition);
             return definition;
         }
 	}

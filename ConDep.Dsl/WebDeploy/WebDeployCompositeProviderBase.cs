@@ -2,15 +2,44 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using StructureMap;
+using StructureMap.Pipeline;
 
 namespace ConDep.Dsl.Core
 {
+    public class CompositeProviderOptions<T> 
+    {
+        //private readonly List<IProvide> _providers;
+        //private readonly DeploymentServer _server;
+
+        //public CompositeProviderOptions(List<IProvide> providers)
+        //{
+        //    _providers = providers;
+        //}
+
+        //public CompositeProviderOptions(List<IProvide> providers, DeploymentServer server)
+        //{
+        //    _providers = providers;
+        //    _server = server;
+        //}
+
+        //public void AddProvider(IProvide provider)
+        //{
+        //    _providers.Add(provider);
+
+        //    if (provider is WebDeployCompositeProviderBase)
+        //    {
+        //        ((WebDeployCompositeProviderBase)provider).Configure(_server);
+        //    }
+        //}
+    }
+
 	public abstract class WebDeployCompositeProviderBase : IProvide
 	{
 	    private readonly List<IProvide> _childProviders = new List<IProvide>();
-        //private readonly List<WebDeployExecuteCondition> _conditions = new List<WebDeployExecuteCondition>();
+	    private DeploymentServer _server;
+	    //private readonly List<WebDeployExecuteCondition> _conditions = new List<WebDeployExecuteCondition>();
 
-	    public List<IProvide> ChildProviders { get { return _childProviders; } }
+	    public IEnumerable<IProvide> ChildProviders { get { return _childProviders; } }
         //public IEnumerable<WebDeployExecuteCondition> ExecuteConditions { get { return _conditions; } }
 		public string SourcePath { get; set; }
 		public virtual string DestinationPath { get; set; }
@@ -31,9 +60,26 @@ namespace ConDep.Dsl.Core
             output(this, new WebDeployMessageEventArgs { Message = string.Format("{0} : Execution finished for provider [{1}]", DateTime.Now.ToLongTimeString(), this.GetType().Name), Level = System.Diagnostics.TraceLevel.Info });
         }
 
-        protected void Configure<T>(Action<T> action)
+	    public void AddChildProvider(IProvide provider)
         {
-            var options = ObjectFactory.GetInstance<T>();
+            if (provider is WebDeployCompositeProviderBase)
+            {
+                ((WebDeployCompositeProviderBase)provider).Configure(_server);
+            }
+            _childProviders.Add(provider);
+        }
+
+        protected void Configure<T>(DeploymentServer server, Action<IProvide> addProviderAction, Action<T> action) where T : IProvideOptions, new()
+        {
+            _server = server;
+            //var options = ObjectFactory.GetInstance<T>();
+            var options = new T { AddProviderAction = addProviderAction };
+            //options.WebDeploySetup.ConfigureServer(server);
+
+
+            //options.Provider = provider; //Can possible send in function in provider to add subProviders?
+            //var compositeOptions = new CompositeProviderOptions(_childProviders, server);
+            //action(options, compositeOptions);
             action(options);
         }
 
@@ -67,7 +113,8 @@ namespace ConDep.Dsl.Core
             //}
 
             ChildProviders.Reverse();
-            ChildProviders.ForEach(provider => provider.Sync(webDeployOptions, deploymentStatus));
+
+            ChildProviders.ToList().ForEach(provider => provider.Sync(webDeployOptions, deploymentStatus));
             return deploymentStatus;
         }
 

@@ -37,14 +37,14 @@ namespace ConDep.Dsl
             var userConfig = string.Format("{0} config \"{1}\" obj= \"{2}\" password= \"{3}\" group= \"{4}\"", SERVICE_CONTROLLER_EXE, ServiceName, UserName, Password, ServiceGroup);
             var start = string.Format("start-service {0}", ServiceName);
 
-            Configure<IProvideForInfrastructure>(p => p.PowerShell(stop, o => o.ContinueOnError().WaitIntervalInSeconds(10)));
-            Configure<IProvideForDeployment>(p => p.CopyDir(SourcePath, c => c.DestinationDir(destinationPath)));
-            Configure<IProvideForInfrastructure>(p =>
+            Configure<ProvideForInfrastructure>(server, AddChildProvider, po => po.PowerShell(stop, o => o.ContinueOnError().WaitIntervalInSeconds(10)));
+            Configure<ProvideForDeployment>(server, AddChildProvider, po => po.CopyDir(SourcePath, c => c.DestinationDir(destinationPath)));
+            Configure<ProvideForInfrastructure>(server, AddChildProvider, po =>
             {
-                p.RunCmd(install);
-                p.RunCmd(failureConfig);
-                p.RunCmd(userConfig);
-                p.PowerShell(start, o => o.WaitIntervalInSeconds(10));
+                po.RunCmd(install);
+                po.RunCmd(failureConfig);
+                po.RunCmd(userConfig);
+                po.PowerShell(start, o => o.WaitIntervalInSeconds(10));
             });
         }
 

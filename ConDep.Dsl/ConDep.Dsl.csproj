@@ -51,6 +51,9 @@
     <Compile Include="..\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="ConDepAppContext.cs" />
+    <Compile Include="ConDepConfigurationTypeNotFound.cs" />
+    <Compile Include="ConDepOptions.cs" />
     <Compile Include="DeploymentExistingIisOptions.cs" />
     <Compile Include="DeploymentExtensions.cs" />
     <Compile Include="DeploymentIisExtensions.cs" />
@@ -94,13 +97,14 @@
     <Compile Include="WebDeployProviders\Deployment\NServiceBus\NServicebusExtension.cs" />
     <Compile Include="WebDeployProviders\Deployment\NServiceBus\NServiceBusOptions.cs" />
     <Compile Include="WebDeployProviders\Deployment\NServiceBus\NServiceBusProvider.cs" />
-    <Compile Include="WebDeployProviders\Deployment\PowerShell\PowerShellExtension.cs" />
-    <Compile Include="WebDeployProviders\Deployment\PowerShell\PowerShellOptions.cs" />
-    <Compile Include="WebDeployProviders\Deployment\PowerShell\PowerShellProvider.cs" />
-    <Compile Include="WebDeployProviders\Deployment\RunCmd\RunCmdExtension.cs" />
-    <Compile Include="WebDeployProviders\Deployment\RunCmd\RunCmdOptions.cs" />
-    <Compile Include="WebDeployProviders\Deployment\RunCmd\RunCmdProvider.cs" />
-    <Compile Include="WebDeployProviders\Deployment\RunCmd\UntrappedExitCodeException.cs" />
+    <Compile Include="WebDeployProviders\PowerShell\PowerShellExtension.cs" />
+    <Compile Include="WebDeployProviders\PowerShell\PowerShellOptions.cs" />
+    <Compile Include="WebDeployProviders\PowerShell\PowerShellProvider.cs" />
+    <Compile Include="WebDeployProviders\PowerShell\ProvideForInfrastructure.cs" />
+    <Compile Include="WebDeployProviders\RunCmd\RunCmdExtension.cs" />
+    <Compile Include="WebDeployProviders\RunCmd\RunCmdOptions.cs" />
+    <Compile Include="WebDeployProviders\RunCmd\RunCmdProvider.cs" />
+    <Compile Include="WebDeployProviders\RunCmd\UntrappedExitCodeException.cs" />
     <Compile Include="WebDeployProviders\Deployment\SetAcl\SetAclExtension.cs" />
     <Compile Include="WebDeployProviders\Deployment\SetAcl\SetAclOptions.cs" />
     <Compile Include="WebDeployProviders\Deployment\SetAcl\SetAclProvider.cs" />

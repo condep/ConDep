@@ -1,19 +1,22 @@
-﻿using StructureMap.Configuration.DSL;
+﻿using ConDep.Dsl.LoadBalancer;
+using StructureMap.Configuration.DSL;
 
 namespace ConDep.Dsl.Core
 {
     public class IoCProviderOptionsRegistry : Registry
     {
-        public IoCProviderOptionsRegistry()
+        public IoCProviderOptionsRegistry(ConDepEnvironmentSettings envSettings)
         {
-            var webDeploySetup = new WebDeploySetup(ConDepConfiguratorBase.EnvSettings);
+            For<ConDepEnvironmentSettings>().Use(envSettings);
 
-            For<IProvideForDeployment>().Use<DeploymentProviderOptions>();
-            For<IProvideForDeploymentIis>().Use<DeploymentIisOptions>();
-            For<IProvideForInfrastructure>().Use<InfrastructureProviderOptions>();
-            For<IProvideForInfrastructureIis>().Use<InfrastructureIisOptions>();
-            For<ISetupWebDeploy>().Use(webDeploySetup);
-            For<ISetupCondep>().Use<ConDepSetup>();
+            For<ISetupWebDeploy>().Use<WebDeploySetup>();
+            For<ISetupConDep>().Use<ConDepSetup>();
+            For<LoadBalancerSettings>().Use(envSettings.LoadBalancer);
+
+            //For<IProvideForDeployment>().Use<DeploymentProviderOptions>();
+            //For<IProvideForDeploymentIis>().Use<DeploymentIisOptions>();
+            //For<IProvideForInfrastructure>().Use<InfrastructureProviderOptions>();
+            //For<IProvideForInfrastructureIis>().Use<InfrastructureIisOptions>();
         }
     }
 }

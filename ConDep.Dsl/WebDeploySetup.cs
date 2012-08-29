@@ -1,52 +1,56 @@
 ﻿using System.Collections.Generic;
+using StructureMap;
 
 namespace ConDep.Dsl.Core
 {
     public class WebDeploySetup : ISetupWebDeploy
     {
-        private readonly ConDepEnvironmentSettings _envSettings;
+        //todo: this prevent uniqe set of providers for context!!!
         private readonly Dictionary<DeploymentServer, WebDeployServerDefinition>  _webDeployDefs = new Dictionary<DeploymentServer, WebDeployServerDefinition>();
 
-        public WebDeploySetup(ConDepEnvironmentSettings envSettings)
+        public WebDeployServerDefinition ConfigureServer(DeploymentServer deploymentServer)//, DeploymentUser user)
         {
-            _envSettings = envSettings;
-        }
-
-        public ConDepEnvironmentSettings EnvSettings
-        {
-            get { return _envSettings; }
-        }
-
-        public void ConfigureServer(DeploymentServer deploymentServer, ConDepSetup setup)
-        {
+            //var setup = ObjectFactory.GetInstance<ISetupConDep>() as ConDepSetup;
             if (_webDeployDefs.ContainsKey(deploymentServer))
-                return;
+                return _webDeployDefs[deploymentServer];
 
             ActiveDeploymentServer = deploymentServer;
 
-            var webDeployServerDefinition = WebDeployServerDefinition.CreateOrGetForServer(EnvSettings, deploymentServer);
+            var webDeployServerDefinition = WebDeployServerDefinition.CreateOrGetForServer(deploymentServer);
             _webDeployDefs.Add(deploymentServer, webDeployServerDefinition);
-
-            //Todo: Check if this should be done before or after calling the action
-            var webDeployOperation = new WebDeployOperation(webDeployServerDefinition);
-            setup.AddOperation(webDeployOperation);
+            return webDeployServerDefinition;
         }
 
         public void ConfigureProvider(IProvide provider)
         {
+            //Must be added to the child providers collection of it parent composite provider
+            if(provider is WebDeployCompositeProviderBase)
+            {
+                ((WebDeployCompositeProviderBase)provider).Configure(ActiveDeploymentServer);
+            }
             ActiveWebDeployServerDefinition.Providers.Add(provider);
+
+
         }
 
         public void ConfigureProvider(WebDeployCompositeProviderBase provider)
         {
             provider.Configure(ActiveDeploymentServer);
-            ActiveWebDeployServerDefinition.Providers.Add(provider);
+            //provider.ChildProviders.Add();
+            //ActiveWebDeployServerDefinition.Providers.Add(provider);
         }
 
-        public DeploymentServer ActiveDeploymentServer { get; private set; }
+        internal DeploymentServer ActiveDeploymentServer { get; set; }
         
-        public WebDeployServerDefinition ActiveWebDeployServerDefinition
-        {
+        //public WebDeployServerDefinition ActiveWebDeployServerDefinition
+        //{
+        //    get
+        //    {
+        //        return _webDeployDefs[ActiveDeploymentServer];
+        //    }
+        //}
+
+        public WebDeployServerDefinition ActiveWebDeployServerDefinition {
             get
             {
                 return _webDeployDefs[ActiveDeploymentServer];

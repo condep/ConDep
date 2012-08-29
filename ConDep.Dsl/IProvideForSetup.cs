@@ -1,4 +1,6 @@
-﻿namespace ConDep.Dsl.Core
+﻿using System;
+
+namespace ConDep.Dsl.Core
 {
     public interface IProvideForSetup
     {

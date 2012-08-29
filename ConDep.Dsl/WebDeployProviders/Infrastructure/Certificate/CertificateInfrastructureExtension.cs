@@ -5,25 +5,28 @@ namespace ConDep.Dsl
 {
     public static class CertificateInfrastructureExtension
     {
-        public static void CopyCertificate(this IProvideForDeployment serverOptions, string searchString, X509FindType findType)
+        public static void CopyCertificate(this ProvideForDeployment serverOptions, string searchString, X509FindType findType)
         {
-            var options = (DeploymentProviderOptions) serverOptions;
+            //var options = (DeploymentProviderOptions) serverOptions;
             var certificateProvider = new CertificateInfrastructureProvider(searchString, findType);
-            options.WebDeploySetup.ConfigureProvider(certificateProvider);
+            ((IProvideOptions) serverOptions).AddProviderAction(certificateProvider);
+            //options.WebDeploySetup.ConfigureProvider(certificateProvider);
         }
 
-        public static void CopyCertificate(this IProvideForDeployment serverOptions, string searchString, string certFriendlyName)
+        public static void CopyCertificate(this ProvideForDeployment serverOptions, string searchString, string certFriendlyName)
         {
-            var options = (DeploymentProviderOptions)serverOptions;
+            //var options = (DeploymentProviderOptions)serverOptions;
             var certificateProvider = new CertificateInfrastructureProvider(searchString, certFriendlyName);
-            options.WebDeploySetup.ConfigureProvider(certificateProvider);
+            ((IProvideOptions)serverOptions).AddProviderAction(certificateProvider);
+            //options.WebDeploySetup.ConfigureProvider(certificateProvider);
         }
 
-        public static void CopyCertificate(this IProvideForDeployment serverOptions, string certFile)
+        public static void CopyCertificate(this ProvideForDeployment serverOptions, string certFile)
         {
-            var options = (DeploymentProviderOptions)serverOptions;
+            //var options = (DeploymentProviderOptions)serverOptions;
             var certificateProvider = new CertificateInfrastructureProvider(certFile);
-            options.WebDeploySetup.ConfigureProvider(certificateProvider);
+            ((IProvideOptions)serverOptions).AddProviderAction(certificateProvider);
+            //options.WebDeploySetup.ConfigureProvider(certificateProvider);
         }
     }
 }

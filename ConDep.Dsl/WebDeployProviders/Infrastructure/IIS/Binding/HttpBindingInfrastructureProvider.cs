@@ -37,7 +37,7 @@ namespace ConDep.Dsl
         {
             //Todo: get bindingtype
             var psCommand = CreateBinding(_webSiteName, Ip, HostHeader, _port.ToString(), BindingType.http);
-            Configure<IProvideForInfrastructure>(p => p.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
+            Configure<ProvideForInfrastructure>(server, AddChildProvider, po => po.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
         }
 
         private static string CreateBinding(string webSiteName, string ip, string hostHeader, string port, BindingType bindingType)

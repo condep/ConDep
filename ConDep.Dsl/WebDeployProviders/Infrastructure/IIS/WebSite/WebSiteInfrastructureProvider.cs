@@ -42,7 +42,7 @@ namespace ConDep.Dsl
             psCommand += GetCreateWebSiteCommand(_webSiteName, AppPoolName, webSiteSettings.Bindings);
             psCommand += GetCreateBindings(_webSiteName, Bindings, webSiteSettings.Bindings);
             psCommand += GetCertificateCommand();
-            Configure<IProvideForInfrastructure>(p => p.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
+            Configure<ProvideForInfrastructure>(server, AddChildProvider, po => po.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
         }
 
         private string GetCreateWebSiteDirCommand(string webSiteDir)

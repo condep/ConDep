@@ -5,11 +5,13 @@ namespace ConDep.Dsl.Core
     public class DeploymentServer
     {
         private readonly string _serverName;
+        private readonly DeploymentUser _user;
         private readonly List<ConDepWebSiteSettings> _webSites = new List<ConDepWebSiteSettings>();
 
-        public DeploymentServer(string serverName)
+        public DeploymentServer(string serverName, DeploymentUser user)
         {
             _serverName = serverName;
+            _user = user;
         }
 
         public string ServerName
@@ -22,6 +24,11 @@ namespace ConDep.Dsl.Core
             get {
                 return _webSites;
             }
+        }
+
+        public DeploymentUser User
+        {
+            get { return _user; }
         }
     }
 }

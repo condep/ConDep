@@ -1,6 +1,6 @@
 ﻿namespace ConDep.Dsl.Core
 {
-    public interface IProvideForInfrastructure 
+    public interface IProvideForInfrastructure : IProvideOptions
     {
     }
 }

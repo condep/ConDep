@@ -1,6 +1,5 @@
-
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{33CD345E-45E2-4282-978B-DE29B1E0C23C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Dsl.Tests", "ConDep.Dsl.Tests\ConDep.Dsl.Tests.csproj", "{1A131274-45B3-47EE-A48D-8310FDB3C332}"
@@ -38,7 +37,6 @@ Global
 		{1A131274-45B3-47EE-A48D-8310FDB3C332}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A131274-45B3-47EE-A48D-8310FDB3C332}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A131274-45B3-47EE-A48D-8310FDB3C332}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{1A131274-45B3-47EE-A48D-8310FDB3C332}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{1A131274-45B3-47EE-A48D-8310FDB3C332}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{1A131274-45B3-47EE-A48D-8310FDB3C332}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A131274-45B3-47EE-A48D-8310FDB3C332}.Release|Any CPU.Build.0 = Release|Any CPU

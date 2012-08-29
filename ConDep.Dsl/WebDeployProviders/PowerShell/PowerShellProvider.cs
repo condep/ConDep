@@ -1,4 +1,3 @@
-using System;
 using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl
@@ -14,7 +13,7 @@ namespace ConDep.Dsl
 
         public override void Configure(DeploymentServer server)
         {
-            Configure<IProvideForInfrastructure>(p => p.RunCmd(string.Format(@"powershell.exe -InputFormat none -Command ""& {{ $ErrorActionPreference='stop'; {0}; exit $LASTEXITCODE }}""", DestinationPath), this.ContinueOnError, o => o.WaitIntervalInSeconds(this.WaitInterval)));
+            Configure<ProvideForInfrastructure>(server, AddChildProvider, po => po.RunCmd(string.Format(@"powershell.exe -InputFormat none -Command ""& {{ $ErrorActionPreference='stop'; {0}; exit $LASTEXITCODE }}""", DestinationPath), this.ContinueOnError, o => o.WaitIntervalInSeconds(this.WaitInterval)));
         }
 
         public override bool IsValid(Notification notification)

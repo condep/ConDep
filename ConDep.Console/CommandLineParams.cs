@@ -9,7 +9,7 @@ namespace ConDep.Console
 
         public string Server { get; set; }
 
-        public string Application { get; set; }
+        public string Context { get; set; }
 
         public TraceLevel TraceLevel { get; set; }
 

@@ -7,20 +7,6 @@ namespace ConDep.Dsl.Core
 {
 	public abstract class ConDepConfiguratorBase
 	{
-	    private TraceLevel _traceLevel = TraceLevel.Info;
-
-	    public static ConDepEnvironmentSettings EnvSettings { get; set; }
-
-	    public TraceLevel TraceLevel
-	    {
-	        get {
-	            return _traceLevel;
-	        }
-	        set {
-	            _traceLevel = value;
-	        }
-	    }
-
 	    //Todo: Must be able to redirect output
 	    protected virtual void OnMessage(object sender, WebDeployMessageEventArgs e)
 	    {
@@ -55,20 +41,22 @@ namespace ConDep.Dsl.Core
 	    protected internal WebDeploymentStatus Setup(Action<IProvideForSetup> action)
 		{
 			var status = new WebDeploymentStatus();
-	        var conDepSetup = ObjectFactory.GetInstance<ISetupCondep>();
+	        var conDepSetup = ObjectFactory.GetInstance<ISetupConDep>();
             var notification = new Notification();
 
             action((IProvideForSetup)conDepSetup);
+
 			if (!conDepSetup.IsValid(notification))
 			{
 				notification.Throw();
 			}
 
-			conDepSetup.Execute(TraceLevel, OnMessage, OnErrorMessage, status);
+            conDepSetup.Execute(Options, OnMessage, OnErrorMessage, status);
 			
 			return status;
 		}
 
+        protected internal ConDepOptions Options { get; set; }
 	    protected internal abstract void Configure();
 	}
 }

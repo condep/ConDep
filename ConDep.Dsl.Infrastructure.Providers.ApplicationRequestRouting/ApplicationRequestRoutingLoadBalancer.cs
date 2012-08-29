@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using ConDep.Dsl.Core;
-using ConDep.Dsl.Core.LoadBalancer;
+using ConDep.Dsl.LoadBalancer;
 
 namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting
 {
+    //Todo: Use base class instead? In order to guide implementers to provide LoadBalancerSettings in constructor which automatically will be injected.
     public class ApplicationRequestRoutingLoadBalancer : ILoadBalance
     {
-        private readonly string _loadBalancerComputerName;
+        private readonly LoadBalancerSettings _settings;
+        private DeploymentUser _user;
 
-        public ApplicationRequestRoutingLoadBalancer(string loadBalancerComputerName)
+        public ApplicationRequestRoutingLoadBalancer(LoadBalancerSettings settings)
         {
-            _loadBalancerComputerName = loadBalancerComputerName;
+            _settings = settings;
+            _user = new DeploymentUser {UserName = settings.UserName, Password = settings.Password};
         }
 
         public void BringOnline(string serverName, TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
@@ -31,9 +35,10 @@ namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting
             var webDepDef = CreateWebDeployDefinition();
 
             var provider = new ApplicationRequestRoutingProvider(state);
-            provider.Configure(new DeploymentServer(serverName));
+            //todo: provide user??
+            provider.Configure(new DeploymentServer(serverName, null));
             //Todo: Why is the child providers in the wrong order by default??
-            provider.ChildProviders.Reverse();
+            provider.ChildProviders.ToList().Reverse();
             webDepDef.Providers.Add(provider);
 
             var webOp = new WebDeployOperation(webDepDef);
@@ -42,21 +47,8 @@ namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting
 
         private WebDeployServerDefinition CreateWebDeployDefinition()
         {
-            var webDepDef = new WebDeployServerDefinition();
-            //Todo: Add credetials
-            webDepDef.WebDeployDestination.ComputerName = _loadBalancerComputerName;
-            webDepDef.WebDeploySource.LocalHost = true;
-
-            if (ConDepConfiguratorBase.EnvSettings.LoadBalancer.UserIsDefined)
-            {
-                webDepDef.WebDeployDestination.Credentials.UserName = ConDepConfiguratorBase.EnvSettings.LoadBalancer.UserName;
-                webDepDef.WebDeployDestination.Credentials.Password = ConDepConfiguratorBase.EnvSettings.LoadBalancer.Password;
-
-                //Todo: Use LoadBalancer user or deployment user for Source?
-                webDepDef.WebDeploySource.Credentials.UserName = ConDepConfiguratorBase.EnvSettings.LoadBalancer.UserName;
-                webDepDef.WebDeploySource.Credentials.Password = ConDepConfiguratorBase.EnvSettings.LoadBalancer.Password;
-            }
-            return webDepDef;
+            var user = new DeploymentUser() {UserName = _settings.UserName, Password = _settings.Password};
+            return  WebDeployServerDefinition.CreateOrGetForServer(new DeploymentServer(_settings.Name, user));
         }
     }
 }

@@ -1,17 +1,12 @@
 ﻿namespace ConDep.Dsl.Core
 {
-    public class InfrastructureProviderOptions : IProvideForInfrastructure
-    {
-        private readonly ISetupWebDeploy _webDeploySetup;
+    //public class InfrastructureProviderOptions : IProvideForInfrastructure
+    //{
+    //    public InfrastructureProviderOptions(ISetupWebDeploy webDeploySetup)
+    //    {
+    //        WebDeploySetup = webDeploySetup;
+    //    }
 
-        public InfrastructureProviderOptions(ISetupWebDeploy webDeploySetup)
-        {
-            _webDeploySetup = webDeploySetup;
-        }
-
-        public ISetupWebDeploy WebDeploySetup
-        {
-            get { return _webDeploySetup; }
-        }
-    }
+    //    public ISetupWebDeploy WebDeploySetup { get; set; }
+    //}
 }

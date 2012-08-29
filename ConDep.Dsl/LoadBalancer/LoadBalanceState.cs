@@ -1,4 +1,4 @@
-namespace ConDep.Dsl.Core.LoadBalancer
+namespace ConDep.Dsl.LoadBalancer
 {
     public enum LoadBalanceState
     {

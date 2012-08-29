@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ConDep.Dsl.Core.LoadBalancer;
+using ConDep.Dsl.LoadBalancer;
 
 namespace ConDep.Dsl.Core
 {

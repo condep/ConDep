@@ -27,6 +27,10 @@ namespace ConDep.Console
             writer.WriteLine("Usage: ConDep <assembly> <environment> [-options]");
             writer.WriteLine();
             writer.WriteLine("  <assembly>\t\tAssembly containing deployment setup");
+            writer.WriteLine("  \t\t\tIf no path to assembly is specified, first current ");
+            writer.WriteLine("  \t\t\tdirectory is searched and then executing directory. ");
+            writer.WriteLine("  \t\t\tPrecedence is in the order specified here.");
+            writer.WriteLine();
             writer.WriteLine("  <environment>\t\tEnvironment to deploy to (e.g. Dev, Test etc)");
             writer.WriteLine();
             writer.WriteLine("where options include:");
@@ -41,17 +45,17 @@ namespace ConDep.Console
             writer.WriteLine();
             writer.WriteLine("\t(2) ConDep.exe MyAssembly.dll Dev -s MyWebServer");
             writer.WriteLine();
-            writer.WriteLine("\t(3) ConDep.exe MyAssembly.dll Dev -s MyWebServer -a MyWebApp");
+            writer.WriteLine("\t(3) ConDep.exe MyAssembly.dll Dev -s MyWebServer -c MyContext");
             writer.WriteLine();
-            writer.WriteLine("\t(4) ConDep.exe MyAssembly.dll Dev -a MyWebApp");
+            writer.WriteLine("\t(4) ConDep.exe MyAssembly.dll Dev -c MyContext");
             writer.WriteLine();
-            writer.WriteLine("\t(5) ConDep.exe MyAssembly.dll Dev -a MyWebApp -d");
+            writer.WriteLine("\t(5) ConDep.exe MyAssembly.dll Dev -c MyContext -deployOnly");
             writer.WriteLine();
-            writer.WriteLine("\t(6) ConDep.exe MyAssembly.dll Dev -a MyWebApp -i");
+            writer.WriteLine("\t(6) ConDep.exe MyAssembly.dll Dev -c MyContext -infraOnly");
             writer.WriteLine();
-            writer.WriteLine("\t(7) ConDep.exe MyAssembly.dll Dev -i");
+            writer.WriteLine("\t(7) ConDep.exe MyAssembly.dll Dev -infraOnly");
             writer.WriteLine();
-            writer.WriteLine("\t(8) ConDep.exe MyAssembly.dll Dev -d");
+            writer.WriteLine("\t(8) ConDep.exe MyAssembly.dll Dev -deployOnly");
             writer.WriteLine();
         }
 
@@ -64,21 +68,18 @@ namespace ConDep.Console
             writer.WriteLine("\t2 - Deploy setup found in MyAssembly.dll do the Dev environment, ");
             writer.WriteLine("\t    but only to the server MyWebServer.");
             writer.WriteLine();
-            writer.WriteLine("\t3 - Same as above, except only deploys the application MyWebApp.");
-            writer.WriteLine("\t    This also meens no infrastructure is deployed (-do option).");
+            writer.WriteLine("\t3 - Same as above, except only deploys the configuration defined in");
+            writer.WriteLine("\t    the MyContext context.");
             writer.WriteLine();
-            writer.WriteLine("\t4 - Deploy the application MyWebApp to all servers in the");
-            writer.WriteLine("\t    Dev environment. (here the -do option is implisit).");
+            writer.WriteLine("\t4 - Deploy the context MyContext to all servers in the Dev environment.");
             writer.WriteLine();
-            writer.WriteLine("\t5 - Same as above, only here -do is explicitly set.");
+            writer.WriteLine("\t5 - Same as above, except only deployment is executed and no infrastructure.");
             writer.WriteLine();
-            writer.WriteLine("\t6 - This will result in an error, cause you cannot deploy");
-            writer.WriteLine("\t    an application with the infrastructure only option set.");
+            writer.WriteLine("\t6 - Same as above, except only infrastructure is executed and no deployment.");
             writer.WriteLine();
             writer.WriteLine("\t7 - Deploy infrastructure setup only.");
             writer.WriteLine();
-            writer.WriteLine("\t8 - Will only deploy deployment specific setup and");
-            writer.WriteLine("\t    not infrastrucutre.");
+            writer.WriteLine("\t8 - Will only deploy deployment specific setup and not infrastrucutre.");
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace ConDep.Dsl.Core.LoadBalancer
+namespace ConDep.Dsl.LoadBalancer
 {
     public class LoadBalancerLookup
     {
@@ -23,7 +23,7 @@ namespace ConDep.Dsl.Core.LoadBalancer
                     //var assembly = Assembly.Load(_loadBalancerSettings.Provider);
 
                     var type = assembly.GetTypes().Where(t => typeof(ILoadBalance).IsAssignableFrom(t)).FirstOrDefault();
-                    return Activator.CreateInstance(type, _loadBalancerSettings.Name) as ILoadBalance;
+                    return Activator.CreateInstance(type, _loadBalancerSettings) as ILoadBalance;
                 }
             }
             return new DefaulLoadBalancer();

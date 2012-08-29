@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using ConDep.Dsl.Core;
 
-namespace ConDep.Dsl.Core.LoadBalancer
+namespace ConDep.Dsl.LoadBalancer
 {
     public class DefaulLoadBalancer : ILoadBalance
     {

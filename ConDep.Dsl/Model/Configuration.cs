@@ -2,7 +2,8 @@
 {
 	public class Configuration : IValidate
 	{
-		private bool _doNotAutoDeployAgent = false;
+        //todo: this must be false to not require WebDeploy on remote servers
+		private bool _doNotAutoDeployAgent = true;
 
 		public bool DoNotAutoDeployAgent
 		{

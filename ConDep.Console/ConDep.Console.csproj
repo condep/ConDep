@@ -58,9 +58,12 @@
     <Compile Include="..\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="ConfigurationAssemblyHandler.cs" />
+    <Compile Include="AssemblyNotFoundException.cs" />
     <Compile Include="CommandLineOptionHandler.cs" />
     <Compile Include="CommandLineParams.cs" />
     <Compile Include="HelpWriter.cs" />
+    <Compile Include="JsonConfigParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
