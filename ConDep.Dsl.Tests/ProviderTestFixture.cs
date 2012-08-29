@@ -8,39 +8,32 @@ namespace ConDep.Dsl.Tests
 	[TestFixture]
 	public abstract class ProviderTestFixture<TProvider, TProvideFor> : SimpleTestFixtureBase 
         where TProvider : class, IProvide
-        where TProvideFor : class
+        where TProvideFor : class, IProvideOptions, new()
 	{
 		private TProvideFor _providers;
 		private List<IProvide> _internalProviders;
 		private readonly Notification _notification = new Notification();
 
-		protected TProvideFor Providers
+	    protected TProvideFor Providers
 		{
 			get
 			{
 				if (_providers == null)
 				{
 					_internalProviders = new List<IProvide>();
-
-                    //Todo: this can't be like this!!!
-                    if(typeof(TProvideFor) is IProvideForDeployment)
-                    {
-                        _providers = new DeploymentProviderOptions(null) as TProvideFor;
-                    }
-                    else if (typeof(TProvideFor) is IProvideForDeploymentExistingIis)
-                    {
-                        _providers = new DeploymentExistingIisOptions(null) as TProvideFor;
-                    }
-                    //etc....
-                    
-                    throw new NotImplementedException();
-                    //_providers = new ProviderOptions(_internalProviders);
+                    _providers = new TProvideFor();
+				    ((IProvideOptions) _providers).AddProviderAction = AddSubProvidersCalled;
 				}
 				return _providers;
 			}
 		}
 
-		protected TProvider Provider
+	    private void AddSubProvidersCalled(IProvide obj)
+	    {
+	        _internalProviders.Add(obj);
+	    }
+
+	    protected TProvider Provider
 		{
 			get { return _internalProviders[0] as TProvider; }
 		}
@@ -50,7 +43,7 @@ namespace ConDep.Dsl.Tests
 			get { return _notification; }
 		}
 
-		protected override void Given()
+	    protected override void Given()
 		{
         }
 

@@ -29,7 +29,6 @@ namespace AssemblyExample
                                    webSiteOpt =>
                                    {
                                        webSiteOpt.AppPoolName = "appPool1";
-                                       webSiteOpt.HttpBinding = 8088;
                                        webSiteOpt.WebApp("webapp1", webAppOpt =>
                                        {
                                            webAppOpt.ApplicationPool = "appPool2";

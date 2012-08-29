@@ -17,7 +17,6 @@ namespace ConDep.Dsl
         {
             //var options = (InfrastructureIisOptions)providerCollection;
             var customWebSiteProvider = new WebSiteInfrastructureProvider(webSiteName, id, physicalDir);
-
             ((IProvideOptions)providerCollection).AddProviderAction(customWebSiteProvider);
 
             var opt = new ProvideForInfrastrucutreWebSite {WebSiteName = webSiteName};

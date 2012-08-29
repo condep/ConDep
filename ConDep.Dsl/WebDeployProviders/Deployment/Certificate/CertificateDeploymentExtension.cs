@@ -5,11 +5,10 @@ namespace ConDep.Dsl
 {
 	public static class CertificateDeploymentExtension
 	{
-        public static void Certificate(this IProvideForDeploymentIis providerOptions, string thumbprint)
+        public static void Certificate(this ProvideForDeploymentIis providerOptions, string thumbprint)
         {
-            var options = (DeploymentIisOptions) providerOptions;
 			var certificateProvider = new CertficiateDeploymentProvider(thumbprint);
-            options.WebDeploySetup.ConfigureProvider(certificateProvider);
+            ((IProvideOptions)providerOptions).AddProviderAction(certificateProvider);
         }
     }
 }

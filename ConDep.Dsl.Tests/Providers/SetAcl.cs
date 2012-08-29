@@ -4,7 +4,7 @@ using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl.Tests.Providers
 {
-	public class when_using_set_acl_provider : ProviderTestFixture<SetAclProvider, IProvideForInfrastructure>
+	public class when_using_set_acl_provider : ProviderTestFixture<SetAclProvider, ProvideForInfrastructure>
 	{
 		protected override void When()
 		{

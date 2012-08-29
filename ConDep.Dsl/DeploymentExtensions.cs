@@ -4,10 +4,9 @@ namespace ConDep.Dsl.Core
 {
     public static class DeploymentExtensions
     {
-        public static void Iis(this ProvideForDeployment deploymentOptions, Action<IProvideForDeploymentIis> iisOptions)
+        public static void Iis(this ProvideForDeployment deploymentOptions, Action<ProvideForDeploymentIis> iisOptions)
         {
-            //var options = (DeploymentProviderOptions)deploymentOptions;
-            iisOptions(new DeploymentIisOptions(((IProvideOptions) deploymentOptions).WebDeploySetup));
+            iisOptions(new ProvideForDeploymentIis());
         }
     }
 }

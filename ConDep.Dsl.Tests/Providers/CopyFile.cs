@@ -3,7 +3,7 @@ using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl.Tests.Providers
 {
-	public class when_using_copy_file_provider : ProviderTestFixture<CopyFileProvider, IProvideForDeployment>
+	public class when_using_copy_file_provider : ProviderTestFixture<CopyFileProvider, ProvideForDeployment>
 	{
 		protected override void When()
 		{

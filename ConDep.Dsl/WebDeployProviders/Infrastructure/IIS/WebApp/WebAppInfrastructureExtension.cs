@@ -34,13 +34,11 @@ namespace ConDep.Dsl
 
     public class ProvideForInfrastrucutreWebSite : IProvideOptions
     {
-        public ISetupWebDeploy WebDeploySetup { get; set; }
-        public Action<IProvide> AddProviderAction { get; set; }
+        ISetupWebDeploy IProvideOptions.WebDeploySetup { get; set; }
+        Action<IProvide> IProvideOptions.AddProviderAction { get; set; }
 
         public string WebSiteName { get; set; }
 
         public string AppPoolName { get; set; }
-
-        public int HttpBinding { get; set; }
     }
 }

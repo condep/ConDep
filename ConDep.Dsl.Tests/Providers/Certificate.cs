@@ -3,7 +3,7 @@ using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl.Tests.Providers
 {
-	public class when_using_certificate_provider : ProviderTestFixture<CertficiateDeploymentProvider, IProvideForDeploymentIis>
+	public class when_using_certificate_provider : ProviderTestFixture<CertficiateDeploymentProvider, ProvideForDeploymentIis>
 	{
 		protected override void When()
 		{

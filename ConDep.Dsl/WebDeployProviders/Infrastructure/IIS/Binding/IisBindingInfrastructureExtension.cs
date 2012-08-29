@@ -5,26 +5,23 @@ namespace ConDep.Dsl
 {
     public static class IisBindingInfrastructureExtension
     {
-        public static void HttpBinding(this IProvideForInfrastrucutreWebSite providerCollection, int port)
+        public static void HttpBinding(this ProvideForInfrastrucutreWebSite providerCollection, int port)
         {
-            var options = (InfrastructureWebSiteOptions) providerCollection;
             var httpBindingProvider = new HttpBindingInfrastructureProvider(providerCollection.WebSiteName, port);
-            options.WebDeploySetup.ConfigureProvider(httpBindingProvider);
+            ((IProvideOptions)providerCollection).AddProviderAction(httpBindingProvider);
         }
 
-        public static void HttpBinding(this IProvideForInfrastrucutreWebSite providerCollection, int port, Action<IisBindingInfrastructureOptions> bindingOptions)
+        public static void HttpBinding(this ProvideForInfrastrucutreWebSite providerCollection, int port, Action<IisBindingInfrastructureOptions> bindingOptions)
         {
-            var options = (InfrastructureWebSiteOptions)providerCollection;
             var httpBindingProvider = new HttpBindingInfrastructureProvider(providerCollection.WebSiteName, port);
             bindingOptions(new IisBindingInfrastructureOptions(httpBindingProvider));
-            options.WebDeploySetup.ConfigureProvider(httpBindingProvider);
+            ((IProvideOptions)providerCollection).AddProviderAction(httpBindingProvider);
         }
         
-        public static void HttpsBinding(this IProvideForInfrastrucutreWebSite providerCollection, int port, string certificateCommonName)
+        public static void HttpsBinding(this ProvideForInfrastrucutreWebSite providerCollection, int port, string certificateCommonName)
         {
-            var options = (InfrastructureWebSiteOptions)providerCollection;
             var httpsBindingProvider = new HttpsBindingInfrastructureProvider(port, certificateCommonName);
-            options.WebDeploySetup.ConfigureProvider(httpsBindingProvider);
+            ((IProvideOptions)providerCollection).AddProviderAction(httpsBindingProvider);
         }
     }
 }

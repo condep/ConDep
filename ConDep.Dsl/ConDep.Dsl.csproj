@@ -54,13 +54,10 @@
     <Compile Include="ConDepAppContext.cs" />
     <Compile Include="ConDepConfigurationTypeNotFound.cs" />
     <Compile Include="ConDepOptions.cs" />
-    <Compile Include="DeploymentExistingIisOptions.cs" />
     <Compile Include="DeploymentExtensions.cs" />
     <Compile Include="DeploymentIisExtensions.cs" />
     <Compile Include="InfrastructureExtensions.cs" />
     <Compile Include="IoCBootstrapper.cs" />
-    <Compile Include="IProvideForDeploymentExistingIis.cs" />
-    <Compile Include="IProvideForSetup.cs" />
     <Compile Include="ISetupWebDeploy.cs" />
     <Compile Include="LoadBalancer\ILoadBalance.cs" />
     <Compile Include="LoadBalancer\DefaulLoadBalancer.cs" />
@@ -75,6 +72,8 @@
     <Compile Include="Operations\PreCompile\PreCompileOperation.cs" />
     <Compile Include="Operations\WebRequest\WebRequestExtension.cs" />
     <Compile Include="Operations\WebRequest\WebRequestOperation.cs" />
+    <Compile Include="ProvideForDeploymentExistingIis.cs" />
+    <Compile Include="ProvideForDeploymentIis.cs" />
     <Compile Include="SetupExtensions.cs" />
     <Compile Include="WebDeployProviders\Deployment\Certificate\CertficiateDeploymentProvider.cs" />
     <Compile Include="WebDeployProviders\Deployment\Certificate\CertificateDeploymentExtension.cs" />
@@ -129,7 +128,6 @@
     <Compile Include="WebDeployProviders\Infrastructure\IIS\WebApp\WebAppInfrastructureOptions.cs" />
     <Compile Include="WebDeployProviders\Infrastructure\IIS\WebApp\WebAppInfrastructureProvider.cs" />
     <Compile Include="WebDeployProviders\Infrastructure\IIS\WebSite\IdentityInfrastructureOptions.cs" />
-    <Compile Include="WebDeployProviders\Infrastructure\IIS\WebSite\InfrastructureWebSiteOptions.cs" />
     <Compile Include="WebDeployProviders\Infrastructure\IIS\WebSite\WebSiteInfrastructureExtension.cs" />
     <Compile Include="WebDeployProviders\Infrastructure\IIS\WebSite\WebSiteInfrastructureProvider.cs" />
     <Compile Include="WebDeploySetup.cs" />
@@ -139,11 +137,6 @@
     <Compile Include="WebDeploy\UnsupportedOutcomeException.cs" />
     <Compile Include="WebDeploy\WebDeployExecuteCondition.cs" />
     <Compile Include="WebDeploy\WebDeployCompositeProviderBase.cs" />
-    <Compile Include="IProvideForInfrastrucutreWebSite.cs" />
-    <Compile Include="IProvideForDeployment.cs" />
-    <Compile Include="IProvideForDeploymentIis.cs" />
-    <Compile Include="IProvideForInfrastructure.cs" />
-    <Compile Include="IProvideForInfrastructureIis.cs" />
     <Compile Include="Model\ConDepEnvironmentSettings.cs" />
     <Compile Include="ConDepConfiguratorBase.cs" />
     <Compile Include="Model\ConDepWebSiteBinding.cs" />
@@ -156,7 +149,6 @@
     <Compile Include="Model\DeploymentUser.cs" />
     <Compile Include="WebDeploy\WebDeployDestination.cs" />
     <Compile Include="Executor.cs" />
-    <Compile Include="DeploymentIisOptions.cs" />
     <Compile Include="InfrastructureIisOptions.cs" />
     <Compile Include="InfrastructureProviderOptions.cs" />
     <Compile Include="ConDepOperationBase.cs" />

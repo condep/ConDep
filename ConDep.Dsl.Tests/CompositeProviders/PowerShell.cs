@@ -3,7 +3,7 @@ using ConDep.Dsl.Core;
 
 namespace ConDep.Dsl.Tests.CompositeProviders
 {
-    public class when_using_PowerShell_provider : ProviderTestFixture<PowerShellProvider, IProvideForInfrastructure>
+    public class when_using_PowerShell_provider : ProviderTestFixture<PowerShellProvider, ProvideForInfrastructure>
     {
         protected override void When()
         {

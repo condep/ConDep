@@ -2,7 +2,7 @@ using NUnit.Framework;
 using ConDep.Dsl.Core;
 namespace ConDep.Dsl.Tests.Providers
 {
-	public class when_using_web_app_provider : ProviderTestFixture<WebAppDeploymentProvider, IProvideForDeploymentIis>
+	public class when_using_web_app_provider : ProviderTestFixture<WebAppDeploymentProvider, ProvideForDeploymentIis>
 	{
 		protected override void When()
 		{
