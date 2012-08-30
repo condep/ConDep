@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 using Microsoft.Web.Deployment;
 using DeploymentProviderOptions = Microsoft.Web.Deployment.DeploymentProviderOptions;
 

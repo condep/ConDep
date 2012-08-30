@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using StructureMap;
 using StructureMap.Pipeline;
 
-namespace ConDep.Dsl.Core
+namespace ConDep.Dsl
 {
     public class CompositeProviderOptions<T> 
     {

@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using ConDep.Dsl;
-using ConDep.Dsl.Core;
 
 namespace ConDep.Console
 {
@@ -23,8 +22,8 @@ namespace ConDep.Console
 
             var jsonConfigParser = new JsonConfigParser(Path.GetDirectoryName(assembly.Location), optionHandler.Params.Environment);
             var envSettings = jsonConfigParser.GetEnvSettings();
-            var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.TraceLevel);
-            Executor.ExecuteFromAssembly(assembly, envSettings, conDepOptions);
+            var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.TraceLevel, optionHandler.Params.PrintSequence);
+            ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions);
         }
     }
 }

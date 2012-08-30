@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 using NUnit.Framework;
 
 namespace ConDep.Dsl.Tests
@@ -58,17 +58,25 @@ namespace ConDep.Dsl.Tests
             Assert.That(Notification.HasErrors, Is.False);
 		}
 
-		//[Test]
-		//public virtual void should_return_webdeploy_provider_options_without_issues()
-		//{
-		//   Provider.GetWebDeployDestinationObject();
-		//}
+        [Test]
+        public virtual void should_return_webdeploy_destination_object_without_issues()
+        {
+            var provider = Provider as WebDeployProviderBase;
+            if(provider != null)
+            {
+                provider.GetWebDeployDestinationObject();
+            }
+        }
 
-		//[Test]
-		//public virtual void should_return_webdeploy_deploy_object_without_issues()
-		//{
-		//   Provider.GetWebDeploySourceObject(new Microsoft.Web.Deployment.DeploymentBaseOptions());
-		//}
+        [Test]
+        public virtual void should_return_webdeploy_deploy_source_object_without_issues()
+        {
+            var provider = Provider as WebDeployProviderBase;
+            if (provider != null)
+            {
+                provider.GetWebDeploySourceObject(new Microsoft.Web.Deployment.DeploymentBaseOptions());
+            }
+        }
 
 	}
 }   

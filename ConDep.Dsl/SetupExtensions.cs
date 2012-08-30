@@ -1,14 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using StructureMap;
 
 namespace ConDep.Dsl
-{
-    public static class ConDepStateContainer
-    {
-           
-    }
-}
-namespace ConDep.Dsl.Core
 {
 	public static class SetupExtensions
 	{
@@ -23,21 +17,15 @@ namespace ConDep.Dsl.Core
             foreach (var deploymentServer in setup.EnvSettings.Servers)
             {
                 setup.WebDeploySetup.ConfigureServer(deploymentServer);
+
                 var webDeployOperation = new WebDeployOperation(setup.WebDeploySetup.ActiveWebDeployServerDefinition);
                 setup.AddOperation(webDeployOperation);
 
                 var provideForDeployment = new ProvideForDeployment();
-                //((IProvideOptions)provideForDeployment).AddProviderAction = 
+                ((IProvideOptions)provideForDeployment).WebDeploySetup = setup.WebDeploySetup;
+                ((IProvideOptions)provideForDeployment).AddProviderAction = setup.WebDeploySetup.ConfigureProvider;
                 deployment(provideForDeployment);
-                //deployment(new DeploymentProviderOptions(setup.WebDeploySetup));
             }
-
-            //foreach (var deploymentServer in setup.EnvSettings.Servers)
-            //{
-            //    setup.WebDeploySetup.ConfigureServer(deploymentServer, (ISetupWebDeploy)setup);
-
-            //    deployment(new DeploymentProviderOptions(setup.WebDeploySetup));
-            //}
         }
 
         /// <summary>
@@ -50,14 +38,16 @@ namespace ConDep.Dsl.Core
             var setup = (ConDepSetup)conDepSetup;
             foreach (var deploymentServer in setup.EnvSettings.Servers)
             {
+                //Should WebDeploySetup (or its functionality) be on the WebDeployOperation?
                 setup.WebDeploySetup.ConfigureServer(deploymentServer);
+
                 var webDeployOperation = new WebDeployOperation(setup.WebDeploySetup.ActiveWebDeployServerDefinition);
                 setup.AddOperation(webDeployOperation);
 
                 var provideInfra = new ProvideForInfrastructure();
-                ((IProvideOptions) provideInfra).WebDeploySetup = setup.WebDeploySetup;
+                ((IProvideOptions)provideInfra).WebDeploySetup = setup.WebDeploySetup;
+                ((IProvideOptions)provideInfra).AddProviderAction = setup.WebDeploySetup.ConfigureProvider;
                 infrastructure(provideInfra);
-                //infrastructure(new InfrastructureProviderOptions(setup.WebDeploySetup));
             }
         }
 
@@ -73,15 +63,37 @@ namespace ConDep.Dsl.Core
         {
             var parentSetup = setup as ConDepSetup;
             var conDepSetup = ObjectFactory.GetInstance<ISetupConDep>();
+            //conDepSetup.Options = parentSetup.Options;
+
             parentSetup.Context.Add((ISetupConDep)conDepSetup, contextName);
+            parentSetup.AddOperation(new ConDepContextOperationPlaceHolder(contextName));
             contextSetup((IProvideForSetup)conDepSetup);
         }
+    }
 
-        //public static void _ConDepAppContext(this IProvideForSetup conDepSetup, string appName, Action<string, IProvideForSetup> setup)
-        //{
-        //    var setupProvider = (ConDepSetup)conDepSetup;
-        //    setupProvider.AppContext.Add(conDepSetup, appName);
-        //    setup(appName, conDepSetup);
-        //}
-	}
+    public class ConDepContextOperationPlaceHolder : ConDepOperationBase
+    {
+        private string _contextName;
+
+        public ConDepContextOperationPlaceHolder(string contextName)
+        {
+            ContextName = contextName;
+        }
+
+        public string ContextName
+        {
+            get { return _contextName; }
+            set { _contextName = value; }
+        }
+
+        public override WebDeploymentStatus Execute(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool IsValid(Notification notification)
+        {
+            return true;
+        }
+    }
 }

@@ -1,5 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 
 namespace ConDep.Dsl
 {

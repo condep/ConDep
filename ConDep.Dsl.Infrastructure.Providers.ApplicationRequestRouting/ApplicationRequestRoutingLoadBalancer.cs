@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 using ConDep.Dsl.LoadBalancer;
 
 namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting

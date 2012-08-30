@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 
 namespace ConDep.Console
 {

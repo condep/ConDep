@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 using System.Linq;
 
 namespace ConDep.Dsl

@@ -1,5 +1,5 @@
 using System.Security.AccessControl;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 using Microsoft.Web.Deployment;
 using DeploymentProviderOptions = Microsoft.Web.Deployment.DeploymentProviderOptions;
 

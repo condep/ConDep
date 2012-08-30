@@ -2,11 +2,11 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 
 namespace ConDep.Dsl
 {
-    public class Executor
+    public class ConDepConfigurationExecutor
     {
         public void Execute(Assembly assembly, ConDepEnvironmentSettings envSettings, ConDepOptions options)
         {
@@ -29,7 +29,7 @@ namespace ConDep.Dsl
 
         public static void ExecuteFromAssembly(Assembly assembly, ConDepEnvironmentSettings envSettings, ConDepOptions options)
         {
-            new Executor().Execute(assembly, envSettings, options);
+            new ConDepConfigurationExecutor().Execute(assembly, envSettings, options);
         }
     }
 }

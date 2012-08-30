@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ConDep.Dsl.Core
+namespace ConDep.Dsl
 {
     public static class InfrastructureExtensions
     {
@@ -12,11 +12,5 @@ namespace ConDep.Dsl.Core
             ((IProvideOptions)infraIis).AddProviderAction = ((IProvideOptions)infrastructureOptions).WebDeploySetup.ConfigureProvider;
             iisOptions(infraIis);
         }
-    }
-
-    public class ProvideForInfrastructureIis : IProvideOptions
-    {
-        ISetupWebDeploy IProvideOptions.WebDeploySetup { get; set; }
-        Action<IProvide> IProvideOptions.AddProviderAction { get; set; }
     }
 }

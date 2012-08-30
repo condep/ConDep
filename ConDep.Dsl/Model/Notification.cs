@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ConDep.Dsl.Core
+namespace ConDep.Dsl
 {
 	public class Notification
 	{

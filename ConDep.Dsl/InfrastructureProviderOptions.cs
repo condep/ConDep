@@ -1,4 +1,4 @@
-﻿namespace ConDep.Dsl.Core
+﻿namespace ConDep.Dsl
 {
     //public class InfrastructureProviderOptions : IProvideForInfrastructure
     //{

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Web.Deployment;
 
-namespace ConDep.Dsl.Core
+namespace ConDep.Dsl
 {
     public class WebDeployOptions
     {

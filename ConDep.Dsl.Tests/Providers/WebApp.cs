@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 namespace ConDep.Dsl.Tests.Providers
 {
 	public class when_using_web_app_provider : ProviderTestFixture<WebAppDeploymentProvider, ProvideForDeploymentIis>

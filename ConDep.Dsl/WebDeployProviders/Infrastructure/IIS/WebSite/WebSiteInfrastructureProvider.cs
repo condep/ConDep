@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 using System.Linq;
 
 namespace ConDep.Dsl

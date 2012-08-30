@@ -51,13 +51,14 @@
     <Compile Include="..\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
-    <Compile Include="ConDepAppContext.cs" />
+    <Compile Include="ConDepContext.cs" />
     <Compile Include="ConDepConfigurationTypeNotFound.cs" />
     <Compile Include="ConDepOptions.cs" />
     <Compile Include="DeploymentExtensions.cs" />
     <Compile Include="DeploymentIisExtensions.cs" />
     <Compile Include="InfrastructureExtensions.cs" />
     <Compile Include="IoCBootstrapper.cs" />
+    <Compile Include="IProvideForSetup.cs" />
     <Compile Include="ISetupWebDeploy.cs" />
     <Compile Include="LoadBalancer\ILoadBalance.cs" />
     <Compile Include="LoadBalancer\DefaulLoadBalancer.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Operations\WebRequest\WebRequestOperation.cs" />
     <Compile Include="ProvideForDeploymentExistingIis.cs" />
     <Compile Include="ProvideForDeploymentIis.cs" />
+    <Compile Include="ProvideForInfrastructureIis.cs" />
     <Compile Include="SetupExtensions.cs" />
     <Compile Include="WebDeployProviders\Deployment\Certificate\CertficiateDeploymentProvider.cs" />
     <Compile Include="WebDeployProviders\Deployment\Certificate\CertificateDeploymentExtension.cs" />
@@ -96,10 +98,12 @@
     <Compile Include="WebDeployProviders\Deployment\NServiceBus\NServicebusExtension.cs" />
     <Compile Include="WebDeployProviders\Deployment\NServiceBus\NServiceBusOptions.cs" />
     <Compile Include="WebDeployProviders\Deployment\NServiceBus\NServiceBusProvider.cs" />
+    <Compile Include="WebDeployProviders\Infrastructure\IIS\WebSite\ProvideForInfrastrucutreWebSite.cs" />
     <Compile Include="WebDeployProviders\PowerShell\PowerShellExtension.cs" />
     <Compile Include="WebDeployProviders\PowerShell\PowerShellOptions.cs" />
     <Compile Include="WebDeployProviders\PowerShell\PowerShellProvider.cs" />
-    <Compile Include="WebDeployProviders\PowerShell\ProvideForInfrastructure.cs" />
+    <Compile Include="ProvideForDeployment.cs" />
+    <Compile Include="ProvideForInfrastructure.cs" />
     <Compile Include="WebDeployProviders\RunCmd\RunCmdExtension.cs" />
     <Compile Include="WebDeployProviders\RunCmd\RunCmdOptions.cs" />
     <Compile Include="WebDeployProviders\RunCmd\RunCmdProvider.cs" />
@@ -144,12 +148,11 @@
     <Compile Include="Model\Configuration.cs" />
     <Compile Include="Model\Credentials.cs" />
     <Compile Include="WebDeployOperation.cs" />
-    <Compile Include="DeploymentProviderOptions.cs" />
+    <Compile Include="IProvideOptions.cs" />
     <Compile Include="Model\DeploymentServer.cs" />
     <Compile Include="Model\DeploymentUser.cs" />
     <Compile Include="WebDeploy\WebDeployDestination.cs" />
-    <Compile Include="Executor.cs" />
-    <Compile Include="InfrastructureIisOptions.cs" />
+    <Compile Include="ConDepConfigurationExecutor.cs" />
     <Compile Include="InfrastructureProviderOptions.cs" />
     <Compile Include="ConDepOperationBase.cs" />
     <Compile Include="IProvide.cs" />

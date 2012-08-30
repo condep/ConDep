@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 using Microsoft.Web.Publishing.Tasks;
 
 namespace ConDep.Dsl

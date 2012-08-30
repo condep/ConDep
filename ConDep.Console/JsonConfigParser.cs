@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 using Newtonsoft.Json.Linq;
 
 namespace ConDep.Console

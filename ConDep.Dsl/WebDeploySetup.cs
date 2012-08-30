@@ -1,25 +1,31 @@
 ﻿using System.Collections.Generic;
 using StructureMap;
 
-namespace ConDep.Dsl.Core
+namespace ConDep.Dsl
 {
     public class WebDeploySetup : ISetupWebDeploy
     {
         //todo: this prevent uniqe set of providers for context!!!
-        private readonly Dictionary<DeploymentServer, WebDeployServerDefinition>  _webDeployDefs = new Dictionary<DeploymentServer, WebDeployServerDefinition>();
+        //private readonly Dictionary<string, WebDeployServerDefinition>  _webDeployDefs = new Dictionary<string, WebDeployServerDefinition>();
 
-        public WebDeployServerDefinition ConfigureServer(DeploymentServer deploymentServer)//, DeploymentUser user)
+        public WebDeployServerDefinition ConfigureServer(DeploymentServer deploymentServer)
         {
-            //var setup = ObjectFactory.GetInstance<ISetupConDep>() as ConDepSetup;
-            if (_webDeployDefs.ContainsKey(deploymentServer))
-                return _webDeployDefs[deploymentServer];
+            //if (_webDeployDefs.ContainsKey(deploymentServer.ServerName + "-" + context))
+            //{
+            //    ActiveServerContextKey = deploymentServer.ServerName + "-" + context;
+            //    ActiveDeploymentServer = deploymentServer;
+            //    return _webDeployDefs[deploymentServer.ServerName + "-" + context];
+            //}
 
+            //ActiveServerContextKey = deploymentServer.ServerName + "-" + context;
             ActiveDeploymentServer = deploymentServer;
 
-            var webDeployServerDefinition = WebDeployServerDefinition.CreateOrGetForServer(deploymentServer);
-            _webDeployDefs.Add(deploymentServer, webDeployServerDefinition);
-            return webDeployServerDefinition;
+            ActiveWebDeployServerDefinition = WebDeployServerDefinition.CreateOrGetForServer(deploymentServer);
+            //_webDeployDefs.Add(deploymentServer.ServerName + "-" + context, webDeployServerDefinition);
+            return ActiveWebDeployServerDefinition;
         }
+
+        internal DeploymentServer ActiveDeploymentServer { get; set; }
 
         public void ConfigureProvider(IProvide provider)
         {
@@ -40,7 +46,7 @@ namespace ConDep.Dsl.Core
             //ActiveWebDeployServerDefinition.Providers.Add(provider);
         }
 
-        internal DeploymentServer ActiveDeploymentServer { get; set; }
+        internal string ActiveServerContextKey { get; set; }
         
         //public WebDeployServerDefinition ActiveWebDeployServerDefinition
         //{
@@ -50,11 +56,6 @@ namespace ConDep.Dsl.Core
         //    }
         //}
 
-        public WebDeployServerDefinition ActiveWebDeployServerDefinition {
-            get
-            {
-                return _webDeployDefs[ActiveDeploymentServer];
-            }
-        }
+        public WebDeployServerDefinition ActiveWebDeployServerDefinition { get; private set; }
     }
 }

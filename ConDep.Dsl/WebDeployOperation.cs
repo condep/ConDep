@@ -1,7 +1,8 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 
-namespace ConDep.Dsl.Core
+namespace ConDep.Dsl
 {
 	public class WebDeployOperation : ConDepOperationBase, IRequireLoadBalancing
 	{
@@ -34,5 +35,18 @@ namespace ConDep.Dsl.Core
 		{
 			return _webDeployServerDefinition.IsValid(notification);
 		}
-    }
+
+	    public override void PrintExecutionSequence(TextWriter writer, int level)
+	    {
+            var tab = "";
+            for (var i = 0; i <= level; i++)
+            {
+                tab += "\t";
+            }
+            foreach (var provider in _webDeployServerDefinition.Providers)
+	        {
+	            writer.WriteLine(tab + provider.GetType().Name);
+	        }
+	    }
+	}
 }

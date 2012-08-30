@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ConDep.Dsl.Core
+namespace ConDep.Dsl
 {
     public class DeploymentUser
     {

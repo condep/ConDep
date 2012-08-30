@@ -1,5 +1,5 @@
 using System;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 using ConDep.Dsl.LoadBalancer;
 
 namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting

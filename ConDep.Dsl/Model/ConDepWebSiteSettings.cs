@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ConDep.Dsl.Core
+namespace ConDep.Dsl
 {
     public class ConDepWebSiteSettings
     {

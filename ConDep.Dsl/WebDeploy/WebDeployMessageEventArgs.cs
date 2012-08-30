@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace ConDep.Dsl.Core
+namespace ConDep.Dsl
 {
 	public class WebDeployMessageEventArgs : EventArgs
 	{

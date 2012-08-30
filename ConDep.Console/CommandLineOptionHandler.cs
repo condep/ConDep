@@ -97,6 +97,7 @@ namespace ConDep.Console
                                     {"t=|traceLevel=", "The level of verbosity on output. Valid values are Off, Info, Warning, Error, Verbose. Default is Info.", v => Params.TraceLevel = ConvertStringToTraceLevel(v)},
                                     {"infraOnly", "Deploy infrastructure only", v => Params.InfraOnly = v != null },
                                     {"deployOnly", "Deploy all except infrastructure", v => Params.DeployOnly = v != null},
+                                    {"p|printSequence", "Prints the execution sequence of all operations and providers.", v => Params.PrintSequence = v != null},
                                     {"h|?|help",  "show this message and exit", v => Params.ShowHelp = v != null }
                                 };
             try

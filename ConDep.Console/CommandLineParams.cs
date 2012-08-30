@@ -20,5 +20,7 @@ namespace ConDep.Console
         public string Environment { get; set; }
 
         public bool ShowHelp { get; set; }
+
+        public bool PrintSequence { get; set; }
     }
 }

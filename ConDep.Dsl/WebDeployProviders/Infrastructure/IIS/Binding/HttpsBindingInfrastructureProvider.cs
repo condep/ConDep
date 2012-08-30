@@ -1,5 +1,5 @@
 ﻿using System;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 
 namespace ConDep.Dsl
 {

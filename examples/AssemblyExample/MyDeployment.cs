@@ -1,6 +1,5 @@
 using System;
 using ConDep.Dsl;
-using ConDep.Dsl.Core;
 
 namespace AssemblyExample
 {
@@ -10,8 +9,18 @@ namespace AssemblyExample
         {
             Setup(s =>
                       {
+                          s.Infrastructure(inf =>
+                                               {
+                                                   inf.RunCmd("ipconfig");
+                                                   inf.RunCmd("echo 'Hello World!'");
+                                               });
                           s.ConDepContext("MyWebApp", SetupMyWebApp );
                           s.ConDepContext("MyOtherApp", SetupMyOtherApp );
+                          //todo: 
+                          s.Infrastructure(inf =>
+                          {
+                              inf.RunCmd("echo 'This should also be executed!'");
+                          });
                       });
         }
 

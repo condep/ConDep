@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ConDep.Dsl.LoadBalancer;
 
-namespace ConDep.Dsl.Core
+namespace ConDep.Dsl
 {
     public class ConDepEnvironmentSettings
     {

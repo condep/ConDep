@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 
 namespace ConDep.Dsl
 {

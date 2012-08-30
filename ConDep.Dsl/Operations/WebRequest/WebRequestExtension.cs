@@ -1,4 +1,4 @@
-﻿using ConDep.Dsl.Core;
+﻿using ConDep.Dsl;
 using ConDep.Dsl.Operations.WebRequest;
 
 namespace ConDep.Dsl

@@ -1,7 +1,7 @@
 ﻿using System;
 using StructureMap;
 
-namespace ConDep.Dsl.Core
+namespace ConDep.Dsl
 {
     public class IoCBootstrapper : IBootstrapper
     {

@@ -1,6 +1,6 @@
 using System.Security.AccessControl;
 using NUnit.Framework;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 
 namespace ConDep.Dsl.Tests.Providers
 {

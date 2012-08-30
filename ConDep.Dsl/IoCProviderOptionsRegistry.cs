@@ -1,7 +1,7 @@
 ﻿using ConDep.Dsl.LoadBalancer;
 using StructureMap.Configuration.DSL;
 
-namespace ConDep.Dsl.Core
+namespace ConDep.Dsl
 {
     public class IoCProviderOptionsRegistry : Registry
     {
@@ -12,11 +12,6 @@ namespace ConDep.Dsl.Core
             For<ISetupWebDeploy>().Use<WebDeploySetup>();
             For<ISetupConDep>().Use<ConDepSetup>();
             For<LoadBalancerSettings>().Use(envSettings.LoadBalancer);
-
-            //For<IProvideForDeployment>().Use<DeploymentProviderOptions>();
-            //For<IProvideForDeploymentIis>().Use<DeploymentIisOptions>();
-            //For<IProvideForInfrastructure>().Use<InfrastructureProviderOptions>();
-            //For<IProvideForInfrastructureIis>().Use<InfrastructureIisOptions>();
         }
     }
 }

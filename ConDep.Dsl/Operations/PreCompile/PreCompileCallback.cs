@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Web.Compilation;
-using ConDep.Dsl.Core;
+using ConDep.Dsl;
 
 namespace ConDep.Dsl
 {

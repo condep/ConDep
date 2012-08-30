@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using StructureMap;
 
-namespace ConDep.Dsl.Core
+namespace ConDep.Dsl
 {
 	public abstract class ConDepConfiguratorBase
 	{
@@ -42,6 +42,8 @@ namespace ConDep.Dsl.Core
 		{
 			var status = new WebDeploymentStatus();
 	        var conDepSetup = ObjectFactory.GetInstance<ISetupConDep>();
+            //conDepSetup.Options = Options;
+
             var notification = new Notification();
 
             action((IProvideForSetup)conDepSetup);
