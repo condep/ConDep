@@ -1,5 +1,6 @@
 using System;
 using ConDep.Dsl;
+using ConDep.Dsl.WebDeployProviders.PowerShell;
 
 namespace ConDep.Dsl
 {

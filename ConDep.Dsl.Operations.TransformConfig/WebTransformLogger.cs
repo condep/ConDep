@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using ConDep.Dsl;
+using ConDep.Dsl.WebDeploy;
 using Microsoft.Web.Publishing.Tasks;
 
 namespace ConDep.Dsl

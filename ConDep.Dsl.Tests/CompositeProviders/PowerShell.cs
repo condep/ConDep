@@ -1,3 +1,4 @@
+using ConDep.Dsl.WebDeployProviders.PowerShell;
 using NUnit.Framework;
 using ConDep.Dsl;
 

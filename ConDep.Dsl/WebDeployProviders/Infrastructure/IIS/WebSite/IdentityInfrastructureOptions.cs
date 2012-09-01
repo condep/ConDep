@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ConDep.Dsl
+﻿namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.WebSite
 {
     public class IdentityInfrastructureOptions
     {

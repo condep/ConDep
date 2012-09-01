@@ -1,10 +1,8 @@
-﻿using System;
-using System.IO;
-using ConDep.Dsl;
+﻿using System.IO;
+using ConDep.Dsl.WebDeploy;
 using Microsoft.Web.Deployment;
-using DeploymentProviderOptions = Microsoft.Web.Deployment.DeploymentProviderOptions;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeployProviders.Deployment.IIS.WebApp
 {
 	public class WebAppDeploymentProvider : WebDeployProviderBase
 	{

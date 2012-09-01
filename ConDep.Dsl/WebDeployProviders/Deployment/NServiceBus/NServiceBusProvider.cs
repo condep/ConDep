@@ -1,8 +1,7 @@
-using System;
 using System.IO;
-using ConDep.Dsl;
+using ConDep.Dsl.WebDeploy;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
 {
     public class NServiceBusProvider : WebDeployCompositeProviderBase
     {
@@ -38,7 +37,7 @@ namespace ConDep.Dsl
             var start = string.Format("start-service {0}", ServiceName);
 
             Configure<ProvideForInfrastructure>(server, AddChildProvider, po => po.PowerShell(stop, o => o.ContinueOnError().WaitIntervalInSeconds(10)));
-            Configure<ProvideForDeployment>(server, AddChildProvider, po => po.CopyDir(SourcePath, c => c.DestinationDir(destinationPath)));
+            Configure<ProvideForDeployment>(server, AddChildProvider, po => po.CopyDir(SourcePath, destinationPath));
             Configure<ProvideForInfrastructure>(server, AddChildProvider, po =>
             {
                 po.RunCmd(install);

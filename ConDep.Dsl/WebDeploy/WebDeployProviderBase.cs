@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.Web.Deployment;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeploy
 {
 	public abstract class WebDeployProviderBase : IProvide, IValidate
 	{

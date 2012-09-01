@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl
 {
@@ -7,8 +8,6 @@ namespace ConDep.Dsl
     {
         bool IsValid(Notification notification);
         WebDeploymentStatus Execute(ConDepOptions options, EventHandler<WebDeployMessageEventArgs> onMessage, EventHandler<WebDeployMessageEventArgs> onErrorMessage, WebDeploymentStatus status);
-        WebDeploymentStatus ExecuteAllContextOperations(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> onMessage, EventHandler<WebDeployMessageEventArgs> onErrorMessage, WebDeploymentStatus status);
-        void PrintExecutionSequence(ConDepOptions options, int level);
-        //ConDepOptions Options { get; set; }
+        void PrintExecutionSequence(ConDepOptions options);
     }
 }

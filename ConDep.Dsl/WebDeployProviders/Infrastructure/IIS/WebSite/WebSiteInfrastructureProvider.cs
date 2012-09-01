@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
-using ConDep.Dsl;
 using System.Linq;
+using ConDep.Dsl.WebDeploy;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.WebSite
 {
     public class WebSiteInfrastructureProvider : WebDeployCompositeProviderBase
     {

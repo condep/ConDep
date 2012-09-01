@@ -1,5 +1,6 @@
 ﻿using System;
 using ConDep.Dsl;
+using ConDep.Dsl.WebDeploy;
 using Microsoft.Web.Deployment;
 using NUnit.Framework;
 

@@ -1,4 +1,5 @@
 ﻿using ConDep.Dsl;
+using ConDep.Dsl.Operations.PreCompile;
 
 namespace ConDep.Dsl
 {

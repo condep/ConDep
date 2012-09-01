@@ -1,4 +1,6 @@
-﻿namespace ConDep.Dsl
+﻿using ConDep.Dsl.WebDeploy;
+
+namespace ConDep.Dsl
 {
     public interface IProvide
     {

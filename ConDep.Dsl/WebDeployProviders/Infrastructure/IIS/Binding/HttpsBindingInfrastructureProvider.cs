@@ -1,7 +1,7 @@
 ﻿using System;
-using ConDep.Dsl;
+using ConDep.Dsl.WebDeploy;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.Binding
 {
     public class HttpsBindingInfrastructureProvider : WebDeployCompositeProviderBase
     {

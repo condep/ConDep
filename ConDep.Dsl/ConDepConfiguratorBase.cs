@@ -1,7 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using StructureMap;
+using ConDep.Dsl.WebDeploy;
+using TinyIoC;
 
 namespace ConDep.Dsl
 {
@@ -41,9 +42,7 @@ namespace ConDep.Dsl
 	    protected internal WebDeploymentStatus Setup(Action<IProvideForSetup> action)
 		{
 			var status = new WebDeploymentStatus();
-	        var conDepSetup = ObjectFactory.GetInstance<ISetupConDep>();
-            //conDepSetup.Options = Options;
-
+	        var conDepSetup = TinyIoCContainer.Current.Resolve<ISetupConDep>();
             var notification = new Notification();
 
             action((IProvideForSetup)conDepSetup);

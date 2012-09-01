@@ -1,4 +1,4 @@
-﻿namespace ConDep.Dsl
+﻿namespace ConDep.Dsl.WebDeployProviders.PowerShell
 {
     public class PowerShellOptions
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Web.Deployment;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeploy
 {
 	public class WebDeployDestination : IValidate
 	{

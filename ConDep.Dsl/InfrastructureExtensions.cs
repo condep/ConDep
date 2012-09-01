@@ -6,8 +6,6 @@ namespace ConDep.Dsl
     {
         public static void Iis(this ProvideForInfrastructure infrastructureOptions, Action<ProvideForInfrastructureIis> iisOptions)
         {
-            //var options = (InfrastructureProviderOptions) infrastructureOptions;
-            //iisOptions(new InfrastructureIisOptions(((IProvideOptions)infrastructureOptions).WebDeploySetup));
             var infraIis = new ProvideForInfrastructureIis();
             ((IProvideOptions)infraIis).AddProviderAction = ((IProvideOptions)infrastructureOptions).WebDeploySetup.ConfigureProvider;
             iisOptions(infraIis);

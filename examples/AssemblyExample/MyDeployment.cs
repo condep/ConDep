@@ -1,4 +1,3 @@
-using System;
 using ConDep.Dsl;
 
 namespace AssemblyExample

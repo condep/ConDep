@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using ConDep.Dsl;
+using ConDep.Dsl.WebDeploy;
 using Microsoft.Web.Deployment;
-using DeploymentProviderOptions = Microsoft.Web.Deployment.DeploymentProviderOptions;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeployProviders.Deployment.General
 {
 	public class GeneralProvider : WebDeployProviderBase
 	{

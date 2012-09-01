@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using ConDep.Dsl;
 using System.Linq;
+using ConDep.Dsl.WebDeploy;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeployProviders.Infrastructure.Certificate
 {
     public class CertificateInfrastructureProvider : WebDeployCompositeProviderBase
     {

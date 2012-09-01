@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ConDep.Dsl;
+using ConDep.Dsl.WebDeploy;
 using Microsoft.Web.Deployment;
-using DeploymentProviderOptions = Microsoft.Web.Deployment.DeploymentProviderOptions;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeployProviders.Deployment.IIS.WebSite
 {
     public class WebSiteDeploymentProvider : WebDeployProviderBase
     {

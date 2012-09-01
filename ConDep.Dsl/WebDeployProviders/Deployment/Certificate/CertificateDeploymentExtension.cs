@@ -1,5 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
 using ConDep.Dsl;
+using ConDep.Dsl.WebDeployProviders.Deployment.Certificate;
 
 namespace ConDep.Dsl
 {

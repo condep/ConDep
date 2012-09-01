@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
-using StructureMap;
+using TinyIoC;
 
 namespace ConDep.Dsl
 {
@@ -62,38 +61,11 @@ namespace ConDep.Dsl
         public static void ConDepContext(this IProvideForSetup setup, string contextName, Action<IProvideForSetup> contextSetup)
         {
             var parentSetup = setup as ConDepSetup;
-            var conDepSetup = ObjectFactory.GetInstance<ISetupConDep>();
-            //conDepSetup.Options = parentSetup.Options;
+            var conDepSetup = TinyIoCContainer.Current.Resolve<ISetupConDep>();
 
             parentSetup.Context.Add((ISetupConDep)conDepSetup, contextName);
             parentSetup.AddOperation(new ConDepContextOperationPlaceHolder(contextName));
             contextSetup((IProvideForSetup)conDepSetup);
-        }
-    }
-
-    public class ConDepContextOperationPlaceHolder : ConDepOperationBase
-    {
-        private string _contextName;
-
-        public ConDepContextOperationPlaceHolder(string contextName)
-        {
-            ContextName = contextName;
-        }
-
-        public string ContextName
-        {
-            get { return _contextName; }
-            set { _contextName = value; }
-        }
-
-        public override WebDeploymentStatus Execute(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool IsValid(Notification notification)
-        {
-            return true;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using ConDep.Dsl.WebDeployProviders.Deployment.CopyDir;
+using NUnit.Framework;
 using ConDep.Dsl;
 
 namespace ConDep.Dsl.Tests.Providers
@@ -8,7 +9,7 @@ namespace ConDep.Dsl.Tests.Providers
 		protected override void When()
 		{
 			Providers
-				.CopyDir(SourceDir, c => c.DestinationDir(DestinationPath));
+				.CopyDir(SourceDir, DestinationPath);
 		}
 
 		[Test]

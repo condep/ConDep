@@ -17,7 +17,6 @@
     <Name>Newtonsoft.Json</Name>
     <Name>NDesk.Options</Name>
     <Name>Lapointe.PowerShell.MamlGenerator</Name>
-    <Name>StructureMap</Name>
     <Name>System.Web</Name>
   </FrameworkAssemblies>
   <Dirs>

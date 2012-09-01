@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeploy
 {
     public class WebDeployExecuteCondition<T>
     {

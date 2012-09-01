@@ -16,7 +16,7 @@ namespace ConDep.Dsl
             var type = assembly.GetTypes().Where(t => typeof(ConDepConfiguratorBase).IsAssignableFrom(t)).FirstOrDefault();
             if (type == null)
             {
-                throw new ConDepConfigurationTypeNotFound(string.Format("A class inheriting from [{0}] must be present in assembly [{1}] for ConDep to work.", typeof(ConDepConfiguratorBase).FullName, assembly.FullName));
+                throw new ConDepConfigurationTypeNotFoundException(string.Format("A class inheriting from [{0}] must be present in assembly [{1}] for ConDep to work.", typeof(ConDepConfiguratorBase).FullName, assembly.FullName));
             }
 
             var depObject = assembly.CreateInstance(type.FullName) as ConDepConfiguratorBase;

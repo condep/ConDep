@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Web.Deployment;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeploy
 {
     public class WebDeploymentStatus
     {

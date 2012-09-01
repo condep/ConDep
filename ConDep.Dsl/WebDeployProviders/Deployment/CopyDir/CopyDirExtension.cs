@@ -1,23 +1,15 @@
 using System;
 using ConDep.Dsl;
+using ConDep.Dsl.WebDeployProviders.Deployment.CopyDir;
 
 namespace ConDep.Dsl
 {
 	public static class CopyDirExtension
 	{
-        public static void CopyDir(this ProvideForDeployment providerCollection, string sourceDir)
+        public static void CopyDir(this ProvideForDeployment providerCollection, string sourceDir, string destDir)
         {
             //var options = (DeploymentProviderOptions) providerCollection;
             var copyDirProvider = new CopyDirProvider(sourceDir);
-            ((IProvideOptions)providerCollection).AddProviderAction(copyDirProvider);
-            //options.WebDeploySetup.ConfigureProvider(copyDirProvider);
-        }
-
-        public static void CopyDir(this ProvideForDeployment providerCollection, string sourceDir, Action<CopyDirOptions> copyDirOptions)
-        {
-            //var options = (DeploymentProviderOptions)providerCollection;
-            var copyDirProvider = new CopyDirProvider(sourceDir);
-            copyDirOptions(new CopyDirOptions(copyDirProvider));
             ((IProvideOptions)providerCollection).AddProviderAction(copyDirProvider);
             //options.WebDeploySetup.ConfigureProvider(copyDirProvider);
         }

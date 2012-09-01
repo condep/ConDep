@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using ConDep.Dsl;
+using ConDep.Dsl.WebDeploy;
 using Microsoft.Web.Publishing.Tasks;
 
 namespace ConDep.Dsl

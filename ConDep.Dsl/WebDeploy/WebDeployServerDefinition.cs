@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Web.Deployment;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeploy
 {
     public class WebDeployServerDefinition : IValidate
 	{

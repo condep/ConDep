@@ -1,38 +1,9 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using StructureMap;
-using StructureMap.Pipeline;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeploy
 {
-    public class CompositeProviderOptions<T> 
-    {
-        //private readonly List<IProvide> _providers;
-        //private readonly DeploymentServer _server;
-
-        //public CompositeProviderOptions(List<IProvide> providers)
-        //{
-        //    _providers = providers;
-        //}
-
-        //public CompositeProviderOptions(List<IProvide> providers, DeploymentServer server)
-        //{
-        //    _providers = providers;
-        //    _server = server;
-        //}
-
-        //public void AddProvider(IProvide provider)
-        //{
-        //    _providers.Add(provider);
-
-        //    if (provider is WebDeployCompositeProviderBase)
-        //    {
-        //        ((WebDeployCompositeProviderBase)provider).Configure(_server);
-        //    }
-        //}
-    }
-
 	public abstract class WebDeployCompositeProviderBase : IProvide
 	{
 	    private readonly List<IProvide> _childProviders = new List<IProvide>();

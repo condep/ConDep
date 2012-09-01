@@ -1,4 +1,4 @@
-﻿namespace ConDep.Dsl
+﻿namespace ConDep.Dsl.WebDeployProviders.Deployment.CopyFile
 {
 	public class CopyFileOptions 
 	{

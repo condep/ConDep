@@ -1,6 +1,6 @@
 ﻿using System.Security.AccessControl;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeployProviders.Deployment.SetAcl
 {
 	public class SetAclOptions 
 	{

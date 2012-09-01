@@ -1,4 +1,4 @@
-﻿namespace ConDep.Dsl
+﻿namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.Binding
 {
     public class IisBindingInfrastructureOptions
     {

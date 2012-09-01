@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Net;
-using ConDep.Dsl;
+using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.Operations.WebRequest
 {

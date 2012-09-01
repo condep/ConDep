@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ConDep.Dsl;
+using ConDep.Dsl.WebDeploy;
 using NUnit.Framework;
 
 namespace ConDep.Dsl.Tests

@@ -1,14 +1,13 @@
 using System;
-using ConDep.Dsl;
 
-namespace ConDep.Dsl.Operations.Deployment.Options
+namespace ConDep.Dsl.WebDeploy
 {
-	public class ToOptions
+	public class WebDeployToOptions
 	{
 		private readonly WebDeployServerDefinition _serverDefinition;
 		private readonly WebDeployDestination _webDeployDestination;
 
-		public ToOptions(WebDeployServerDefinition serverDefinition)
+		public WebDeployToOptions(WebDeployServerDefinition serverDefinition)
 		{
 			_serverDefinition = serverDefinition;
 			_webDeployDestination = serverDefinition.WebDeployDestination;
@@ -19,10 +18,10 @@ namespace ConDep.Dsl.Operations.Deployment.Options
 			_webDeployDestination.ComputerName = "127.0.0.1";
 		}
 
-		public void LocalHost(Action<CredentialsOptions> credentials)
+		public void LocalHost(Action<WebDeployCredentialsOptions> credentials)
 		{
 			_webDeployDestination.ComputerName = "127.0.0.1";
-			var credBuilder = new CredentialsOptions(_webDeployDestination.Credentials);
+			var credBuilder = new WebDeployCredentialsOptions(_webDeployDestination.Credentials);
 			credentials(credBuilder);
 		}
 
@@ -31,10 +30,10 @@ namespace ConDep.Dsl.Operations.Deployment.Options
 			_webDeployDestination.ComputerName = serverName;
 		}
 
-		public void Server(string serverName, Action<CredentialsOptions> credentials)
+		public void Server(string serverName, Action<WebDeployCredentialsOptions> credentials)
 		{
 			_webDeployDestination.ComputerName = serverName;
-			var credBuilder = new CredentialsOptions(_webDeployDestination.Credentials);
+			var credBuilder = new WebDeployCredentialsOptions(_webDeployDestination.Credentials);
 			credentials(credBuilder);
 		}
 

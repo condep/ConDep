@@ -2,9 +2,9 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Web.Compilation;
-using ConDep.Dsl;
+using ConDep.Dsl.WebDeploy;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.Operations.PreCompile
 {
 	public class PreCompileOperation : ConDepOperationBase
 	{

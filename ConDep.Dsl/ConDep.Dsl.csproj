@@ -37,9 +37,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files\IIS\Microsoft Web Deploy V3\Microsoft.Web.Deployment.dll</HintPath>
     </Reference>
-    <Reference Include="StructureMap">
-      <HintPath>..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
@@ -52,7 +49,8 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="ConDepContext.cs" />
-    <Compile Include="ConDepConfigurationTypeNotFound.cs" />
+    <Compile Include="ConDepConfigurationTypeNotFoundException.cs" />
+    <Compile Include="ConDepContextOperationPlaceHolder.cs" />
     <Compile Include="ConDepOptions.cs" />
     <Compile Include="DeploymentExtensions.cs" />
     <Compile Include="DeploymentIisExtensions.cs" />
@@ -66,8 +64,8 @@
     <Compile Include="IRequireLoadBalancing.cs" />
     <Compile Include="LoadBalancer\LoadBalanceState.cs" />
     <Compile Include="ISetupCondep.cs" />
-    <Compile Include="IoCProviderOptionsRegistry.cs" />
     <Compile Include="Model\InvalidSetupException.cs" />
+    <Compile Include="OperationExecutor.cs" />
     <Compile Include="Operations\PreCompile\PreCompileCallback.cs" />
     <Compile Include="Operations\PreCompile\PreCompileExtension.cs" />
     <Compile Include="Operations\PreCompile\PreCompileOperation.cs" />
@@ -77,10 +75,10 @@
     <Compile Include="ProvideForDeploymentIis.cs" />
     <Compile Include="ProvideForInfrastructureIis.cs" />
     <Compile Include="SetupExtensions.cs" />
+    <Compile Include="TinyIoC.cs" />
     <Compile Include="WebDeployProviders\Deployment\Certificate\CertficiateDeploymentProvider.cs" />
     <Compile Include="WebDeployProviders\Deployment\Certificate\CertificateDeploymentExtension.cs" />
     <Compile Include="WebDeployProviders\Deployment\CopyDir\CopyDirExtension.cs" />
-    <Compile Include="WebDeployProviders\Deployment\CopyDir\CopyDirOptions.cs" />
     <Compile Include="WebDeployProviders\Deployment\CopyDir\CopyDirProvider.cs" />
     <Compile Include="WebDeployProviders\Deployment\CopyFile\CopyFileExtension.cs" />
     <Compile Include="WebDeployProviders\Deployment\CopyFile\CopyFileOptions.cs" />
@@ -135,9 +133,9 @@
     <Compile Include="WebDeployProviders\Infrastructure\IIS\WebSite\WebSiteInfrastructureExtension.cs" />
     <Compile Include="WebDeployProviders\Infrastructure\IIS\WebSite\WebSiteInfrastructureProvider.cs" />
     <Compile Include="WebDeploySetup.cs" />
-    <Compile Include="WebDeploy\ConfigurationOptions.cs" />
-    <Compile Include="WebDeploy\CredentialsOptions.cs" />
-    <Compile Include="WebDeploy\ToOptions.cs" />
+    <Compile Include="WebDeploy\WebDeployConfigurationOptions.cs" />
+    <Compile Include="WebDeploy\WebDeployCredentialsOptions.cs" />
+    <Compile Include="WebDeploy\WebDeployToOptions.cs" />
     <Compile Include="WebDeploy\UnsupportedOutcomeException.cs" />
     <Compile Include="WebDeploy\WebDeployExecuteCondition.cs" />
     <Compile Include="WebDeploy\WebDeployCompositeProviderBase.cs" />
@@ -153,7 +151,6 @@
     <Compile Include="Model\DeploymentUser.cs" />
     <Compile Include="WebDeploy\WebDeployDestination.cs" />
     <Compile Include="ConDepConfigurationExecutor.cs" />
-    <Compile Include="InfrastructureProviderOptions.cs" />
     <Compile Include="ConDepOperationBase.cs" />
     <Compile Include="IProvide.cs" />
     <Compile Include="IValidate.cs" />

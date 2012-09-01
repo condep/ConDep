@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using ConDep.Dsl;
 using ConDep.Dsl.LoadBalancer;
+using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting
 {

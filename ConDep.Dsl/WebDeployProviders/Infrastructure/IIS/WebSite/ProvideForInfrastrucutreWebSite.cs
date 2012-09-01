@@ -1,7 +1,6 @@
 using System;
-using ConDep.Dsl;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.WebSite
 {
     public class ProvideForInfrastrucutreWebSite : IProvideOptions
     {

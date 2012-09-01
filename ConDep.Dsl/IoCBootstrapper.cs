@@ -1,9 +1,10 @@
 ﻿using System;
-using StructureMap;
+using ConDep.Dsl.LoadBalancer;
+using TinyIoC;
 
 namespace ConDep.Dsl
 {
-    public class IoCBootstrapper : IBootstrapper
+    public class IoCBootstrapper
     {
         private readonly ConDepEnvironmentSettings _envSettings;
 
@@ -12,17 +13,19 @@ namespace ConDep.Dsl
             _envSettings = envSettings;
         }
 
-        public void BootstrapStructureMap()
+        public void BootstrapTinyIoC()
         {
-            ObjectFactory.Initialize(x =>
-                                         {
-                                             x.AddRegistry(new IoCProviderOptionsRegistry(_envSettings));
-                                         });
+            var container = TinyIoCContainer.Current;
+
+            container.Register(_envSettings);
+            container.Register<ISetupWebDeploy, WebDeploySetup>().AsMultiInstance();
+            container.Register<ISetupConDep, ConDepSetup>().AsMultiInstance();
+            container.Register(_envSettings.LoadBalancer);
         }
 
         public static void Bootstrap(ConDepEnvironmentSettings envSettings)
         {
-            new IoCBootstrapper(envSettings).BootstrapStructureMap();
+            new IoCBootstrapper(envSettings).BootstrapTinyIoC();
         }
     }
 }

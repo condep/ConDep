@@ -1,6 +1,6 @@
-using ConDep.Dsl;
+using ConDep.Dsl.WebDeploy;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.AppPool
 {
     public class AppPoolInfrastructureProvider : WebDeployCompositeProviderBase
     {

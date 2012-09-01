@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.WebSite;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.AppPool
 {
     public class AppPoolInfrastructureOptions
     {
