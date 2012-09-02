@@ -1,17 +1,59 @@
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using ConDep.Dsl.WebDeployProviders.Deployment.Certificate;
 using NUnit.Framework;
-using ConDep.Dsl;
 
 namespace ConDep.Dsl.Tests.Providers
 {
 	public class when_using_certificate_provider : ProviderTestFixture<CertficiateDeploymentProvider, ProvideForDeploymentIis>
 	{
-		protected override void When()
+	    private X509Certificate2 _cert;
+
+	    protected override void Before()
+        {
+            InstallCertInStore();
+        }
+
+        protected override void When()
 		{
 			Providers.Certificate(SourcePath);
 		}
 
-		[Test]
+        protected override void After()
+        {
+            RemoveCertFromStore();
+        }
+
+	    private void InstallCertInStore()
+	    {
+            var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+            store.Open(OpenFlags.ReadWrite);
+            store.Add(Certificate); 
+            store.Close();
+	    }
+
+	    private void RemoveCertFromStore()
+	    {
+	        var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+	        store.Open(OpenFlags.ReadWrite);
+	        store.Remove(Certificate); 
+	        store.Close();
+	    }
+
+	    private X509Certificate2 Certificate
+	    {
+	        get
+	        {
+                if(_cert == null)
+                {
+                    var certArray = Encoding.UTF8.GetBytes(Properties.Resources.ConDepCert);
+                    _cert = new X509Certificate2(certArray);
+                }
+	            return _cert;
+	        }
+	    }
+
+	    [Test]
 		public void should_have_valid_source_path()
 		{
 			Assert.That(SourcePath, Is.EqualTo(Provider.SourcePath));
@@ -25,7 +67,7 @@ namespace ConDep.Dsl.Tests.Providers
 
 		public string SourcePath
 		{
-			get { return "88d927fef15fc7d19ac60810921a3cf46aac8af1"; }
+            get { return "dfc1228322458329b37c07a895bba599c797ed5b"; }
 		}
 	}
 }

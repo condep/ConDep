@@ -7,9 +7,10 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.CopyDir
 	{
 		private const string NAME = "dirPath";
 
-		public CopyDirProvider(string sourceDir)
+		public CopyDirProvider(string sourceDir, string destDir)
 		{
 			SourcePath = sourceDir;
+		    DestinationPath = destDir;
 		}
 
 		public override string Name
