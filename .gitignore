@@ -25,5 +25,7 @@ _ReSharper.*/
 *.log
 *.TeamCity.user
 *.DotSettings.user
+*.ncrunchproject
+*.ncrunchsolution
 packages/
 NDependOut

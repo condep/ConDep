@@ -132,7 +132,7 @@
     <Compile Include="WebDeployProviders\Infrastructure\IIS\WebSite\IdentityInfrastructureOptions.cs" />
     <Compile Include="WebDeployProviders\Infrastructure\IIS\WebSite\WebSiteInfrastructureExtension.cs" />
     <Compile Include="WebDeployProviders\Infrastructure\IIS\WebSite\WebSiteInfrastructureProvider.cs" />
-    <Compile Include="WebDeploySetup.cs" />
+    <Compile Include="WebDeploy\WebDeploySetup.cs" />
     <Compile Include="WebDeploy\WebDeployConfigurationOptions.cs" />
     <Compile Include="WebDeploy\WebDeployCredentialsOptions.cs" />
     <Compile Include="WebDeploy\WebDeployToOptions.cs" />
@@ -145,7 +145,7 @@
     <Compile Include="Model\ConDepWebSiteSettings.cs" />
     <Compile Include="Model\Configuration.cs" />
     <Compile Include="Model\Credentials.cs" />
-    <Compile Include="WebDeployOperation.cs" />
+    <Compile Include="WebDeploy\WebDeployOperation.cs" />
     <Compile Include="IProvideOptions.cs" />
     <Compile Include="Model\DeploymentServer.cs" />
     <Compile Include="Model\DeploymentUser.cs" />

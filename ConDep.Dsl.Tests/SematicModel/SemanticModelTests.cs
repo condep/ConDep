@@ -1,6 +1,4 @@
-﻿using System;
-using ConDep.Dsl;
-using ConDep.Dsl.WebDeploy;
+﻿using ConDep.Dsl.WebDeploy;
 using Microsoft.Web.Deployment;
 using NUnit.Framework;
 
@@ -11,7 +9,6 @@ namespace ConDep.Dsl.Tests.SematicModel
 	public class when_no_providers_are_specified : SemanticTestFixture
 	{
 		[Test]
-
 		public void should_notify_about_missing_provider()
 		{
 			Assert.That(Notification.HasErrorOfType(ValidationErrorType.NoProviders));
@@ -89,5 +86,24 @@ namespace ConDep.Dsl.Tests.SematicModel
 			_serverDefinition.WebDeploySource.IsValid(_notification);
 		}
 	}
+
+    public class when_dont_know_yet : SemanticTestFixture
+    {
+        private WebDeploySetup _setup;
+        private DeploymentServer _server;
+        private Notification _notification;
+
+        protected override void Given()
+        {
+            _server = new DeploymentServer("localhost", null);
+            _setup = new WebDeploySetup();
+        }
+
+        protected override void When()
+        {
+            var definition = _setup.ConfigureServer(_server);
+            definition.IsValid(_notification);
+        }
+    }
 
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using ConDep.Dsl.LoadBalancer;
+using ConDep.Dsl.WebDeploy;
 using TinyIoC;
 
 namespace ConDep.Dsl

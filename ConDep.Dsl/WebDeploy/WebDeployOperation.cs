@@ -1,9 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using ConDep.Dsl.WebDeploy;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.WebDeploy
 {
 	public class WebDeployOperation : ConDepOperationBase, IRequireLoadBalancing
 	{

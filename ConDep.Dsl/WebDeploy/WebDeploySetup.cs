@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using ConDep.Dsl.WebDeploy;
-
-namespace ConDep.Dsl
+﻿namespace ConDep.Dsl.WebDeploy
 {
     public class WebDeploySetup : ISetupWebDeploy
     {
