@@ -14,7 +14,7 @@ task default -depends Build
 task ci -depends Build
 
 task Build -depends Clean, Init { 
-	Exec { msbuild "$solution_file" /t:Build /p:Configuration=$configuration /p:OutDir=$build_dir }
+	Exec { msbuild "$solution_file" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory }
 }
 
 task Init {  
