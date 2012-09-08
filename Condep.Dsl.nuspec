@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ConDep.Dsl</id>
-    <version>0.2.8-pre</version>
+    <version>$version$-pre</version>
     <title>ConDep.Dsl</title>
     <authors>Jon Arild Torresdal</authors>
     <owners>Jon Arild Torresdal</owners>
@@ -15,14 +15,13 @@
     <copyright>Copyright 2012</copyright>
     <tags>Continuous Deployment Delivery Infrastructure WebDeploy Deploy</tags>
     <dependencies>
-      <dependency id="ConDep.Dsl.Core" version="0.2.0-pre"  />
       <dependency id="NDesk.Options" version="0.2.1"  />
       <dependency id="Newtonsoft.Json" version="4.5.8"  />
     </dependencies>
   </metadata>
   <files>
-    <file src="ConDep.Dsl.Operations\bin\Release\ConDep.Dsl.Operations.dll" target="lib\net40" />
-    <file src="ConDep.Console\bin\Release\ConDep.exe" target="lib\net40" />
+    <file src="ConDep.Dsl\bin\Release\ConDep.Dsl.dll" target="lib\net40" />
+    <file src="ConDep.Console\bin\Release\ConDep.exe" target="tools\net40" />
     <file src="ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting\bin\Release\ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting.dll" target="lib\net40" />
     <file src="ConDep.Dsl.Operations.TransformConfig\bin\Release\ConDep.Dsl.Operations.TransformConfig.dll" target="lib\net40" />
   </files>
