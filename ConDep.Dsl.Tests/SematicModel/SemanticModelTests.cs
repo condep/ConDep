@@ -86,24 +86,4 @@ namespace ConDep.Dsl.Tests.SematicModel
 			_serverDefinition.WebDeploySource.IsValid(_notification);
 		}
 	}
-
-    public class when_dont_know_yet : SemanticTestFixture
-    {
-        private WebDeploySetup _setup;
-        private DeploymentServer _server;
-        private Notification _notification;
-
-        protected override void Given()
-        {
-            _server = new DeploymentServer("localhost", null);
-            _setup = new WebDeploySetup();
-        }
-
-        protected override void When()
-        {
-            var definition = _setup.ConfigureServer(_server);
-            definition.IsValid(_notification);
-        }
-    }
-
 }
