@@ -62,7 +62,7 @@ param(
   <files>
     <file src=""ConDep.Dsl\*.dll"" target=""lib\net40"" />
     <file src=""ConDep.Dsl\ConDep.exe*"" target=""tools\net40"" />
-    <file src=""ConDep.Dsl\"LICENSE" target=""tools\net40"" />
+    <file src=""ConDep.Dsl\LICENSE"" target=""tools\net40"" />
   </files>
 </package>"
 
