@@ -11,10 +11,14 @@ properties {
 include .\tools\psake_ext.ps1
  
 task default -depends Build
-task ci -depends Build
+task ci -depends CreateBuildNumberFile, Build
 
 task Build -depends Clean, Init { 
 	Exec { msbuild "$solution_file" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory }
+}
+
+task CreateBuildNumberFile {
+	$nugetBuildNumber = $version.Substring(0, $version.LastIndexOf("."))  | out-file "$pwd\Build\nuget.build.number" -encoding "ASCII" -force 
 }
 
 task Init {  
