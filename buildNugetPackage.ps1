@@ -9,7 +9,5 @@ properties {
 task default -depends BuildNugetPackage
 
 task BuildNugetPackage { 
-	Write-Host "Build dir : $build_directory"
-	Write-Host "Build dir : $nuget_directory"
-	Exec { & "$nuget" pack $pwd\ConDep.Dsl.nuspec }
+	Exec { & "$nuget" pack $pwd\ConDep.Dsl.nuspec -verbose }
 }
