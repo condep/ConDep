@@ -11,7 +11,7 @@ properties {
 include .\tools\psake_ext.ps1
  
 task default -depends Build
-task ci -depends CreateBuildNumberFile, Build
+task ci -depends Build, CreateBuildNumberFile
 
 task Build -depends Clean, Init { 
 	Exec { msbuild "$solution_file" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory }
