@@ -1,6 +1,6 @@
 properties {
 	$pwd = Split-Path $psake.build_script_file	
-	$build_directory  = "$pwd\Build\"
+	$build_directory  = "$pwd\Build"
 	$solution_name = "ConDep.Dsl"
 	$solution_file = "$solution_name.sln"
 	$tools_directory  = "$pwd\tools\"
@@ -18,7 +18,7 @@ task Build -depends Clean, Init {
 }
 
 task CreateBuildNumberFile {
-	$nugetBuildNumber = $version.Substring(0, $version.LastIndexOf("."))  | out-file "$pwd\Build\nuget.build.number" -encoding "ASCII" -force 
+	$nugetBuildNumber = $version.Substring(0, $version.LastIndexOf("."))  | out-file "$build_directory\nuget.build.number" -encoding "ASCII" -force 
 }
 
 task Init {  
