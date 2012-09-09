@@ -60,8 +60,7 @@ param(
     </dependencies>
   </metadata>
   <files>
-    <file src=""Build\*.dll"" target=""lib\net40"" />
-    <file src=""Build\ConDep.exe*"" target=""tools\net40"" />
+    <file src=""Build\*"" target=""lib\net40"" />
   </files>
 </package>"
 
