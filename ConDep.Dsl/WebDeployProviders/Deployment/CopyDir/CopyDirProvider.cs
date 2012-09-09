@@ -1,3 +1,4 @@
+using System.IO;
 using ConDep.Dsl.WebDeploy;
 using Microsoft.Web.Deployment;
 
@@ -9,11 +10,11 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.CopyDir
 
 		public CopyDirProvider(string sourceDir, string destDir)
 		{
-			SourcePath = sourceDir;
+		    SourcePath = !Path.IsPathRooted(sourceDir) ? Path.GetFullPath(sourceDir) : sourceDir;
 		    DestinationPath = destDir;
 		}
 
-		public override string Name
+	    public override string Name
 		{
 			get { return NAME; }
 		}

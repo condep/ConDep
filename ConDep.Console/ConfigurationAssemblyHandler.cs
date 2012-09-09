@@ -63,17 +63,19 @@ namespace ConDep.Console
 
         private static bool TryGetAbsolutePath(string assemblyName, out string absolutePath)
         {
-            if (File.Exists(assemblyName))
+            if (Path.IsPathRooted(assemblyName) && File.Exists(assemblyName))
             {
                 absolutePath = assemblyName;
                 return true;
             }
+
             var absPath = Path.GetFullPath(assemblyName);
             if (File.Exists(absPath))
             {
                 absolutePath = absPath;
                 return true;
             }
+            
             absolutePath = string.Empty;
             return false;
         }
