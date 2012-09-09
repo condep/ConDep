@@ -15,15 +15,27 @@ namespace ConDep.Console
         //If assembly, Env, Server and Application is provided, then ConDep will take Server offline from Load Balancer if provided and deploy only the Applications specified
         static void Main(string[] args)
         {
-            //System.Console.ReadLine();
-            var optionHandler = new CommandLineOptionHandler(args);
-            var configAssemblyLoader = new ConfigurationAssemblyHandler(optionHandler.Params.AssemblyName);
-            var assembly = configAssemblyLoader.GetConfigAssembly();
+            var exitCode = 0;
+            try
+            {
+                var optionHandler = new CommandLineOptionHandler(args);
+                var configAssemblyLoader = new ConfigurationAssemblyHandler(optionHandler.Params.AssemblyName);
+                var assembly = configAssemblyLoader.GetConfigAssembly();
 
-            var jsonConfigParser = new JsonConfigParser(Path.GetDirectoryName(assembly.Location), optionHandler.Params.Environment);
-            var envSettings = jsonConfigParser.GetEnvSettings();
-            var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.TraceLevel, optionHandler.Params.PrintSequence);
-            ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions);
+                var jsonConfigParser = new JsonConfigParser(Path.GetDirectoryName(assembly.Location), optionHandler.Params.Environment);
+                var envSettings = jsonConfigParser.GetEnvSettings();
+                var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.TraceLevel, optionHandler.Params.PrintSequence);
+                ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions);
+            }
+            catch
+            {
+                exitCode = 1;
+                throw;
+            }
+            finally
+            {
+                Environment.Exit(exitCode);
+            }
         }
     }
 }
