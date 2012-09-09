@@ -60,11 +60,7 @@ param(
     </dependencies>
   </metadata>
   <files>
-    <file src=""ConDep.Dsl.dll"" target=""lib\net40"" />
-    <file src=""ConDep.exe"" target=""tools\net40"" />
-    <file src=""ConDep.exe.config"" target=""tools\net40"" />
-    <file src=""ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting.dll"" target=""lib\net40"" />
-    <file src=""ConDep.Dsl.Operations.TransformConfig.dll"" target=""lib\net40"" />
+    <file src=""ConDep.Dsl\*"" target=""lib\net40"" />
   </files>
 </package>"
 
