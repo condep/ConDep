@@ -10,7 +10,7 @@ properties {
  
 include .\tools\psake_ext.ps1
  
-task default -depends NuspecFile, Build
+task default -depends Build
 task ci -depends Build, CreateBuildNumberFile
 
 task Build -depends Clean, Init { 
@@ -21,12 +21,10 @@ task CreateBuildNumberFile {
 	$nugetBuildNumber = $version.Substring(0, $version.LastIndexOf("."))  | out-file "$build_directory\nuget.build.number" -encoding "ASCII" -force 
 }
 
-task NuspecFile {
-	$nugetVersion = $version.Substring(0, $version.LastIndexOf("."))
-	Generate-Nuspec-File -file "$pwd\ConDep.Dsl.nuspec" -version $nugetVersion -pre_release $true
-}
-
 task Init {  
+	$nugetVersion = $version.Substring(0, $version.LastIndexOf("."))
+	Generate-Nuspec-File -file "$build_directory\ConDep.Dsl.nuspec" -version $nugetVersion -pre_release $true
+
     Generate-Assembly-Info `
         -file "$build_directory\AssemblyVersionInfo.cs" `
         -company "ConDep" `
