@@ -1,12 +1,13 @@
 using ConDep.Dsl;
+using ConDep.Dsl.WebDeploy;
 
 namespace AssemblyExample
 {
     public class MyDeployment : ConDepConfiguratorBase
     {
-        protected override void Configure()
+        protected override WebDeploymentStatus Configure()
         {
-            Setup(s =>
+            return Setup(s =>
                       {
                           s.Infrastructure(inf =>
                                                {

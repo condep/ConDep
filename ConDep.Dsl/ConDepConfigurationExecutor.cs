@@ -3,12 +3,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using ConDep.Dsl;
+using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl
 {
     public class ConDepConfigurationExecutor
     {
-        public void Execute(Assembly assembly, ConDepEnvironmentSettings envSettings, ConDepOptions options)
+        public WebDeploymentStatus Execute(Assembly assembly, ConDepEnvironmentSettings envSettings, ConDepOptions options)
         {
             if (assembly == null) { throw new ArgumentException("assembly"); }
             if (envSettings == null) { throw new ArgumentException("envSettings"); }
@@ -24,12 +25,12 @@ namespace ConDep.Dsl
 
             depObject.Options = options;
             IoCBootstrapper.Bootstrap(envSettings);
-            depObject.Configure();
+            return depObject.Configure();
         }
 
-        public static void ExecuteFromAssembly(Assembly assembly, ConDepEnvironmentSettings envSettings, ConDepOptions options)
+        public static WebDeploymentStatus ExecuteFromAssembly(Assembly assembly, ConDepEnvironmentSettings envSettings, ConDepOptions options)
         {
-            new ConDepConfigurationExecutor().Execute(assembly, envSettings, options);
+            return new ConDepConfigurationExecutor().Execute(assembly, envSettings, options);
         }
     }
 }

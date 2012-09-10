@@ -58,6 +58,6 @@ namespace ConDep.Dsl
 		}
 
         protected internal ConDepOptions Options { get; set; }
-	    protected internal abstract void Configure();
+	    protected internal abstract WebDeploymentStatus Configure();
 	}
 }

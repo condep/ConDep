@@ -25,10 +25,16 @@ namespace ConDep.Console
                 var jsonConfigParser = new JsonConfigParser(Path.GetDirectoryName(assembly.Location), optionHandler.Params.Environment);
                 var envSettings = jsonConfigParser.GetEnvSettings();
                 var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.TraceLevel, optionHandler.Params.PrintSequence);
-                ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions);
+                var status = ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions);
+
+                if(status.HasErrors)
+                {
+                    exitCode = 1;
+                }
             }
             catch
             {
+                //todo: Exceptions from Web Deploy providers don't seem to buble up, so need to look into that.
                 exitCode = 1;
                 throw;
             }
