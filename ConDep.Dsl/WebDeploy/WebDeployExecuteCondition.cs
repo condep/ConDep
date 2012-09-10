@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ConDep.Dsl.WebDeploy
 {
-    public class WebDeployExecuteCondition<T> where T : IProvideOptions
+    public class WebDeployExecuteCondition<T> : WebDeployCompositeProviderBase where T : IProvideOptions
     {
         private enum ExpectedOutcome
         {
@@ -21,12 +21,12 @@ namespace ConDep.Dsl.WebDeploy
             _expectedOutcome = expectedOutcome;
         }
 
-        public void Configure()
-        {
-            throw new NotImplementedException();
-            //var providerOptions = new ProviderOptions(_providers);
-            //_action(providerOptions);
-        }
+        //public void Configure()
+        //{
+        //    throw new NotImplementedException();
+        //    //var providerOptions = new ProviderOptions(_providers);
+        //    //_action(providerOptions);
+        //}
 
         public static WebDeployExecuteCondition<T> IsSuccess(Action<T> action)
         {
@@ -63,6 +63,16 @@ namespace ConDep.Dsl.WebDeploy
                 default:
                     throw new UnsupportedOutcomeException();
             }
+        }
+
+        public override bool IsValid(Notification notification)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Configure(DeploymentServer arrServer)
+        {
+            throw new NotImplementedException();
         }
     }
 }

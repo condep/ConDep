@@ -25,7 +25,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.AppPool
             return !string.IsNullOrWhiteSpace(_appPoolName);
         }
 
-        public override void Configure(DeploymentServer server)
+        public override void Configure(DeploymentServer arrServer)
         {
             var psCommand = string.Format("Set-Location IIS:\\AppPools; try {{ Remove-WebAppPool '{0}' }} catch {{ }}; $newAppPool = New-WebAppPool '{0}'; ", _appPoolName);
 
@@ -41,7 +41,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.AppPool
             }
 
             psCommand += "$newAppPool | set-item;";
-            Configure<ProvideForInfrastructure>(server, po => po.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
+            Configure<ProvideForInfrastructure>(arrServer, po => po.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
         }
 
         private string ExtractNetFrameworkVersion()

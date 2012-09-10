@@ -8,7 +8,7 @@ namespace ConDep.Dsl.WebDeploy
 	{
 	    private readonly List<IProvide> _childProviders = new List<IProvide>();
 	    private DeploymentServer _server;
-	    //private readonly List<WebDeployExecuteCondition> _conditions = new List<WebDeployExecuteCondition>();
+        private readonly List<WebDeployCompositeProviderBase> _conditions = new List<WebDeployCompositeProviderBase>();
 
 	    public IEnumerable<IProvide> ChildProviders { get { return _childProviders; } }
         //public IEnumerable<WebDeployExecuteCondition> ExecuteConditions { get { return _conditions; } }
@@ -20,7 +20,7 @@ namespace ConDep.Dsl.WebDeploy
 		public int WaitInterval { get; set; }
         public int RetryAttempts { get; set; }
 
-        public abstract void Configure(DeploymentServer server);
+        public abstract void Configure(DeploymentServer arrServer);
 
         public virtual void BeforeExecute(EventHandler<WebDeployMessageEventArgs> output)
         {
@@ -40,18 +40,22 @@ namespace ConDep.Dsl.WebDeploy
             _childProviders.Add(provider);
         }
 
-        protected void Configure<T>(DeploymentServer server, Action<T> action) where T : IProvideOptions, new()
+        protected void Configure<T>(DeploymentServer arrServer, Action<T> action) where T : IProvideOptions, new()
         {
-            _server = server;
-            //var options = ObjectFactory.GetInstance<T>();
+            _server = arrServer;
             var options = new T { AddProviderAction = AddChildProvider };
-            //options.WebDeploySetup.ConfigureServer(server);
-
-
-            //options.Provider = provider; //Can possible send in function in provider to add subProviders?
-            //var compositeOptions = new CompositeProviderOptions(_childProviders, server);
-            //action(options, compositeOptions);
             action(options);
+        }
+
+        protected void Configure<T1>(DeploymentServer arrServer, Action<T1> action, WebDeployCompositeProviderBase condition) 
+            where T1 : IProvideOptions, new()
+        {
+            _server = arrServer;
+            var options = new T1 { AddProviderAction = AddChildProvider };
+            action(options);
+
+            condition.Configure(arrServer);
+            _conditions.Add(condition);
         }
 
         //protected void Configure(Action<ProviderOptions> action, WebDeployExecuteCondition webDeployExecuteCondition)

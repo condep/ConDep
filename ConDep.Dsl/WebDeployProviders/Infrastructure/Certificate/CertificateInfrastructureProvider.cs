@@ -38,12 +38,12 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.Certificate
             return File.Exists(_certFile);
         }
 
-        public override void Configure(DeploymentServer server)
+        public override void Configure(DeploymentServer arrServer)
         {
             if (_copyCertFromFile)
             {
                 var cert = new X509Certificate2(_certFile);
-                ConfigureCertInstall(server, cert);
+                ConfigureCertInstall(arrServer, cert);
             }
             else
             {
@@ -71,7 +71,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.Certificate
                         throw new CertificateDuplicationException("More than one certificate found in search");
                     }
 
-                    ConfigureCertInstall(server, certs[0]);
+                    ConfigureCertInstall(arrServer, certs[0]);
                 }
                 finally
                 {
@@ -85,6 +85,6 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.Certificate
             var certScript = string.Format("[byte[]]$byteArray = {0}; $myCert = new-object System.Security.Cryptography.X509Certificates.X509Certificate2(,$byteArray); ", string.Join(",", cert.GetRawCertData()));
             certScript += string.Format("$store = new-object System.Security.Cryptography.X509Certificates.X509Store('{0}', '{1}'); $store.open(“MaxAllowed”); $store.add($myCert); $store.close();", StoreName.My, StoreLocation.LocalMachine);
             Configure<ProvideForInfrastructure>(server, po => po.PowerShell(certScript, o => o.WaitIntervalInSeconds(15).RetryAttempts(3)));
-        }
+        }   
     }
 }

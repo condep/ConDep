@@ -25,7 +25,7 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
             set { _serviceInstallerName = value; }
         }
 
-        public override void Configure(DeploymentServer server)
+        public override void Configure(DeploymentServer arrServer)
         {
             var destinationPath = DestinationPath ?? SourcePath;
 
@@ -36,9 +36,9 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
             var userConfig = string.Format("{0} config \"{1}\" obj= \"{2}\" password= \"{3}\" group= \"{4}\"", SERVICE_CONTROLLER_EXE, ServiceName, UserName, Password, ServiceGroup);
             var start = string.Format("start-service {0}", ServiceName);
 
-            Configure<ProvideForInfrastructure>(server, po => po.PowerShell(stop, o => o.ContinueOnError().WaitIntervalInSeconds(10)));
-            Configure<ProvideForDeployment>(server, po => po.CopyDir(SourcePath, destinationPath));
-            Configure<ProvideForInfrastructure>(server, po =>
+            Configure<ProvideForInfrastructure>(arrServer, po => po.PowerShell(stop, o => o.ContinueOnError().WaitIntervalInSeconds(10)));
+            Configure<ProvideForDeployment>(arrServer, po => po.CopyDir(SourcePath, destinationPath));
+            Configure<ProvideForInfrastructure>(arrServer, po =>
             {
                 po.RunCmd(install);
                 po.RunCmd(failureConfig);

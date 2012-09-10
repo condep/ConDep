@@ -35,7 +35,7 @@ namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting
         {
             var webDepDef = CreateWebDeployDefinition();
 
-            var provider = new ApplicationRequestRoutingProvider(state);
+            var provider = new ApplicationRequestRoutingProvider(state, _settings.Name);
             //todo: provide user??
             provider.Configure(new DeploymentServer(serverName, null));
             //Todo: Why is the child providers in the wrong order by default??
