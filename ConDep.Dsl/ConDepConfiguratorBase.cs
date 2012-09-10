@@ -39,9 +39,8 @@ namespace ConDep.Dsl
 	        Console.ForegroundColor = currentConsoleColor;
 	    }
 
-	    protected internal WebDeploymentStatus Setup(Action<IProvideForSetup> action)
+	    protected internal void Setup(Action<IProvideForSetup> action)
 		{
-			var status = new WebDeploymentStatus();
 	        var conDepSetup = TinyIoCContainer.Current.Resolve<ISetupConDep>();
             var notification = new Notification();
 
@@ -52,12 +51,13 @@ namespace ConDep.Dsl
 				notification.Throw();
 			}
 
-            conDepSetup.Execute(Options, OnMessage, OnErrorMessage, status);
-			
-			return status;
+            conDepSetup.Execute(Options, OnMessage, OnErrorMessage, Status);
 		}
 
         protected internal ConDepOptions Options { get; set; }
-	    protected internal abstract WebDeploymentStatus Configure();
+
+	    public WebDeploymentStatus Status { get; set; }
+
+	    protected internal abstract void Configure();
 	}
 }

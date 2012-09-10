@@ -9,7 +9,7 @@ namespace ConDep.Dsl
 {
     public class ConDepConfigurationExecutor
     {
-        public WebDeploymentStatus Execute(Assembly assembly, ConDepEnvironmentSettings envSettings, ConDepOptions options)
+        public void Execute(Assembly assembly, ConDepEnvironmentSettings envSettings, ConDepOptions options, WebDeploymentStatus status)
         {
             if (assembly == null) { throw new ArgumentException("assembly"); }
             if (envSettings == null) { throw new ArgumentException("envSettings"); }
@@ -24,13 +24,14 @@ namespace ConDep.Dsl
             if (depObject == null) throw new NullReferenceException(string.Format("Instance of configuration class [{0}] in assembly [{1}] is null.", type.FullName, assembly.FullName));
 
             depObject.Options = options;
+            depObject.Status = status;
             IoCBootstrapper.Bootstrap(envSettings);
-            return depObject.Configure();
+            depObject.Configure();
         }
 
-        public static WebDeploymentStatus ExecuteFromAssembly(Assembly assembly, ConDepEnvironmentSettings envSettings, ConDepOptions options)
+        public static void ExecuteFromAssembly(Assembly assembly, ConDepEnvironmentSettings envSettings, ConDepOptions options, WebDeploymentStatus status)
         {
-            return new ConDepConfigurationExecutor().Execute(assembly, envSettings, options);
+            new ConDepConfigurationExecutor().Execute(assembly, envSettings, options, status);
         }
     }
 }

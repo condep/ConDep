@@ -5,9 +5,9 @@ namespace AssemblyExample
 {
     public class MyDeployment : ConDepConfiguratorBase
     {
-        protected override WebDeploymentStatus Configure()
+        protected override void Configure()
         {
-            return Setup(s =>
+            Setup(s =>
                       {
                           s.Infrastructure(inf =>
                                                {

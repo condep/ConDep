@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using ConDep.Dsl;
+using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Console
 {
@@ -25,7 +26,9 @@ namespace ConDep.Console
                 var jsonConfigParser = new JsonConfigParser(Path.GetDirectoryName(assembly.Location), optionHandler.Params.Environment);
                 var envSettings = jsonConfigParser.GetEnvSettings();
                 var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.TraceLevel, optionHandler.Params.PrintSequence);
-                var status = ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions);
+
+                var status = new WebDeploymentStatus();
+                ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions, status);
 
                 if(status.HasErrors)
                 {
@@ -34,7 +37,6 @@ namespace ConDep.Console
             }
             catch
             {
-                //todo: Exceptions from Web Deploy providers don't seem to buble up, so need to look into that.
                 exitCode = 1;
                 throw;
             }
