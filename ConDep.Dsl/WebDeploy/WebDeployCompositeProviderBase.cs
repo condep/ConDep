@@ -40,11 +40,11 @@ namespace ConDep.Dsl.WebDeploy
             _childProviders.Add(provider);
         }
 
-        protected void Configure<T>(DeploymentServer server, Action<IProvide> addProviderAction, Action<T> action) where T : IProvideOptions, new()
+        protected void Configure<T>(DeploymentServer server, Action<T> action) where T : IProvideOptions, new()
         {
             _server = server;
             //var options = ObjectFactory.GetInstance<T>();
-            var options = new T { AddProviderAction = addProviderAction };
+            var options = new T { AddProviderAction = AddChildProvider };
             //options.WebDeploySetup.ConfigureServer(server);
 
 

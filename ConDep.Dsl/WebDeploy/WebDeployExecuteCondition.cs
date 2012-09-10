@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ConDep.Dsl.WebDeploy
 {
-    public class WebDeployExecuteCondition<T>
+    public class WebDeployExecuteCondition<T> where T : IProvideOptions
     {
         private enum ExpectedOutcome
         {

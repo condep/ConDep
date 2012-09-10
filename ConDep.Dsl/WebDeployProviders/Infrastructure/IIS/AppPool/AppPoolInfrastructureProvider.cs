@@ -41,7 +41,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.AppPool
             }
 
             psCommand += "$newAppPool | set-item;";
-            Configure<ProvideForInfrastructure>(server, AddChildProvider, po => po.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
+            Configure<ProvideForInfrastructure>(server, po => po.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
         }
 
         private string ExtractNetFrameworkVersion()

@@ -32,7 +32,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.WebApp
             var path = PhysicalPath ?? string.Format("($webSite.physicalPath + '\\{0}')", _webAppName);
             var appPool = ApplicationPool != null ? string.Format(" -ApplicationPool \"{0}\"", ApplicationPool) : string.Format(" -ApplicationPool ({0})", "$webSite.applicationPool");
             command += string.Format("New-WebApplication -Name \"{0}\" -Site \"{1}\" -PhysicalPath {2}{3} -force; ", _webAppName, _webSiteName, path, appPool);
-            Configure<ProvideForInfrastructure>(server, AddChildProvider, po => po.PowerShell("Import-Module WebAdministration; " + command, o => o.WaitIntervalInSeconds(10)));
+            Configure<ProvideForInfrastructure>(server, po => po.PowerShell("Import-Module WebAdministration; " + command, o => o.WaitIntervalInSeconds(10)));
         }
     }
 }
