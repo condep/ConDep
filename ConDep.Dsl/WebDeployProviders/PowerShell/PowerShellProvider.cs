@@ -11,9 +11,9 @@ namespace ConDep.Dsl.WebDeployProviders.PowerShell
 
         public bool ContinueOnError { get; set; }
 
-        public override void Configure(DeploymentServer arrServer)
+        public override void Configure(DeploymentServer server)
         {
-            Configure<ProvideForInfrastructure>(arrServer, po => po.RunCmd(string.Format(@"powershell.exe -InputFormat none -Command ""& {{ $ErrorActionPreference='stop'; {0}; exit $LASTEXITCODE }}""", DestinationPath), this.ContinueOnError, o => o.WaitIntervalInSeconds(this.WaitInterval)));
+            Configure<ProvideForInfrastructure>(server, po => po.RunCmd(string.Format(@"powershell.exe -InputFormat none -Command ""& {{ $ErrorActionPreference='stop'; {0}; exit $LASTEXITCODE }}""", DestinationPath), this.ContinueOnError, o => o.WaitIntervalInSeconds(this.WaitInterval)));
         }
 
         public override bool IsValid(Notification notification)

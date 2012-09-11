@@ -1,4 +1,5 @@
 using System;
+using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl
 {
@@ -6,5 +7,6 @@ namespace ConDep.Dsl
     {
         ISetupWebDeploy IProvideOptions.WebDeploySetup { get; set; }
         Action<IProvide> IProvideOptions.AddProviderAction { get; set; }
+        IProvideConditions IProvideOptions.Condition { get; set; }
     }
 }

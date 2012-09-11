@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using ConDep.Dsl.WebDeploy;
 using Microsoft.Web.Deployment;
@@ -6,7 +7,7 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.CopyDir
 {
 	public class CopyDirProvider : WebDeployProviderBase
 	{
-		private const string NAME = "dirPath";
+	    private const string NAME = "dirPath";
 
 		public CopyDirProvider(string sourceDir, string destDir)
 		{

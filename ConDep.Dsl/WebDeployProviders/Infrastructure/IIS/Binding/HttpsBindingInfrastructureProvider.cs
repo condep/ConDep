@@ -15,7 +15,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.Binding
             throw new NotImplementedException();
         }
 
-        public override void Configure(DeploymentServer arrServer)
+        public override void Configure(DeploymentServer server)
         {
             throw new NotImplementedException();
         }

@@ -15,6 +15,7 @@ namespace ConDep.Dsl.WebDeploy
         private readonly Action<T> _action;
         private readonly ExpectedOutcome _expectedOutcome;
         private readonly List<IProvide> _providers = new List<IProvide>();
+        private DeploymentServer _server;
 
         private WebDeployExecuteCondition(Action<T> action, ExpectedOutcome expectedOutcome)
         {
@@ -39,7 +40,7 @@ namespace ConDep.Dsl.WebDeploy
             return new WebDeployExecuteCondition<T>(action, ExpectedOutcome.Failure);
         }
 
-        public bool IsNotExpectedOutcome(WebDeployOptions webDeployOptions)
+        public bool HasExpectedOutcome(WebDeployOptions webDeployOptions)
         {
             var deploymentStatus = new WebDeploymentStatus();
             bool exception = false;
@@ -71,14 +72,19 @@ namespace ConDep.Dsl.WebDeploy
 
         public void Configure(DeploymentServer arrServer)
         {
+            _server = arrServer;
             var options = new T();
+            options.AddProviderAction = AddChildProvider;
             _action(options);
         }
-    }
 
-    public interface IProvideConditions
-    {
-        void Configure(DeploymentServer arrServer);
-        bool IsNotExpectedOutcome(WebDeployOptions webDeployOptions);
+        public void AddChildProvider(IProvide provider)
+        {
+            if (provider is WebDeployCompositeProviderBase)
+            {
+                ((WebDeployCompositeProviderBase)provider).Configure(_server);
+            }
+            _providers.Add(provider);
+        }
     }
 }

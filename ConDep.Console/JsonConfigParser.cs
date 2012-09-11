@@ -74,7 +74,7 @@ namespace ConDep.Console
                 if (json["LoadBalancer"]["UserName"] != null)
                 {
                     envSettings.LoadBalancer.UserName = json["LoadBalancer"]["UserName"].ToString();
-                    envSettings.LoadBalancer.Password = json["LoadBalancer"]["UserName"].ToString();
+                    envSettings.LoadBalancer.Password = json["LoadBalancer"]["Password"].ToString();
                 }
             }
         }

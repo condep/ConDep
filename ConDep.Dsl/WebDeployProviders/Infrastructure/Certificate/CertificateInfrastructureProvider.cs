@@ -38,12 +38,12 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.Certificate
             return File.Exists(_certFile);
         }
 
-        public override void Configure(DeploymentServer arrServer)
+        public override void Configure(DeploymentServer server)
         {
             if (_copyCertFromFile)
             {
                 var cert = new X509Certificate2(_certFile);
-                ConfigureCertInstall(arrServer, cert);
+                ConfigureCertInstall(server, cert);
             }
             else
             {
@@ -71,7 +71,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.Certificate
                         throw new CertificateDuplicationException("More than one certificate found in search");
                     }
 
-                    ConfigureCertInstall(arrServer, certs[0]);
+                    ConfigureCertInstall(server, certs[0]);
                 }
                 finally
                 {

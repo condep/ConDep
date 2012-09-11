@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Web.Deployment;
 
@@ -6,12 +7,15 @@ namespace ConDep.Dsl.WebDeploy
 {
 	public abstract class WebDeployProviderBase : IProvide, IValidate
 	{
-        public string SourcePath { get; set; }
+	    private List<IProvideConditions> _conditions = new List<IProvideConditions>();
+	    public string SourcePath { get; set; }
 		public virtual string DestinationPath { get; set; }
 		public abstract string Name { get; }
 		public int WaitInterval { get; set; }
 
-		public abstract Microsoft.Web.Deployment.DeploymentProviderOptions GetWebDeployDestinationObject();
+        //public IProvide Condition { get; set; }
+
+	    public abstract Microsoft.Web.Deployment.DeploymentProviderOptions GetWebDeployDestinationObject();
 		public abstract DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions);
         public virtual IList<DeploymentRule> GetReplaceRules()
         {
@@ -19,9 +23,33 @@ namespace ConDep.Dsl.WebDeploy
         }
 
 		public abstract bool IsValid(Notification notification);
-        
-        public virtual WebDeploymentStatus Sync(WebDeployOptions webDeployOptions, WebDeploymentStatus deploymentStatus)
+
+	    public void AddCondition(IProvideConditions condition)
+	    {
+	        _conditions.Add(condition);
+	    }
+
+	    public virtual WebDeploymentStatus Sync(WebDeployOptions webDeployOptions, WebDeploymentStatus deploymentStatus)
         {
+            try
+            {
+                if (_conditions.Count > 0)
+                {
+                    foreach(var condition in _conditions)
+                    {
+                        if(!condition.HasExpectedOutcome(webDeployOptions))
+                        {
+                            return deploymentStatus;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return deploymentStatus;
+            }
+
+
             var defaultWaitInterval = webDeployOptions.DestBaseOptions.RetryInterval;
 
             if (WaitInterval > 0)

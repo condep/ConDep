@@ -30,10 +30,10 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.WebSite
             return !string.IsNullOrWhiteSpace(_webSiteName);
         }
 
-        public override void Configure(DeploymentServer arrServer)
+        public override void Configure(DeploymentServer server)
         {
 
-            var webSiteSettings = arrServer.WebSites.SingleOrDefault(x => x.WebSiteName == WebSiteName);
+            var webSiteSettings = server.WebSites.SingleOrDefault(x => x.WebSiteName == WebSiteName);
 
             string psCommand = GetRemoveExistingWebSiteCommand(_id);
             //psCommand += GetCreateAppPoolCommand();
@@ -41,7 +41,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.WebSite
             psCommand += GetCreateWebSiteCommand(_webSiteName, AppPoolName, webSiteSettings.Bindings);
             psCommand += GetCreateBindings(_webSiteName, Bindings, webSiteSettings.Bindings);
             psCommand += GetCertificateCommand();
-            Configure<ProvideForInfrastructure>(arrServer, po => po.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
+            Configure<ProvideForInfrastructure>(server, po => po.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
         }
 
         private string GetCreateWebSiteDirCommand(string webSiteDir)
