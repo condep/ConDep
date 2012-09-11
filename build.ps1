@@ -26,7 +26,7 @@ task Init {
 	Generate-Nuspec-File -file "$build_directory\ConDep.Dsl.nuspec" -version $nugetVersion -pre_release $true
 
     Generate-Assembly-Info `
-        -file "$build_directory\AssemblyVersionInfo.cs" `
+        -file "$pwd\AssemblyVersionInfo.cs" `
         -company "ConDep" `
         -product "ConDep $version" `
         -copyright "Copyright © ConDep 2012" `
