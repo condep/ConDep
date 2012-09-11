@@ -8,7 +8,7 @@ namespace ConDep.Dsl.WebDeploy
 	{
 	    private readonly List<IProvide> _childProviders = new List<IProvide>();
 	    private DeploymentServer _server;
-        private readonly List<WebDeployCompositeProviderBase> _conditions = new List<WebDeployCompositeProviderBase>();
+        private readonly List<IProvideConditions> _conditions = new List<IProvideConditions>();
 
 	    public IEnumerable<IProvide> ChildProviders { get { return _childProviders; } }
         //public IEnumerable<WebDeployExecuteCondition> ExecuteConditions { get { return _conditions; } }
@@ -47,7 +47,7 @@ namespace ConDep.Dsl.WebDeploy
             action(options);
         }
 
-        protected void Configure<T1>(DeploymentServer arrServer, Action<T1> action, WebDeployCompositeProviderBase condition) 
+        protected void Configure<T1>(DeploymentServer arrServer, Action<T1> action, IProvideConditions condition) 
             where T1 : IProvideOptions, new()
         {
             _server = arrServer;
@@ -57,16 +57,6 @@ namespace ConDep.Dsl.WebDeploy
             condition.Configure(arrServer);
             _conditions.Add(condition);
         }
-
-        //protected void Configure(Action<ProviderOptions> action, WebDeployExecuteCondition webDeployExecuteCondition)
-        //{
-        //    var providerOptions = new ProviderOptions(_childProviders);
-
-        //    action(providerOptions);
-            
-        //    webDeployExecuteCondition.Configure();
-        //    _conditions.Add(webDeployExecuteCondition);
-        //}
 
         public WebDeploymentStatus Sync(WebDeployOptions webDeployOptions, WebDeploymentStatus deploymentStatus)
         {
@@ -78,14 +68,14 @@ namespace ConDep.Dsl.WebDeploy
               if (RetryAttempts > 0)
                   webDeployOptions.DestBaseOptions.RetryAttempts = RetryAttempts;
 
-            //if(HasConditions())
-            //{
-            //    if (_conditions.Any(x => x.IsNotExpectedOutcome(webDeployOptions)))
-            //    {
-            //        deploymentStatus.AddConditionMessage(string.Format("Skipped provider [{0}], because one or more conditions evaluated to false.]", GetType().Name));
-            //        return deploymentStatus;
-            //    }
-            //}
+              if (HasConditions())
+              {
+                  if (_conditions.Any(x => x.IsNotExpectedOutcome(webDeployOptions)))
+                  {
+                      deploymentStatus.AddConditionMessage(string.Format("Skipped provider [{0}], because one or more conditions evaluated to false.]", GetType().Name));
+                      return deploymentStatus;
+                  }
+              }
 
             ChildProviders.Reverse();
 
@@ -93,9 +83,9 @@ namespace ConDep.Dsl.WebDeploy
             return deploymentStatus;
         }
 
-        //private bool HasConditions()
-        //{
-        //    return _conditions.Count > 0;
-        //}
+        private bool HasConditions()
+        {
+            return _conditions.Count > 0;
+        }
 	}
 }

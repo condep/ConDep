@@ -21,17 +21,16 @@ namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting
 
         public override void Configure(DeploymentServer arrServer)
         {
-            //var condition = WebDeployExecuteCondition<ProvideForInfrastructure>.IsSuccess(p => p.PowerShell("throw"));
+            var condition = WebDeployExecuteCondition<ProvideForInfrastructure>.IsFailure(p => p.PowerShell("import-module ApplicationRequestRouting"));
 
-            DeployPsCmdLet(arrServer);//, condition);
+            DeployPsCmdLet(arrServer, condition);
             Execute(_state, arrServer, _serverNameToChangeStateOn);
-            RemovePsCmdLet(arrServer);//, condition);
+            RemovePsCmdLet(arrServer, condition);
         }
 
-        private void DeployPsCmdLet(DeploymentServer server)//, WebDeployExecuteCondition<ProvideForInfrastructure> condition)
+        private void DeployPsCmdLet(DeploymentServer server, WebDeployExecuteCondition<ProvideForInfrastructure> condition)
         {
-            //Configure<ProvideForDeployment, ProvideForInfrastructure>(server, p => p.CopyDir(@"C:\GitHub\ConDep\ConDep.PowerShell.ApplicationRequestRouting\bin\Release", @"%temp%\ApplicationRequestRouting"), condition);
-            Configure<ProvideForDeployment>(server, p => p.CopyDir(@"C:\GitHub\ConDep\ConDep.PowerShell.ApplicationRequestRouting\bin\Release", @"%temp%\ApplicationRequestRouting"));
+            Configure<ProvideForDeployment>(server, p => p.CopyDir(@"C:\GitHub\ConDep\ConDep.PowerShell.ApplicationRequestRouting\bin\Release", @"%temp%\ApplicationRequestRouting"), condition);
         }
 
         private void Execute(LoadBalanceState state, DeploymentServer server, string serverNameToChangeStateOn)
@@ -39,10 +38,9 @@ namespace ConDep.Dsl.Infrastructure.Providers.ApplicationRequestRouting
             Configure<ProvideForInfrastructure>(server, p => p.PowerShell(string.Format(@"import-module $env:temp\ApplicationRequestRouting; Set-WebFarmServerState -State {0} -Name {1} -UseDnsLookup;", state.ToString(), serverNameToChangeStateOn)));
         }
 
-        private void RemovePsCmdLet(DeploymentServer arrServer)//, WebDeployExecuteCondition<ProvideForInfrastructure> condition)
+        private void RemovePsCmdLet(DeploymentServer arrServer, WebDeployExecuteCondition<ProvideForInfrastructure> condition)
         {
-            //Configure<ProvideForInfrastructure, ProvideForInfrastructure>(arrServer, p => p.PowerShell(@"remove-item $env:temp\ApplicationRequestRouting -force -recurse"), condition);
-            Configure<ProvideForInfrastructure>(arrServer, p => p.PowerShell(@"remove-item $env:temp\ApplicationRequestRouting -force -recurse"));
+            Configure<ProvideForInfrastructure>(arrServer, p => p.PowerShell(@"remove-item $env:temp\ApplicationRequestRouting -force -recurse"), condition);
         }
     }
 }

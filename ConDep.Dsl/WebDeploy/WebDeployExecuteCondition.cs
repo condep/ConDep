@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConDep.Dsl.WebDeploy
 {
-    public class WebDeployExecuteCondition<T> : WebDeployCompositeProviderBase where T : IProvideOptions
+    public class WebDeployExecuteCondition<T> : IProvideConditions, IValidate where T : IProvideOptions, new()
     {
         private enum ExpectedOutcome
         {
@@ -30,14 +31,12 @@ namespace ConDep.Dsl.WebDeploy
 
         public static WebDeployExecuteCondition<T> IsSuccess(Action<T> action)
         {
-            throw new NotImplementedException();
-            //return new WebDeployExecuteCondition(action, ExpectedOutcome.Success);
+            return new WebDeployExecuteCondition<T>(action, ExpectedOutcome.Success);
         }
 
         public static WebDeployExecuteCondition<T> IsFailure(Action<T> action)
         {
-            throw new NotImplementedException();
-            //return new WebDeployExecuteCondition(action, ExpectedOutcome.Failure);
+            return new WebDeployExecuteCondition<T>(action, ExpectedOutcome.Failure);
         }
 
         public bool IsNotExpectedOutcome(WebDeployOptions webDeployOptions)
@@ -65,14 +64,21 @@ namespace ConDep.Dsl.WebDeploy
             }
         }
 
-        public override bool IsValid(Notification notification)
+        public bool IsValid(Notification notification)
         {
-            throw new NotImplementedException();
+            return _providers.All(provider => provider.IsValid(notification));
         }
 
-        public override void Configure(DeploymentServer arrServer)
+        public void Configure(DeploymentServer arrServer)
         {
-            throw new NotImplementedException();
+            var options = new T();
+            _action(options);
         }
+    }
+
+    public interface IProvideConditions
+    {
+        void Configure(DeploymentServer arrServer);
+        bool IsNotExpectedOutcome(WebDeployOptions webDeployOptions);
     }
 }
