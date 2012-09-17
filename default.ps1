@@ -1,8 +1,6 @@
 properties {
 	$pwd = Split-Path $psake.build_script_file	
 	$build_directory  = "$pwd\Build"
-	$solution_name = "ConDep.Dsl"
-	$solution_file = "$solution_name.sln"
 	$tools_directory  = "$pwd\tools\"
 	$version          = "1.0.0.0"
 	$configuration = "Debug"
