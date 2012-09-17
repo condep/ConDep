@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Web.Publishing.Tasks">
-      <HintPath>..\..\..\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v10.0\Web\Microsoft.Web.Publishing.Tasks.Dll</HintPath>
+      <HintPath>C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v10.0\Web\Microsoft.Web.Publishing.Tasks.Dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
