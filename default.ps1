@@ -90,7 +90,7 @@ task Build-ConDep-Dsl-LB-ARR -depends Clean-ConDep-Dsl-LB-ARR, Init {
 		-files @(@{ Path="$build_directory\$condep_dsl_lb_arr\$condep_dsl_lb_arr.dll"; Target="lib/net40"} )       
 }
 
-task Init -depends ExtractWebDeploy {  
+task Init {
 	$script:nugetVersion = $version.Substring(0, $version.LastIndexOf("."))
 
 	Generate-Assembly-Info `
@@ -104,12 +104,6 @@ task Init -depends ExtractWebDeploy {
 	if ((Test-Path $build_directory) -eq $false) {
 		New-Item $build_directory -ItemType Directory
 	}
-}
-
-task ExtractWebDeploy {
-	Write-Host "Extracting WebDeploy msi package to $tools_directory\WebDeploy"
-	Write-Host "msiexec /a $tools_directory\WebDeploy_amd64_en-US.msi /quiet targetdir=$build_directory\WebDeploy"
-	Exec { msiexec /a "$tools_directory\WebDeploy_amd64_en-US.msi" /quiet targetdir="$build_directory\WebDeploy" }
 }
 
 task Clean-ConDep-Dsl {
