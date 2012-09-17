@@ -1,7 +1,7 @@
 properties {
 	$pwd = Split-Path $psake.build_script_file	
 	$build_directory  = "$pwd\Build"
-	$tools_directory  = "$pwd\tools\"
+	$tools_directory  = "$pwd\tools"
 	$version          = "1.0.0.0"
 	$configuration = "Debug"
 	$condep = "ConDep"
@@ -90,24 +90,28 @@ task Build-ConDep-Dsl-LB-ARR -depends Clean-ConDep-Dsl-LB-ARR, Init {
 		-files @(@{ Path="$build_directory\$condep_dsl_lb_arr\$condep_dsl_lb_arr.dll"; Target="lib/net40"} )       
 }
 
-task Init {  
-	#Generate-Nuspec-File -file "$build_directory\$condep_dsl.nuspec" -version $nugetVersion -pre_release $true
-	
+task Init -depends ExtractWebDeploy {  
 	$script:nugetVersion = $version.Substring(0, $version.LastIndexOf("."))
 
-    Generate-Assembly-Info `
-        -file "$pwd\AssemblyVersionInfo.cs" `
-        -company "ConDep" `
-        -product "ConDep $version" `
-        -copyright "Copyright © ConDep 2012" `
-        -version $version `
-        -clsCompliant "true"
+	Generate-Assembly-Info `
+		-file "$pwd\AssemblyVersionInfo.cs" `
+		-company "ConDep" `
+		-product "ConDep $version" `
+		-copyright "Copyright © ConDep 2012" `
+		-version $version `
+		-clsCompliant "true"
         
-    if ((Test-Path $build_directory) -eq $false) {
-        New-Item $build_directory -ItemType Directory
-    }
+	if ((Test-Path $build_directory) -eq $false) {
+		New-Item $build_directory -ItemType Directory
+	}
 }
- 
+
+task ExtractWebDeploy {
+	Write-Host "Extracting WebDeploy msi package to $tools_directory\WebDeploy"
+	Write-Host "msiexec /a $tools_directory\WebDeploy_amd64_en-US.msi /qn $tools_directory\WebDeploy"
+	Exec { msiexec /a "$tools_directory\WebDeploy_amd64_en-US.msi" /qn targetdir="$build_directory\WebDeploy" }
+}
+
 task Clean-ConDep-Dsl {
 	Write-Host "Cleaning Build output"  -ForegroundColor Green
 	Remove-Item $build_directory\$condep_dsl -Force -Recurse -ErrorAction SilentlyContinue
