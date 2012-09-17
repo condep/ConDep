@@ -18,7 +18,7 @@ task ci -depends Build-All
 task Build-All -depends Init, Build-ConDep-Dsl, Build-ConDep-Console, Build-ConDep-Dsl-LB-ARR
 
 task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init { 
-	Exec { msbuild "$pwd\$condep_dsl\$condep_dsl.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_dsl }
+	Exec { msbuild "$pwd\$condep_dsl\$condep_dsl.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_dsl\ }
 
 	Generate-Nuspec-File `
 		-file "$build_directory\$condep_dsl.nuspec" `
@@ -40,7 +40,7 @@ task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init {
 }
 
 task Build-ConDep-Console -depends Clean-ConDep-Console, Init { 
-	Exec { msbuild "$pwd\$condep_console\$condep_console.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_console }
+	Exec { msbuild "$pwd\$condep_console\$condep_console.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_console\ }
 
 	Generate-Nuspec-File `
 		-file "$build_directory\$condep.nuspec" `
@@ -69,7 +69,7 @@ task Build-ConDep-Console -depends Clean-ConDep-Console, Init {
 }
 
 task Build-ConDep-Dsl-LB-ARR -depends Clean-ConDep-Dsl-LB-ARR, Init { 
-	Exec { msbuild "$pwd\$condep_dsl_lb_arr\$condep_dsl_lb_arr.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_dsl_lb_arr }
+	Exec { msbuild "$pwd\$condep_dsl_lb_arr\$condep_dsl_lb_arr.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_dsl_lb_arr\ }
 
 	Generate-Nuspec-File `
 		-file "$build_directory\$condep_dsl_lb_arr.nuspec" `
