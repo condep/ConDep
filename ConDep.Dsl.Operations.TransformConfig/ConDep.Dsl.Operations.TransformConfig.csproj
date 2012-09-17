@@ -33,9 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Web.Publishing.Tasks, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Microsoft.Web.Publishing.Tasks.Dll</HintPath>
+    <Reference Include="Microsoft.Web.Publishing.Tasks">
+      <HintPath>..\..\..\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v10.0\Web\Microsoft.Web.Publishing.Tasks.Dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

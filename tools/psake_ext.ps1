@@ -35,34 +35,72 @@ function Generate-Nuspec-File
 param(
 	[string]$version,
 	[bool]$pre_release,
+	[string]$id,
+	[string]$title,
+	[string]$licenseUrl,
+	[string]$projectUrl,
+	[string]$description,
+	[string]$iconUrl,
+	[string]$releaseNotes,
+	[string]$tags,
+	[array]$dependencies,
+	[array]$frameworkAssemblies,
+	[array]$files,
 	[string]$file = $(throw "file is a required parameter.")
 )
 	$preString = if($pre_release) { "-pre" } else { "" }	
 	$nuspec = "<?xml version=""1.0""?>
 <package>
   <metadata>
-    <id>ConDep.Dsl</id>
+    <id>$id</id>
     <version>$version$preString</version>
-    <title>ConDep.Dsl</title>
+    <title>$title</title>
     <authors>Jon Arild Torresdal</authors>
     <owners>Jon Arild Torresdal</owners>
-    <licenseUrl>https://github.com/torresdal/ConDep/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/torresdal/ConDep/</projectUrl>
+    <licenseUrl>$licenseUrl</licenseUrl>
+    <projectUrl>$projectUrl</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>ConDep is a highly extendable Domain Specific Language for Continuous Deployment, Continuous Delivery and Infrastructure as Code on Windows</description>
-    <iconUrl>https://raw.github.com/torresdal/ConDep/master/images/ConDepNugetLogo.png</iconUrl>
-    <releaseNotes>Initial pre-release.</releaseNotes>
+    <description>$description</description>
+    <iconUrl>$iconUrl</iconUrl>
+    <releaseNotes>$releaseNotes</releaseNotes>
     <copyright>Copyright 2012</copyright>
-    <tags>Continuous Deployment Delivery Infrastructure WebDeploy Deploy</tags>
-    <dependencies>
-      <dependency id=""NDesk.Options"" version=""0.2.1""  />
-      <dependency id=""Newtonsoft.Json"" version=""4.5.8""  />
-    </dependencies>
-  </metadata>
-  <files>
-    <file src=""Build\*"" target=""lib\net40"" />
+    <tags>$tags</tags>
+    "
+  if($dependencies -ne $null) {
+    $nuspec += "    <dependencies>
+"
+    	$dependencies | foreach {
+      $nuspec += "<dependency id=""" + $_.Name + """ version=""" + $_.Version + """  />
+      "
+      }
+    $nuspec += "</dependencies>"
+    }
+  $nuspec += "</metadata>
+  "
+  if($files -ne $null) {
+    $nuspec += "  <files>
+    "
+  	$files | foreach {
+  	$exclude = ""
+	if($_.Exclude -ne $null) { $exclude = " exclude=""" + $_.Exclude + """"}
+    $nuspec += "<file src=""" + $_.Path + """" + $exclude + " target=""" + $_.Target + """ />"
+    }
+  $nuspec += "
   </files>
-</package>"
+  "
+  }
+
+  if($frameworkAssemblies -ne $null) {
+    $nuspec += "    <frameworkAssemblies>
+"
+    	$frameworkAssemblies | foreach {
+      $nuspec += "<frameworkAssembly assemblyName=""" + $_.Name + """ targetFramework=""" + $_.Target + """  />
+      "
+      }
+    $nuspec += "</frameworkAssemblies>"
+    }
+  
+$nuspec += "</package>"
 
 	$dir = [System.IO.Path]::GetDirectoryName($file)
 	if ([System.IO.Directory]::Exists($dir) -eq $false)

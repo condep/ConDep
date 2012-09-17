@@ -27,5 +27,8 @@ _ReSharper.*/
 *.DotSettings.user
 *.ncrunchproject
 *.ncrunchsolution
+*.ncrunchsolution.user
+*.nuspec
+Testresults/
 packages/
 NDependOut

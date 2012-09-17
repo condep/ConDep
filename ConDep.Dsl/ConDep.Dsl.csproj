@@ -35,7 +35,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.Web.Deployment, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Microsoft.Web.Deployment.dll</HintPath>
+      <HintPath>..\..\..\Program Files\IIS\Microsoft Web Deploy V3\Microsoft.Web.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
@@ -133,6 +133,7 @@
     <Compile Include="WebDeployProviders\Infrastructure\IIS\WebSite\WebSiteInfrastructureExtension.cs" />
     <Compile Include="WebDeployProviders\Infrastructure\IIS\WebSite\WebSiteInfrastructureProvider.cs" />
     <Compile Include="IProvideConditions.cs" />
+    <Compile Include="WebDeploy\ConditionContainer.cs" />
     <Compile Include="WebDeploy\WebDeploySetup.cs" />
     <Compile Include="WebDeploy\WebDeployConfigurationOptions.cs" />
     <Compile Include="WebDeploy\WebDeployCredentialsOptions.cs" />

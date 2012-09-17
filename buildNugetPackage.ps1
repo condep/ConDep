@@ -4,10 +4,12 @@ properties {
 	$tools_directory  = "$pwd\tools\"
 	$nuget_directory  = "$pwd\.nuget"
 	$nuget  = "$nuget_directory\nuget.exe"
+	$package_name = ""
 }
 
 task default -depends BuildNugetPackage
 
 task BuildNugetPackage { 
-	Exec { & "$nuget" pack $pwd\ConDep.Dsl.nuspec -verbose }
+	Write-Host "Executing from: $pwd"
+	Exec { & "$nuget" pack $build_directory\$package_name.nuspec -verbose }
 }

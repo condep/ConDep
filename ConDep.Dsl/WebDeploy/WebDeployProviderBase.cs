@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Web.Deployment;
 
@@ -7,20 +6,16 @@ namespace ConDep.Dsl.WebDeploy
 {
 	public abstract class WebDeployProviderBase : IProvide, IValidate
 	{
-	    private List<IProvideConditions> _conditions = new List<IProvideConditions>();
-	    public string SourcePath { get; set; }
+	    private readonly List<IProvideConditions> _conditions = new List<IProvideConditions>();
+
+        public string SourcePath { get; set; }
 		public virtual string DestinationPath { get; set; }
 		public abstract string Name { get; }
 		public int WaitInterval { get; set; }
 
-        //public IProvide Condition { get; set; }
-
-	    public abstract Microsoft.Web.Deployment.DeploymentProviderOptions GetWebDeployDestinationObject();
+	    public abstract DeploymentProviderOptions GetWebDeployDestinationObject();
 		public abstract DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions);
-        public virtual IList<DeploymentRule> GetReplaceRules()
-        {
-            return new List<DeploymentRule>();
-        }
+        public virtual IList<DeploymentRule> GetReplaceRules() { return new List<DeploymentRule>(); }
 
 		public abstract bool IsValid(Notification notification);
 
@@ -31,24 +26,10 @@ namespace ConDep.Dsl.WebDeploy
 
 	    public virtual WebDeploymentStatus Sync(WebDeployOptions webDeployOptions, WebDeploymentStatus deploymentStatus)
         {
-            try
+            if (HasConditions())
             {
-                if (_conditions.Count > 0)
-                {
-                    foreach(var condition in _conditions)
-                    {
-                        if(!condition.HasExpectedOutcome(webDeployOptions))
-                        {
-                            return deploymentStatus;
-                        }
-                    }
-                }
+                if (_conditions.Any(condition => !condition.HasExpectedOutcome(webDeployOptions))) return deploymentStatus;
             }
-            catch
-            {
-                return deploymentStatus;
-            }
-
 
             var defaultWaitInterval = webDeployOptions.DestBaseOptions.RetryInterval;
 
@@ -89,6 +70,11 @@ namespace ConDep.Dsl.WebDeploy
             }
             return deploymentStatus;
         }
+
+	    private bool HasConditions()
+	    {
+	        return _conditions.Count > 0;
+	    }
 
 	    private void Backup(WebDeployOptions webDeployOptions)
 	    {
