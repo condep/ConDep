@@ -108,8 +108,8 @@ task Init -depends ExtractWebDeploy {
 
 task ExtractWebDeploy {
 	Write-Host "Extracting WebDeploy msi package to $tools_directory\WebDeploy"
-	Write-Host "msiexec /a $tools_directory\WebDeploy_amd64_en-US.msi /qn $tools_directory\WebDeploy"
-	Exec { msiexec /a "$tools_directory\WebDeploy_amd64_en-US.msi" /qn targetdir="$build_directory\WebDeploy" }
+	Write-Host "msiexec /a $tools_directory\WebDeploy_amd64_en-US.msi /quiet targetdir=$build_directory\WebDeploy"
+	Exec { msiexec /a "$tools_directory\WebDeploy_amd64_en-US.msi" /quiet targetdir="$build_directory\WebDeploy" }
 }
 
 task Clean-ConDep-Dsl {
