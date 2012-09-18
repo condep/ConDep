@@ -29,7 +29,7 @@ task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init {
 		-title "$condep_dsl" `
 		-licenseUrl "https://github.com/torresdal/ConDep/blob/master/LICENSE" `
 		-projectUrl "https://github.com/torresdal/ConDep/" `
-		-description "Note: This package is for extending the ConDep.Dsl. If you're looking for ConDep to do deployment or infrastructure as code, please use the ConDep package. <br/><br/>ConDep is a highly extendable Domain Specific Language for Continuous Deployment, Continuous Delivery and Infrastructure as Code on Windows." `
+		-description "Note: This package is for extending the ConDep.Dsl. If you're looking for ConDep to do deployment or infrastructure as code, please use the ConDep package. ConDep is a highly extendable Domain Specific Language for Continuous Deployment, Continuous Delivery and Infrastructure as Code on Windows." `
 		-iconUrl "https://raw.github.com/torresdal/ConDep/master/images/ConDepNugetLogo.png" `
 		-releaseNotes "Initial pre-release." `
 		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy" `
