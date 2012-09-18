@@ -63,9 +63,6 @@ task Build-ConDep-Console -depends Clean-ConDep-Console, Init {
 		-files @(
 			@{ Path="$condep_console\$condep.exe"; Target="lib/net40"}, 
 			@{ Path="$condep_console\ConDep.Dsl.Operations.TransformConfig.dll"; Target="lib/net40"} 
-		) `
-		-frameworkAssemblies @(
-			@{ Name="Microsoft.Web.Publishing.Tasks"; Target="net40"} 
 		)
 }
 
