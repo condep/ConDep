@@ -33,7 +33,7 @@ task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init {
 		-iconUrl "https://raw.github.com/torresdal/ConDep/master/images/ConDepNugetLogo.png" `
 		-releaseNotes "Initial pre-release." `
 		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy" `
-		-files @(@{ Path="$build_directory\$condep_dsl\$condep_dsl.dll"; Target="lib/net40"} ) `
+		-files @(@{ Path=".\Build\$condep_dsl\$condep_dsl.dll"; Target="lib/net40"} ) `
 		-frameworkAssemblies @(
 			@{ Name="Microsoft.Web.Deployment"; Target="net40"}, 
 			@{ Name="Microsoft.Web.Delegation"; Target="net40"} 
@@ -61,8 +61,8 @@ task Build-ConDep-Console -depends Clean-ConDep-Console, Init {
 			@{ Name="NDesk.Options"; Version="0.2.1"}
 		) `
 		-files @(
-			@{ Path="$build_directory\$condep_console\$condep.exe"; Target="lib/net40"}, 
-			@{ Path="$build_directory\$condep_console\ConDep.Dsl.Operations.TransformConfig.dll"; Target="lib/net40"} 
+			@{ Path=".\Build\$condep_console\$condep.exe"; Target="lib/net40"}, 
+			@{ Path=".\Build\$condep_console\ConDep.Dsl.Operations.TransformConfig.dll"; Target="lib/net40"} 
 		) `
 		-frameworkAssemblies @(
 			@{ Name="Microsoft.Web.Publishing.Tasks"; Target="net40"} 
@@ -88,7 +88,7 @@ task Build-ConDep-Dsl-LB-ARR -depends Clean-ConDep-Dsl-LB-ARR, Init {
 			@{ Name="$condep_dsl"; Version="$nugetVersion"},
 			@{ Name="ArrLoadBalancerCmdlet"; Version="1.0.2"}
 		) `
-		-files @(@{ Path="$build_directory\$condep_dsl_lb_arr\$condep_dsl_lb_arr.dll"; Target="lib/net40"} )       
+		-files @(@{ Path=".\Build\$condep_dsl_lb_arr\$condep_dsl_lb_arr.dll"; Target="lib/net40"} )       
 }
 
 task Build-Tests -depends Clean-Tests, Init {
