@@ -10,6 +10,9 @@ properties {
 task default -depends BuildNugetPackage
 
 task BuildNugetPackage { 
-	Write-Host "Executing from: $pwd"
-	Exec { & "$nuget" pack $build_directory\$package_name.nuspec -verbose }
+	$nuspecFiles = get-childitem $build_directory -name -include *.nuspec
+	$nuspecFiles | foreach {
+		Write-Host "Creating nuget package with $_"
+		Exec { & "$nuget" pack $build_directory\$_ -verbose }
+	}
 }
