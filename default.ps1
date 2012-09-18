@@ -57,7 +57,7 @@ task Build-ConDep-Console -depends Clean-ConDep-Console, Init {
 		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy" `
 		-dependencies @(
 			@{ Name="$condep_dsl"; Version="$nugetVersion"},
-			@{ Name="Json.NET"; Version="4.5.9"},
+			@{ Name="Newtonsoft.Json"; Version="4.5.9"},
 			@{ Name="NDesk.Options"; Version="0.2.1"}
 		) `
 		-files @(
