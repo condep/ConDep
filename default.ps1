@@ -8,6 +8,7 @@ properties {
 	$condep_dsl = "ConDep.Dsl"
 	$condep_console = "ConDep.Console"
 	$condep_dsl_lb_arr = "ConDep.Dsl.LoadBalancer.Arr"
+	$condep_tests = "ConDep.Dsl.Tests"
 }
  
 include .\tools\psake_ext.ps1
@@ -15,7 +16,7 @@ include .\tools\psake_ext.ps1
 task default -depends Build-All
 task ci -depends Build-All
 
-task Build-All -depends Init, Build-ConDep-Dsl, Build-ConDep-Console, Build-ConDep-Dsl-LB-ARR
+task Build-All -depends Init, Build-ConDep-Dsl, Build-ConDep-Console, Build-ConDep-Dsl-LB-ARR, Build-Tests
 
 task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init { 
 	Exec { msbuild "$pwd\$condep_dsl\$condep_dsl.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_dsl\ }
@@ -90,6 +91,10 @@ task Build-ConDep-Dsl-LB-ARR -depends Clean-ConDep-Dsl-LB-ARR, Init {
 		-files @(@{ Path="$build_directory\$condep_dsl_lb_arr\$condep_dsl_lb_arr.dll"; Target="lib/net40"} )       
 }
 
+task Build-Tests -depends Clean-Tests, Init {
+	Exec { msbuild "$pwd\$condep_tests\$condep_tests.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_tests\ }
+}
+
 task Init {
 	$script:nugetVersion = $version.Substring(0, $version.LastIndexOf("."))
 
@@ -119,4 +124,9 @@ task Clean-ConDep-Console {
 task Clean-ConDep-Dsl-LB-ARR {
 	Write-Host "Cleaning Build output"  -ForegroundColor Green
 	Remove-Item $build_directory\$condep_dsl_lb_arr -Force -Recurse -ErrorAction SilentlyContinue
+}
+
+task Clean-Tests {
+	Write-Host "Cleaning Build output"  -ForegroundColor Green
+	Remove-Item $build_directory\$condep_tests -Force -Recurse -ErrorAction SilentlyContinue
 }
