@@ -75,6 +75,18 @@ param(
       }
     $nuspec += "</dependencies>"
     }
+
+  if($frameworkAssemblies -ne $null) {
+    $nuspec += "    <frameworkAssemblies>
+"
+    	$frameworkAssemblies | foreach {
+      $nuspec += "<frameworkAssembly assemblyName=""" + $_.Name + """ targetFramework=""" + $_.Target + """  />
+      "
+      }
+    $nuspec += "</frameworkAssemblies>"
+    }
+
+
   $nuspec += "</metadata>
   "
   if($files -ne $null) {
@@ -90,16 +102,6 @@ param(
   "
   }
 
-  if($frameworkAssemblies -ne $null) {
-    $nuspec += "    <frameworkAssemblies>
-"
-    	$frameworkAssemblies | foreach {
-      $nuspec += "<frameworkAssembly assemblyName=""" + $_.Name + """ targetFramework=""" + $_.Target + """  />
-      "
-      }
-    $nuspec += "</frameworkAssemblies>"
-    }
-  
 $nuspec += "</package>"
 
 	$dir = [System.IO.Path]::GetDirectoryName($file)
