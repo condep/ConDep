@@ -1,3 +1,4 @@
+using System.IO;
 using ConDep.Dsl;
 using ConDep.Dsl.LoadBalancer;
 using ConDep.Dsl.WebDeploy;
@@ -31,7 +32,8 @@ namespace ConDep.LoadBalancer.Arr
 
         private void DeployPsCmdLet(DeploymentServer server, WebDeployExecuteCondition<ProvideForInfrastructure> condition)
         {
-            Configure<ProvideForDeployment, ProvideForInfrastructure>(server, p => p.CopyDir(@"C:\GitHub\ConDep\ConDep.PowerShell.ApplicationRequestRouting\bin\Release", @"%temp%\ApplicationRequestRouting"), condition);
+            var dir = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "ArrLoadBalancer");
+            Configure<ProvideForDeployment, ProvideForInfrastructure>(server, p => p.CopyDir(dir, @"%temp%\ApplicationRequestRouting"), condition);
         }
 
         private void Execute(LoadBalanceState state, DeploymentServer server, string serverNameToChangeStateOn)
