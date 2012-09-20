@@ -57,14 +57,21 @@ namespace ConDep.Console
                 envSettings.DeploymentUser.UserName = deploymentUser["UserName"].ToString();
                 envSettings.DeploymentUser.Password = deploymentUser["Password"].ToString();
             }
+            JToken servers;
+            if(!json.TryGetValue("Servers", out servers))
+            {
+                throw new NoServersFoundException("No servers where defined for environment");
+            }
 
-            foreach (var server in json["Servers"])
+            bool explicitServerFound = false;
+            foreach (var server in servers)
             {
                 if(hasExplicitServerDefined)
                 {
                     if(explicitServer == server["Name"].ToString())
                     {
                         envSettings.Servers.Add(new DeploymentServer(server["Name"].ToString(), envSettings.DeploymentUser));
+                        explicitServerFound = true;
                         break;
                     }
                 }
@@ -72,6 +79,11 @@ namespace ConDep.Console
                 //todo: how to handle deployment user?? Shouldn't this be on server level??
                 envSettings.Servers.Add(new DeploymentServer(server["Name"].ToString(), envSettings.DeploymentUser));
             }
+
+            if(hasExplicitServerDefined && !explicitServerFound)
+            {
+                throw new NoServersFoundException("Server [{0}] where not one of the servers defined for environment.");
+            } 
 
             return envSettings;
         }
