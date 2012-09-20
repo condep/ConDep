@@ -20,9 +20,12 @@ namespace ConDep.Dsl.WebDeploy
             if(BeforeExecute != null)
             {
                 BeforeExecute(_webDeployServerDefinition.WebDeployDestination.ComputerName, traceLevel, output, outputError, webDeploymentStatus);
+                if(webDeploymentStatus.HasErrors) return webDeploymentStatus;
             }
 
             var status = _webDeployServerDefinition.Sync(output, outputError, webDeploymentStatus);
+
+            if (webDeploymentStatus.HasErrors) return webDeploymentStatus;
 
             if (AfterExecute != null)
             {
