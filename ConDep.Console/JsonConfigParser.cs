@@ -84,7 +84,7 @@ namespace ConDep.Console
 
             if(hasExplicitServerDefined && !explicitServerFound)
             {
-                throw new NoServersFoundException("Server [{0}] where not one of the servers defined for environment.");
+                throw new NoServersFoundException(string.Format("Server [{0}] where not one of the servers defined for environment.", explicitServer));
             } 
 
             return envSettings;
