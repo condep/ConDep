@@ -35,9 +35,8 @@ namespace ConDep.LoadBalancer.Arr
         {
             var webDepDef = CreateWebDeployDefinition();
 
-            var provider = new ApplicationRequestRoutingProvider(state, _settings.Name);
-            //todo: provide user??
-            provider.Configure(new DeploymentServer(serverName, _user));
+            var provider = new ApplicationRequestRoutingProvider(state, serverName);
+            provider.Configure(new DeploymentServer(_settings.Name, _user));
             //Todo: Why is the child providers in the wrong order by default??
             provider.ChildProviders.ToList().Reverse();
             webDepDef.Providers.Add(provider);
