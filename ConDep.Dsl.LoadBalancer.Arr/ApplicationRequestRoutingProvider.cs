@@ -27,7 +27,8 @@ namespace ConDep.LoadBalancer.Arr
 
             DeployPsCmdLet(arrServer, condition);
             Execute(_state, arrServer, _serverNameToChangeStateOn);
-            RemovePsCmdLet(arrServer, condition);
+            //todo:Removal of power shell cmdlet failes. Possibly because of file locks from PS.
+            //RemovePsCmdLet(arrServer, condition);
         }
 
         private void DeployPsCmdLet(DeploymentServer server, WebDeployExecuteCondition<ProvideForInfrastructure> condition)
@@ -38,7 +39,13 @@ namespace ConDep.LoadBalancer.Arr
 
         private void Execute(LoadBalanceState state, DeploymentServer server, string serverNameToChangeStateOn)
         {
-            Configure<ProvideForInfrastructure>(server, p => p.PowerShell(string.Format(@"import-module $env:temp\ApplicationRequestRouting; Set-WebFarmServerState -State {0} -Name {1} -UseDnsLookup;", state.ToString(), serverNameToChangeStateOn), o => o.WaitIntervalInSeconds(10)));
+            Configure<ProvideForInfrastructure>(server, p => 
+                p.PowerShell(string.Format(@"import-module $env:temp\ApplicationRequestRouting; Set-WebFarmServerState -State {0} -Name {1} -UseDnsLookup;", 
+                             state.ToString(), 
+                             serverNameToChangeStateOn), o =>{
+                                                                o.WaitIntervalInSeconds(10);
+                                                                o.RetryAttempts(20);
+                                                             }));
         }
 
         private void RemovePsCmdLet(DeploymentServer arrServer, WebDeployExecuteCondition<ProvideForInfrastructure> condition)
