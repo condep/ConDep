@@ -25,6 +25,8 @@ namespace ConDep.Dsl
 
             depObject.Options = options;
             depObject.Status = status;
+            depObject.EnvSettings = envSettings;
+
             IoCBootstrapper.Bootstrap(envSettings);
             depObject.Configure();
         }

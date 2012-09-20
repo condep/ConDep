@@ -58,6 +58,8 @@ namespace ConDep.Dsl
 
 	    public WebDeploymentStatus Status { get; set; }
 
+        protected internal ConDepEnvironmentSettings EnvSettings { get; set; }
+
 	    protected internal abstract void Configure();
 	}
 }
