@@ -16,7 +16,7 @@ namespace ConDep.Console
             _environment = environment;
         }
 
-        public ConDepEnvironmentSettings GetEnvSettings()
+        public ConDepEnvironmentSettings GetEnvSettings(string explicitServer)
         {
             var envFileName = string.Format("{0}.Env.js", _environment);
             var envFilePath = Path.Combine(_configDir, envFileName);
@@ -31,7 +31,7 @@ namespace ConDep.Console
             var envJsonText = File.ReadAllText(Path.Combine(_configDir, string.Format("{0}.Env.js", _environment)));
 
             var envJson = JObject.Parse(envJsonText);
-            var envSettings = PopulateEnvSettings(_environment, envJson);
+            var envSettings = PopulateEnvSettings(_environment, envJson, explicitServer);
 
             if (File.Exists(webSitesFilePath))
             {
@@ -43,8 +43,10 @@ namespace ConDep.Console
             return envSettings;
         }
 
-        private static ConDepEnvironmentSettings PopulateEnvSettings(string environment, JObject json)
+        private static ConDepEnvironmentSettings PopulateEnvSettings(string environment, JObject json, string explicitServer)
         {
+            bool hasExplicitServerDefined = !string.IsNullOrWhiteSpace(explicitServer);
+
             var envSettings = new ConDepEnvironmentSettings(environment);
 
             PopulateLoadBalancer(envSettings, json);
@@ -58,6 +60,15 @@ namespace ConDep.Console
 
             foreach (var server in json["Servers"])
             {
+                if(hasExplicitServerDefined)
+                {
+                    if(explicitServer == server["Name"].ToString())
+                    {
+                        envSettings.Servers.Add(new DeploymentServer(server["Name"].ToString(), envSettings.DeploymentUser));
+                        break;
+                    }
+                }
+
                 //todo: how to handle deployment user?? Shouldn't this be on server level??
                 envSettings.Servers.Add(new DeploymentServer(server["Name"].ToString(), envSettings.DeploymentUser));
             }
