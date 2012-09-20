@@ -75,9 +75,11 @@ namespace ConDep.Console
                         break;
                     }
                 }
-
-                //todo: how to handle deployment user?? Shouldn't this be on server level??
-                envSettings.Servers.Add(new DeploymentServer(server["Name"].ToString(), envSettings.DeploymentUser));
+                else
+                {
+                    //todo: how to handle deployment user?? Shouldn't this be on server level??
+                    envSettings.Servers.Add(new DeploymentServer(server["Name"].ToString(), envSettings.DeploymentUser));
+                }
             }
 
             if(hasExplicitServerDefined && !explicitServerFound)
