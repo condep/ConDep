@@ -9,12 +9,6 @@
             _nservicebusProvider = nservicebusProvider;
         }
         
-        public NServiceBusOptions DestinationDir(string path)
-        {
-            _nservicebusProvider.DestinationPath = path;
-            return this;
-        }
-
     	public NServiceBusOptions ServiceInstaller(string nServiceBusInstallerPath)
     	{
     		_nservicebusProvider.ServiceInstallerName = nServiceBusInstallerPath;
@@ -33,10 +27,42 @@
 			return this;
     	}
 
+
     	public NServiceBusOptions ServiceGroup(string group)
     	{
     		_nservicebusProvider.ServiceGroup = group;
 			return this;
     	}
+
+        /// <summary>
+        /// Specifies which profile NServiceBus should run under
+        /// </summary>
+        public NServiceBusOptions Profile(string profile)
+        {
+            _nservicebusProvider.Profile = profile;
+            return this;
+        }
+
+        /// <summary>
+        /// Interval in seconds with no failures after which the failure count is reset to 0
+        /// </summary>
+        /// <param name="interval">Interval in seconds</param>
+        /// <returns></returns>
+        public NServiceBusOptions ServiceFailureResetInterval(int interval)
+        {
+            _nservicebusProvider.ServiceFailureResetInterval = interval;
+            return this;
+        }
+
+        /// <summary>
+        /// Delay in millisecond before the service gets restarted after failure
+        /// </summary>
+        /// <param name="delay">Delay in milliseconds</param>
+        /// <returns></returns>
+        public NServiceBusOptions ServiceRestartDelay(int delay)
+        {
+            _nservicebusProvider.ServiceRestartDelay = delay;
+            return this;
+        }
     }
 }
