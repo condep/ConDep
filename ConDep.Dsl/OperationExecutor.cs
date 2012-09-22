@@ -28,6 +28,7 @@ namespace ConDep.Dsl
             foreach (var operation in _operations)
             {
                 ExecuteOperation(operation);
+                if (_webDeploymentStatus.HasErrors) return _webDeploymentStatus;
             }
             return _webDeploymentStatus;
         }
