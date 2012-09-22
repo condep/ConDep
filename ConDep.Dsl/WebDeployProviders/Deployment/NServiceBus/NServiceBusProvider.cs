@@ -31,7 +31,8 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
 
         public override void Configure(DeploymentServer server)
         {
-            var stop = string.Format("stop-service {0}", ServiceName);
+            //var stop = string.Format("stop-service {0}", ServiceName);
+            var stop = string.Format("\"Stopping {0}\"; try {{ Get-Service {0} -ErrorAction Stop | ForEach {{ if ($_.Status -eq [System.ServiceProcess.ServiceControllerStatus]::Running) {{ \"Stopping: \" + $_.DisplayName; $_.Stop(); $_.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Stopped); \"Stopped: \" + $_.DisplayName; }} else {{ $_.DisplayName + \" is already stopped\" }}	C:\\WINDOWS\\system32\\sc.exe delete $_.DisplayName }} }} catch {{ \"Service not found {0}\" }}", ServiceName);
             var install = string.Format("{0} /install /serviceName:\"{1}\" /displayName:\"{1}\" {2}", Path.Combine(DestinationPath, ServiceInstallerName), ServiceName, Profile);
 
             var serviceFailureCommand = "";
