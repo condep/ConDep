@@ -53,6 +53,7 @@
     <Compile Include="ConDepConfigurationTypeNotFoundException.cs" />
     <Compile Include="ConDepContextOperationPlaceHolder.cs" />
     <Compile Include="ConDepOptions.cs" />
+    <Compile Include="ConDepResourceNotFoundException.cs" />
     <Compile Include="DeploymentExtensions.cs" />
     <Compile Include="DeploymentIisExtensions.cs" />
     <Compile Include="InfrastructureExtensions.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="WebDeployProviders\Deployment\IIS\WebSite\WebSiteDeploymentIncludeOptions.cs" />
     <Compile Include="WebDeployProviders\Deployment\IIS\WebSite\WebSiteDeploymentOptions.cs" />
     <Compile Include="WebDeployProviders\Deployment\IIS\WebSite\WebSiteDeploymentProvider.cs" />
+    <Compile Include="ConDepResourceFiles.cs" />
     <Compile Include="WebDeployProviders\Deployment\NServiceBus\NServicebusExtension.cs" />
     <Compile Include="WebDeployProviders\Deployment\NServiceBus\NServiceBusOptions.cs" />
     <Compile Include="WebDeployProviders\Deployment\NServiceBus\NServiceBusProvider.cs" />
