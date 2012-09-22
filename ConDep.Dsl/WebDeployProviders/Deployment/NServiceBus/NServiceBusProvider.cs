@@ -22,6 +22,7 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
         public string Profile { get; set; }
         public int? ServiceFailureResetInterval { get; set; }
         public int? ServiceRestartDelay { get; set; }
+        public bool IgnoreFailureOnServiceStartStop { get; set; }
 
         public string ServiceInstallerName
         {
@@ -56,7 +57,7 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
             }
 
             var stop = string.Format(". $env:temp\\NServiceBus.ps1; stop-nsbservice {0}", ServiceName);
-            Configure<ProvideForInfrastructure>(server, po => po.PowerShell(stop, o => o.ContinueOnError().WaitIntervalInSeconds(10).RetryAttempts(10)));
+            Configure<ProvideForInfrastructure>(server, po => po.PowerShell(stop, o => o.ContinueOnError(IgnoreFailureOnServiceStartStop).WaitIntervalInSeconds(10).RetryAttempts(10)));
             Configure<ProvideForDeployment>(server, po => po.CopyDir(SourcePath, DestinationPath));
 
             //Allow continue on error??
@@ -67,7 +68,7 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
                 if(!string.IsNullOrWhiteSpace(serviceConfigCommand)) po.RunCmd(serviceConfigCommand);
 
                 var start = string.Format(". $env:temp\\NServiceBus.ps1; start-nsbservice {0}", ServiceName);
-                po.PowerShell(start, o => o.WaitIntervalInSeconds(10).RetryAttempts(10));
+                po.PowerShell(start, o => o.WaitIntervalInSeconds(10).RetryAttempts(10).ContinueOnError(IgnoreFailureOnServiceStartStop));
             });
         }
 

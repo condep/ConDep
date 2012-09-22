@@ -64,5 +64,11 @@
             _nservicebusProvider.ServiceRestartDelay = delay;
             return this;
         }
+
+        public NServiceBusOptions IgnoreFailureOnServiceStartStop(bool value)
+        {
+            _nservicebusProvider.IgnoreFailureOnServiceStartStop = value;
+            return this;
+        }
     }
 }

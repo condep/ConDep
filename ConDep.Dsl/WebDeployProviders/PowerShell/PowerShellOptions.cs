@@ -9,9 +9,9 @@
             _powerShellProvider = powerShellProvider;
         }
 
-        public PowerShellOptions ContinueOnError()
+        public PowerShellOptions ContinueOnError(bool value)
         {
-            _powerShellProvider.ContinueOnError = true;
+            _powerShellProvider.ContinueOnError = value;
             return this;
         }
 
