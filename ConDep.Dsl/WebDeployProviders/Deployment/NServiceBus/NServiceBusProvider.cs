@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Reflection;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
@@ -31,8 +33,9 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
 
         public override void Configure(DeploymentServer server)
         {
-            var stop = string.Format("\"Stopping {0}\"; try {{ Get-Service {0} -ErrorAction Stop | if ($_.Status -eq [System.ServiceProcess.ServiceControllerStatus]::Running) {{ \"Stopping: \" + $_.DisplayName; $_.Stop(); $_.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Stopped); \"Stopped: \" + $_.DisplayName; }} else {{ $_.DisplayName + \" is already stopped\" }}	C:\\WINDOWS\\system32\\sc.exe delete $_.DisplayName }} catch {{ \"Service not found {0}\" }}", ServiceName);
-            var start = string.Format("\"Starting {0}\"; try {{ Get-Service {0} -ErrorAction Stop | if ($_.Status -eq [System.ServiceProcess.ServiceControllerStatus]::Stopped) {{ \"Starting: \" + $_.DisplayName; $_.Start(); $_.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Running); \"Started: \" + $_.DisplayName; }} else {{ $_.DisplayName + \" is already running\" }} }} catch {{ \"Service not found {0}\" }}", ServiceName);
+            CopyPowerShellScriptsToTarget(server);
+            //var stop = string.Format("\"Stopping {0}\"; try {{ Get-Service {0} -ErrorAction Stop | if ($_.Status -eq [System.ServiceProcess.ServiceControllerStatus]::Running) {{ \"Stopping: \" + $_.DisplayName; $_.Stop(); $_.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Stopped); \"Stopped: \" + $_.DisplayName; }} else {{ $_.DisplayName + \" is already stopped\" }}	C:\\WINDOWS\\system32\\sc.exe delete $_.DisplayName }} catch {{ \"Service not found {0}\" }}", ServiceName);
+            //var start = string.Format("\"Starting {0}\"; try {{ Get-Service {0} -ErrorAction Stop | if ($_.Status -eq [System.ServiceProcess.ServiceControllerStatus]::Stopped) {{ \"Starting: \" + $_.DisplayName; $_.Start(); $_.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Running); \"Started: \" + $_.DisplayName; }} else {{ $_.DisplayName + \" is already running\" }} }} catch {{ \"Service not found {0}\" }}", ServiceName);
             var install = string.Format("{0} /install /serviceName:\"{1}\" /displayName:\"{1}\" {2}", Path.Combine(DestinationPath, ServiceInstallerName), ServiceName, Profile);
 
             var serviceFailureCommand = "";
@@ -55,6 +58,7 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
                 serviceConfigCommand = string.Format("{0} config \"{1}\" {2} {3} {4}", SERVICE_CONTROLLER_EXE, ServiceName, userNameOption, passwordOption, groupOption);
             }
 
+            var stop = string.Format(". $env:temp\\NServiceBus.ps1; stop-nsbservice {0}", ServiceName);
             Configure<ProvideForInfrastructure>(server, po => po.PowerShell(stop, o => o.ContinueOnError().WaitIntervalInSeconds(10)));
             Configure<ProvideForDeployment>(server, po => po.CopyDir(SourcePath, DestinationPath));
 
@@ -64,8 +68,16 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
                 po.RunCmd(install);
                 if(!string.IsNullOrWhiteSpace(serviceFailureCommand)) po.RunCmd(serviceFailureCommand);
                 if(!string.IsNullOrWhiteSpace(serviceConfigCommand)) po.RunCmd(serviceConfigCommand);
+
+                var start = string.Format(". $env:temp\\NServiceBus.ps1; start-nsbservice {0}", ServiceName);
                 po.PowerShell(start, o => o.WaitIntervalInSeconds(10));
             });
+        }
+
+        private void CopyPowerShellScriptsToTarget(DeploymentServer server)
+        {
+            var filePath = ConDepResourceFiles.GetFilePath("NServiceBus.ps1");
+            Configure<ProvideForDeployment>(server, d => d.CopyFile(filePath, o=> o.RenameFileOnDestination(@"%temp%\NServiceBus.ps1")));
         }
 
         private bool HasServiceConfigOptions
@@ -91,5 +103,36 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
 
             return valid;
         }
+    }
+
+    public class ConDepResourceFiles
+    {
+        public static string GetFilePath(string resourceName)
+        {
+            //Todo: not thread safe
+            var tempFolder = Path.GetTempPath();
+            var filePath = Path.Combine(tempFolder, resourceName + ".condep");
+
+            try
+            {
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                {
+                    using (var writeStream = File.Create(filePath))
+                    {
+                        stream.CopyTo(writeStream);
+                    }
+                }
+                return filePath;
+            }
+            catch(Exception ex)
+            {
+                throw new ConDepResourceNotFoundException(string.Format("Resource [{0}]", resourceName), ex);
+            }
+        }
+    }
+
+    public class ConDepResourceNotFoundException : Exception
+    {
+        public ConDepResourceNotFoundException(string message, Exception innerException) : base(message, innerException) {}
     }
 }
