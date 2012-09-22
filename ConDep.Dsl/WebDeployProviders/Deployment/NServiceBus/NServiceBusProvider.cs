@@ -31,8 +31,8 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
 
         public override void Configure(DeploymentServer server)
         {
-            //var stop = string.Format("stop-service {0}", ServiceName);
-            var stop = string.Format("\"Stopping {0}\"; try {{ Get-Service {0} -ErrorAction Stop | ForEach {{ if ($_.Status -eq [System.ServiceProcess.ServiceControllerStatus]::Running) {{ \"Stopping: \" + $_.DisplayName; $_.Stop(); $_.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Stopped); \"Stopped: \" + $_.DisplayName; }} else {{ $_.DisplayName + \" is already stopped\" }}	C:\\WINDOWS\\system32\\sc.exe delete $_.DisplayName }} }} catch {{ \"Service not found {0}\" }}", ServiceName);
+            var stop = string.Format("\"Stopping {0}\"; try {{ Get-Service {0} -ErrorAction Stop | if ($_.Status -eq [System.ServiceProcess.ServiceControllerStatus]::Running) {{ \"Stopping: \" + $_.DisplayName; $_.Stop(); $_.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Stopped); \"Stopped: \" + $_.DisplayName; }} else {{ $_.DisplayName + \" is already stopped\" }}	C:\\WINDOWS\\system32\\sc.exe delete $_.DisplayName }} catch {{ \"Service not found {0}\" }}", ServiceName);
+            var start = string.Format("\"Starting {0}\"; try {{ Get-Service {0} -ErrorAction Stop | if ($_.Status -eq [System.ServiceProcess.ServiceControllerStatus]::Stopped) {{ \"Starting: \" + $_.DisplayName; $_.Start(); $_.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Running); \"Started: \" + $_.DisplayName; }} else {{ $_.DisplayName + \" is already running\" }} }} catch {{ \"Service not found {0}\" }}", ServiceName);
             var install = string.Format("{0} /install /serviceName:\"{1}\" /displayName:\"{1}\" {2}", Path.Combine(DestinationPath, ServiceInstallerName), ServiceName, Profile);
 
             var serviceFailureCommand = "";
@@ -54,8 +54,6 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
 
                 serviceConfigCommand = string.Format("{0} config \"{1}\" {2} {3} {4}", SERVICE_CONTROLLER_EXE, ServiceName, userNameOption, passwordOption, groupOption);
             }
-
-            var start = string.Format("start-service {0}", ServiceName);
 
             Configure<ProvideForInfrastructure>(server, po => po.PowerShell(stop, o => o.ContinueOnError().WaitIntervalInSeconds(10)));
             Configure<ProvideForDeployment>(server, po => po.CopyDir(SourcePath, DestinationPath));
