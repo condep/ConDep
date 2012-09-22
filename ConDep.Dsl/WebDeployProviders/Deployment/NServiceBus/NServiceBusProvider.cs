@@ -56,8 +56,8 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
                 serviceConfigCommand = string.Format("{0} config \"{1}\" {2} {3} {4}", SERVICE_CONTROLLER_EXE, ServiceName, userNameOption, passwordOption, groupOption);
             }
 
-            var stop = string.Format(". $env:temp\\NServiceBus.ps1; stop-nsbservice {0}", ServiceName);
-            Configure<ProvideForInfrastructure>(server, po => po.PowerShell(stop, o => o.ContinueOnError(IgnoreFailureOnServiceStartStop).WaitIntervalInSeconds(10).RetryAttempts(10)));
+            var remove = string.Format(". $env:temp\\NServiceBus.ps1; remove-nsbservice {0}", ServiceName);
+            Configure<ProvideForInfrastructure>(server, po => po.PowerShell(remove, o => o.ContinueOnError(IgnoreFailureOnServiceStartStop).WaitIntervalInSeconds(10).RetryAttempts(10)));
             Configure<ProvideForDeployment>(server, po => po.CopyDir(SourcePath, DestinationPath));
 
             //Allow continue on error??
