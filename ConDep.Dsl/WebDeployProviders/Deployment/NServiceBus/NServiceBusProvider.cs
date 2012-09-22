@@ -76,7 +76,7 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
 
         private void CopyPowerShellScriptsToTarget(DeploymentServer server)
         {
-            var filePath = ConDepResourceFiles.GetFilePath("NServiceBus.ps1");
+            var filePath = ConDepResourceFiles.GetFilePath(GetType().Namespace, "NServiceBus.ps1");
             Configure<ProvideForDeployment>(server, d => d.CopyFile(filePath, o=> o.RenameFileOnDestination(@"%temp%\NServiceBus.ps1")));
         }
 
@@ -107,7 +107,7 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
 
     public class ConDepResourceFiles
     {
-        public static string GetFilePath(string resourceName)
+        public static string GetFilePath(string resourceNamespace, string resourceName)
         {
             //Todo: not thread safe
             var tempFolder = Path.GetTempPath();
@@ -115,7 +115,7 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
 
             try
             {
-                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceNamespace + "." + resourceName))
                 {
                     using (var writeStream = File.Create(filePath))
                     {
