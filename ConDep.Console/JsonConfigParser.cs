@@ -16,7 +16,7 @@ namespace ConDep.Console
             _environment = environment;
         }
 
-        public ConDepEnvironmentSettings GetEnvSettings(string explicitServer)
+        public ConDepEnvironmentSettings GetEnvSettings(string explicitServer, bool bypassLb)
         {
             var envFileName = string.Format("{0}.Env.js", _environment);
             var envFilePath = Path.Combine(_configDir, envFileName);
@@ -31,7 +31,7 @@ namespace ConDep.Console
             var envJsonText = File.ReadAllText(Path.Combine(_configDir, string.Format("{0}.Env.js", _environment)));
 
             var envJson = JObject.Parse(envJsonText);
-            var envSettings = PopulateEnvSettings(_environment, envJson, explicitServer);
+            var envSettings = PopulateEnvSettings(_environment, envJson, explicitServer, bypassLb);
 
             if (File.Exists(webSitesFilePath))
             {
@@ -43,13 +43,16 @@ namespace ConDep.Console
             return envSettings;
         }
 
-        private static ConDepEnvironmentSettings PopulateEnvSettings(string environment, JObject json, string explicitServer)
+        private static ConDepEnvironmentSettings PopulateEnvSettings(string environment, JObject json, string explicitServer, bool bypassLb)
         {
             bool hasExplicitServerDefined = !string.IsNullOrWhiteSpace(explicitServer);
 
             var envSettings = new ConDepEnvironmentSettings(environment);
 
-            PopulateLoadBalancer(envSettings, json);
+            if(!bypassLb)
+            {
+                PopulateLoadBalancer(envSettings, json);
+            }
 
             var deploymentUser = json["DeploymentUser"];
             if (deploymentUser != null)

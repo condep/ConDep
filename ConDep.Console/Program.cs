@@ -24,7 +24,7 @@ namespace ConDep.Console
                 var assembly = configAssemblyLoader.GetConfigAssembly();
 
                 var jsonConfigParser = new JsonConfigParser(Path.GetDirectoryName(assembly.Location), optionHandler.Params.Environment);
-                var envSettings = jsonConfigParser.GetEnvSettings(optionHandler.Params.Server);
+                var envSettings = jsonConfigParser.GetEnvSettings(optionHandler.Params.Server, optionHandler.Params.BypassLB);
                 var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.TraceLevel, optionHandler.Params.PrintSequence);
 
                 var status = new WebDeploymentStatus();

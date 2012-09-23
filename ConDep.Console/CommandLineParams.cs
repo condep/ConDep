@@ -22,5 +22,7 @@ namespace ConDep.Console
         public bool ShowHelp { get; set; }
 
         public bool PrintSequence { get; set; }
+
+        public bool BypassLB { get; set; }
     }
 }
