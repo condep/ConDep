@@ -26,6 +26,7 @@ namespace ConDep.Dsl
 			var document = new XmlDocument();
 			var configFilePath = Path.Combine(_configDirPath, _configName);
 			var transformFilePath = Path.Combine(_configDirPath, _transformName);
+            var backupPath = "";
 
 			ValidatePaths(configFilePath, transformFilePath);
 
@@ -35,7 +36,7 @@ namespace ConDep.Dsl
                 args.Level = TraceLevel.Info;
                 args.Message = string.Format("Using [{0}] as configuration file to transform", _configDirPath + CONDEP_CONFIG_EXTENSION);
                 output(this, args);
-                configFilePath = Path.Combine(_configDirPath, _configName + CONDEP_CONFIG_EXTENSION);
+                backupPath = Path.Combine(_configDirPath, _configName + CONDEP_CONFIG_EXTENSION);
             }
             else
             {
@@ -50,7 +51,7 @@ namespace ConDep.Dsl
                                                              transformFilePath)
                                        };
             output(this, transformMessage);
-            document.Load(configFilePath);
+            document.Load(string.IsNullOrWhiteSpace(backupPath) ? configFilePath : backupPath);
 
 			var transformation = new XmlTransformation(transformFilePath, new WebTransformLogger(output, outputError));
 			var success = transformation.Apply(document);
