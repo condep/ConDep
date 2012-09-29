@@ -19,7 +19,6 @@ namespace ConDep.Dsl
     {
         private static ILog _log;
         //private static readonly string _teamCityEnvVar = Environment.GetEnvironmentVariable("TEAMCITY_VERSION");
-        private static string _assemblyPath;
 
         private static ILog InternalLogger
         {
@@ -31,18 +30,15 @@ namespace ConDep.Dsl
         {
             get
             {
-                if(_assemblyPath == null)
-                {
-                    var codeBase = Assembly.GetCallingAssembly().CodeBase;
-                    var assemblyFullPath = Uri.UnescapeDataString(new UriBuilder(codeBase).Path);
-                    var assemblyDirectory = Path.GetDirectoryName(assemblyFullPath);
-                    _assemblyPath = assemblyDirectory;
+                //todo: need to optimize, so this does not run on every check
+                var codeBase = Assembly.GetCallingAssembly().CodeBase;
+                var assemblyFullPath = Uri.UnescapeDataString(new UriBuilder(codeBase).Path);
+                var assemblyDirectory = Path.GetDirectoryName(assemblyFullPath);
 
-                    InternalLogger.Logger.Log(typeof(Logger), Level.All, "Checking if ConDep is running on TeamCity...", null);
-                    InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("Is running on TeamCity: {0}", _assemblyPath.ToLowerInvariant().Contains("buildagent\\work")), null);
-                    // a full TeamCity build directory would be e.g. 'D:\TeamCity\buildAgent\work\de796548775cea8e\build\Compile'
-                }
-                return _assemblyPath.ToLowerInvariant().Contains("buildagent\\work");
+                InternalLogger.Logger.Log(typeof(Logger), Level.All, "Checking if ConDep is running on TeamCity...", null);
+                InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("Is running on TeamCity: {0}", assemblyDirectory.ToLowerInvariant().Contains("buildagent\\work")), null);
+                // a full TeamCity build directory would be e.g. 'D:\TeamCity\buildAgent\work\de796548775cea8e\build\Compile'
+                return assemblyDirectory.ToLowerInvariant().Contains("buildagent\\work");
             }
         }
 
