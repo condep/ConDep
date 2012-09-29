@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using log4net;
 using log4net.Core;
 
@@ -16,14 +18,30 @@ namespace ConDep.Dsl
     public static class Logger
     {
         private static ILog _log;
-        private static readonly string _teamCityEnvVar = Environment.GetEnvironmentVariable("TEAMCITY_VERSION");
+        //private static readonly string _teamCityEnvVar = Environment.GetEnvironmentVariable("TEAMCITY_VERSION");
+        private static string _assemblyPath;
 
         private static ILog InternalLogger
         {
             get { return _log ?? (_log = LogManager.GetLogger(RunningOnTeamCity ? "condep.teamcity" : "condep.out")); }
         }
 
-        private static bool RunningOnTeamCity { get { return !string.IsNullOrWhiteSpace(_teamCityEnvVar); } }
+        //private static bool RunningOnTeamCity { get { return !string.IsNullOrWhiteSpace(_teamCityEnvVar); } }
+        public static bool RunningOnTeamCity
+        {
+            get
+            {
+                if(_assemblyPath == null)
+                {
+                    var codeBase = Assembly.GetCallingAssembly().CodeBase;
+                    var assemblyFullPath = Uri.UnescapeDataString(new UriBuilder(codeBase).Path);
+                    var assemblyDirectory = Path.GetDirectoryName(assemblyFullPath);
+                    _assemblyPath = assemblyDirectory;
+                    // a full TeamCity build directory would be e.g. 'D:\TeamCity\buildAgent\work\de796548775cea8e\build\Compile'
+                }
+                return _assemblyPath.ToLowerInvariant().Contains("buildagent\\work");
+            }
+        }
 
         public static void Info(string message, params object[] formatArgs)
         {
@@ -99,8 +117,6 @@ namespace ConDep.Dsl
         public static void Log(string message, TraceLevel traceLevel)
         {
             var level = GetLog4NetLevel(traceLevel);
-            var defaultLevel = TraceLevel;
-
             InternalLogger.Logger.Log(typeof(Logger), level, message, null);
         }
 
