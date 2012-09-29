@@ -37,6 +37,9 @@ namespace ConDep.Dsl
                     var assemblyFullPath = Uri.UnescapeDataString(new UriBuilder(codeBase).Path);
                     var assemblyDirectory = Path.GetDirectoryName(assemblyFullPath);
                     _assemblyPath = assemblyDirectory;
+
+                    InternalLogger.Logger.Log(typeof(Logger), Level.All, "Checking if ConDep is running on TeamCity...", null);
+                    InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("Is running on TeamCity: {0}", _assemblyPath.ToLowerInvariant().Contains("buildagent\\work")), null);
                     // a full TeamCity build directory would be e.g. 'D:\TeamCity\buildAgent\work\de796548775cea8e\build\Compile'
                 }
                 return _assemblyPath.ToLowerInvariant().Contains("buildagent\\work");
