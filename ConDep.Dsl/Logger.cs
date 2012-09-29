@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.ServiceProcess;
 using log4net;
 using log4net.Core;
 
@@ -18,6 +19,7 @@ namespace ConDep.Dsl
     public static class Logger
     {
         private static ILog _log;
+        private static bool? _tcServiceExist;
         //private static readonly string _teamCityEnvVar = Environment.GetEnvironmentVariable("TEAMCITY_VERSION");
 
         private static ILog InternalLogger
@@ -30,7 +32,19 @@ namespace ConDep.Dsl
         {
             get
             {
-                return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TEAMCITY_JRE"));
+                if(_tcServiceExist == null)
+                {
+                    try
+                    {
+                        var tcService = new ServiceController("TCBuildAgent");
+                        _tcServiceExist = tcService.Status == ServiceControllerStatus.Running;
+                    }
+                    catch
+                    {
+                        _tcServiceExist = false;
+                    }
+                }
+                return _tcServiceExist.Value;
             }
         }
 
