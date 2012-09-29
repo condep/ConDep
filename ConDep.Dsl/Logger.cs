@@ -30,11 +30,7 @@ namespace ConDep.Dsl
         {
             get
             {
-                //todo: need to optimize, so this does not run on every check
-                var codeBase = Assembly.GetCallingAssembly().CodeBase;
-                var assemblyFullPath = Uri.UnescapeDataString(new UriBuilder(codeBase).Path);
-                var assemblyDirectory = Path.GetDirectoryName(assemblyFullPath);
-                return assemblyDirectory.ToLowerInvariant().Contains("buildagent\\work");
+                return Environment.CurrentDirectory.ToLowerInvariant().Contains("buildagent\\work");
             }
         }
 
