@@ -12,8 +12,8 @@ namespace ConDep.Dsl.WebDeploy
 		private readonly Configuration _configuration = new Configuration();
 		private readonly List<IProvide> _providers = new List<IProvide>();
 
-    	private EventHandler<WebDeployMessageEventArgs> _output;
-    	private EventHandler<WebDeployMessageEventArgs> _outputError;
+        //private EventHandler<WebDeployMessageEventArgs> _output;
+        //private EventHandler<WebDeployMessageEventArgs> _outputError;
 
         public WebDeployServerDefinition() { }
 
@@ -67,10 +67,10 @@ namespace ConDep.Dsl.WebDeploy
 			_providers.ForEach(p => p.IsValid(notification));
 		}
 
-		public WebDeploymentStatus Sync(EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus deploymentStatus)
+		public WebDeploymentStatus Sync(WebDeploymentStatus deploymentStatus)
         {
-			  _output = output;
-			  _outputError = outputError;
+              //_output = output;
+              //_outputError = outputError;
 
 			  WebDeployOptions options = null;
 
@@ -82,14 +82,14 @@ namespace ConDep.Dsl.WebDeploy
 				  {
                       if(provider is WebDeployCompositeProviderBase)
                       {
-                          ((WebDeployCompositeProviderBase) provider).BeforeExecute(output);
+                          ((WebDeployCompositeProviderBase) provider).BeforeExecute();
                       }
 					  
                       provider.Sync(options, deploymentStatus);
                   
                       if (provider is WebDeployCompositeProviderBase)
                       {
-                          ((WebDeployCompositeProviderBase)provider).AfterExecute(output);
+                          ((WebDeployCompositeProviderBase)provider).AfterExecute();
                       }
                   }
 			  }
@@ -129,27 +129,18 @@ namespace ConDep.Dsl.WebDeploy
 			  deploymentStatus.AddUntrappedException(ex);
 			  var message = GetCompleteExceptionMessage(ex);
 
-			  if (_outputError != null)
-			  {
-				  _outputError(this, new WebDeployMessageEventArgs { Message = message, Level = TraceLevel.Error });
-			  }
+              Logger.Error(message);
 		  }
 
 		  void OnWebDeployTraceMessage(object sender, DeploymentTraceEventArgs e)
 		  {
 			  if (e.EventLevel == TraceLevel.Error)
 			  {
-				  if (_outputError != null)
-				  {
-					  _outputError(this, new WebDeployMessageEventArgs { Message = e.Message, Level = e.EventLevel });
-				  }
+                  Logger.Error(e.Message);
 			  }
 			  else
 			  {
-				  if (_output != null)
-				  {
-					  _output(this, new WebDeployMessageEventArgs { Message = e.Message, Level = e.EventLevel });
-				  }
+			      Logger.Log(e.Message, e.EventLevel);
 			  }
 		  }
 

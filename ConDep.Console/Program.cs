@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using ConDep.Dsl;
 using ConDep.Dsl.WebDeploy;
+using log4net.Config;
 
 namespace ConDep.Console
 {
@@ -19,13 +20,15 @@ namespace ConDep.Console
             var exitCode = 0;
             try
             {
+                ConfigureLog4Net();
+
                 var optionHandler = new CommandLineOptionHandler(args);
                 var configAssemblyLoader = new ConfigurationAssemblyHandler(optionHandler.Params.AssemblyName);
                 var assembly = configAssemblyLoader.GetConfigAssembly();
 
                 var jsonConfigParser = new JsonConfigParser(Path.GetDirectoryName(assembly.Location), optionHandler.Params.Environment);
                 var envSettings = jsonConfigParser.GetEnvSettings(optionHandler.Params.Server, optionHandler.Params.BypassLB);
-                var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.TraceLevel, optionHandler.Params.PrintSequence);
+                var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.PrintSequence);
 
                 var status = new WebDeploymentStatus();
                 ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions, status);
@@ -44,6 +47,12 @@ namespace ConDep.Console
             {
                 Environment.Exit(exitCode);
             }
+        }
+
+        private static void ConfigureLog4Net()
+        {
+            var logpath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "condep.log4net.xml");
+            XmlConfigurator.Configure(new FileInfo(logpath));
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.Operations.WebRequest
@@ -21,7 +19,7 @@ namespace ConDep.Dsl.Operations.WebRequest
             return true;
         }
 
-        public override WebDeploymentStatus Execute(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public override WebDeploymentStatus Execute(WebDeploymentStatus webDeploymentStatus)
         {
             var webRequest = System.Net.WebRequest.Create(_url);
             webRequest.Method = _method;
@@ -34,13 +32,11 @@ namespace ConDep.Dsl.Operations.WebRequest
 
             if (statusCode == HttpStatusCode.OK)
             {
-                var args = new WebDeployMessageEventArgs { Level = TraceLevel.Info, Message = string.Format("HTTP {0} Succeeded: {1}", _method.ToUpper(), _url) };
-                output(this, args);
+                Logger.Info("HTTP {0} Succeeded: {1}", _method.ToUpper(), _url);
             }
             else
             {
-                var args = new WebDeployMessageEventArgs { Level = TraceLevel.Error, Message = string.Format("HTTP {0} Failed with Status {1}: {2}", _method.ToUpper(), statusCode, _url) };
-                outputError(this, args);
+                Logger.Error("HTTP {0} Failed with Status {1}: {2}", _method.ToUpper(), statusCode, _url);
             }
 
             return webDeploymentStatus;

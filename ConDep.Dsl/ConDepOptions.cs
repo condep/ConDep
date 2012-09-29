@@ -10,12 +10,11 @@ namespace ConDep.Dsl
         private readonly TraceLevel _traceLevel;
         private readonly bool _printSequence;
 
-        public ConDepOptions(string context, bool deployOnly, bool infraOnly, TraceLevel traceLevel, bool printSequence)
+        public ConDepOptions(string context, bool deployOnly, bool infraOnly, bool printSequence)
         {
             _context = context;
             _deployOnly = deployOnly;
             _infraOnly = infraOnly;
-            _traceLevel = traceLevel;
             _printSequence = printSequence;
         }
 
@@ -29,11 +28,6 @@ namespace ConDep.Dsl
         public bool InfraOnly
         {
             get { return _infraOnly; }
-        }
-
-        public TraceLevel TraceLevel
-        {
-            get { return _traceLevel; }
         }
 
         public bool PrintSequence

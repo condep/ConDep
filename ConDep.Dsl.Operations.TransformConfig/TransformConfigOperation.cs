@@ -21,7 +21,7 @@ namespace ConDep.Dsl
 			_transformName = transformName;
 		}
 
-        public override WebDeploymentStatus Execute(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public override WebDeploymentStatus Execute(WebDeploymentStatus webDeploymentStatus)
         {
 			var document = new XmlDocument();
 			var configFilePath = Path.Combine(_configDirPath, _configName);
@@ -32,28 +32,18 @@ namespace ConDep.Dsl
 
             if(ConDepConfigBackupExist(_configDirPath, _configName))
             {
-                var args = new WebDeployMessageEventArgs();
-                args.Level = TraceLevel.Info;
-                args.Message = string.Format("Using [{0}] as configuration file to transform", _configDirPath + CONDEP_CONFIG_EXTENSION);
-                output(this, args);
+                Logger.Info("Using [{0}] as configuration file to transform", _configDirPath + CONDEP_CONFIG_EXTENSION);
                 backupPath = Path.Combine(_configDirPath, _configName + CONDEP_CONFIG_EXTENSION);
             }
             else
             {
-                BackupConfigFile(_configDirPath, _configName, output);
+                BackupConfigFile(_configDirPath, _configName);
             }
 
-            var transformMessage = new WebDeployMessageEventArgs
-                                       {
-                                           Level = TraceLevel.Info,
-                                           Message =
-                                               string.Format("Transforming [{0}] using [{1}]", configFilePath,
-                                                             transformFilePath)
-                                       };
-            output(this, transformMessage);
+            Logger.Info("Transforming [{0}] using [{1}]", configFilePath, transformFilePath);
             document.Load(string.IsNullOrWhiteSpace(backupPath) ? configFilePath : backupPath);
 
-			var transformation = new XmlTransformation(transformFilePath, new WebTransformLogger(output, outputError));
+			var transformation = new XmlTransformation(transformFilePath, new WebTransformLogger());
 			var success = transformation.Apply(document);
 			document.Save(configFilePath);
 
@@ -81,15 +71,9 @@ namespace ConDep.Dsl
 	        return File.Exists(Path.Combine(dir, name + CONDEP_CONFIG_EXTENSION));
 	    }
 
-	    private void BackupConfigFile(string dir, string name, EventHandler<WebDeployMessageEventArgs> output)
+	    private void BackupConfigFile(string dir, string name)
 	    {
-	        var args = new WebDeployMessageEventArgs
-	                       {
-	                           Level = TraceLevel.Info,
-	                           Message = string.Format("Backing up [{0}] to [{1}]", name, name + CONDEP_CONFIG_EXTENSION)
-	                       };
-
-	        output(this, args);
+            Logger.Info("Backing up [{0}] to [{1}]", name, name + CONDEP_CONFIG_EXTENSION);
             File.Copy(Path.Combine(dir, name), Path.Combine(dir, name + CONDEP_CONFIG_EXTENSION));
 	    }
 

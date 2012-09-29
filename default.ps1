@@ -33,6 +33,9 @@ task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init {
 		-iconUrl "https://raw.github.com/torresdal/ConDep/master/images/ConDepNugetLogo.png" `
 		-releaseNotes "Initial pre-release." `
 		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy" `
+		-dependencies @(
+			@{ Name="log4net"; Version="2.0.0"}
+		) `
 		-files @(@{ Path="$condep_dsl\$condep_dsl.dll"; Target="lib/net40"} ) `
 		-frameworkAssemblies @(
 			@{ Name="Microsoft.Web.Deployment"; Target="net40"}, 
@@ -59,6 +62,7 @@ task Build-ConDep-Console -depends Clean-ConDep-Console, Init {
 			@{ Name="$condep_dsl"; Version="$nugetVersion"},
 			@{ Name="Newtonsoft.Json"; Version="4.5.9"},
 			@{ Name="NDesk.Options"; Version="0.2.1"}
+			@{ Name="log4net"; Version="2.0.0"}
 		) `
 		-files @(
 			@{ Path="$condep_console\$condep.exe"; Target="lib/net40"}, 

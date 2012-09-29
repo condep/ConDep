@@ -61,7 +61,7 @@ namespace ConDep.Dsl
 			return _operations.All(operation => operation.IsValid(notification));
 		}
 
-        public WebDeploymentStatus Execute(ConDepOptions options, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public WebDeploymentStatus Execute(ConDepOptions options, WebDeploymentStatus webDeploymentStatus)
         {
             if (options.PrintSequence)
             {
@@ -69,7 +69,7 @@ namespace ConDep.Dsl
                 return webDeploymentStatus;
             }
 
-            var operationExecutor = new OperationExecutor(_operations, options, output, outputError, webDeploymentStatus, _context);
+            var operationExecutor = new OperationExecutor(_operations, options, webDeploymentStatus, _context);
             return operationExecutor.Execute();
         }
 

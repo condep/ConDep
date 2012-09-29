@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Deployment, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\IIS\Microsoft Web Deploy V3\Microsoft.Web.Deployment.dll</HintPath>
@@ -66,6 +69,7 @@
     <Compile Include="IRequireLoadBalancing.cs" />
     <Compile Include="LoadBalancer\LoadBalanceState.cs" />
     <Compile Include="ISetupCondep.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Model\InvalidSetupException.cs" />
     <Compile Include="OperationExecutor.cs" />
     <Compile Include="Operations\PreCompile\PreCompileCallback.cs" />

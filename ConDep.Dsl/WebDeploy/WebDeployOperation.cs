@@ -13,23 +13,23 @@ namespace ConDep.Dsl.WebDeploy
 			_webDeployServerDefinition = webDeployServerDefinition;
 		}
 
-		public override WebDeploymentStatus Execute(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+		public override WebDeploymentStatus Execute(WebDeploymentStatus webDeploymentStatus)
 		{
-		    _webDeployServerDefinition.TraceLevel = traceLevel;
+		    _webDeployServerDefinition.TraceLevel = Logger.TraceLevel;
 
             if(BeforeExecute != null)
             {
-                BeforeExecute(_webDeployServerDefinition.WebDeployDestination.ComputerName, traceLevel, output, outputError, webDeploymentStatus);
+                BeforeExecute(_webDeployServerDefinition.WebDeployDestination.ComputerName, webDeploymentStatus);
                 if(webDeploymentStatus.HasErrors) return webDeploymentStatus;
             }
 
-            var status = _webDeployServerDefinition.Sync(output, outputError, webDeploymentStatus);
+            var status = _webDeployServerDefinition.Sync(webDeploymentStatus);
 
             if (webDeploymentStatus.HasErrors) return webDeploymentStatus;
 
             if (AfterExecute != null)
             {
-                AfterExecute(_webDeployServerDefinition.WebDeployDestination.ComputerName, traceLevel, output, outputError, webDeploymentStatus);
+                AfterExecute(_webDeployServerDefinition.WebDeployDestination.ComputerName, webDeploymentStatus);
             }
 		    return status;
 		}

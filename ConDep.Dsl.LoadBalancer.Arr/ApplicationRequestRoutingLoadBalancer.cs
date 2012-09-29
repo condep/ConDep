@@ -19,16 +19,16 @@ namespace ConDep.LoadBalancer.Arr
             _user = new DeploymentUser {UserName = settings.UserName, Password = settings.Password};
         }
 
-        public void BringOnline(string serverName, TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public void BringOnline(string serverName, WebDeploymentStatus webDeploymentStatus)
         {
             var operation = GetOperation(LoadBalanceState.Online, serverName);
-            operation.Execute(traceLevel, output, outputError, webDeploymentStatus);
+            operation.Execute(webDeploymentStatus);
         }
 
-        public void BringOffline(string serverName, TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public void BringOffline(string serverName, WebDeploymentStatus webDeploymentStatus)
         {
             var operation = GetOperation(LoadBalanceState.Offline, serverName);
-            operation.Execute(traceLevel, output, outputError, webDeploymentStatus);
+            operation.Execute(webDeploymentStatus);
         }
 
         private WebDeployOperation GetOperation(LoadBalanceState state, string serverName)

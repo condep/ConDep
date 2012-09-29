@@ -17,16 +17,16 @@ namespace ConDep.Dsl.WebDeploy
         public int WaitInterval { get; set; }
         public int RetryAttempts { get; set; }
 
-        public abstract void Configure(DeploymentServer arrServer);
+        public abstract void Configure(DeploymentServer server);
 
-        public virtual void BeforeExecute(EventHandler<WebDeployMessageEventArgs> output)
+        public virtual void BeforeExecute()
         {
-            output(this, new WebDeployMessageEventArgs { Message = string.Format("Executing {0}", GetType().Name), Level = System.Diagnostics.TraceLevel.Info });
+            Logger.Info("Executing provider [{0}]", GetType().Name);
         }
 
-        public virtual void AfterExecute(EventHandler<WebDeployMessageEventArgs> output)
+        public virtual void AfterExecute()
         {
-            output(this, new WebDeployMessageEventArgs { Message = string.Format("{0} : Execution finished for provider [{1}]", DateTime.Now.ToLongTimeString(), this.GetType().Name), Level = System.Diagnostics.TraceLevel.Info });
+            Logger.Info("Execution finished for provider [{0}]", GetType().Name);
         }
 
         public void AddChildProvider(IProvide provider)
@@ -38,9 +38,9 @@ namespace ConDep.Dsl.WebDeploy
             _childProviders.Add(provider);
         }
 
-        protected void Configure<T>(DeploymentServer arrServer, Action<T> action) where T : IProvideOptions, new()
+        protected void Configure<T>(DeploymentServer server, Action<T> action) where T : IProvideOptions, new()
         {
-            _server = arrServer;
+            _server = server;
             var options = new T { AddProviderAction = AddChildProvider };
             action(options);
         }

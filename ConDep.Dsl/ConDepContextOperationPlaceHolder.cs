@@ -19,7 +19,7 @@ namespace ConDep.Dsl
             set { _contextName = value; }
         }
 
-        public override WebDeploymentStatus Execute(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public override WebDeploymentStatus Execute(WebDeploymentStatus webDeploymentStatus)
         {
             throw new NotImplementedException();
         }

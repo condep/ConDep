@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Web.Compilation;
 using ConDep.Dsl.WebDeploy;
@@ -19,7 +18,7 @@ namespace ConDep.Dsl.Operations.PreCompile
 			_preCompileOutputpath = preCompileOutputpath;
 		}
 
-        public override WebDeploymentStatus Execute(TraceLevel traceLevel, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus)
+        public override WebDeploymentStatus Execute(WebDeploymentStatus webDeploymentStatus)
 		{
 			try
 			{
@@ -27,12 +26,11 @@ namespace ConDep.Dsl.Operations.PreCompile
 					Directory.Delete(_preCompileOutputpath, true);
 
 				var buildManager = new ClientBuildManager(_webApplicationName, _webApplicationPhysicalPath, _preCompileOutputpath, new ClientBuildManagerParameter{ PrecompilationFlags = PrecompilationFlags.Updatable });
-				buildManager.PrecompileApplication(new PreCompileCallback(output, outputError));
+				buildManager.PrecompileApplication(new PreCompileCallback());
 			}
 			catch (Exception ex)
 			{
-				var args = new WebDeployMessageEventArgs { Level = TraceLevel.Error, Message = ex.Message };
-				outputError(this, args);
+                Logger.Error(ex.Message);
 				throw;
 			}
 			return webDeploymentStatus;

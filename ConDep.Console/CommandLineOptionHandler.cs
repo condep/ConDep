@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using ConDep.Dsl;
 using NDesk.Options;
 
 namespace ConDep.Console
@@ -94,7 +95,7 @@ namespace ConDep.Console
                                 {
                                     {"s=|server=", "Server to deploy to", v => Params.Server = v},
                                     {"c=|context=", "Context to deploy", v => Params.Context = v},
-                                    {"t=|traceLevel=", "The level of verbosity on output. Valid values are Off, Info, Warning, Error, Verbose. Default is Info.", v => Params.TraceLevel = ConvertStringToTraceLevel(v)},
+                                    {"t=|traceLevel=", "The level of verbosity on output. Valid values are Off, Info, Warning, Error, Verbose. Default is Info.", v => Logger.TraceLevel = ConvertStringToTraceLevel(v)},
                                     {"infraOnly", "Deploy infrastructure only", v => Params.InfraOnly = v != null },
                                     {"deployOnly", "Deploy all except infrastructure", v => Params.DeployOnly = v != null},
                                     {"bypassLB", "Don't use configured load balancer during execution.", v => Params.BypassLB = v != null},

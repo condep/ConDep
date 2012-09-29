@@ -7,7 +7,7 @@ namespace ConDep.Dsl
     public interface ISetupConDep
     {
         bool IsValid(Notification notification);
-        WebDeploymentStatus Execute(ConDepOptions options, EventHandler<WebDeployMessageEventArgs> onMessage, EventHandler<WebDeployMessageEventArgs> onErrorMessage, WebDeploymentStatus status);
+        WebDeploymentStatus Execute(ConDepOptions options, WebDeploymentStatus status);
         void PrintExecutionSequence(ConDepOptions options);
     }
 }

@@ -8,28 +8,30 @@ namespace ConDep.Dsl
     {
         private readonly List<ConDepOperationBase> _operations;
         private readonly ConDepOptions _options;
-        private readonly EventHandler<WebDeployMessageEventArgs> _output;
-        private readonly EventHandler<WebDeployMessageEventArgs> _outputError;
         private readonly WebDeploymentStatus _webDeploymentStatus;
         private readonly ConDepContext _context;
 
-        public OperationExecutor(List<ConDepOperationBase> operations, ConDepOptions options, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError, WebDeploymentStatus webDeploymentStatus, ConDepContext context)
+        public OperationExecutor(List<ConDepOperationBase> operations, ConDepOptions options, WebDeploymentStatus webDeploymentStatus, ConDepContext context)
         {
             _operations = operations;
             _options = options;
-            _output = output;
-            _outputError = outputError;
             _webDeploymentStatus = webDeploymentStatus;
             _context = context;
         }
 
         public WebDeploymentStatus Execute()
         {
+            Logger.TeamCityBlockStart("ConDep");
+            Logger.TeamCityProgressMessage("Executing ConDep");
+            Logger.Info("Starting execution of ConDep");
+
             foreach (var operation in _operations)
             {
                 ExecuteOperation(operation);
                 if (_webDeploymentStatus.HasErrors) return _webDeploymentStatus;
             }
+            Logger.Info("Finished executing ConDep");
+            Logger.TeamCityBlockEnd("ConDep");
             return _webDeploymentStatus;
         }
 
@@ -37,16 +39,19 @@ namespace ConDep.Dsl
         {
             if (operation is ConDepContextOperationPlaceHolder)
             {
-                ExecuteContextPlaceholderOperation(_options, _output, _outputError, _webDeploymentStatus, operation);
+                Logger.TeamCityBlockStart(((ConDepContextOperationPlaceHolder)operation).ContextName);
+                ExecuteContextPlaceholderOperation(_options, _webDeploymentStatus, operation);
+                Logger.TeamCityBlockEnd(((ConDepContextOperationPlaceHolder)operation).ContextName);
             }
             else
             {
-                operation.Execute(_options.TraceLevel, _output, _outputError, _webDeploymentStatus);
+                Logger.TeamCityBlockStart(operation.GetType().Name);
+                operation.Execute(_webDeploymentStatus);
+                Logger.TeamCityBlockEnd(operation.GetType().Name);
             }
         }
 
-        private void ExecuteContextPlaceholderOperation(ConDepOptions options, EventHandler<WebDeployMessageEventArgs> output, EventHandler<WebDeployMessageEventArgs> outputError,
-                                                        WebDeploymentStatus webDeploymentStatus, ConDepOperationBase operation)
+        private void ExecuteContextPlaceholderOperation(ConDepOptions options, WebDeploymentStatus webDeploymentStatus, ConDepOperationBase operation)
         {
             ISetupConDep contextSetup;
 
@@ -66,7 +71,7 @@ namespace ConDep.Dsl
                 contextSetup = _context[((ConDepContextOperationPlaceHolder)operation).ContextName];
             }
 
-            contextSetup.Execute(options, output, outputError, webDeploymentStatus);
+            contextSetup.Execute(options, webDeploymentStatus);
         }
     }
 }

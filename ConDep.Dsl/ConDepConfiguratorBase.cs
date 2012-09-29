@@ -9,35 +9,35 @@ namespace ConDep.Dsl
 	public abstract class ConDepConfiguratorBase
 	{
 	    //Todo: Must be able to redirect output
-	    protected virtual void OnMessage(object sender, WebDeployMessageEventArgs e)
-	    {
-            if (e.Level == TraceLevel.Warning)
-            {
-                WriteColorMessage(e, ConsoleColor.Yellow, Console.Out);
-            }
-            else if(e.Level == TraceLevel.Info)
-            {
-                WriteColorMessage(e, ConsoleColor.Green, Console.Out);
-            }
-            else
-            {
-                Console.Out.WriteLine(DateTime.Now.ToLongTimeString() + " - " + e.Message);
-            }
-        }
+        //protected virtual void OnMessage(object sender, WebDeployMessageEventArgs e)
+        //{
+        //    if (e.Level == TraceLevel.Warning)
+        //    {
+        //        WriteColorMessage(e, ConsoleColor.Yellow, Console.Out);
+        //    }
+        //    else if(e.Level == TraceLevel.Info)
+        //    {
+        //        WriteColorMessage(e, ConsoleColor.Green, Console.Out);
+        //    }
+        //    else
+        //    {
+        //        Console.Out.WriteLine(DateTime.Now.ToLongTimeString() + " - " + e.Message);
+        //    }
+        //}
 
-        //Todo: Must be able to redirect output
-        protected virtual void OnErrorMessage(object sender, WebDeployMessageEventArgs e)
-		{
-            WriteColorMessage(e, ConsoleColor.Red, Console.Error);
-        }
+        ////Todo: Must be able to redirect output
+        //protected virtual void OnErrorMessage(object sender, WebDeployMessageEventArgs e)
+        //{
+        //    WriteColorMessage(e, ConsoleColor.Red, Console.Error);
+        //}
 
-	    private static void WriteColorMessage(WebDeployMessageEventArgs e, ConsoleColor color, TextWriter writer)
-	    {
-	        var currentConsoleColor = Console.ForegroundColor;
-	        Console.ForegroundColor = color;
-	        writer.WriteLine(DateTime.Now.ToLongTimeString() + " - " + e.Message);
-	        Console.ForegroundColor = currentConsoleColor;
-	    }
+        //private static void WriteColorMessage(WebDeployMessageEventArgs e, ConsoleColor color, TextWriter writer)
+        //{
+        //    var currentConsoleColor = Console.ForegroundColor;
+        //    Console.ForegroundColor = color;
+        //    writer.WriteLine(DateTime.Now.ToLongTimeString() + " - " + e.Message);
+        //    Console.ForegroundColor = currentConsoleColor;
+        //}
 
 	    protected internal void Setup(Action<IProvideForSetup> action)
 		{
@@ -51,7 +51,7 @@ namespace ConDep.Dsl
 				notification.Throw();
 			}
 
-            conDepSetup.Execute(Options, OnMessage, OnErrorMessage, Status);
+            conDepSetup.Execute(Options, Status);
 		}
 
         protected internal ConDepOptions Options { get; set; }
