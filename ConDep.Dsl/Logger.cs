@@ -30,7 +30,7 @@ namespace ConDep.Dsl
         {
             get
             {
-                return Environment.CurrentDirectory.ToLowerInvariant().Contains("buildagent\\work");
+                return !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TEAMCITY_JRE"));
             }
         }
 
