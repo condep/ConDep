@@ -166,7 +166,11 @@ namespace ConDep.Dsl
 
         public static void TeamCityBlockStart(string name)
         {
-            if (!RunningOnTeamCity) return;
+            if (!RunningOnTeamCity)
+            {
+                InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("TeamCity not found. Could not add block for '{0}']", name), null);
+                return;
+            }
             InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("Adding TeamCity block for '{0}']", name), null);
             InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[blockOpened name='{0}']", name), null);
         }
