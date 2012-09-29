@@ -179,12 +179,14 @@ namespace ConDep.Dsl
         public static void TeamCityBlockStart(string name)
         {
             if (!RunningOnTeamCity) return;
+            InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("Adding TeamCity block for '{0}']", name), null);
             InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[blockOpened name='{0}']", name), null);
         }
 
         public static void TeamCityBlockEnd(string name)
         {
             if (!RunningOnTeamCity) return;
+            InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("Closing TeamCity block for '{0}']", name), null);
             InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[blockClosed name='{0}']", name), null);
         }
 
