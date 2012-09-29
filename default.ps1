@@ -59,7 +59,7 @@ task Build-ConDep-Console -depends Clean-ConDep-Console, Init {
 		-releaseNotes "Initial pre-release." `
 		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy" `
 		-dependencies @(
-			@{ Name="$condep_dsl"; Version="$nugetVersion"},
+			@{ Name="$condep_dsl"; Version="$nugetVersion-pre"},
 			@{ Name="Newtonsoft.Json"; Version="4.5.9"},
 			@{ Name="NDesk.Options"; Version="0.2.1"}
 			@{ Name="log4net"; Version="2.0.0"}
@@ -87,7 +87,7 @@ task Build-ConDep-Dsl-LB-ARR -depends Clean-ConDep-Dsl-LB-ARR, Init {
 		-releaseNotes "Initial pre-release." `
 		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy" `
 		-dependencies @(
-			@{ Name="$condep_dsl"; Version="$nugetVersion"},
+			@{ Name="$condep_dsl"; Version="$nugetVersion-pre"},
 			@{ Name="ArrLoadBalancerCmdlet"; Version="1.0.2"}
 		) `
 		-files @(@{ Path="$condep_dsl_lb_arr\$condep_dsl_lb_arr.dll"; Target="lib/net40"} )       
