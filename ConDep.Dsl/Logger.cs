@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
+﻿using System.Diagnostics;
 using System.ServiceProcess;
 using log4net;
 using log4net.Core;
@@ -20,37 +17,34 @@ namespace ConDep.Dsl
     {
         private static ILog _log;
         private static bool? _tcServiceExist;
-        //private static readonly string _teamCityEnvVar = Environment.GetEnvironmentVariable("TEAMCITY_VERSION");
         private static readonly ILog _teamCityServiceMessageLog = LogManager.GetLogger("condep.teamcity.servicemessage");
+        
         private static ILog InternalLogger
         {
             get { return _log ?? (_log = LogManager.GetLogger(RunningOnTeamCity ? "condep.teamcity" : "condep.out")); }
         }
         
-
-        //private static bool RunningOnTeamCity { get { return !string.IsNullOrWhiteSpace(_teamCityEnvVar); } }
         public static bool RunningOnTeamCity
         {
             get
             {
-                var log = LogManager.GetLogger("condep.out");
-                log.Logger.Log(typeof(Logger), Level.All, "Trying to find out if I'm on TeamCity...", null);
                 if(_tcServiceExist == null)
                 {
-                    log.Logger.Log(typeof(Logger), Level.All, "Trying to find TeamCity Agent service...", null);
                     try
                     {
                         var tcService = new ServiceController("TCBuildAgent");
                         _tcServiceExist = tcService.Status == ServiceControllerStatus.Running;
-                        log.Logger.Log(typeof(Logger), Level.All, "TeamCity check for Agent service finished with " + _tcServiceExist, null);
+                        if(_tcServiceExist.Value)
+                        {
+                            var log = LogManager.GetLogger("condep.out.no.time");
+                            log.Logger.Log(typeof(Logger), Level.All, "Running on Team City - using Team City formatting", null);
+                        } 
                     }
                     catch
                     {
                         _tcServiceExist = false;
-                        log.Logger.Log(typeof(Logger), Level.All, "TeamCity check for Agent service failed.", null);
                     }
                 }
-                log.Logger.Log(typeof(Logger), Level.All, "TeamCity check for Agent service value is " + _tcServiceExist.Value, null);
                 return _tcServiceExist.Value;
             }
         }
@@ -59,7 +53,7 @@ namespace ConDep.Dsl
         {
             if(formatArgs == null)
             {
-                InternalLogger.Info(@message);
+                InternalLogger.Info(message);
             }
             else
             {
@@ -71,13 +65,25 @@ namespace ConDep.Dsl
         {
             if (formatArgs == null)
             {
-                InternalLogger.Warn(@message);
-                TeamCityWarning(message);
+                if(RunningOnTeamCity)
+                {
+                    TeamCityWarning(message);
+                }
+                else
+                {
+                    InternalLogger.Warn(message);
+                }
             }
             else
             {
-                InternalLogger.WarnFormat(message, formatArgs);
-                TeamCityWarning(message, formatArgs);
+                if (RunningOnTeamCity)
+                {
+                    TeamCityWarning(message, formatArgs);
+                }
+                else
+                {
+                    InternalLogger.WarnFormat(message, formatArgs);
+                }
             }
         }
 
@@ -104,13 +110,25 @@ namespace ConDep.Dsl
         {
             if (formatArgs == null)
             {
-                InternalLogger.Error(@message);
-                TeamCityError(message, "");
+                if(RunningOnTeamCity)
+                {
+                    TeamCityError(message, "");
+                }
+                else
+                {
+                    InternalLogger.Error(message);
+                }
             }
             else
             {
-                InternalLogger.ErrorFormat(message, formatArgs);
-                TeamCityError(message, "", formatArgs);
+                if (RunningOnTeamCity)
+                {
+                    TeamCityError(message, "", formatArgs);
+                }
+                else
+                {
+                    InternalLogger.ErrorFormat(message, formatArgs);
+                }
             }
         }
 
@@ -187,32 +205,21 @@ namespace ConDep.Dsl
 
         public static void TeamCityBlockStart(string name)
         {
-            var log = LogManager.GetLogger("condep.out");
-            log.Logger.Log(typeof(Logger), Level.All, "Trying to add Team City block for " + name, null);
+            if (!RunningOnTeamCity) return;
 
-            if (!RunningOnTeamCity)
-            {
-                log.Logger.Log(typeof(Logger), Level.All, "Team City check returned false", null);
-                InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("TeamCity not found. Could not add block for '{0}']", name), null);
-                return;
-            }
-            log.Logger.Log(typeof(Logger), Level.All, "Writing out TeamCity block", null);
-            InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("Adding TeamCity block for '{0}']", name), null);
             _teamCityServiceMessageLog.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[blockOpened name='{0}']", name), null);
-            log.Logger.Log(typeof(Logger), Level.All, "TeamCity block output finished", null);
         }
 
         public static void TeamCityBlockEnd(string name)
         {
             if (!RunningOnTeamCity) return;
-            InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("Closing TeamCity block for '{0}']", name), null);
             _teamCityServiceMessageLog.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[blockClosed name='{0}']", name), null);
         }
 
         public static void TeamCityProgressMessage(string message)
         {
             if (!RunningOnTeamCity) return;
-            InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[progressMessage '{0}']", message), null);
+            _teamCityServiceMessageLog.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[progressMessage '{0}']", message), null);
         }
     }
 }
