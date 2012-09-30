@@ -105,7 +105,7 @@ namespace ConDep.Dsl
 
             var formattedMessage = formatArgs != null ? string.Format(message, formatArgs) : "";
             var tcMessage = string.Format("##teamcity[message text='{0}' errorDetails='{1}' status='{2}']", formattedMessage, errorDetails, status);
-            InternalLogger.Logger.Log(typeof(Logger), Level.All, tcMessage, null);
+            _teamCityServiceMessageLog.Logger.Log(typeof(Logger), Level.All, tcMessage, null);
         }
 
         public static void Error(string message, params object[] formatArgs)
