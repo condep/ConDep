@@ -54,9 +54,5 @@
       <level value="ALL" />
       <appender-ref ref="TeamCityServiceMessageAppender" />
     </logger>
-
-    <root>
-      <level value="ALL" />
-    </root>
   </log4net>
 </configuration>
