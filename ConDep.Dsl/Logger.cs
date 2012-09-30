@@ -49,6 +49,7 @@ namespace ConDep.Dsl
                         log.Logger.Log(typeof(Logger), Level.All, "TeamCity check for Agent service failed.", null);
                     }
                 }
+                log.Logger.Log(typeof(Logger), Level.All, "TeamCity check for Agent service value is " + _tcServiceExist.Value, null);
                 return _tcServiceExist.Value;
             }
         }
@@ -185,13 +186,19 @@ namespace ConDep.Dsl
 
         public static void TeamCityBlockStart(string name)
         {
+            var log = LogManager.GetLogger("condep.out");
+            log.Logger.Log(typeof(Logger), Level.All, "Trying to add Team City block for " + name, null);
+
             if (!RunningOnTeamCity)
             {
+                log.Logger.Log(typeof(Logger), Level.All, "Team City check returned false", null);
                 InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("TeamCity not found. Could not add block for '{0}']", name), null);
                 return;
             }
+            log.Logger.Log(typeof(Logger), Level.All, "Writing out TeamCity block", null);
             InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("Adding TeamCity block for '{0}']", name), null);
             InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[blockOpened name='{0}']", name), null);
+            log.Logger.Log(typeof(Logger), Level.All, "TeamCity block output finished", null);
         }
 
         public static void TeamCityBlockEnd(string name)
