@@ -21,17 +21,11 @@ namespace ConDep.Dsl
 
         public WebDeploymentStatus Execute()
         {
-            Logger.TeamCityBlockStart("ConDep");
-            Logger.TeamCityProgressMessage("Executing ConDep");
-            Logger.Info("Starting execution of ConDep");
-
             foreach (var operation in _operations)
             {
                 ExecuteOperation(operation);
                 if (_webDeploymentStatus.HasErrors) return _webDeploymentStatus;
             }
-            Logger.Info("Finished executing ConDep");
-            Logger.TeamCityBlockEnd("ConDep");
             return _webDeploymentStatus;
         }
 
@@ -39,15 +33,15 @@ namespace ConDep.Dsl
         {
             if (operation is ConDepContextOperationPlaceHolder)
             {
-                Logger.TeamCityBlockStart(((ConDepContextOperationPlaceHolder)operation).ContextName);
+                Logger.TeamCityBlockStart("Executing ConDep context " + ((ConDepContextOperationPlaceHolder)operation).ContextName);
                 ExecuteContextPlaceholderOperation(_options, _webDeploymentStatus, operation);
-                Logger.TeamCityBlockEnd(((ConDepContextOperationPlaceHolder)operation).ContextName);
+                Logger.TeamCityBlockEnd("Executing ConDep context " + ((ConDepContextOperationPlaceHolder)operation).ContextName);
             }
             else
             {
-                Logger.TeamCityBlockStart(operation.GetType().Name);
+                Logger.TeamCityBlockStart("Executing ConDep operation " + operation.GetType().Name);
                 operation.Execute(_webDeploymentStatus);
-                Logger.TeamCityBlockEnd(operation.GetType().Name);
+                Logger.TeamCityBlockEnd("Executing ConDep operation " + operation.GetType().Name);
             }
         }
 
