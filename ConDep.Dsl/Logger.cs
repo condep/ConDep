@@ -32,16 +32,21 @@ namespace ConDep.Dsl
         {
             get
             {
+                var log = LogManager.GetLogger("condep.out");
+                log.Logger.Log(typeof(Logger), Level.All, "Trying to find out if I'm on TeamCity...", null);
                 if(_tcServiceExist == null)
                 {
+                    log.Logger.Log(typeof(Logger), Level.All, "Trying to find TeamCity Agent service...", null);
                     try
                     {
                         var tcService = new ServiceController("TCBuildAgent");
                         _tcServiceExist = tcService.Status == ServiceControllerStatus.Running;
+                        log.Logger.Log(typeof(Logger), Level.All, "TeamCity check for Agent service finished with " + _tcServiceExist, null);
                     }
                     catch
                     {
                         _tcServiceExist = false;
+                        log.Logger.Log(typeof(Logger), Level.All, "TeamCity check for Agent service failed.", null);
                     }
                 }
                 return _tcServiceExist.Value;
