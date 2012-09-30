@@ -21,11 +21,12 @@ namespace ConDep.Dsl
         private static ILog _log;
         private static bool? _tcServiceExist;
         //private static readonly string _teamCityEnvVar = Environment.GetEnvironmentVariable("TEAMCITY_VERSION");
-
+        private static readonly ILog _teamCityServiceMessageLog = LogManager.GetLogger("condep.teamcity.servicemessage");
         private static ILog InternalLogger
         {
             get { return _log ?? (_log = LogManager.GetLogger(RunningOnTeamCity ? "condep.teamcity" : "condep.out")); }
         }
+        
 
         //private static bool RunningOnTeamCity { get { return !string.IsNullOrWhiteSpace(_teamCityEnvVar); } }
         public static bool RunningOnTeamCity
@@ -197,7 +198,7 @@ namespace ConDep.Dsl
             }
             log.Logger.Log(typeof(Logger), Level.All, "Writing out TeamCity block", null);
             InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("Adding TeamCity block for '{0}']", name), null);
-            InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[blockOpened name='{0}']", name), null);
+            _teamCityServiceMessageLog.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[blockOpened name='{0}']", name), null);
             log.Logger.Log(typeof(Logger), Level.All, "TeamCity block output finished", null);
         }
 
@@ -205,7 +206,7 @@ namespace ConDep.Dsl
         {
             if (!RunningOnTeamCity) return;
             InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("Closing TeamCity block for '{0}']", name), null);
-            InternalLogger.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[blockClosed name='{0}']", name), null);
+            _teamCityServiceMessageLog.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[blockClosed name='{0}']", name), null);
         }
 
         public static void TeamCityProgressMessage(string message)
