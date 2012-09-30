@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using ConDep.Dsl;
 using ConDep.Dsl.WebDeploy;
 using log4net.Config;
@@ -20,7 +18,7 @@ namespace ConDep.Console
             var exitCode = 0;
             try
             {
-                ConfigureLog4Net();
+                new LogConfigLoader().Load();
 
                 var optionHandler = new CommandLineOptionHandler(args);
                 var configAssemblyLoader = new ConfigurationAssemblyHandler(optionHandler.Params.AssemblyName);
@@ -48,11 +46,26 @@ namespace ConDep.Console
                 Environment.Exit(exitCode);
             }
         }
+    }
 
-        private static void ConfigureLog4Net()
+    internal class LogConfigLoader
+    {
+        public void Load()
         {
             var logpath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "condep.log4net.xml");
-            XmlConfigurator.Configure(new FileInfo(logpath));
+            if(File.Exists(logpath))
+            {
+                XmlConfigurator.Configure(new FileInfo(logpath));
+            }
+            else
+            {
+                var type = GetType();
+
+                using(var logConfigStream = type.Module.Assembly.GetManifestResourceStream(type.Namespace + ".internal.condep.log4net.xml"))
+                {
+                    XmlConfigurator.Configure(logConfigStream);
+                }
+            }
         }
     }
 }

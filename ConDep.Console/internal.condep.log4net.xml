@@ -29,34 +29,36 @@
       </layout>
     </appender>
 
+    <appender name="TeamCityAppender" type="log4net.Appender.ConsoleAppender">
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%message%newline" />
+      </layout>
+    </appender>
+
     <appender name="TeamCityServiceMessageAppender" type="log4net.Appender.ConsoleAppender">
       <layout type="log4net.Layout.PatternLayout">
         <conversionPattern value="%message" />
       </layout>
     </appender>
 
-    <logger name="condep.out">
+    <logger name="condep-default">
       <level value="ALL" />
       <appender-ref ref="TimeConsoleAppender" />
     </logger>
 
-    <logger name="condep.out.no.time">
+    <logger name="condep-no-time">
       <level value="ALL" />
       <appender-ref ref="PlainConsoleAppender" />
     </logger>
 
-    <logger name="condep.teamcity">
+    <logger name="condep-teamcity">
       <level value="ALL" />
-      <appender-ref ref="PlainConsoleAppender" />
+      <appender-ref ref="TeamCityAppender" />
     </logger>
 
-    <logger name="condep.teamcity.servicemessage">
+    <logger name="condep-teamcity-servicemessage">
       <level value="ALL" />
       <appender-ref ref="TeamCityServiceMessageAppender" />
     </logger>
-
-    <root>
-      <level value="ALL" />
-    </root>
   </log4net>
 </configuration>

@@ -17,11 +17,11 @@ namespace ConDep.Dsl
     {
         private static ILog _log;
         private static bool? _tcServiceExist;
-        private static readonly ILog _teamCityServiceMessageLog = LogManager.GetLogger("condep.teamcity.servicemessage");
+        private static ILog _teamCityServiceMessageLog = LogManager.GetLogger("condep-teamcity-servicemessage");
         
         private static ILog InternalLogger
         {
-            get { return _log ?? (_log = LogManager.GetLogger(RunningOnTeamCity ? "condep.teamcity" : "condep.out")); }
+            get { return _log ?? (_log = LogManager.GetLogger(RunningOnTeamCity ? "condep-teamcity" : "condep-default")); }
         }
         
         public static bool RunningOnTeamCity
@@ -30,18 +30,20 @@ namespace ConDep.Dsl
             {
                 if(_tcServiceExist == null)
                 {
+                    var log = LogManager.GetLogger("condep-no-time");
                     try
                     {
+                        log.Logger.Log(typeof(Logger), Level.All, "Checking if ConDep is running under Team City", null);
                         var tcService = new ServiceController("TCBuildAgent");
                         _tcServiceExist = tcService.Status == ServiceControllerStatus.Running;
-                        if(_tcServiceExist.Value)
-                        {
-                            var log = LogManager.GetLogger("condep.out.no.time");
-                            log.Logger.Log(typeof(Logger), Level.All, "Running on Team City - using Team City formatting", null);
-                        } 
+                        log.Logger.Log(typeof (Logger), Level.All,
+                                       _tcServiceExist.Value
+                                           ? "Running on Team City - using Team City formatting"
+                                           : "Not running on Team City - using default formatting", null);
                     }
                     catch
                     {
+                        log.Logger.Log(typeof(Logger), Level.All, "Not running on Team City - using default formatting", null);
                         _tcServiceExist = false;
                     }
                 }
@@ -136,7 +138,7 @@ namespace ConDep.Dsl
         {
             if (formatArgs == null)
             {
-                InternalLogger.Debug(@message);
+                InternalLogger.Debug(message);
             }
             else
             {
