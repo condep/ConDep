@@ -47,39 +47,18 @@ namespace ConDep.Dsl
 
         public static void Info(string message, params object[] formatArgs)
         {
-            if(formatArgs == null)
-            {
-                InternalLogger.Info(message);
-            }
-            else
-            {
-                InternalLogger.InfoFormat(message, formatArgs);
-            }
+            Log(message, TraceLevel.Info, formatArgs);
         }
 
         public static void Warn(string message, params object[] formatArgs)
         {
-            if (formatArgs == null)
+            if(RunningOnTeamCity)
             {
-                if(RunningOnTeamCity)
-                {
-                    TeamCityWarning(message);
-                }
-                else
-                {
-                    InternalLogger.Warn(message);
-                }
+                TeamCityWarning(message, formatArgs);
             }
             else
             {
-                if (RunningOnTeamCity)
-                {
-                    TeamCityWarning(message, formatArgs);
-                }
-                else
-                {
-                    InternalLogger.WarnFormat(message, formatArgs);
-                }
+                Log(message, TraceLevel.Warning, formatArgs);
             }
         }
 
@@ -115,46 +94,26 @@ namespace ConDep.Dsl
 
         public static void Error(string message, params object[] formatArgs)
         {
-            if (formatArgs == null)
+            if(RunningOnTeamCity)
             {
-                if(RunningOnTeamCity)
-                {
-                    TeamCityError(message, "");
-                }
-                else
-                {
-                    InternalLogger.Error(message);
-                }
+                TeamCityError(message, "", formatArgs);
             }
             else
             {
-                if (RunningOnTeamCity)
-                {
-                    TeamCityError(message, "", formatArgs);
-                }
-                else
-                {
-                    InternalLogger.ErrorFormat(message, formatArgs);
-                }
+                Log(message, TraceLevel.Error, formatArgs);
             }
         }
 
         public static void Verbose(string message, params object[] formatArgs)
         {
-            if (formatArgs == null)
-            {
-                InternalLogger.Debug(message);
-            }
-            else
-            {
-                InternalLogger.DebugFormat(message, formatArgs);
-            }
+            Log(message, TraceLevel.Verbose, formatArgs);
         }
 
-        public static void Log(string message, TraceLevel traceLevel)
+        public static void Log(string message, TraceLevel traceLevel, params object[] formatArgs)
         {
             var level = GetLog4NetLevel(traceLevel);
-            InternalLogger.Logger.Log(typeof(Logger), level, message, null);
+            var formattedMessage = formatArgs != null ? string.Format(message, formatArgs) : "";
+            InternalLogger.Logger.Log(typeof(Logger), level, formattedMessage, null);
         }
 
         private static Level GetLog4NetLevel(TraceLevel traceLevel)

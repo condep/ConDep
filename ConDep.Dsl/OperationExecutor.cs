@@ -63,9 +63,9 @@ namespace ConDep.Dsl
                 contextSetup = _context[((ConDepContextOperationPlaceHolder)operation).ContextName];
             }
 
-            Logger.TeamCityBlockStart("Executing ConDep context " + ((ConDepContextOperationPlaceHolder)operation).ContextName);
+            Logger.TeamCityBlockStart(((ConDepContextOperationPlaceHolder)operation).ContextName + " context");
             contextSetup.Execute(options, webDeploymentStatus);
-            Logger.TeamCityBlockEnd("Executing ConDep context " + ((ConDepContextOperationPlaceHolder)operation).ContextName);
+            Logger.TeamCityBlockEnd(((ConDepContextOperationPlaceHolder)operation).ContextName + " context");
         }
     }
 }
