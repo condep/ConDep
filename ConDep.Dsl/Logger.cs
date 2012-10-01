@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.ServiceProcess;
+using System.Text;
 using log4net;
 using log4net.Core;
 
@@ -30,20 +31,13 @@ namespace ConDep.Dsl
             {
                 if(_tcServiceExist == null)
                 {
-                    var log = LogManager.GetLogger("condep-no-time");
                     try
                     {
-                        log.Logger.Log(typeof(Logger), Level.All, "Checking if ConDep is running under Team City", null);
                         var tcService = new ServiceController("TCBuildAgent");
                         _tcServiceExist = tcService.Status == ServiceControllerStatus.Running;
-                        log.Logger.Log(typeof (Logger), Level.All,
-                                       _tcServiceExist.Value
-                                           ? "Running on Team City - using Team City formatting"
-                                           : "Not running on Team City - using default formatting", null);
                     }
                     catch
                     {
-                        log.Logger.Log(typeof(Logger), Level.All, "Not running on Team City - using default formatting", null);
                         _tcServiceExist = false;
                     }
                 }
@@ -96,7 +90,7 @@ namespace ConDep.Dsl
 
         private static void TeamCityError(string message, string errorDetails, params object[] formatArgs)
         {
-            TeamCityMessage(message, errorDetails, TeamCityMessageStatus.WARNING, formatArgs);
+            TeamCityMessage(message, errorDetails, TeamCityMessageStatus.ERROR, formatArgs);
         }
 
         private static void TeamCityMessage(string message, string errorDetails, TeamCityMessageStatus status, params object[] formatArgs)
@@ -104,7 +98,18 @@ namespace ConDep.Dsl
             if (!RunningOnTeamCity) return;
 
             var formattedMessage = formatArgs != null ? string.Format(message, formatArgs) : "";
-            var tcMessage = string.Format("##teamcity[message text='{0}' errorDetails='{1}' status='{2}']", formattedMessage, errorDetails, status);
+            var sb = new StringBuilder(formattedMessage);
+            sb.Replace("|", "||")
+                .Replace("'", "|'")
+                .Replace("\n", "|n")
+                .Replace("\r", "|r")
+                .Replace("\u0085", "|x")
+                .Replace("\u2028", "|l")
+                .Replace("\u2029", "|p")
+                .Replace("[", "|[")
+                .Replace("]", "|]");
+
+            var tcMessage = string.Format("##teamcity[message text='{0}' errorDetails='{1}' status='{2}']", sb, errorDetails, status);
             _teamCityServiceMessageLog.Logger.Log(typeof(Logger), Level.All, tcMessage, null);
         }
 
