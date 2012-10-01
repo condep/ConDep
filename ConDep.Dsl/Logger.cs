@@ -76,7 +76,7 @@ namespace ConDep.Dsl
         {
             if (!RunningOnTeamCity) return;
 
-            var formattedMessage = formatArgs != null ? string.Format(message, formatArgs) : "";
+            var formattedMessage = (formatArgs != null && formatArgs.Length > 0)? string.Format(message, formatArgs) : message;
             var sb = new StringBuilder(formattedMessage);
             sb.Replace("|", "||")
                 .Replace("'", "|'")
@@ -112,7 +112,7 @@ namespace ConDep.Dsl
         public static void Log(string message, TraceLevel traceLevel, params object[] formatArgs)
         {
             var level = GetLog4NetLevel(traceLevel);
-            var formattedMessage = formatArgs != null ? string.Format(message, formatArgs) : "";
+            var formattedMessage = (formatArgs != null && formatArgs.Length > 0 ) ? string.Format(message, formatArgs) : message;
             InternalLogger.Logger.Log(typeof(Logger), level, formattedMessage, null);
         }
 
