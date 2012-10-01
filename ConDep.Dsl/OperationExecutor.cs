@@ -37,9 +37,9 @@ namespace ConDep.Dsl
             }
             else
             {
-                Logger.TeamCityBlockStart("Executing ConDep operation " + operation.GetType().Name);
+                Logger.TeamCityBlockStart(operation.GetType().Name);
                 operation.Execute(_webDeploymentStatus);
-                Logger.TeamCityBlockEnd("Executing ConDep operation " + operation.GetType().Name);
+                Logger.TeamCityBlockEnd(operation.GetType().Name);
             }
         }
 

@@ -12,9 +12,6 @@ namespace ConDep.Dsl.WebDeploy
 		private readonly Configuration _configuration = new Configuration();
 		private readonly List<IProvide> _providers = new List<IProvide>();
 
-        //private EventHandler<WebDeployMessageEventArgs> _output;
-        //private EventHandler<WebDeployMessageEventArgs> _outputError;
-
         public WebDeployServerDefinition() { }
 
         public WebDeployServerDefinition(DeploymentServer deploymentServer)
@@ -69,13 +66,11 @@ namespace ConDep.Dsl.WebDeploy
 
 		public WebDeploymentStatus Sync(WebDeploymentStatus deploymentStatus)
         {
-              //_output = output;
-              //_outputError = outputError;
-
 			  WebDeployOptions options = null;
 
 			  try
 			  {
+                  Logger.TeamCityBlockStart(WebDeployDestination.ComputerName);
 				  options = GetWebDeployOptions();
 
 				  foreach (var provider in Providers)
@@ -101,6 +96,8 @@ namespace ConDep.Dsl.WebDeploy
 			  {
                   if (options != null && options.DestBaseOptions != null) options.DestBaseOptions.Trace -= OnWebDeployTraceMessage;
                   if (options != null && options.SourceBaseOptions != null) options.SourceBaseOptions.Trace -= OnWebDeployTraceMessage;
+
+                  Logger.TeamCityBlockEnd(WebDeployDestination.ComputerName);
               }
 
 			  return deploymentStatus;
@@ -138,9 +135,13 @@ namespace ConDep.Dsl.WebDeploy
 			  {
                   Logger.Error(e.Message);
 			  }
+              else if(e.EventLevel == TraceLevel.Warning)
+              {
+                  Logger.Warn(e.Message);
+              }
 			  else
 			  {
-			      Logger.Log(e.Message, e.EventLevel);
+			      Logger.Log(e.Message, TraceLevel.Verbose);
 			  }
 		  }
 

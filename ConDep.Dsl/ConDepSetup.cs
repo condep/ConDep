@@ -70,13 +70,8 @@ namespace ConDep.Dsl
             }
 
             Logger.TeamCityBlockStart("ConDep");
-            Logger.TeamCityProgressMessage("Executing ConDep");
-            Logger.Info("Starting execution of ConDep");
-            
             var operationExecutor = new OperationExecutor(_operations, options, webDeploymentStatus, _context);
             var result = operationExecutor.Execute();
-
-            Logger.Info("Finished executing ConDep");
             Logger.TeamCityBlockEnd("ConDep");
             return result;
         }
