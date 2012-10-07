@@ -1,14 +1,15 @@
 using System.Collections.Generic;
+using ConDep.Dsl.Model.Config;
 
 namespace ConDep.Dsl.WebDeploy
 {
     public class ConditionContainer<T> where T : IProvideOptions, new()
     {
         private readonly List<IProvide> _childProviders;
-        private readonly DeploymentServer _server;
+        private readonly ServerConfig _server;
         private WebDeployExecuteCondition<T> _condition;
 
-        public ConditionContainer(WebDeployExecuteCondition<T> condition, List<IProvide> childProviders, DeploymentServer server)
+        public ConditionContainer(WebDeployExecuteCondition<T> condition, List<IProvide> childProviders, ServerConfig server)
         {
             _condition = condition;
             _childProviders = childProviders;

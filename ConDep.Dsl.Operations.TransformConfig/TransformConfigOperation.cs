@@ -48,7 +48,7 @@ namespace ConDep.Dsl
 			document.Save(configFilePath);
 
 			if(!success)
-				throw new WebConfigTransformException(string.Format("Failed to transform [{0}] file.", _configName));
+				throw new CondepWebConfigTransformException(string.Format("Failed to transform [{0}] file.", _configName));
 
 			return webDeploymentStatus;
 		}

@@ -1,32 +1,28 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using ConDep.Dsl;
+using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
-using log4net.Config;
 
 namespace ConDep.Console
 {
-    sealed class Program
+    sealed internal class Program
     {
-        //ConDep.exe MyAssembly.dll Env=Test [Server=web01] [Applications=Selvbetjent] [/InfraOnly] [/DeployOnly]
-        //
-        //If only assembly and Env is provided, then ConDep will deploy all applications to all servers utilizing load balancer if provided
-        //If assembly, Env and Server is provided, then ConDep will take Server offline from Load Balancer if provided and deploy all applications
-        //If assembly, Env, Server and Application is provided, then ConDep will take Server offline from Load Balancer if provided and deploy only the Applications specified
         static void Main(string[] args)
         {
             var exitCode = 0;
             try
             {
                 new LogConfigLoader().Load();
+                Logger.LogSectionStart("ConDep");
 
                 var optionHandler = new CommandLineOptionHandler(args);
-                var configAssemblyLoader = new ConfigurationAssemblyHandler(optionHandler.Params.AssemblyName);
+                var configAssemblyLoader = new ConDepAssemblyHandler(optionHandler.Params.AssemblyName);
                 var assembly = configAssemblyLoader.GetConfigAssembly();
 
-                var jsonConfigParser = new JsonConfigParser(Path.GetDirectoryName(assembly.Location), optionHandler.Params.Environment);
-                var envSettings = jsonConfigParser.GetEnvSettings(optionHandler.Params.Server, optionHandler.Params.BypassLB);
                 var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.PrintSequence);
+                var envSettings = GetEnvConfig(optionHandler.Params, assembly);
 
                 var status = new WebDeploymentStatus();
                 ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions, status);
@@ -43,29 +39,30 @@ namespace ConDep.Console
             }
             finally
             {
+                Logger.LogSectionEnd("ConDep");
                 Environment.Exit(exitCode);
             }
         }
-    }
 
-    internal class LogConfigLoader
-    {
-        public void Load()
+        private static ConDepConfig GetEnvConfig(CommandLineParams cmdParams, Assembly assembly)
         {
-            var logpath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "condep.log4net.xml");
-            if(File.Exists(logpath))
-            {
-                XmlConfigurator.Configure(new FileInfo(logpath));
-            }
-            else
-            {
-                var type = GetType();
+            var envFileName = string.Format("{0}.Env.json", cmdParams.Environment);
+            var envFilePath = Path.Combine(Path.GetDirectoryName(assembly.Location), envFileName);
 
-                using(var logConfigStream = type.Module.Assembly.GetManifestResourceStream(type.Namespace + ".internal.condep.log4net.xml"))
-                {
-                    XmlConfigurator.Configure(logConfigStream);
-                }
+            var jsonConfigParser = new EnvConfigParser();
+            var envConfig = jsonConfigParser.GetEnvConfig(envFilePath);
+
+            //todo: add unit tests for these conditions
+            if (!string.IsNullOrWhiteSpace(cmdParams.Server))
+            {
+                envConfig.Servers.RemoveAllExcept(cmdParams.Server);
             }
+
+            if (cmdParams.BypassLB)
+            {
+                envConfig.LoadBalancer = null;
+            }
+            return envConfig;
         }
     }
 }

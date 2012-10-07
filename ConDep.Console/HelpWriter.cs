@@ -3,7 +3,7 @@ using NDesk.Options;
 
 namespace ConDep.Console
 {
-    public class HelpWriter
+    internal class HelpWriter
     {
         private readonly TextWriter _writer;
 

@@ -1,6 +1,7 @@
 using System.IO;
 using ConDep.Dsl;
 using ConDep.Dsl.LoadBalancer;
+using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.LoadBalancer.Arr
@@ -21,13 +22,13 @@ namespace ConDep.LoadBalancer.Arr
             return true;
         }
 
-        public override void Configure(DeploymentServer arrServer)
+        public override void Configure(ServerConfig arrServer)
         {
             DeployPsCmdLet(arrServer);
             Execute(_state, arrServer, _serverNameToChangeStateOn);
         }
 
-        private void DeployPsCmdLet(DeploymentServer server)
+        private void DeployPsCmdLet(ServerConfig server)
         {
             var condition = WebDeployExecuteCondition<ProvideForInfrastructure>.IsFailure(p => p.PowerShell("import-module ApplicationRequestRouting"));
 
@@ -35,7 +36,7 @@ namespace ConDep.LoadBalancer.Arr
             Configure<ProvideForDeployment, ProvideForInfrastructure>(server, p => p.CopyDir(dir, @"%temp%\ApplicationRequestRouting"), condition);
         }
 
-        private void Execute(LoadBalanceState state, DeploymentServer server, string serverNameToChangeStateOn)
+        private void Execute(LoadBalanceState state, ServerConfig server, string serverNameToChangeStateOn)
         {
             Configure<ProvideForInfrastructure>(server, p => 
                 p.PowerShell(string.Format(@"import-module $env:temp\ApplicationRequestRouting; Set-WebFarmServerState -State {0} -Name {1} -UseDnsLookup;", 

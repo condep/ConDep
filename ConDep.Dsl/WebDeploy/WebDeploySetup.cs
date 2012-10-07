@@ -1,10 +1,18 @@
-﻿namespace ConDep.Dsl.WebDeploy
+﻿using ConDep.Dsl.Model.Config;
+
+namespace ConDep.Dsl.WebDeploy
 {
     public class WebDeploySetup : ISetupWebDeploy
     {
-        private DeploymentServer _activeDeploymentServer;
+        private readonly ConDepConfig _envConfig;
+        private ServerConfig _activeDeploymentServer;
 
-        public WebDeployServerDefinition ConfigureServer(DeploymentServer deploymentServer)
+        public WebDeploySetup(ConDepConfig envConfig)
+        {
+            _envConfig = envConfig;
+        }
+
+        public WebDeployServerDefinition ConfigureServer(ServerConfig deploymentServer)
         {
             _activeDeploymentServer = deploymentServer;
             ActiveWebDeployServerDefinition = WebDeployServerDefinition.CreateOrGetForServer(deploymentServer);
@@ -18,7 +26,7 @@
             {
                 webDeployCompositeProviderBase.Configure(_activeDeploymentServer);
             }
-            ActiveWebDeployServerDefinition.Providers.Add(provider);
+            ActiveWebDeployServerDefinition.AddProvider(provider, _envConfig);
         }
 
         public WebDeployServerDefinition ActiveWebDeployServerDefinition { get; private set; }

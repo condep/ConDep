@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.WebSite
@@ -30,16 +31,16 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.WebSite
             return !string.IsNullOrWhiteSpace(_webSiteName);
         }
 
-        public override void Configure(DeploymentServer server)
+        public override void Configure(ServerConfig server)
         {
 
-            var webSiteSettings = server.WebSites.SingleOrDefault(x => x.WebSiteName == WebSiteName);
+            var webSiteConfig = server.WebSites.SingleOrDefault(x => x.Name == WebSiteName);
 
             string psCommand = GetRemoveExistingWebSiteCommand(_id);
             //psCommand += GetCreateAppPoolCommand();
             psCommand += GetCreateWebSiteDirCommand(_physicalDir);
-            psCommand += GetCreateWebSiteCommand(_webSiteName, AppPoolName, webSiteSettings.Bindings);
-            psCommand += GetCreateBindings(_webSiteName, Bindings, webSiteSettings.Bindings);
+            psCommand += GetCreateWebSiteCommand(_webSiteName, AppPoolName, webSiteConfig.Bindings);
+            psCommand += GetCreateBindings(_webSiteName, Bindings, webSiteConfig.Bindings);
             psCommand += GetCertificateCommand();
             Configure<ProvideForInfrastructure>(server, po => po.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
         }
@@ -71,7 +72,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.WebSite
             return command;
         }
 
-        private string GetCreateBindings(string webSiteName, IList<IisBinding> bindings, IList<ConDepWebSiteBinding> serverWebSiteBindings)
+        private string GetCreateBindings(string webSiteName, IList<IisBinding> bindings, IList<WebSiteBindingConfig> serverWebSiteBindings)
         {
             string bindingString = "";
 
@@ -116,7 +117,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.WebSite
 
         }
 
-        private string GetCreateWebSiteCommand(string webSiteName, string appPoolName, IList<ConDepWebSiteBinding> serverWebSiteBindings)
+        private string GetCreateWebSiteCommand(string webSiteName, string appPoolName, IList<WebSiteBindingConfig> serverWebSiteBindings)
         {
 
             string bindingString = "";

@@ -1,3 +1,4 @@
+using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.WebApp
@@ -23,7 +24,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.WebApp
                 && !string.IsNullOrWhiteSpace(_webSiteName);
         }
 
-        public override void Configure(DeploymentServer server)
+        public override void Configure(ServerConfig server)
         {
             //Todo: Remove web app before adding, cause -force have no effect.
             var command = string.Format("$webSite = Get-WebSite | where-object {{ $_.Name -eq '{0}' }}; ", _webSiteName);

@@ -1,4 +1,5 @@
 ﻿using System;
+using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.Binding
@@ -33,7 +34,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.Binding
             return true;
         }
 
-        public override void Configure(DeploymentServer server)
+        public override void Configure(ServerConfig server)
         {
             //Todo: get bindingtype
             var psCommand = CreateBinding(_webSiteName, Ip, HostHeader, _port.ToString(), BindingType.http);

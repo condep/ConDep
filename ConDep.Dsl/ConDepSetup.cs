@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ConDep.Dsl.LoadBalancer;
+using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl
@@ -11,14 +12,14 @@ namespace ConDep.Dsl
 		private readonly List<ConDepOperationBase> _operations = new List<ConDepOperationBase>();
 	    private ILoadBalance _loadBalancer;
         private readonly ISetupWebDeploy _webDeploySetup;
-        private readonly ConDepEnvironmentSettings _envSettings;
+        private readonly ConDepConfig _envConfig;
         private readonly LoadBalancerLookup _loadBalancerLookup;
         private readonly ConDepContext _context;
 
-        public ConDepSetup(ISetupWebDeploy webDeploySetup, ConDepEnvironmentSettings envSettings, LoadBalancerLookup loadBalancerLookup, ConDepContext context)
+        public ConDepSetup(ISetupWebDeploy webDeploySetup, ConDepConfig envConfig, LoadBalancerLookup loadBalancerLookup, ConDepContext context)
         {
             _webDeploySetup = webDeploySetup;
-            _envSettings = envSettings;
+            _envConfig = envConfig;
             _loadBalancerLookup = loadBalancerLookup;
             _context = context;
         }
@@ -30,7 +31,7 @@ namespace ConDep.Dsl
             get { return _webDeploySetup; }
         }
 
-        public ConDepEnvironmentSettings EnvSettings { get { return _envSettings; } }
+        public ConDepConfig EnvConfig { get { return _envConfig; } }
 
         public void AddOperation(ConDepOperationBase operation)
 	    {
@@ -69,10 +70,8 @@ namespace ConDep.Dsl
                 return webDeploymentStatus;
             }
 
-            Logger.TeamCityBlockStart("ConDep");
             var operationExecutor = new OperationExecutor(_operations, options, webDeploymentStatus, _context);
             var result = operationExecutor.Execute();
-            Logger.TeamCityBlockEnd("ConDep");
             return result;
         }
 

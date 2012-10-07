@@ -1,28 +1,31 @@
+using System.Collections.Generic;
 using System.IO;
+using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
 {
-    public class NServiceBusProvider : WebDeployCompositeProviderBase
+    public class NServiceBusProvider : WebDeployCompositeProviderBase, IRequireCustomConfiguration
     {
 		internal const string SERVICE_CONTROLLER_EXE = @"C:\WINDOWS\system32\sc.exe";
         private string _serviceInstallerName = "NServiceBus.Host.exe";
 
-		public NServiceBusProvider(string path, string destDir, string serviceName)
+        public NServiceBusProvider(string path, string destDir, string serviceName)
 		{
             SourcePath = Path.GetFullPath(path);
             ServiceName = serviceName;
 		    DestinationPath = destDir;
 		}
 
-    	public string ServiceName { get; set; }
-    	public string ServiceGroup { get; set; }
-    	public string Password { get; set; }
-    	public string UserName { get; set; }
-        public string Profile { get; set; }
-        public int? ServiceFailureResetInterval { get; set; }
-        public int? ServiceRestartDelay { get; set; }
-        public bool IgnoreFailureOnServiceStartStop { get; set; }
+        public string ServicePassword { get; set; }
+        public string ServiceUserName { get; set; }
+
+        internal string ServiceName { get; set; }
+        internal string ServiceGroup { get; set; }
+        internal string Profile { get; set; }
+        internal int? ServiceFailureResetInterval { get; set; }
+        internal int? ServiceRestartDelay { get; set; }
+        internal bool IgnoreFailureOnServiceStartStop { get; set; }
 
         public string ServiceInstallerName
         {
@@ -30,7 +33,7 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
             set { _serviceInstallerName = value; }
         }
 
-        public override void Configure(DeploymentServer server)
+        public override void Configure(ServerConfig server)
         {
             CopyPowerShellScriptsToTarget(server);
 
@@ -49,8 +52,8 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
 
             if(HasServiceConfigOptions)
             {
-                var userNameOption = !string.IsNullOrWhiteSpace(UserName) ? "obj= \"" + UserName + "\"" : "";
-                var passwordOption = !string.IsNullOrWhiteSpace(Password) ? "password= \"" + Password + "\"" : "";
+                var userNameOption = !string.IsNullOrWhiteSpace(ServiceUserName) ? "obj= \"" + ServiceUserName + "\"" : "";
+                var passwordOption = !string.IsNullOrWhiteSpace(ServicePassword) ? "password= \"" + ServicePassword + "\"" : "";
                 var groupOption = !string.IsNullOrWhiteSpace(ServiceGroup) ? "group= \"" + ServiceGroup + "\"" : "";
 
                 serviceConfigCommand = string.Format("{0} config \"{1}\" {2} {3} {4}", SERVICE_CONTROLLER_EXE, ServiceName, userNameOption, passwordOption, groupOption);
@@ -72,7 +75,7 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
             });
         }
 
-        private void CopyPowerShellScriptsToTarget(DeploymentServer server)
+        private void CopyPowerShellScriptsToTarget(ServerConfig server)
         {
             var filePath = ConDepResourceFiles.GetFilePath(GetType().Namespace, "NServiceBus.ps1");
             Configure<ProvideForDeployment>(server, d => d.CopyFile(filePath, o=> o.RenameFileOnDestination(@"%temp%\NServiceBus.ps1")));
@@ -80,7 +83,7 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
 
         private bool HasServiceConfigOptions
         {
-            get { return !string.IsNullOrWhiteSpace(UserName) || !string.IsNullOrWhiteSpace(Password) || !string.IsNullOrWhiteSpace(ServiceGroup); }
+            get { return !string.IsNullOrWhiteSpace(ServiceUserName) || !string.IsNullOrWhiteSpace(ServicePassword) || !string.IsNullOrWhiteSpace(ServiceGroup); }
         }
 
         private bool HasServiceFailureOptions
@@ -91,6 +94,7 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
         public override bool IsValid(Notification notification)
         {
             var valid = true;
+
             foreach (var childProvider in ChildProviders)
             {
                 if(!childProvider.IsValid(notification))

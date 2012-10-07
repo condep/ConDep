@@ -14,7 +14,7 @@ namespace ConDep.Dsl
         public static void Deployment(this IProvideForSetup conDepSetup, Action<ProvideForDeployment> deployment)
         {
             var setup = (ConDepSetup)conDepSetup;
-            foreach (var deploymentServer in setup.EnvSettings.Servers)
+            foreach (var deploymentServer in setup.EnvConfig.Servers)
             {
                 setup.WebDeploySetup.ConfigureServer(deploymentServer);
 
@@ -36,7 +36,7 @@ namespace ConDep.Dsl
         public static void Infrastructure(this IProvideForSetup conDepSetup, Action<ProvideForInfrastructure> infrastructure)
         {
             var setup = (ConDepSetup)conDepSetup;
-            foreach (var deploymentServer in setup.EnvSettings.Servers)
+            foreach (var deploymentServer in setup.EnvConfig.Servers)
             {
                 //Should WebDeploySetup (or its functionality) be on the WebDeployOperation?
                 setup.WebDeploySetup.ConfigureServer(deploymentServer);

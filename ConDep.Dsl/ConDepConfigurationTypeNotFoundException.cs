@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace ConDep.Dsl
 {
-    internal class ConDepConfigurationTypeNotFoundException : Exception
+    public class ConDepConfigurationTypeNotFoundException : Exception
     {
         public ConDepConfigurationTypeNotFoundException() {}
 

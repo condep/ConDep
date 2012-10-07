@@ -1,18 +1,17 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using ConDep.Dsl;
+using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl
 {
     public class ConDepConfigurationExecutor
     {
-        public void Execute(Assembly assembly, ConDepEnvironmentSettings envSettings, ConDepOptions options, WebDeploymentStatus status)
+        public void Execute(Assembly assembly, ConDepConfig envConfig, ConDepOptions options, WebDeploymentStatus status)
         {
             if (assembly == null) { throw new ArgumentException("assembly"); }
-            if (envSettings == null) { throw new ArgumentException("envSettings"); }
+            if (envConfig == null) { throw new ArgumentException("envSettings"); }
 
             var type = assembly.GetTypes().Where(t => typeof(ConDepConfiguratorBase).IsAssignableFrom(t)).FirstOrDefault();
             if (type == null)
@@ -25,13 +24,13 @@ namespace ConDep.Dsl
 
             depObject.Options = options;
             depObject.Status = status;
-            depObject.EnvSettings = envSettings;
+            depObject.EnvSettings = envConfig;
 
-            IoCBootstrapper.Bootstrap(envSettings);
+            IoCBootstrapper.Bootstrap(envConfig);
             depObject.Configure();
         }
 
-        public static void ExecuteFromAssembly(Assembly assembly, ConDepEnvironmentSettings envSettings, ConDepOptions options, WebDeploymentStatus status)
+        public static void ExecuteFromAssembly(Assembly assembly, ConDepConfig envSettings, ConDepOptions options, WebDeploymentStatus status)
         {
             new ConDepConfigurationExecutor().Execute(assembly, envSettings, options, status);
         }

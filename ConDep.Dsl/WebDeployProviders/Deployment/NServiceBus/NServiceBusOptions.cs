@@ -17,13 +17,13 @@
 
     	public NServiceBusOptions UserName(string username)
     	{
-    		_nservicebusProvider.UserName = username;
+    		_nservicebusProvider.ServiceUserName = username;
     		return this;
     	}
 
     	public NServiceBusOptions Password(string password)
     	{
-    		_nservicebusProvider.Password = password;
+    		_nservicebusProvider.ServicePassword = password;
 			return this;
     	}
 

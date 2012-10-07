@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using ConDep.Dsl;
 using ConDep.Dsl.LoadBalancer;
+using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.LoadBalancer.Arr
@@ -10,13 +11,15 @@ namespace ConDep.LoadBalancer.Arr
     //Todo: Use base class instead? In order to guide implementers to provide LoadBalancerSettings in constructor which automatically will be injected.
     public class ApplicationRequestRoutingLoadBalancer : ILoadBalance
     {
-        private readonly LoadBalancerSettings _settings;
-        private DeploymentUser _user;
+        private readonly LoadBalancerConfig _settings;
+        private readonly DeploymentUserConfig _user;
+        private readonly ServerConfig _server;
 
-        public ApplicationRequestRoutingLoadBalancer(LoadBalancerSettings settings)
+        public ApplicationRequestRoutingLoadBalancer(LoadBalancerConfig settings)
         {
             _settings = settings;
-            _user = new DeploymentUser {UserName = settings.UserName, Password = settings.Password};
+            _user = new DeploymentUserConfig { UserName = settings.UserName, Password = settings.Password };
+            _server = new ServerConfig {DeploymentUser = _user, Name = _settings.Name};
         }
 
         public void BringOnline(string serverName, WebDeploymentStatus webDeploymentStatus)
@@ -36,10 +39,10 @@ namespace ConDep.LoadBalancer.Arr
             var webDepDef = CreateWebDeployDefinition();
 
             var provider = new ApplicationRequestRoutingProvider(state, serverName);
-            provider.Configure(new DeploymentServer(_settings.Name, _user));
+            provider.Configure(_server);
             //Todo: Why is the child providers in the wrong order by default??
             provider.ChildProviders.ToList().Reverse();
-            webDepDef.Providers.Add(provider);
+            webDepDef.AddProvider(provider, null);
 
             var webOp = new WebDeployOperation(webDepDef);
             return webOp;
@@ -47,8 +50,7 @@ namespace ConDep.LoadBalancer.Arr
 
         private WebDeployServerDefinition CreateWebDeployDefinition()
         {
-            var user = new DeploymentUser() {UserName = _settings.UserName, Password = _settings.Password};
-            return  WebDeployServerDefinition.CreateOrGetForServer(new DeploymentServer(_settings.Name, user));
+            return  WebDeployServerDefinition.CreateOrGetForServer(_server);
         }
     }
 }

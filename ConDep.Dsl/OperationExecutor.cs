@@ -37,9 +37,9 @@ namespace ConDep.Dsl
             }
             else
             {
-                Logger.TeamCityBlockStart(operation.GetType().Name);
+                Logger.LogSectionStart(operation.GetType().Name);
                 operation.Execute(_webDeploymentStatus);
-                Logger.TeamCityBlockEnd(operation.GetType().Name);
+                Logger.LogSectionEnd(operation.GetType().Name);
             }
         }
 
@@ -63,9 +63,9 @@ namespace ConDep.Dsl
                 contextSetup = _context[((ConDepContextOperationPlaceHolder)operation).ContextName];
             }
 
-            Logger.TeamCityBlockStart(((ConDepContextOperationPlaceHolder)operation).ContextName + " context");
+            Logger.LogSectionStart(((ConDepContextOperationPlaceHolder)operation).ContextName + " context");
             contextSetup.Execute(options, webDeploymentStatus);
-            Logger.TeamCityBlockEnd(((ConDepContextOperationPlaceHolder)operation).ContextName + " context");
+            Logger.LogSectionEnd(((ConDepContextOperationPlaceHolder)operation).ContextName + " context");
         }
     }
 }

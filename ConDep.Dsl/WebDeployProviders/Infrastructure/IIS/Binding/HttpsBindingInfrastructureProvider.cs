@@ -1,4 +1,5 @@
 ﻿using System;
+using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.Binding
@@ -15,7 +16,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.Binding
             throw new NotImplementedException();
         }
 
-        public override void Configure(DeploymentServer server)
+        public override void Configure(ServerConfig server)
         {
             throw new NotImplementedException();
         }

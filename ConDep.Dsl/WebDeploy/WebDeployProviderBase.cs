@@ -66,7 +66,7 @@ namespace ConDep.Dsl.WebDeploy
 
             if (summery.Errors > 0)
             {
-                throw new WebDeployProviderException("The provider reported " + summery.Errors + " during deployment.");
+                throw new ConDepWebDeployProviderException("The provider reported " + summery.Errors + " during deployment.");
             }
             return deploymentStatus;
         }

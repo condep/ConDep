@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.WebDeployProviders.PowerShell
@@ -24,7 +25,7 @@ namespace ConDep.Dsl.WebDeployProviders.PowerShell
 
         public bool ContinueOnError { get; set; }
 
-        public override void Configure(DeploymentServer server)
+        public override void Configure(ServerConfig server)
         {
             if(!IsCommand(DestinationPath))
             {
@@ -48,12 +49,12 @@ namespace ConDep.Dsl.WebDeployProviders.PowerShell
             return builder.ToString();
         }
 
-        private void ExecuteScriptOnDestination(DeploymentServer server, string destFilePath)
+        private void ExecuteScriptOnDestination(ServerConfig server, string destFilePath)
         {
             Configure<ProvideForInfrastructure>(server, po => po.RunCmd(string.Format(@"powershell.exe -InputFormat none -File '{0}'", destFilePath), ContinueOnError, o => o.WaitIntervalInSeconds(WaitInterval)));
         }
 
-        private string CopyScriptToDestination(DeploymentServer server, string filePath)
+        private string CopyScriptToDestination(ServerConfig server, string filePath)
         {
             var destFilePath = @"%temp%\" + Path.GetFileName(filePath);
             Configure<ProvideForDeployment>(server, c => c.CopyFile(filePath, o => o.RenameFileOnDestination(destFilePath)));

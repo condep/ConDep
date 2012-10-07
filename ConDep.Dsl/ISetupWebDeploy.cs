@@ -1,10 +1,11 @@
-﻿using ConDep.Dsl.WebDeploy;
+﻿using ConDep.Dsl.Model.Config;
+using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl
 {
     public interface ISetupWebDeploy
     {
-        WebDeployServerDefinition ConfigureServer(DeploymentServer deploymentServer);
+        WebDeployServerDefinition ConfigureServer(ServerConfig deploymentServer);
         void ConfigureProvider(IProvide provider);
         WebDeployServerDefinition ActiveWebDeployServerDefinition { get; }
     }

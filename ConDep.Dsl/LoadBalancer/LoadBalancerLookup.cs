@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using ConDep.Dsl.Model.Config;
 
 namespace ConDep.Dsl.LoadBalancer
 {
     public class LoadBalancerLookup
     {
-        private readonly LoadBalancerSettings _loadBalancerSettings;
+        private readonly LoadBalancerConfig _loadBalancerSettings;
 
-        public LoadBalancerLookup(LoadBalancerSettings loadBalancerSettings)
+        public LoadBalancerLookup(LoadBalancerConfig loadBalancerSettings)
         {
             _loadBalancerSettings = loadBalancerSettings;
         }

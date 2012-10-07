@@ -6,7 +6,7 @@ namespace ConDep.Dsl.WebDeployProviders.RunCmd
 	public class RunCmdProvider : WebDeployProviderBase
 	{
 	    private readonly bool _continueOnError;
-        private UntrappedExitCodeException _untrappedExitCodeException;
+        private ConDepUntrappedExitCodeException _untrappedExitCodeException;
         private const string NAME = "runCommand";
 
 		public RunCmdProvider(string command, bool continueOnError)
@@ -75,7 +75,7 @@ namespace ConDep.Dsl.WebDeployProviders.RunCmd
             {
                 if (!e.Message.Contains("exited with code '0x0'"))
                 {
-                    _untrappedExitCodeException = new UntrappedExitCodeException(e.Message, _untrappedExitCodeException);
+                    _untrappedExitCodeException = new ConDepUntrappedExitCodeException(e.Message, _untrappedExitCodeException);
                 }
             }
         }

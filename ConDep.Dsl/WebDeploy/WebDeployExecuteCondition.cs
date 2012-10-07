@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConDep.Dsl.Model.Config;
 
 namespace ConDep.Dsl.WebDeploy
 {
@@ -15,7 +16,7 @@ namespace ConDep.Dsl.WebDeploy
         private readonly Action<T> _action;
         private readonly ExpectedOutcome _expectedOutcome;
         private readonly List<IProvide> _providers = new List<IProvide>();
-        private DeploymentServer _server;
+        private ServerConfig _server;
 
         private WebDeployExecuteCondition(Action<T> action, ExpectedOutcome expectedOutcome)
         {
@@ -61,7 +62,7 @@ namespace ConDep.Dsl.WebDeploy
                 case ExpectedOutcome.Failure:
                     return deploymentStatus.HasErrors || exception;
                 default:
-                    throw new UnsupportedOutcomeException();
+                    throw new ConDepUnsupportedOutcomeException();
             }
         }
 
@@ -70,7 +71,7 @@ namespace ConDep.Dsl.WebDeploy
             return _providers.All(provider => provider.IsValid(notification));
         }
 
-        public void Configure(DeploymentServer arrServer)
+        public void Configure(ServerConfig arrServer)
         {
             _server = arrServer;
             var options = new T();

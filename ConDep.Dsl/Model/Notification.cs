@@ -25,7 +25,7 @@ namespace ConDep.Dsl
 
 	    public void Throw()
 	    {
-	        throw _validationErrors.Aggregate<SemanticValidationError, Exception>(null, (current, error) => new InvalidSetupException(error.Message, current));
+	        throw _validationErrors.Aggregate<SemanticValidationError, Exception>(null, (current, error) => new ConDepInvalidSetupException(error.Message, current));
 	    }
 	}
 }

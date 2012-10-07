@@ -1,3 +1,4 @@
+using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.AppPool
@@ -12,7 +13,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.AppPool
             _appPoolName = appPoolName;
         }
 
-        public AppPoolInfrastructureProvider(string appPoolName, ApplicationPool appPool)
+        public AppPoolInfrastructureProvider(string appPoolName, ApplicationPool appPool) 
         {
             _appPoolName = appPoolName;
             _appPool = appPool;
@@ -25,7 +26,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.AppPool
             return !string.IsNullOrWhiteSpace(_appPoolName);
         }
 
-        public override void Configure(DeploymentServer server)
+        public override void Configure(ServerConfig server)
         {
             var psCommand = string.Format("Set-Location IIS:\\AppPools; try {{ Remove-WebAppPool '{0}' }} catch {{ }}; $newAppPool = New-WebAppPool '{0}'; ", _appPoolName);
 
@@ -59,7 +60,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.IIS.AppPool
                 case NetFrameworkVersion.Net5_0:
                     return "v5.0";
                 default:
-                    throw new UnknowNetFrameworkException("Framework version unknown to ConDep.");
+                    throw new ConDepUnknowNetFrameworkException("Framework version unknown to ConDep.");
             }
 
         }

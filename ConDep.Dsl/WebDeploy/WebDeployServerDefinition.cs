@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
+using ConDep.Dsl.Model.Config;
 using Microsoft.Web.Deployment;
+using System.Linq;
 
 namespace ConDep.Dsl.WebDeploy
 {
@@ -14,18 +17,19 @@ namespace ConDep.Dsl.WebDeploy
 
         public WebDeployServerDefinition() { }
 
-        public WebDeployServerDefinition(DeploymentServer deploymentServer)
+        public WebDeployServerDefinition(ServerConfig deploymentServer)
         {
-            WebDeployDestination.ComputerName = deploymentServer.ServerName;
+            WebDeployDestination.ComputerName = deploymentServer.Name;
             WebDeploySource.LocalHost = true;
 
-            if (!deploymentServer.User.IsDefined) return;
+            if (!deploymentServer.DeploymentUser.IsDefined) return;
 
-            WebDeployDestination.Credentials.UserName = deploymentServer.User.UserName;
-            WebDeployDestination.Credentials.Password = deploymentServer.User.Password;
+            WebDeployDestination.Credentials.UserName = deploymentServer.DeploymentUser.UserName;
+            WebDeployDestination.Credentials.Password = deploymentServer.DeploymentUser.Password;
 
-            WebDeploySource.Credentials.UserName = deploymentServer.User.UserName;
-            WebDeploySource.Credentials.Password = deploymentServer.User.Password;
+            //Todo: Should this user also be used for source?
+            WebDeploySource.Credentials.UserName = deploymentServer.DeploymentUser.UserName;
+            WebDeploySource.Credentials.Password = deploymentServer.DeploymentUser.Password;
         }
 
         public WebDeploySource WebDeploySource
@@ -33,7 +37,7 @@ namespace ConDep.Dsl.WebDeploy
 			get { return _webDeploySource; }
 		}
 
-		public List<IProvide> Providers { get { return _providers; } }
+		public IEnumerable<IProvide> Providers { get { return _providers; } }
 
 		public WebDeployDestination WebDeployDestination
 		{
@@ -70,7 +74,7 @@ namespace ConDep.Dsl.WebDeploy
 
 			  try
 			  {
-                  Logger.TeamCityBlockStart(WebDeployDestination.ComputerName);
+                  Logger.LogSectionStart(WebDeployDestination.ComputerName);
 				  options = GetWebDeployOptions();
 
 				  foreach (var provider in Providers)
@@ -97,7 +101,7 @@ namespace ConDep.Dsl.WebDeploy
                   if (options != null && options.DestBaseOptions != null) options.DestBaseOptions.Trace -= OnWebDeployTraceMessage;
                   if (options != null && options.SourceBaseOptions != null) options.SourceBaseOptions.Trace -= OnWebDeployTraceMessage;
 
-                  Logger.TeamCityBlockEnd(WebDeployDestination.ComputerName);
+                  Logger.LogSectionEnd(WebDeployDestination.ComputerName);
               }
 
 			  return deploymentStatus;
@@ -157,7 +161,7 @@ namespace ConDep.Dsl.WebDeploy
 
         private readonly Dictionary<string, WebDeployServerDefinition> ServerDefinitions = new Dictionary<string, WebDeployServerDefinition>();
 
-        public static WebDeployServerDefinition CreateOrGetForServer(DeploymentServer deploymentServer)
+        public static WebDeployServerDefinition CreateOrGetForServer(ServerConfig deploymentServer)
         {
             //if (ServerDefinitions.ContainsKey(deploymentServer.ServerName))
             //{
@@ -165,8 +169,31 @@ namespace ConDep.Dsl.WebDeploy
             //}
             
             var definition = new WebDeployServerDefinition(deploymentServer);
-            definition.ServerDefinitions.Add(deploymentServer.ServerName, definition);
+            definition.ServerDefinitions.Add(deploymentServer.Name, definition);
             return definition;
         }
+
+        public void AddProvider(IProvide provider, ConDepConfig envSettings)
+        {
+            if (envSettings != null && provider is IRequireCustomConfiguration)
+            {
+                AddCustomConfigForProvider(provider, envSettings);
+            }
+            _providers.Add(provider);
+        }
+
+        private void AddCustomConfigForProvider(IProvide provider, ConDepConfig envSettings)
+        {
+            var providerConfig = envSettings.CustomProviderConfig.FirstOrDefault(x => x.ProviderName == provider.GetType().Name);
+
+            foreach(var property in providerConfig.ProviderConfig)
+            {
+                provider.GetType().GetProperty(property.Key).SetValue(provider, property.Value, null);
+            }
+        }
 	}
+
+    public interface IRequireCustomConfiguration
+    {
+    }
 }

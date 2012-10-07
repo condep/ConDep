@@ -1,13 +1,15 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using ConDep.Dsl.Model.Config;
 
 namespace ConDep.Dsl.WebDeploy
 {
     public abstract class WebDeployCompositeProviderBase : IProvide
     {
+        protected readonly CustomProviderConfig _customProviderConfig;
         private readonly List<IProvide> _childProviders = new List<IProvide>();
-        private DeploymentServer _server;
+        private ServerConfig _server;
         private List<IProvideConditions> _conditions = new List<IProvideConditions>();
 
         public IEnumerable<IProvide> ChildProviders { get { return _childProviders; } }
@@ -17,7 +19,7 @@ namespace ConDep.Dsl.WebDeploy
         public int WaitInterval { get; set; }
         public int RetryAttempts { get; set; }
 
-        public abstract void Configure(DeploymentServer server);
+        public abstract void Configure(ServerConfig server);
 
         public virtual void BeforeExecute()
         {
@@ -38,14 +40,14 @@ namespace ConDep.Dsl.WebDeploy
             _childProviders.Add(provider);
         }
 
-        protected void Configure<T>(DeploymentServer server, Action<T> action) where T : IProvideOptions, new()
+        protected void Configure<T>(ServerConfig server, Action<T> action) where T : IProvideOptions, new()
         {
             _server = server;
             var options = new T { AddProviderAction = AddChildProvider };
             action(options);
         }
 
-        protected void Configure<T1, T2>(DeploymentServer server, Action<T1> action, WebDeployExecuteCondition<T2> condition)
+        protected void Configure<T1, T2>(ServerConfig server, Action<T1> action, WebDeployExecuteCondition<T2> condition)
             where T1 : IProvideOptions, new()
             where T2 : IProvideOptions, new()
         {

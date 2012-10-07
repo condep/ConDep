@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Linq;
+using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.WebDeployProviders.Infrastructure.Certificate
@@ -13,21 +14,21 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.Certificate
         private readonly string _certFile;
         private readonly bool _copyCertFromFile;
 
-        public CertificateInfrastructureProvider(string searchString, X509FindType findType)
+        public CertificateInfrastructureProvider(string searchString, X509FindType findType) 
         {
             _searchString = searchString;
             _findType = findType;
             _copyCertFromFile = false;
         }
 
-        public CertificateInfrastructureProvider(string searchString, string certFriendlyName)
+        public CertificateInfrastructureProvider(string searchString, string certFriendlyName) 
         {
             _searchString = searchString;
             _certFriendlyName = certFriendlyName;
             _copyCertFromFile = false;
         }
 
-        public CertificateInfrastructureProvider(string certFile)
+        public CertificateInfrastructureProvider(string certFile) 
         {
             _certFile = certFile;
             _copyCertFromFile = true;
@@ -38,7 +39,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.Certificate
             return File.Exists(_certFile);
         }
 
-        public override void Configure(DeploymentServer server)
+        public override void Configure(ServerConfig server)
         {
             if (_copyCertFromFile)
             {
@@ -66,9 +67,9 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.Certificate
                     if (certs.Count != 1)
                     {
                         if (certs.Count < 1)
-                            throw new CertificateNotFoundException("Certificate not found");
+                            throw new ConDepCertificateNotFoundException("Certificate not found");
 
-                        throw new CertificateDuplicationException("More than one certificate found in search");
+                        throw new ConDepCertificateDuplicationException("More than one certificate found in search");
                     }
 
                     ConfigureCertInstall(server, certs[0]);
@@ -80,7 +81,7 @@ namespace ConDep.Dsl.WebDeployProviders.Infrastructure.Certificate
             }
         }
 
-        private void ConfigureCertInstall(DeploymentServer server, X509Certificate2 cert)
+        private void ConfigureCertInstall(ServerConfig server, X509Certificate2 cert)
         {
             var certScript = string.Format("[byte[]]$byteArray = {0}; $myCert = new-object System.Security.Cryptography.X509Certificates.X509Certificate2(,$byteArray); ", string.Join(",", cert.GetRawCertData()));
             certScript += string.Format("$store = new-object System.Security.Cryptography.X509Certificates.X509Store('{0}', '{1}'); $store.open(“MaxAllowed”); $store.add($myCert); $store.close();", StoreName.My, StoreLocation.LocalMachine);
