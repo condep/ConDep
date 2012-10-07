@@ -39,7 +39,7 @@ namespace ConDep.Dsl.WebDeploy
 
 		public IEnumerable<IProvide> Providers { get { return _providers; } }
 
-		public WebDeployDestination WebDeployDestination
+        public WebDeployDestination WebDeployDestination
 		{
 			get { return _webDeployDestination; }
 		}

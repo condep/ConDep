@@ -1,11 +1,9 @@
 using System;
-using System.Diagnostics;
-using ConDep.Dsl.WebDeploy;
 using Microsoft.Web.Publishing.Tasks;
 
 namespace ConDep.Dsl
 {
-	public class WebTransformLogger : IXmlTransformationLogger
+    internal class WebTransformLogger : IXmlTransformationLogger
 	{
 		public void LogMessage(string message, params object[] messageArgs)
 		{

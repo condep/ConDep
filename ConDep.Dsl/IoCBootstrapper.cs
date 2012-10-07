@@ -6,7 +6,7 @@ using TinyIoC;
 
 namespace ConDep.Dsl
 {
-    public class IoCBootstrapper
+    internal class IoCBootstrapper
     {
         private readonly ConDepConfig _envConfig;
 

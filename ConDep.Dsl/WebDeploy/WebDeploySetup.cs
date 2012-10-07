@@ -2,7 +2,7 @@
 
 namespace ConDep.Dsl.WebDeploy
 {
-    public class WebDeploySetup : ISetupWebDeploy
+    internal class WebDeploySetup : ISetupWebDeploy
     {
         private readonly ConDepConfig _envConfig;
         private ServerConfig _activeDeploymentServer;

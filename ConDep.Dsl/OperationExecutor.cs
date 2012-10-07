@@ -4,7 +4,7 @@ using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl
 {
-    public class OperationExecutor
+    internal class OperationExecutor
     {
         private readonly List<ConDepOperationBase> _operations;
         private readonly ConDepOptions _options;

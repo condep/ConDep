@@ -7,16 +7,16 @@ using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl
 {
-    public class ConDepSetup : ISetupConDep, IValidate, IProvideForSetup
+    internal class ConDepSetup : ISetupConDep, IValidate, IProvideForSetup
 	{
 		private readonly List<ConDepOperationBase> _operations = new List<ConDepOperationBase>();
 	    private ILoadBalance _loadBalancer;
         private readonly ISetupWebDeploy _webDeploySetup;
         private readonly ConDepConfig _envConfig;
-        private readonly LoadBalancerLookup _loadBalancerLookup;
+        private readonly ILookupLoadBalancer _loadBalancerLookup;
         private readonly ConDepContext _context;
 
-        public ConDepSetup(ISetupWebDeploy webDeploySetup, ConDepConfig envConfig, LoadBalancerLookup loadBalancerLookup, ConDepContext context)
+        public ConDepSetup(ISetupWebDeploy webDeploySetup, ConDepConfig envConfig, ILookupLoadBalancer loadBalancerLookup, ConDepContext context)
         {
             _webDeploySetup = webDeploySetup;
             _envConfig = envConfig;

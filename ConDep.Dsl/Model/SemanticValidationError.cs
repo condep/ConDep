@@ -1,6 +1,6 @@
 namespace ConDep.Dsl
 {
-	public class SemanticValidationError
+    public class SemanticValidationError
 	{
 		private readonly string _message;
 		private readonly ValidationErrorType _errorType;

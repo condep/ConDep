@@ -2,8 +2,8 @@
 
 namespace ConDep.Dsl.WebDeploy
 {
-	public class WebDeployDestination : IValidate
-	{
+    public class WebDeployDestination : IValidate
+    {
 		private readonly Credentials _credentials = new Credentials();
 
 		public string ComputerName { get; set; }

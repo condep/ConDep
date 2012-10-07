@@ -4,7 +4,7 @@ using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl
 {
-    public class ConDepContextOperationPlaceHolder : ConDepOperationBase
+    internal class ConDepContextOperationPlaceHolder : ConDepOperationBase
     {
         private string _contextName;
 

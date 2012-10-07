@@ -3,7 +3,7 @@ using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.Operations.WebRequest
 {
-    public class WebRequestOperation : ConDepOperationBase
+    internal class WebRequestOperation : ConDepOperationBase
     {
         private readonly string _url;
         private readonly string _method;

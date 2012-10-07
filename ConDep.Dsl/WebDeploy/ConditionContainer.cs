@@ -3,7 +3,7 @@ using ConDep.Dsl.Model.Config;
 
 namespace ConDep.Dsl.WebDeploy
 {
-    public class ConditionContainer<T> where T : IProvideOptions, new()
+    internal class ConditionContainer<T> where T : IProvideOptions, new()
     {
         private readonly List<IProvide> _childProviders;
         private readonly ServerConfig _server;

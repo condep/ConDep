@@ -86,7 +86,6 @@
     <Compile Include="Model\Config\ServerListExtensions.cs" />
     <Compile Include="Model\Config\WebSiteBindingConfig.cs" />
     <Compile Include="Model\Config\WebSiteConfig.cs" />
-    <Compile Include="Model\CustomEnvConfig.cs" />
     <Compile Include="Model\ConDepInvalidSetupException.cs" />
     <Compile Include="OperationExecutor.cs" />
     <Compile Include="Operations\PreCompile\PreCompileCallback.cs" />
@@ -161,28 +160,19 @@
     <Compile Include="IProvideConditions.cs" />
     <Compile Include="WebDeploy\ConditionContainer.cs" />
     <Compile Include="WebDeploy\WebDeploySetup.cs" />
-    <Compile Include="WebDeploy\WebDeployConfigurationOptions.cs" />
-    <Compile Include="WebDeploy\WebDeployCredentialsOptions.cs" />
-    <Compile Include="WebDeploy\WebDeployToOptions.cs" />
     <Compile Include="WebDeploy\ConDepUnsupportedOutcomeException.cs" />
     <Compile Include="WebDeploy\WebDeployExecuteCondition.cs" />
     <Compile Include="WebDeploy\WebDeployCompositeProviderBase.cs" />
-    <Compile Include="Model\ConDepEnvironmentSettings.cs" />
     <Compile Include="ConDepConfiguratorBase.cs" />
-    <Compile Include="Model\ConDepWebSiteBinding.cs" />
-    <Compile Include="Model\ConDepWebSiteSettings.cs" />
     <Compile Include="Model\Configuration.cs" />
     <Compile Include="Model\Credentials.cs" />
     <Compile Include="WebDeploy\WebDeployOperation.cs" />
     <Compile Include="IProvideOptions.cs" />
-    <Compile Include="Model\DeploymentServer.cs" />
-    <Compile Include="Model\DeploymentUser.cs" />
     <Compile Include="WebDeploy\WebDeployDestination.cs" />
     <Compile Include="ConDepConfigurationExecutor.cs" />
     <Compile Include="ConDepOperationBase.cs" />
     <Compile Include="IProvide.cs" />
     <Compile Include="IValidate.cs" />
-    <Compile Include="LoadBalancer\LoadBalancerSettings.cs" />
     <Compile Include="Model\Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\SemanticValidationError.cs" />
@@ -192,7 +182,6 @@
     <Compile Include="Model\ValidationErrorType.cs" />
     <Compile Include="WebDeploy\WebDeployServerDefinition.cs" />
     <Compile Include="WebDeploy\WebDeploymentStatus.cs" />
-    <Compile Include="WebDeploy\WebDeployMessageEventArgs.cs" />
     <Compile Include="WebDeploy\WebDeployOptions.cs" />
     <Compile Include="WebDeploy\WebDeployProviderBase.cs" />
   </ItemGroup>

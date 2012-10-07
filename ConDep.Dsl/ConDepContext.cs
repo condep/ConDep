@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ConDep.Dsl
 {
-    public class ConDepContext : IEnumerable<ISetupConDep>
+    internal class ConDepContext : IEnumerable<ISetupConDep>
     {
         private readonly Dictionary<string, ISetupConDep> _context = new Dictionary<string, ISetupConDep>();
 

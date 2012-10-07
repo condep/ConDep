@@ -5,7 +5,12 @@ using ConDep.Dsl.Model.Config;
 
 namespace ConDep.Dsl.LoadBalancer
 {
-    public class LoadBalancerLookup
+    public interface ILookupLoadBalancer
+    {
+        ILoadBalance GetLoadBalancer();
+    }
+
+    internal class LoadBalancerLookup : ILookupLoadBalancer
     {
         private readonly LoadBalancerConfig _loadBalancerSettings;
 

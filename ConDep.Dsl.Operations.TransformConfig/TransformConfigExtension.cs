@@ -16,7 +16,7 @@ namespace ConDep.Dsl
         public static void TransformConfig(this IProvideForSetup conDepSetup, string configDirPath, string configName, string transformName)
 		{
 			var transformWebConfigOperation = new TransformConfigOperation(configDirPath, configName, transformName);
-			((ConDepSetup) conDepSetup).AddOperation(transformWebConfigOperation);
+            ((ISetupConDep)conDepSetup).AddOperation(transformWebConfigOperation);
 		}
 
 	}
