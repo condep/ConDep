@@ -78,7 +78,7 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
         private void CopyPowerShellScriptsToTarget(ServerConfig server)
         {
             var filePath = ConDepResourceFiles.GetFilePath(GetType().Namespace, "NServiceBus.ps1");
-            Configure<ProvideForDeployment>(server, d => d.CopyFile(filePath, o=> o.RenameFileOnDestination(@"%temp%\NServiceBus.ps1")));
+            Configure<ProvideForDeployment>(server, d => d.CopyFile(filePath, @"%temp%\NServiceBus.ps1"));
         }
 
         private bool HasServiceConfigOptions

@@ -104,7 +104,6 @@
     <Compile Include="WebDeployProviders\Deployment\CopyDir\CopyDirExtension.cs" />
     <Compile Include="WebDeployProviders\Deployment\CopyDir\CopyDirProvider.cs" />
     <Compile Include="WebDeployProviders\Deployment\CopyFile\CopyFileExtension.cs" />
-    <Compile Include="WebDeployProviders\Deployment\CopyFile\CopyFileOptions.cs" />
     <Compile Include="WebDeployProviders\Deployment\CopyFile\CopyFileProvider.cs" />
     <Compile Include="WebDeployProviders\Deployment\General\GeneralProvider.cs" />
     <Compile Include="WebDeployProviders\Deployment\General\GeneralProviderExtension.cs" />
@@ -163,7 +162,7 @@
     <Compile Include="WebDeploy\ConDepUnsupportedOutcomeException.cs" />
     <Compile Include="WebDeploy\WebDeployExecuteCondition.cs" />
     <Compile Include="WebDeploy\WebDeployCompositeProviderBase.cs" />
-    <Compile Include="ConDepConfiguratorBase.cs" />
+    <Compile Include="ConDepDefinitionBase.cs" />
     <Compile Include="Model\Configuration.cs" />
     <Compile Include="Model\Credentials.cs" />
     <Compile Include="WebDeploy\WebDeployOperation.cs" />

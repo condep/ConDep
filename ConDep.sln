@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Dsl", "ConDep.Dsl\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Dsl.LoadBalancer.Arr", "ConDep.Dsl.LoadBalancer.Arr\ConDep.Dsl.LoadBalancer.Arr.csproj", "{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyExample", "examples\AssemblyExample\AssemblyExample.csproj", "{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,16 @@ Global
 		{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9653F966-8B4C-4E13-B129-8AE29CE0D4A7}.Release|x86.ActiveCfg = Release|Any CPU
+		{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

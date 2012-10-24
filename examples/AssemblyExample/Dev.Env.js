@@ -1,8 +1,11 @@
 ﻿{
-    Servers         :
+    "Servers" :
     [
         {
-            Name        : "localhost"
+            "Name" : "ConDepServer1"
+        },
+        {
+            "Name": "ConDepServer2"
         }
     ]
 }

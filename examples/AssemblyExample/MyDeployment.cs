@@ -1,27 +1,43 @@
+using System;
 using ConDep.Dsl;
-using ConDep.Dsl.WebDeploy;
 
 namespace AssemblyExample
 {
-    public class MyDeployment : ConDepConfiguratorBase
+public class MyDefinition : ConDepDefinitionBase
+{
+protected override void Configure(IProvideForSetup setup)
+{
+    setup.ConDepContext("WebApp1", SetupWebApp1);
+    setup.ConDepContext("WebApp2", SetupWebApp2);
+}
+
+private void SetupWebApp1(IProvideForSetup setup)
+{
+    setup.Deployment(d => d.CopyDir(@"C:\MyWebApp1", @"E:\MyWebSite\MyWebApp1"));
+    setup.Deployment(d => d.CopyFile(@"C:\MyWebApp1\someSourceFile.txt", @"E:\MyWebApp1\someDestFile.txt"));
+}
+
+private void SetupWebApp2(IProvideForSetup setup)
+{
+    setup.Deployment(d => d.CopyDir(@"C:\MyWebApp2", @"E:\MyWebSite\MyWebApp2"));
+}
+}
+    public class MyDeployment : ConDepDefinitionBase
     {
-        protected override void Configure()
+        protected override void Configure(IProvideForSetup s)
         {
-            Setup(s =>
-                      {
-                          s.Infrastructure(inf =>
-                                               {
-                                                   inf.RunCmd("ipconfig");
-                                                   inf.RunCmd("echo 'Hello World!'");
-                                               });
-                          s.ConDepContext("MyWebApp", SetupMyWebApp );
-                          s.ConDepContext("MyOtherApp", SetupMyOtherApp );
-                          //todo: 
-                          s.Infrastructure(inf =>
-                          {
-                              inf.RunCmd("echo 'This should also be executed!'");
-                          });
-                      });
+            s.Infrastructure(inf =>
+                                {
+                                    inf.RunCmd("ipconfig");
+                                    inf.RunCmd("echo 'Hello World!'");
+                                });
+            s.ConDepContext("MyWebApp", SetupMyWebApp );
+            s.ConDepContext("MyOtherApp", SetupMyOtherApp );
+            //todo: 
+            s.Infrastructure(inf =>
+            {
+                inf.RunCmd("echo 'This should also be executed!'");
+            });
         }
 
         private void SetupMyWebApp(IProvideForSetup s)

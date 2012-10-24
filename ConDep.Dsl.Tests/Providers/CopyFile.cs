@@ -9,7 +9,7 @@ namespace ConDep.Dsl.Tests.Providers
 		protected override void When()
 		{
 			Providers
-				.CopyFile(SourceFile, c => c.RenameFileOnDestination(DestinationFileName));
+				.CopyFile(SourceFile, DestinationFileName);
 		}
 
 		[Test]

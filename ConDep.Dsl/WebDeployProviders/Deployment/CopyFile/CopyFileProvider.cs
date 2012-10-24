@@ -1,3 +1,4 @@
+using System.IO;
 using ConDep.Dsl.WebDeploy;
 using Microsoft.Web.Deployment;
 
@@ -7,9 +8,10 @@ namespace ConDep.Dsl.WebDeployProviders.Deployment.CopyFile
 	{
 		private const string NAME = "filePath";
 
-		public CopyFileProvider(string sourcePath)
+		public CopyFileProvider(string sourceFilePath, string destFilepath)
 		{
-			SourcePath = sourcePath;
+            SourcePath = !Path.IsPathRooted(sourceFilePath) ? Path.GetFullPath(sourceFilePath) : sourceFilePath; ;
+		    DestinationPath = destFilepath;
 		}
 
 		public override string Name

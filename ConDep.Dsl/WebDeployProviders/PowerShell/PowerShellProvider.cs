@@ -57,7 +57,7 @@ namespace ConDep.Dsl.WebDeployProviders.PowerShell
         private string CopyScriptToDestination(ServerConfig server, string filePath)
         {
             var destFilePath = @"%temp%\" + Path.GetFileName(filePath);
-            Configure<ProvideForDeployment>(server, c => c.CopyFile(filePath, o => o.RenameFileOnDestination(destFilePath)));
+            Configure<ProvideForDeployment>(server, c => c.CopyFile(filePath, destFilePath));
             return destFilePath;
         }
 

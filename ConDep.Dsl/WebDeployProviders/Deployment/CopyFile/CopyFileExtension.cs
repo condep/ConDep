@@ -1,5 +1,3 @@
-using System;
-using ConDep.Dsl;
 using ConDep.Dsl.WebDeployProviders.Deployment.CopyFile;
 
 namespace ConDep.Dsl
@@ -7,16 +5,9 @@ namespace ConDep.Dsl
 	public static class CopyFileExtension
 	{
 
-        public static void CopyFile(this ProvideForDeployment providerOptions, string path)
+        public static void CopyFile(this ProvideForDeployment providerOptions, string sourceFile, string destFile)
         {
-            var copyFileProvider = new CopyFileProvider(path);
-            ((IProvideOptions)providerOptions).AddProviderAction(copyFileProvider);
-        }
-        
-        public static void CopyFile(this ProvideForDeployment providerOptions, string path, Action<CopyFileOptions> copyFileOptions)
-		{
-            var copyFileProvider = new CopyFileProvider(path);
-			copyFileOptions(new CopyFileOptions(copyFileProvider));
+            var copyFileProvider = new CopyFileProvider(sourceFile, destFile);
             ((IProvideOptions)providerOptions).AddProviderAction(copyFileProvider);
         }
     }
