@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Dsl.LoadBalancer.Arr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyExample", "examples\AssemblyExample\AssemblyExample.csproj", "{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{D59A6276-F2E6-409F-8A38-6FA367339203}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "examples\IntegrationTests\IntegrationTests.csproj", "{397EF77E-9BA0-4C08-A963-7C0CA24F213F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,9 +91,23 @@ Global
 		{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1CCFB97E-E2C3-47B4-874E-92E093AC07D9}.Release|x86.ActiveCfg = Release|Any CPU
+		{397EF77E-9BA0-4C08-A963-7C0CA24F213F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{397EF77E-9BA0-4C08-A963-7C0CA24F213F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{397EF77E-9BA0-4C08-A963-7C0CA24F213F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{397EF77E-9BA0-4C08-A963-7C0CA24F213F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{397EF77E-9BA0-4C08-A963-7C0CA24F213F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{397EF77E-9BA0-4C08-A963-7C0CA24F213F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{397EF77E-9BA0-4C08-A963-7C0CA24F213F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{397EF77E-9BA0-4C08-A963-7C0CA24F213F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{397EF77E-9BA0-4C08-A963-7C0CA24F213F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{397EF77E-9BA0-4C08-A963-7C0CA24F213F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1CCFB97E-E2C3-47B4-874E-92E093AC07D9} = {D59A6276-F2E6-409F-8A38-6FA367339203}
+		{397EF77E-9BA0-4C08-A963-7C0CA24F213F} = {D59A6276-F2E6-409F-8A38-6FA367339203}
 	EndGlobalSection
 	GlobalSection(NDepend) = preSolution
 		Project = ".\ConDep.Dsl.ndproj"

@@ -1,9 +1,6 @@
-using System;
-using System.Diagnostics;
 using System.IO;
-using System.Xml;
+using ConDep.Dsl.Operations.TransformConfig;
 using ConDep.Dsl.WebDeploy;
-using Microsoft.Web.Publishing.Tasks;
 
 namespace ConDep.Dsl
 {
@@ -23,7 +20,6 @@ namespace ConDep.Dsl
 
         public override WebDeploymentStatus Execute(WebDeploymentStatus webDeploymentStatus)
         {
-			var document = new XmlDocument();
 			var configFilePath = Path.Combine(_configDirPath, _configName);
 			var transformFilePath = Path.Combine(_configDirPath, _transformName);
             var backupPath = "";
@@ -41,12 +37,15 @@ namespace ConDep.Dsl
             }
 
             Logger.Info("Transforming [{0}] using [{1}]", configFilePath, transformFilePath);
-            document.Load(string.IsNullOrWhiteSpace(backupPath) ? configFilePath : backupPath);
+            var trans = new SlowCheetah.Tasks.TransformXml
+            {
+                BuildEngine = new TransformConfigBuildEngine(),
+                Source = string.IsNullOrWhiteSpace(backupPath) ? configFilePath : backupPath,
+                Transform = transformFilePath,
+                Destination = configFilePath
+            };
 
-			var transformation = new XmlTransformation(transformFilePath, new WebTransformLogger());
-			var success = transformation.Apply(document);
-			document.Save(configFilePath);
-
+            var success = trans.Execute();
 			if(!success)
 				throw new CondepWebConfigTransformException(string.Format("Failed to transform [{0}] file.", _configName));
 

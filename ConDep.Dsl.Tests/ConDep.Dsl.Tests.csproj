@@ -45,6 +45,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Microsoft.Web.Deployment, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Microsoft.Web.Deployment.dll</HintPath>
@@ -52,6 +54,9 @@
     <Reference Include="nunit.framework, Version=2.6.1.12217, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.1\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="SlowCheetah.Tasks">
+      <HintPath>..\lib\SlowCheetah\v2.4\SlowCheetah.Tasks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -69,6 +74,7 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="CompositeProviders\NServiceBus.cs" />
+    <Compile Include="ConfigTransformTests.cs" />
     <Compile Include="JsonParsingTests.cs" />
     <Compile Include="LoggerTests.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -92,6 +98,10 @@
     <Compile Include="SimpleTestFixtureBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConDep.Dsl.Operations.TransformConfig\ConDep.Dsl.Operations.TransformConfig.csproj">
+      <Project>{975A49C5-DEB5-4F47-8655-63164EC4F258}</Project>
+      <Name>ConDep.Dsl.Operations.TransformConfig</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConDep.Dsl\ConDep.Dsl.csproj">
       <Project>{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}</Project>
       <Name>ConDep.Dsl</Name>
