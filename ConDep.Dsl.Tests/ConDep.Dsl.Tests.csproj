@@ -98,10 +98,6 @@
     <Compile Include="SimpleTestFixtureBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConDep.Dsl.Operations.TransformConfig\ConDep.Dsl.Operations.TransformConfig.csproj">
-      <Project>{975A49C5-DEB5-4F47-8655-63164EC4F258}</Project>
-      <Name>ConDep.Dsl.Operations.TransformConfig</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ConDep.Dsl\ConDep.Dsl.csproj">
       <Project>{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}</Project>
       <Name>ConDep.Dsl</Name>

@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C9CCCE
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Dsl.Operations.TransformConfig", "ConDep.Dsl.Operations.TransformConfig\ConDep.Dsl.Operations.TransformConfig.csproj", "{975A49C5-DEB5-4F47-8655-63164EC4F258}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Console", "ConDep.Console\ConDep.Console.csproj", "{4DC12EF8-6E21-4749-AC5B-15BCBD097A38}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Dsl", "ConDep.Dsl\ConDep.Dsl.csproj", "{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}"
@@ -41,16 +39,6 @@ Global
 		{1A131274-45B3-47EE-A48D-8310FDB3C332}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1A131274-45B3-47EE-A48D-8310FDB3C332}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1A131274-45B3-47EE-A48D-8310FDB3C332}.Release|x86.ActiveCfg = Release|Any CPU
-		{975A49C5-DEB5-4F47-8655-63164EC4F258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{975A49C5-DEB5-4F47-8655-63164EC4F258}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{975A49C5-DEB5-4F47-8655-63164EC4F258}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{975A49C5-DEB5-4F47-8655-63164EC4F258}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{975A49C5-DEB5-4F47-8655-63164EC4F258}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{975A49C5-DEB5-4F47-8655-63164EC4F258}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{975A49C5-DEB5-4F47-8655-63164EC4F258}.Release|Any CPU.Build.0 = Release|Any CPU
-		{975A49C5-DEB5-4F47-8655-63164EC4F258}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{975A49C5-DEB5-4F47-8655-63164EC4F258}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{975A49C5-DEB5-4F47-8655-63164EC4F258}.Release|x86.ActiveCfg = Release|Any CPU
 		{4DC12EF8-6E21-4749-AC5B-15BCBD097A38}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{4DC12EF8-6E21-4749-AC5B-15BCBD097A38}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{4DC12EF8-6E21-4749-AC5B-15BCBD097A38}.Debug|Mixed Platforms.Build.0 = Debug|x86

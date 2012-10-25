@@ -36,10 +36,15 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Microsoft.Web.Deployment, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\IIS\Microsoft Web Deploy V3\Microsoft.Web.Deployment.dll</HintPath>
       <HintPath>..\Build\WebDeploy\x64\IIS\Microsoft Web Deploy V3\Microsoft.Web.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="SlowCheetah.Tasks">
+      <HintPath>..\lib\SlowCheetah\v2.4\SlowCheetah.Tasks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
@@ -99,6 +104,10 @@
     <Compile Include="Operations\PreCompile\PreCompileCallback.cs" />
     <Compile Include="Operations\PreCompile\PreCompileExtension.cs" />
     <Compile Include="Operations\PreCompile\PreCompileOperation.cs" />
+    <Compile Include="Operations\TransformConfig\CondepWebConfigTransformException.cs" />
+    <Compile Include="Operations\TransformConfig\TransformConfigBuildEngine.cs" />
+    <Compile Include="Operations\TransformConfig\TransformConfigExtension.cs" />
+    <Compile Include="Operations\TransformConfig\TransformConfigOperation.cs" />
     <Compile Include="Operations\WebRequest\WebRequestExtension.cs" />
     <Compile Include="Operations\WebRequest\WebRequestOperation.cs" />
     <Compile Include="Application\Infrastructure\InfrastructureArtifact.cs" />

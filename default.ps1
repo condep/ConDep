@@ -65,8 +65,7 @@ task Build-ConDep-Console -depends Clean-ConDep-Console, Init {
 			@{ Name="log4net"; Version="2.0.0"}
 		) `
 		-files @(
-			@{ Path="$condep_console\$condep.exe"; Target="lib/net40"}, 
-			@{ Path="$condep_console\ConDep.Dsl.Operations.TransformConfig.dll"; Target="lib/net40"} 
+			@{ Path="$condep_console\$condep.exe"; Target="lib/net40"}
 		)
 }
 
