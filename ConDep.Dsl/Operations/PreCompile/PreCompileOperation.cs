@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Web.Compilation;
+using ConDep.Dsl.Experimental.Core;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.Operations.PreCompile
@@ -18,7 +19,7 @@ namespace ConDep.Dsl.Operations.PreCompile
 			_preCompileOutputpath = preCompileOutputpath;
 		}
 
-        public override WebDeploymentStatus Execute(WebDeploymentStatus webDeploymentStatus)
+        public override IReportStatus Execute(IReportStatus status)
 		{
 			try
 			{
@@ -33,7 +34,7 @@ namespace ConDep.Dsl.Operations.PreCompile
                 Logger.Error(ex.Message);
 				throw;
 			}
-			return webDeploymentStatus;
+			return status;
 		}
 
         public override bool IsValid(Notification notification)

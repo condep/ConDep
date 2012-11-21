@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using ConDep.Dsl.Experimental.Core;
 using ConDep.Dsl.Model.Config;
 
 namespace ConDep.Dsl.WebDeploy
@@ -65,7 +66,7 @@ namespace ConDep.Dsl.WebDeploy
             _conditions.Add(condition);
         }
 
-        public WebDeploymentStatus Sync(WebDeployOptions webDeployOptions, WebDeploymentStatus deploymentStatus)
+        public IReportStatus Sync(WebDeployOptions webDeployOptions, IReportStatus status)
         {
             if (WaitInterval > 0)
             {
@@ -77,13 +78,13 @@ namespace ConDep.Dsl.WebDeploy
 
             if (HasConditions())
             {
-                if (_conditions.Any(condition => !condition.HasExpectedOutcome(webDeployOptions))) return deploymentStatus;
+                if (_conditions.Any(condition => !condition.HasExpectedOutcome(webDeployOptions))) return status;
             }
 
             ChildProviders.Reverse();
 
-            ChildProviders.ToList().ForEach(provider => provider.Sync(webDeployOptions, deploymentStatus));
-            return deploymentStatus;
+            ChildProviders.ToList().ForEach(provider => provider.Sync(webDeployOptions, status));
+            return status;
         }
 
         private bool HasConditions()

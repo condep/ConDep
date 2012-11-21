@@ -1,3 +1,4 @@
+using ConDep.Dsl.Experimental.Core;
 using ConDep.Dsl.WebDeploy;
 using Microsoft.Web.Deployment;
 
@@ -42,12 +43,12 @@ namespace ConDep.Dsl.WebDeployProviders.RunCmd
                 string.IsNullOrWhiteSpace(SourcePath);
 		}
 
-        public override WebDeploymentStatus Sync(WebDeployOptions webDeployOptions, WebDeploymentStatus deploymentStatus)
+        public override IReportStatus Sync(WebDeployOptions webDeployOptions, IReportStatus status)
         {
             try
             {
                 webDeployOptions.DestBaseOptions.Trace += CheckForUntrappedRunCommandExitCodes;
-                base.Sync(webDeployOptions, deploymentStatus);
+                base.Sync(webDeployOptions, status);
             }
             catch
             {
@@ -65,7 +66,7 @@ namespace ConDep.Dsl.WebDeployProviders.RunCmd
                     throw _untrappedExitCodeException;
                 }
             }
-            return deploymentStatus;
+            return status;
         }
 
         void CheckForUntrappedRunCommandExitCodes(object sender, DeploymentTraceEventArgs e)

@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using ConDep.Dsl.Experimental.Core;
 
 namespace ConDep.Dsl.WebDeploy
 {
@@ -13,25 +14,25 @@ namespace ConDep.Dsl.WebDeploy
 			_webDeployServerDefinition = webDeployServerDefinition;
 		}
 
-		public override WebDeploymentStatus Execute(WebDeploymentStatus webDeploymentStatus)
+        public override IReportStatus Execute(IReportStatus status)
 		{
 		    _webDeployServerDefinition.TraceLevel = Logger.TraceLevel;
 
             if(BeforeExecute != null)
             {
-                BeforeExecute(_webDeployServerDefinition.WebDeployDestination.ComputerName, webDeploymentStatus);
-                if(webDeploymentStatus.HasErrors) return webDeploymentStatus;
+                BeforeExecute(_webDeployServerDefinition.WebDeployDestination.ComputerName, status);
+                if(status.HasErrors) return status;
             }
 
-            var status = _webDeployServerDefinition.Sync(webDeploymentStatus);
+            var syncStatus = _webDeployServerDefinition.Sync(status);
 
-            if (webDeploymentStatus.HasErrors) return webDeploymentStatus;
+            if (status.HasErrors) return status;
 
             if (AfterExecute != null)
             {
-                AfterExecute(_webDeployServerDefinition.WebDeployDestination.ComputerName, webDeploymentStatus);
+                AfterExecute(_webDeployServerDefinition.WebDeployDestination.ComputerName, status);
             }
-		    return status;
+		    return syncStatus;
 		}
 
 		public override bool IsValid(Notification notification)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using ConDep.Dsl.Experimental.Core;
 using ConDep.Dsl.Model.Config;
 using Microsoft.Web.Deployment;
 using System.Linq;
@@ -68,7 +69,7 @@ namespace ConDep.Dsl.WebDeploy
 			_providers.ForEach(p => p.IsValid(notification));
 		}
 
-		public WebDeploymentStatus Sync(WebDeploymentStatus deploymentStatus)
+        public IReportStatus Sync(IReportStatus status)
         {
 			  WebDeployOptions options = null;
 
@@ -84,7 +85,7 @@ namespace ConDep.Dsl.WebDeploy
                           ((WebDeployCompositeProviderBase) provider).BeforeExecute();
                       }
 					  
-                      provider.Sync(options, deploymentStatus);
+                      provider.Sync(options, status);
                   
                       if (provider is WebDeployCompositeProviderBase)
                       {
@@ -94,7 +95,7 @@ namespace ConDep.Dsl.WebDeploy
 			  }
 			  catch (Exception ex)
 			  {
-				  HandleSyncException(deploymentStatus, ex);
+				  HandleSyncException(status, ex);
 			  }
 			  finally
 			  {
@@ -104,7 +105,7 @@ namespace ConDep.Dsl.WebDeploy
                   Logger.LogSectionEnd(WebDeployDestination.ComputerName);
               }
 
-			  return deploymentStatus;
+			  return status;
 		  }
 
 		  WebDeployOptions GetWebDeployOptions()
@@ -125,7 +126,7 @@ namespace ConDep.Dsl.WebDeploy
 			  return new WebDeployOptions(WebDeploySource.PackagePath, sourceBaseOptions, destBaseOptions, syncOptions);
 		  }
 
-		  private void HandleSyncException(WebDeploymentStatus deploymentStatus, Exception ex)
+          private void HandleSyncException(IReportStatus deploymentStatus, Exception ex)
 		  {
 			  deploymentStatus.AddUntrappedException(ex);
 			  var message = GetCompleteExceptionMessage(ex);

@@ -28,8 +28,14 @@ namespace ConDep.Dsl
             Log(message, TraceLevel.Info, formatArgs);
         }
 
+        public void Error(string message, params object[] formatArgs)
+        {
+            Log(message, TraceLevel.Error, formatArgs);
+        }
+
         public virtual void Error(string message, string errorDetails, params object[] formatArgs)
         {
+            //Todo: handle errorDetails
             Log(message, TraceLevel.Error, formatArgs);
         }
 

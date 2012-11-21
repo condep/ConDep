@@ -24,5 +24,7 @@ namespace ConDep.Console
         public bool PrintSequence { get; set; }
 
         public bool BypassLB { get; set; }
+
+        public bool Experimental { get; set; }
     }
 }

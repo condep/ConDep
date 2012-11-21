@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using ConDep.Dsl.Experimental.Core;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.Operations.WebRequest
@@ -16,10 +17,10 @@ namespace ConDep.Dsl.Operations.WebRequest
 
         public override bool IsValid(Notification notification)
         {
-            return true;
+            return !string.IsNullOrWhiteSpace(_url) || !string.IsNullOrWhiteSpace(_method);
         }
 
-        public override WebDeploymentStatus Execute(WebDeploymentStatus webDeploymentStatus)
+        public override IReportStatus Execute(IReportStatus status)
         {
             var webRequest = System.Net.WebRequest.Create(_url);
             webRequest.Method = _method;
@@ -39,7 +40,7 @@ namespace ConDep.Dsl.Operations.WebRequest
                 Logger.Error("HTTP {0} Failed with Status {1}: {2}", _method.ToUpper(), statusCode, _url);
             }
 
-            return webDeploymentStatus;
+            return status;
         }
     }
 }

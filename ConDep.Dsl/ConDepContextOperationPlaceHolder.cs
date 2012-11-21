@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using ConDep.Dsl.Experimental.Core;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl
@@ -19,7 +20,7 @@ namespace ConDep.Dsl
             set { _contextName = value; }
         }
 
-        public override WebDeploymentStatus Execute(WebDeploymentStatus webDeploymentStatus)
+        public override IReportStatus Execute(IReportStatus status)
         {
             throw new NotImplementedException();
         }

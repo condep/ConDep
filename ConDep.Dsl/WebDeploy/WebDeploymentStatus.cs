@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConDep.Dsl.Experimental.Core;
 using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.WebDeploy
 {
-    public class WebDeploymentStatus
+    public class WebDeploymentStatus : IReportStatus
     {
         private readonly List<DeploymentChangeSummary> _summeries = new List<DeploymentChangeSummary>();
         private readonly List<Exception> _untrappedExceptions = new List<Exception>();

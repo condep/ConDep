@@ -1,13 +1,10 @@
-﻿using System;
-using System.Diagnostics;
-using ConDep.Dsl;
-using ConDep.Dsl.WebDeploy;
+﻿using ConDep.Dsl.Experimental.Core;
 
 namespace ConDep.Dsl.LoadBalancer
 {
     public interface ILoadBalance
     {
-        void BringOffline(string serverName, WebDeploymentStatus webDeploymentStatus);
-        void BringOnline(string serverName, WebDeploymentStatus webDeploymentStatus);
+        void BringOffline(string serverName, IReportStatus status);
+        void BringOnline(string serverName, IReportStatus status);
     }
 }

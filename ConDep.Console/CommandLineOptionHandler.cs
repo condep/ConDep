@@ -99,6 +99,7 @@ namespace ConDep.Console
                                     {"infraOnly", "Deploy infrastructure only", v => Params.InfraOnly = v != null },
                                     {"deployOnly", "Deploy all except infrastructure", v => Params.DeployOnly = v != null},
                                     {"bypassLB", "Don't use configured load balancer during execution.", v => Params.BypassLB = v != null},
+                                    {"experimental", "Use experimental functionality in ConDep", v => Params.Experimental = v != null},
                                     {"p|printSequence", "Prints the execution sequence of all operations and providers.", v => Params.PrintSequence = v != null},
                                     {"h|?|help",  "show this message and exit", v => Params.ShowHelp = v != null }
                                 };

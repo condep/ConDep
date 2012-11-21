@@ -25,7 +25,14 @@ namespace ConDep.Console
                 var envSettings = GetEnvConfig(optionHandler.Params, assembly);
 
                 var status = new WebDeploymentStatus();
-                ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions, status);
+                if(optionHandler.Params.Experimental)
+                {
+                    ConDepConfigurationExecutor.ExecuteExperimentalFromAssembly(assembly, envSettings, conDepOptions, status);
+                }
+                else
+                {
+                    ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions, status);
+                }
 
                 if(status.HasErrors)
                 {

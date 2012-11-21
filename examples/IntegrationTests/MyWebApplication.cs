@@ -1,33 +1,51 @@
-﻿using ConDep.Dsl.Application;
-using ConDep.Dsl.Application.Infrastructure;
+﻿using ConDep.Dsl.Experimental.Application;
+using ConDep.Dsl.Experimental.Application.Infrastructure;
 
 namespace IntegrationTests
 {
-    public class MyWebApplication : ApplicationArtifact<RequireWebServer>
+    public class MyWebApplication : ApplicationArtifact, IDependOnInfrastructure<WebServerInfrastructure>//, IDependOnApplication<RaadgivewerbLiv>
     {
-        protected override void Configure(IDeploy deploy, IExecute execute, IExecuteLocally locally)
+        public override void Configure(IOfferApplicationOps onLocalMachine)
         {
-            locally.TransformConfigFile(@"C:\MyWebApp\", "web.config", "web.prod.config");
-            locally.PreCompile("MyWebApplication", @"C:\MyWebApp", @"C:\_precompiled\MyWebApp");
-            locally.ExecuteWebRequest("GET", "http://www.con-dep.net");
+            onLocalMachine.ExecuteWebRequest("GET", "http://www.con-dep.net");
+            //onLocalMachine
+            //    .PreCompile("MyWebApplication", @"C:\MyWebApp", @"C:\_precompiled\MyWebApp")
+            //    .TransformConfigFile(@"C:\MyWebApp\", "web.config", "web.prod.config");
 
-            deploy.Directory(@"C:\MyWebApp", @"E:\SomeWebSite\MyWebApp");
-            deploy.File(@"C:\SomeDir\SomeFile.txt", @"E:\SomeWebSite\MyWebApp\SomeFile.txt");
-            deploy.IisWebApplication();
-            deploy.WindowsService();
-            deploy.NServiceBusEndpoint("", "", "");
-            deploy.NServiceBusEndpoint("", "", "", opt => opt.Profile(""));
-            deploy.SslCertificate.FromStore();
-            deploy.SslCertificate.FromFile();
+            //fromLocalMachine.ToSpecificServer("MyServer", x => x.Deploy.SslCertificate.FromFile());
+            onLocalMachine.ToEachServer(x =>
+                                    {
+                                        x.Deploy
+                                            .Directory(@"C:\website1", @"C:\Temp\ConDep\MyWebApp");
+                                            //.NServiceBusEndpoint("", "", "", opt => opt.Profile(""));
 
-            execute.DosCommand();
-            execute.Powershell();
+                                        //x.ExecuteRemote
+                                        //    .Powershell();
+
+                                        //x.Deploy
+                                        //    .SslCertificate.FromFile();
+                                        
+                                        //x.FromLocalMachineToServer
+                                        //    .ExecuteWebRequest("GET", "http://www.con-dep.net")
+                                        //    .ExecuteWebRequest("GET", "http://www.google.com");
+
+                                        //x.Deploy
+                                        //    .Directory(@"C:\MyWebApp", @"E:\SomeWebSite\MyWebApp")
+                                        //    .Directory(@"C:\temp", @"c:\temp");
+
+                                        //x.FromLocalMachineToServer
+                                        //    .ExecuteWebRequest("GET", "http://www.con-dep.net");
+                                    }
+                );
+
+            onLocalMachine.ExecuteWebRequest("GET", "http://www.con-dep.net");
+            //fromLocalMachine.ToEachServer(x => x.Deploy.Directory(@"C:\temp", @"e:\temp"));
         }
     }
 
-    public class RequireWebServer : InfrastructureArtifact
+    public class WebServerInfrastructure : InfrastructureArtifact
     {
-        protected override void Configure(IRequireInfrastructure require)
+        protected override void Configure(IConfigureInfrastructure require)
         {
             //require.Iis();
             //require.IisWebSite()
@@ -41,8 +59,7 @@ namespace IntegrationTests
             //        .WebApplication()
             //        .WebApplication();
 
-            //require.Msmq();
+            //require.Msmq();            
         }
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using ConDep.Dsl.Experimental.Core;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl
@@ -8,6 +9,6 @@ namespace ConDep.Dsl
         bool IsValid(Notification notification);
 		int WaitInterval { get; set; }
         void AddCondition(IProvideConditions condition);
-        WebDeploymentStatus Sync(WebDeployOptions webDeployOptions, WebDeploymentStatus deploymentStatus);
+        IReportStatus Sync(WebDeployOptions webDeployOptions, IReportStatus status);
     }
 }

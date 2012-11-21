@@ -1,4 +1,5 @@
 using System.IO;
+using ConDep.Dsl.Experimental.Core;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.Operations.TransformConfig
@@ -17,7 +18,7 @@ namespace ConDep.Dsl.Operations.TransformConfig
 			_transformName = transformName;
 		}
 
-        public override WebDeploymentStatus Execute(WebDeploymentStatus webDeploymentStatus)
+        public override IReportStatus Execute(IReportStatus status)
         {
 			var configFilePath = Path.Combine(_configDirPath, _configName);
 			var transformFilePath = Path.Combine(_configDirPath, _transformName);
@@ -48,7 +49,7 @@ namespace ConDep.Dsl.Operations.TransformConfig
 			if(!success)
 				throw new CondepWebConfigTransformException(string.Format("Failed to transform [{0}] file.", _configName));
 
-			return webDeploymentStatus;
+			return status;
 		}
 
 	    private static void ValidatePaths(string configFilePath, string transformFilePath)

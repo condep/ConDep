@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ConDep.Dsl.Experimental.Core;
 using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.WebDeploy
@@ -24,11 +25,11 @@ namespace ConDep.Dsl.WebDeploy
 	        _conditions.Add(condition);
 	    }
 
-	    public virtual WebDeploymentStatus Sync(WebDeployOptions webDeployOptions, WebDeploymentStatus deploymentStatus)
+        public virtual IReportStatus Sync(WebDeployOptions webDeployOptions, IReportStatus status)
         {
             if (HasConditions())
             {
-                if (_conditions.Any(condition => !condition.HasExpectedOutcome(webDeployOptions))) return deploymentStatus;
+                if (_conditions.Any(condition => !condition.HasExpectedOutcome(webDeployOptions))) return status;
             }
 
             var defaultWaitInterval = webDeployOptions.DestBaseOptions.RetryInterval;
@@ -56,11 +57,14 @@ namespace ConDep.Dsl.WebDeploy
                 //{
 
                 //Backup(webDeployOptions);
+                foreach(var factory in DeploymentManager.ProviderFactories)
+                {
+                }
                 summery = sourceDepObject.SyncTo(destProviderOptions, webDeployOptions.DestBaseOptions, webDeployOptions.SyncOptions);
                 //}
             }
 
-            deploymentStatus.AddSummery(summery);
+            status.AddSummery(summery);
 
             webDeployOptions.DestBaseOptions.RetryInterval = defaultWaitInterval;
 
@@ -68,7 +72,7 @@ namespace ConDep.Dsl.WebDeploy
             {
                 throw new ConDepWebDeployProviderException("The provider reported " + summery.Errors + " during deployment.");
             }
-            return deploymentStatus;
+            return status;
         }
 
 	    private bool HasConditions()
@@ -104,4 +108,47 @@ namespace ConDep.Dsl.WebDeploy
             return DeploymentManager.CreateObject(DeploymentWellKnownProvider.Package, webDeployOptions.PackagePath, webDeployOptions.SourceBaseOptions);
 	    }
 	}
+
+    //public class WebDeployProviderCollection : DeploymentObjectProvider
+    //{
+    //    public WebDeployProviderCollection(DeploymentBaseContext baseContext) : base(baseContext)
+    //    {
+    //    }
+
+    //    public WebDeployProviderCollection(DeploymentProviderContext providerContext, DeploymentBaseContext baseContext) : base(providerContext, baseContext)
+    //    {
+    //    }
+
+    //    public override DeploymentObjectAttributeData CreateKeyAttributeData()
+    //    {
+    //        throw new System.NotImplementedException();
+    //    }
+
+    //    public override string Name
+    //    {
+    //        get { throw new System.NotImplementedException(); }
+    //    }
+
+    //    public override DeploymentObjectProvider AddChild(DeploymentObject source, int position, bool whatIf)
+    //    {
+    //        string factoryName = (string)null;
+    //        string factoryPath = (string)null;
+    //        source.GetFactoryInfo(out factoryName, out factoryPath);
+    //        if (this.BaseContext.SourceObject != null)
+    //        {
+    //            foreach (DeploymentSyncParameter deploymentSyncParameter in this.BaseContext.SourceObject.SyncParameters)
+    //            {
+    //                foreach (DeploymentSyncParameterEntry syncParameterEntry in deploymentSyncParameter.Entries)
+    //                {
+    //                    if (syncParameterEntry.Kind == DeploymentSyncParameterEntryKind.ProviderPath && syncParameterEntry.IsScopeMatch(factoryName) && (syncParameterEntry.Match == null || RegexHelper.IsMatch(factoryPath, syncParameterEntry.Match)))
+    //                        factoryPath = deploymentSyncParameter.Value;
+    //                }
+    //            }
+    //        }
+    //        DeploymentProviderOptions providerOptions = source.ProviderContext == null ? new DeploymentProviderOptions(factoryName) : new DeploymentProviderOptions(factoryName, (IEnumerable<DeploymentProviderSetting>)source.ProviderContext.ProviderSettings);
+    //        providerOptions.Path = factoryPath;
+    //        DeploymentProviderContext providerContext = new DeploymentProviderContext(providerOptions);
+    //        return providerOptions.Factory.CreateProvider(providerContext, this.BaseContext);
+    //    }
+    //}
 }

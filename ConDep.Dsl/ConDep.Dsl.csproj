@@ -59,14 +59,21 @@
     <Compile Include="..\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
-    <Compile Include="Application\ApplicationArtifact.cs" />
-    <Compile Include="Application\Deployment\Deployment.cs" />
-    <Compile Include="Application\Deployment\IManageExecutionSequence.cs" />
-    <Compile Include="Application\IDeploy.cs" />
-    <Compile Include="Application\IDeploySslCertificate.cs" />
-    <Compile Include="Application\IExecute.cs" />
-    <Compile Include="Application\IExecuteLocally.cs" />
-    <Compile Include="Application\Infrastructure\IRequireInfrastructure.cs" />
+    <Compile Include="Experimental\Application\ApplicationArtifact.cs" />
+    <Compile Include="Experimental\Application\Dsl\Remote\Deployment\RemoteDeployment.cs" />
+    <Compile Include="Experimental\Application\Dsl\Remote\Deployment\IOfferRemoteOptions.cs" />
+    <Compile Include="Experimental\Application\Dsl\Local\ApplicationOps.cs" />
+    <Compile Include="Experimental\Application\Dsl\Remote\Execution\RemoteExecutor.cs" />
+    <Compile Include="Experimental\Application\Dsl\Remote\Deployment\RemoteServerOffer.cs" />
+    <Compile Include="Experimental\Application\Dsl\Remote\Deployment\Ssl\SslCertificateDeployer.cs" />
+    <Compile Include="Experimental\Core\Impl\ExecutionSequenceManager.cs" />
+    <Compile Include="Experimental\Core\IManageExecutionSequence.cs" />
+    <Compile Include="Experimental\Application\Dsl\Remote\Deployment\IOfferRemoteDeployment.cs" />
+    <Compile Include="Experimental\Application\Dsl\Remote\Deployment\Ssl\IOfferRemoteSslOperations.cs" />
+    <Compile Include="Experimental\Application\Dsl\Remote\Execution\IOfferRemoteExecution.cs" />
+    <Compile Include="Experimental\Application\Dsl\Local\IOfferApplicationOps.cs" />
+    <Compile Include="Experimental\Application\Infrastructure\IConfigureInfrastructure.cs" />
+    <Compile Include="Experimental\Application\Infrastructure\IDependOnInfrastructure.cs" />
     <Compile Include="ConDepContext.cs" />
     <Compile Include="ConDepConfigurationTypeNotFoundException.cs" />
     <Compile Include="ConDepContextOperationPlaceHolder.cs" />
@@ -76,6 +83,18 @@
     <Compile Include="DeploymentExtensions.cs" />
     <Compile Include="DeploymentIisExtensions.cs" />
     <Compile Include="EnvConfigParser.cs" />
+    <Compile Include="Experimental\Core\IManageGeneralSequence.cs" />
+    <Compile Include="Experimental\Core\IManageLocalSequence.cs" />
+    <Compile Include="Experimental\Core\IManageRemoteSequence.cs" />
+    <Compile Include="Experimental\Core\IOperateRemote.cs" />
+    <Compile Include="Experimental\Core\IOperateWebDeploy.cs" />
+    <Compile Include="Experimental\Core\IRemoteSequenceElement.cs" />
+    <Compile Include="Experimental\Core\ISequenceElement.cs" />
+    <Compile Include="Experimental\Core\Impl\LocalOperationSequenceElement.cs" />
+    <Compile Include="Experimental\Core\Impl\LocalSequenceManager.cs" />
+    <Compile Include="Experimental\Core\Impl\RemoteSequenceManager.cs" />
+    <Compile Include="Experimental\Core\RemoteOperation.cs" />
+    <Compile Include="Experimental\Core\WebDeployOperator.cs" />
     <Compile Include="ILogForCondep.cs" />
     <Compile Include="InfrastructureExtensions.cs" />
     <Compile Include="IoCBootstrapper.cs" />
@@ -110,7 +129,7 @@
     <Compile Include="Operations\TransformConfig\TransformConfigOperation.cs" />
     <Compile Include="Operations\WebRequest\WebRequestExtension.cs" />
     <Compile Include="Operations\WebRequest\WebRequestOperation.cs" />
-    <Compile Include="Application\Infrastructure\InfrastructureArtifact.cs" />
+    <Compile Include="Experimental\Application\Infrastructure\InfrastructureArtifact.cs" />
     <Compile Include="ProvideForDeploymentExistingIis.cs" />
     <Compile Include="ProvideForDeploymentIis.cs" />
     <Compile Include="ProvideForInfrastructureIis.cs" />
@@ -206,8 +225,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Application\LocalExecution\" />
-    <Folder Include="Application\RemoteExecution\" />
+    <Folder Include="Experimental\Application\Deployment\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

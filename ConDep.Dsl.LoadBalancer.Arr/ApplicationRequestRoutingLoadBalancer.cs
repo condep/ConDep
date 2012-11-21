@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using ConDep.Dsl;
+using ConDep.Dsl.Experimental.Core;
 using ConDep.Dsl.LoadBalancer;
 using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
@@ -22,16 +23,16 @@ namespace ConDep.LoadBalancer.Arr
             _server = new ServerConfig {DeploymentUser = _user, Name = _settings.Name};
         }
 
-        public void BringOnline(string serverName, WebDeploymentStatus webDeploymentStatus)
+        public void BringOnline(string serverName, IReportStatus status)
         {
             var operation = GetOperation(LoadBalanceState.Online, serverName);
-            operation.Execute(webDeploymentStatus);
+            operation.Execute(status);
         }
 
-        public void BringOffline(string serverName, WebDeploymentStatus webDeploymentStatus)
+        public void BringOffline(string serverName, IReportStatus status)
         {
             var operation = GetOperation(LoadBalanceState.Offline, serverName);
-            operation.Execute(webDeploymentStatus);
+            operation.Execute(status);
         }
 
         private WebDeployOperation GetOperation(LoadBalanceState state, string serverName)
