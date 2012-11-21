@@ -38,6 +38,10 @@ namespace ConDep.Console
                 {
                     exitCode = 1;
                 }
+                else
+                {
+                    status.PrintSummery(new Logger().Resolve());
+                }
             }
             catch
             {

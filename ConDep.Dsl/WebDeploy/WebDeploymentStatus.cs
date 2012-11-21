@@ -41,5 +41,31 @@ namespace ConDep.Dsl.WebDeploy
         }
 
 
+        public void PrintSummery(ILogForConDep logger)
+        {
+            int objectsAdded = 0;
+            int objectsDeleted = 0;
+            int objectsUpdated = 0;
+            double mBytesCopied = 0;
+
+            foreach (var summery in _summeries)
+            {
+                objectsAdded += summery.ObjectsAdded;
+                objectsDeleted += summery.ObjectsDeleted;
+                objectsUpdated += summery.ObjectsUpdated;
+                if(summery.BytesCopied > 0)
+                {
+                    mBytesCopied += ((summery.BytesCopied / 1024.0) / 1024.0);
+                }
+            }
+
+            string message = string.Format(@"
+Objects Added     : {0}
+Objects Deleted   : {1}
+Objects Updated   : {2}
+Mega Bytes Copied : {3}", objectsAdded, objectsDeleted, objectsUpdated, mBytesCopied.ToString("N"));
+
+            logger.Info(message);
+        }
     }
 }
