@@ -14,6 +14,10 @@ namespace ConDep.Dsl.Experimental.Core
         private readonly ILogForConDep _logger;
         private readonly IOperateWebDeploy _webDeploy;
 
+        public RemoteOperation(IProvide provider) : this(provider, new Logger().Resolve(), new WebDeployOperator()) { }
+
+        public RemoteOperation(IProvide provider, ILogForConDep logger) : this(provider, logger, new WebDeployOperator()) { }
+
         public RemoteOperation(IProvide provider, ILogForConDep logger, IOperateWebDeploy webDeploy)
         {
             _provider = provider;

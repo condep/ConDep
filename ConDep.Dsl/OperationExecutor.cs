@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ConDep.Dsl.Experimental.Core;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl
@@ -8,10 +9,10 @@ namespace ConDep.Dsl
     {
         private readonly List<ConDepOperationBase> _operations;
         private readonly ConDepOptions _options;
-        private readonly WebDeploymentStatus _webDeploymentStatus;
+        private readonly IReportStatus _webDeploymentStatus;
         private readonly ConDepContext _context;
 
-        public OperationExecutor(List<ConDepOperationBase> operations, ConDepOptions options, WebDeploymentStatus webDeploymentStatus, ConDepContext context)
+        public OperationExecutor(List<ConDepOperationBase> operations, ConDepOptions options, IReportStatus webDeploymentStatus, ConDepContext context)
         {
             _operations = operations;
             _options = options;
@@ -19,7 +20,7 @@ namespace ConDep.Dsl
             _context = context;
         }
 
-        public WebDeploymentStatus Execute()
+        public IReportStatus Execute()
         {
             foreach (var operation in _operations)
             {
@@ -43,7 +44,7 @@ namespace ConDep.Dsl
             }
         }
 
-        private void ExecuteContextPlaceholderOperation(ConDepOptions options, WebDeploymentStatus webDeploymentStatus, ConDepOperationBase operation)
+        private void ExecuteContextPlaceholderOperation(ConDepOptions options, IReportStatus status, ConDepOperationBase operation)
         {
             ISetupConDep contextSetup;
 
@@ -64,7 +65,7 @@ namespace ConDep.Dsl
             }
 
             Logger.LogSectionStart(((ConDepContextOperationPlaceHolder)operation).ContextName + " context");
-            contextSetup.Execute(options, webDeploymentStatus);
+            contextSetup.Execute(options, status);
             Logger.LogSectionEnd(((ConDepContextOperationPlaceHolder)operation).ContextName + " context");
         }
     }

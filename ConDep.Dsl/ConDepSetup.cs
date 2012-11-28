@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConDep.Dsl.Experimental.Core;
 using ConDep.Dsl.LoadBalancer;
 using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
@@ -62,7 +63,7 @@ namespace ConDep.Dsl
 			return _operations.All(operation => operation.IsValid(notification));
 		}
 
-        public WebDeploymentStatus Execute(ConDepOptions options, WebDeploymentStatus webDeploymentStatus)
+        public IReportStatus Execute(ConDepOptions options, IReportStatus webDeploymentStatus)
         {
             if (options.PrintSequence)
             {

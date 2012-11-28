@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using ConDep.Dsl.Experimental.Application;
+using ConDep.Dsl.Experimental.Application.Deployment;
 using ConDep.Dsl.Model.Config;
 using ConDep.Dsl.WebDeploy;
 
@@ -52,6 +54,21 @@ namespace ConDep.Dsl.Experimental.Core.Impl
                     return status;
             }
             return status;
+        }
+
+        public static IManageRemoteSequence GetSequenceFor(IOfferRemoteDeployment deployment)
+        {
+            return ((RemoteDeployment) deployment).Sequence;
+        }
+
+        public static IManageRemoteSequence GetSequenceFor(IOfferRemoteExecution execution)
+        {
+            return ((RemoteExecutor)execution).Sequence;
+        }
+
+        public static IManageGeneralSequence GetSequenceFor(IOfferApplicationOps appOps)
+        {
+            return ((ApplicationOps)appOps).Sequence;
         }
     }
 }

@@ -36,9 +36,11 @@ namespace ConDep.Dsl.Experimental.Application.Deployment
             return this;
         }
 
-        public IOfferRemoteDeployment IisWebApplication()
+        public IOfferRemoteDeployment IisWebApplication(string sourceDir, string webAppName, string webSiteName)
         {
-            throw new NotImplementedException();
+            var webAppProvider = new WebAppDeploymentProvider(sourceDir, webAppName, webSiteName);
+            _remoteSequence.Add(new RemoteOperation(webAppProvider));
+            return this;
         }
 
         public IOfferRemoteDeployment WindowsService()
@@ -48,14 +50,21 @@ namespace ConDep.Dsl.Experimental.Application.Deployment
 
         public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName)
         {
-            throw new NotImplementedException();
+            var nServiceBusProvider = new NServiceBusProvider(sourceDir, destDir, serviceName);
+            _remoteSequence.Add(new RemoteOperation(nServiceBusProvider));
+            return this;
         }
 
         public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, Action<NServiceBusOptions> nServiceBusOptions)
         {
-            throw new NotImplementedException();
+            var nServiceBusProvider = new NServiceBusProvider(sourceDir, destDir, serviceName);
+            nServiceBusOptions(new NServiceBusOptions(nServiceBusProvider));
+            _remoteSequence.Add(new RemoteOperation(nServiceBusProvider));
+            return this;
         }
 
         public IOfferRemoteSslOperations SslCertificate { get { return _sslCertDeployment; } }
+
+        public IManageRemoteSequence Sequence { get { return _remoteSequence; } }
     }
 }

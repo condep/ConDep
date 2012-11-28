@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using ConDep.Dsl.Experimental.Core;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl
@@ -7,7 +6,7 @@ namespace ConDep.Dsl
     public interface ISetupConDep
     {
         bool IsValid(Notification notification);
-        WebDeploymentStatus Execute(ConDepOptions options, WebDeploymentStatus status);
+        IReportStatus Execute(ConDepOptions options, IReportStatus status);
         void PrintExecutionSequence(ConDepOptions options);
         void AddOperation(ConDepOperationBase operation);
     }

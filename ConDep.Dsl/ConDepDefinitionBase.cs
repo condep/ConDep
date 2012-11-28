@@ -1,9 +1,5 @@
-using System;
-using System.Diagnostics;
-using System.IO;
+using ConDep.Dsl.Experimental.Core;
 using ConDep.Dsl.Model.Config;
-using ConDep.Dsl.WebDeploy;
-using TinyIoC;
 
 namespace ConDep.Dsl
 {
@@ -11,7 +7,7 @@ namespace ConDep.Dsl
 	{
         protected internal ConDepOptions Options { get; set; }
 
-	    public WebDeploymentStatus Status { get; set; }
+	    public IReportStatus Status { get; set; }
 
         protected internal ConDepConfig EnvSettings { get; set; }
 

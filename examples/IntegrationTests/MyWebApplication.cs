@@ -17,6 +17,10 @@ namespace IntegrationTests
                                     {
                                         x.Deploy
                                             .Directory(@"C:\website1", @"C:\Temp\ConDep\MyWebApp");
+
+                                        x.Deploy
+                                            .Directory2(@"C:\website1", @"C:\Temp\ConDep\MyWebApp");
+
                                             //.NServiceBusEndpoint("", "", "", opt => opt.Profile(""));
 
                                         //x.ExecuteRemote
@@ -38,7 +42,7 @@ namespace IntegrationTests
                                     }
                 );
 
-            onLocalMachine.ExecuteWebRequest("GET", "http://www.con-dep.net");
+            onLocalMachine.ExecuteWebRequest2("GET", "http://www.con-dep.net");
             //fromLocalMachine.ToEachServer(x => x.Deploy.Directory(@"C:\temp", @"e:\temp"));
         }
     }

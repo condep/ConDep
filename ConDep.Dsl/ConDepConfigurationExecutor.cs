@@ -13,7 +13,7 @@ namespace ConDep.Dsl
 {
     public class ConDepConfigurationExecutor
     {
-        public void Execute(Assembly assembly, ConDepConfig envConfig, ConDepOptions options, WebDeploymentStatus status)
+        public void Execute(Assembly assembly, ConDepConfig envConfig, ConDepOptions options, IReportStatus status)
         {
             if (assembly == null) { throw new ArgumentException("assembly"); }
             if (envConfig == null) { throw new ArgumentException("envSettings"); }
@@ -46,17 +46,17 @@ namespace ConDep.Dsl
             conDepSetup.Execute(options, status);
         }
 
-        public static void ExecuteFromAssembly(Assembly assembly, ConDepConfig envSettings, ConDepOptions options, WebDeploymentStatus status)
+        public static void ExecuteFromAssembly(Assembly assembly, ConDepConfig envSettings, ConDepOptions options, IReportStatus status)
         {
             new ConDepConfigurationExecutor().Execute(assembly, envSettings, options, status);
         }
 
-        public static void ExecuteExperimentalFromAssembly(Assembly assembly, ConDepConfig envSettings, ConDepOptions options, WebDeploymentStatus status)
+        public static void ExecuteExperimentalFromAssembly(Assembly assembly, ConDepConfig envSettings, ConDepOptions options, IReportStatus status)
         {
             new ConDepConfigurationExecutor().ExecuteExperimental(assembly, envSettings, options, status);
         }
 
-        private void ExecuteExperimental(Assembly assembly, ConDepConfig envConfig, ConDepOptions options, WebDeploymentStatus status)
+        private void ExecuteExperimental(Assembly assembly, ConDepConfig envConfig, ConDepOptions options, IReportStatus status)
         {
             if (assembly == null) { throw new ArgumentException("assembly"); }
             if (envConfig == null) { throw new ArgumentException("envSettings"); }

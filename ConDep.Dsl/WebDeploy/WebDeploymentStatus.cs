@@ -41,7 +41,7 @@ namespace ConDep.Dsl.WebDeploy
         }
 
 
-        public void PrintSummery(ILogForConDep logger)
+        public void PrintSummery()
         {
             int objectsAdded = 0;
             int objectsDeleted = 0;
@@ -65,7 +65,7 @@ Objects Deleted   : {1}
 Objects Updated   : {2}
 Mega Bytes Copied : {3}", objectsAdded, objectsDeleted, objectsUpdated, mBytesCopied.ToString("N"));
 
-            logger.Info(message);
+            Logger.Info(message);
         }
     }
 }

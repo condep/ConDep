@@ -1,5 +1,6 @@
 using System;
 using ConDep.Dsl.Experimental.Core;
+using ConDep.Dsl.Experimental.Core.Impl;
 
 namespace ConDep.Dsl.Experimental.Application
 {
@@ -11,6 +12,8 @@ namespace ConDep.Dsl.Experimental.Application
         {
             _localSequence = localSequence;
         }
+
+        public IManageGeneralSequence Sequence { get { return _localSequence; } }
 
         public IOfferApplicationOps TransformConfigFile(string configDirPath, string configName, string transformName)
         {

@@ -7,7 +7,7 @@ namespace ConDep.Dsl.Experimental.Core.Impl
     public class LocalSequenceManager : IManageLocalSequence
     {
         private readonly List<ConDepOperationBase> _sequence = new List<ConDepOperationBase>();
- 
+
         public void Add(ConDepOperationBase localOperation)
         {
             _sequence.Add(localOperation);

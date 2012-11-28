@@ -40,7 +40,7 @@ namespace ConDep.Console
                 }
                 else
                 {
-                    status.PrintSummery(new Logger().Resolve());
+                    status.PrintSummery();
                 }
             }
             catch
