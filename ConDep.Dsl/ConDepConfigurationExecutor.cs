@@ -93,7 +93,7 @@ namespace ConDep.Dsl
             foreach(var application in applications)
             {
                 var local = new ApplicationOps(sequence);
-                application.Configure(local);
+                application.Configure(local, envConfig);
             }
 
             var notification = new Notification();

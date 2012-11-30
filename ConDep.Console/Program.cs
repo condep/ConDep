@@ -62,6 +62,7 @@ namespace ConDep.Console
 
             var jsonConfigParser = new EnvConfigParser();
             var envConfig = jsonConfigParser.GetEnvConfig(envFilePath);
+            envConfig.EnvironmentName = cmdParams.Environment;
 
             //todo: add unit tests for these conditions
             if (!string.IsNullOrWhiteSpace(cmdParams.Server))
