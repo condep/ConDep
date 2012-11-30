@@ -1,10 +1,9 @@
 ﻿using System.Net;
 using ConDep.Dsl.Experimental.Core;
-using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.Operations.WebRequest
 {
-    internal class WebRequestOperation : ConDepOperationBase
+    public class WebRequestOperation : ConDepOperationBase
     {
         private readonly string _url;
         private readonly string _method;

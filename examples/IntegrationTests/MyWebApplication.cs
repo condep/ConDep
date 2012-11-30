@@ -1,4 +1,5 @@
-﻿using ConDep.Dsl.Experimental.Application;
+﻿using ConDep.Dsl.Experimental;
+using ConDep.Dsl.Experimental.Application;
 using ConDep.Dsl.Experimental.Application.Infrastructure;
 
 namespace IntegrationTests

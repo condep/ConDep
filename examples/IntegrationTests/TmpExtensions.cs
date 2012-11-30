@@ -1,9 +1,10 @@
+using ConDep.Dsl.Experimental.Application;
 using ConDep.Dsl.Experimental.Core;
 using ConDep.Dsl.Experimental.Core.Impl;
 using ConDep.Dsl.WebDeployProviders.Deployment.CopyDir;
 using ConDep.Dsl.WebDeployProviders.RunCmd;
 
-namespace ConDep.Dsl.Experimental.Application
+namespace ConDep.Dsl.Experimental
 {
     public static class TmpExtensions
     {
