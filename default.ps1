@@ -9,6 +9,7 @@ properties {
 	$condep_console = "ConDep.Console"
 	$condep_dsl_lb_arr = "ConDep.Dsl.LoadBalancer.Arr"
 	$condep_tests = "ConDep.Dsl.Tests"
+	$lib = "$pwd\lib"
 }
  
 include .\tools\psake_ext.ps1
@@ -60,12 +61,12 @@ task Build-ConDep-Console -depends Clean-ConDep-Console, Init {
 		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy" `
 		-dependencies @(
 			@{ Name="$condep_dsl"; Version="$nugetVersion-pre"},
-			@{ Name="Newtonsoft.Json"; Version="4.5.9"},
 			@{ Name="NDesk.Options"; Version="0.2.1"}
 			@{ Name="log4net"; Version="2.0.0"}
 		) `
 		-files @(
-			@{ Path="$condep_console\$condep.exe"; Target="lib/net40"}
+			@{ Path="$condep_console\$condep.exe"; Target="lib/net40"},
+			@{ Path="$lib\SlowCheetah\v2.4\SlowCheetah.Tasks.dll"; Target="lib/net40"}
 		)
 }
 
