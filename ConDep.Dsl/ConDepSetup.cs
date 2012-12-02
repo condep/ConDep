@@ -10,7 +10,7 @@ namespace ConDep.Dsl
 {
     internal class ConDepSetup : ISetupConDep, IValidate, IProvideForSetup
 	{
-		private readonly List<ConDepOperationBase> _operations = new List<ConDepOperationBase>();
+		private readonly List<LocalOperation> _operations = new List<LocalOperation>();
 	    private ILoadBalance _loadBalancer;
         private readonly ISetupWebDeploy _webDeploySetup;
         private readonly ConDepConfig _envConfig;
@@ -34,13 +34,13 @@ namespace ConDep.Dsl
 
         public ConDepConfig EnvConfig { get { return _envConfig; } }
 
-        public void AddOperation(ConDepOperationBase operation)
+        public void AddOperation(LocalOperation operation)
 	    {
 	        CheckLoadBalancerRequirement(operation);
 	        _operations.Add(operation);
 	    }
 
-	    private void CheckLoadBalancerRequirement(ConDepOperationBase operation)
+	    private void CheckLoadBalancerRequirement(LocalOperation operation)
 	    {
 	        if (!(operation is IRequireLoadBalancing)) return;
 	        
@@ -92,7 +92,7 @@ namespace ConDep.Dsl
                     }
                     else
                     {
-                        operation.PrintExecutionSequence(Console.Out);
+                        //operation.PrintExecutionSequence(Console.Out);
                     }
                 }
             }
@@ -107,7 +107,7 @@ namespace ConDep.Dsl
                     } 
                     else
                     {
-                        operation.PrintExecutionSequence(Console.Out);
+                        //operation.PrintExecutionSequence(Console.Out);
                     }
                 }
             }

@@ -1,12 +1,13 @@
 ﻿using ConDep.Dsl.Experimental;
 using ConDep.Dsl.Experimental.Application;
 using ConDep.Dsl.Experimental.Application.Infrastructure;
+using ConDep.Dsl.Model.Config;
 
 namespace IntegrationTests
 {
     public class MyWebApplication : ApplicationArtifact, IDependOnInfrastructure<WebServerInfrastructure>//, IDependOnApplication<RaadgivewerbLiv>
     {
-        public override void Configure(IOfferApplicationOps onLocalMachine)
+        public override void Configure(IOfferApplicationOps onLocalMachine, ConDepConfig config)
         {
             onLocalMachine.ExecuteWebRequest("GET", "http://www.con-dep.net");
             //onLocalMachine

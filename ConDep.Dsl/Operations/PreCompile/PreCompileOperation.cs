@@ -6,7 +6,7 @@ using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.Operations.PreCompile
 {
-    public class PreCompileOperation : ConDepOperationBase
+    public class PreCompileOperation : LocalOperation
 	{
 		private readonly string _webApplicationName;
 		private readonly string _webApplicationPhysicalPath;

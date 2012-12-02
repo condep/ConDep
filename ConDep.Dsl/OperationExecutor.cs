@@ -7,12 +7,12 @@ namespace ConDep.Dsl
 {
     internal class OperationExecutor
     {
-        private readonly List<ConDepOperationBase> _operations;
+        private readonly List<LocalOperation> _operations;
         private readonly ConDepOptions _options;
         private readonly IReportStatus _webDeploymentStatus;
         private readonly ConDepContext _context;
 
-        public OperationExecutor(List<ConDepOperationBase> operations, ConDepOptions options, IReportStatus webDeploymentStatus, ConDepContext context)
+        public OperationExecutor(List<LocalOperation> operations, ConDepOptions options, IReportStatus webDeploymentStatus, ConDepContext context)
         {
             _operations = operations;
             _options = options;
@@ -30,7 +30,7 @@ namespace ConDep.Dsl
             return _webDeploymentStatus;
         }
 
-        private void ExecuteOperation(ConDepOperationBase operation)
+        private void ExecuteOperation(LocalOperation operation)
         {
             if (operation is ConDepContextOperationPlaceHolder)
             {
@@ -44,7 +44,7 @@ namespace ConDep.Dsl
             }
         }
 
-        private void ExecuteContextPlaceholderOperation(ConDepOptions options, IReportStatus status, ConDepOperationBase operation)
+        private void ExecuteContextPlaceholderOperation(ConDepOptions options, IReportStatus status, LocalOperation operation)
         {
             ISetupConDep contextSetup;
 

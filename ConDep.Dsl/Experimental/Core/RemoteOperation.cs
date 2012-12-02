@@ -32,6 +32,11 @@ namespace ConDep.Dsl.Experimental.Core
 
         public IReportStatus Execute(ServerConfig server, IReportStatus status)
         {
+            if (_provider is WebDeployCompositeProviderBase)
+            {
+                ((WebDeployCompositeProviderBase)_provider).Configure(server);
+            }
+
             WebDeployOptions options = null;
             try
             {

@@ -4,7 +4,7 @@ using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.Operations.TransformConfig
 {
-	public class TransformConfigOperation : ConDepOperationBase
+	public class TransformConfigOperation : LocalOperation
 	{
 		private readonly string _configDirPath;
 		private readonly string _configName;

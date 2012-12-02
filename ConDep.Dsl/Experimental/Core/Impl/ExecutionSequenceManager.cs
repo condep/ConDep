@@ -21,7 +21,7 @@ namespace ConDep.Dsl.Experimental.Core.Impl
             _sequence.Add(localSequence);
         }
 
-        public void Add(ConDepOperationBase operation)
+        public void Add(LocalOperation operation)
         {
             _sequence.Add(new LocalOperationSequenceElement(operation));
         }

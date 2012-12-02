@@ -8,6 +8,6 @@ namespace ConDep.Dsl
         bool IsValid(Notification notification);
         IReportStatus Execute(ConDepOptions options, IReportStatus status);
         void PrintExecutionSequence(ConDepOptions options);
-        void AddOperation(ConDepOperationBase operation);
+        void AddOperation(LocalOperation operation);
     }
 }

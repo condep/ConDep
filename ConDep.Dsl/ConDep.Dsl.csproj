@@ -60,6 +60,7 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="Experimental\Application\ApplicationArtifact.cs" />
+    <Compile Include="Experimental\Application\Dsl\RemoteCompositeOperation.cs" />
     <Compile Include="Experimental\Application\Dsl\Remote\Deployment\RemoteDeployment.cs" />
     <Compile Include="Experimental\Application\Dsl\Remote\Deployment\IOfferRemoteOptions.cs" />
     <Compile Include="Experimental\Application\Dsl\Local\ApplicationOps.cs" />
@@ -206,7 +207,7 @@
     <Compile Include="IProvideOptions.cs" />
     <Compile Include="WebDeploy\WebDeployDestination.cs" />
     <Compile Include="ConDepConfigurationExecutor.cs" />
-    <Compile Include="ConDepOperationBase.cs" />
+    <Compile Include="LocalOperation.cs" />
     <Compile Include="IProvide.cs" />
     <Compile Include="IValidate.cs" />
     <Compile Include="Model\Notification.cs" />

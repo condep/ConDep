@@ -5,7 +5,7 @@ using ConDep.Dsl.Experimental.Core;
 
 namespace ConDep.Dsl.WebDeploy
 {
-	public class WebDeployOperation : ConDepOperationBase, IRequireLoadBalancing
+	public class WebDeployOperation : LocalOperation, IRequireLoadBalancing
 	{
 		private readonly WebDeployServerDefinition _webDeployServerDefinition;
 
@@ -39,13 +39,5 @@ namespace ConDep.Dsl.WebDeploy
 		{
 			return _webDeployServerDefinition.IsValid(notification);
 		}
-
-	    public override void PrintExecutionSequence(TextWriter writer)
-	    {
-            foreach (var provider in _webDeployServerDefinition.Providers)
-	        {
-	            writer.WriteLine(provider.GetType().Name);
-	        }
-	    }
 	}
 }

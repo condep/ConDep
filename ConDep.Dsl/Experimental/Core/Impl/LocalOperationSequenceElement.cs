@@ -5,9 +5,9 @@ namespace ConDep.Dsl.Experimental.Core.Impl
 {
     public class LocalOperationSequenceElement : ISequenceElement
     {
-        private readonly ConDepOperationBase _operation;
+        private readonly LocalOperation _operation;
 
-        public LocalOperationSequenceElement(ConDepOperationBase operation)
+        public LocalOperationSequenceElement(LocalOperation operation)
         {
             _operation = operation;
         }
