@@ -71,7 +71,7 @@ namespace ConDep.Dsl
 
         public static void LogSectionStart(string name)
         {
-            _log.LogSectionEnd(name);
+            _log.LogSectionStart(name);
         }
 
         public static void LogSectionEnd(string name)

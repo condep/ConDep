@@ -37,7 +37,7 @@ namespace ConDep.Dsl.Experimental.Core.Impl
             {
                 try
                 {
-                    Logger.LogSectionStart(server.Name);
+                    Logger.LogSectionStart("Server: " + server.Name);
                     foreach (var element in _sequence)
                     {
                         try
@@ -55,7 +55,7 @@ namespace ConDep.Dsl.Experimental.Core.Impl
                 }
                 finally
                 {
-                    Logger.LogSectionEnd(server.Name);
+                    Logger.LogSectionEnd("Server: " + server.Name);
                 }
             }
             return status;
