@@ -78,7 +78,7 @@ namespace ConDep.Dsl.Experimental.Application.Dsl.Remote
         private void CopyPowerShellScriptsToTarget(IOfferRemoteDeployment deploy)
         {
             var filePath = ConDepResourceFiles.GetFilePath(GetType().Namespace, "NServiceBus.ps1");
-            deploy.Directory(filePath, @"%temp%\NServiceBus.ps1");
+            deploy.File(filePath, @"%temp%\NServiceBus.ps1");
         }
 
         private bool HasServiceConfigOptions
