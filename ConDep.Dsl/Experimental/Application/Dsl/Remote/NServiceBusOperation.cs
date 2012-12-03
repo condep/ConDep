@@ -62,7 +62,7 @@ namespace ConDep.Dsl.Experimental.Application.Dsl.Remote
             server.Deploy.Directory(SourcePath, DestinationPath);
 
             //Allow continue on error??
-            server.ExecuteRemote.DosCommand(install);
+            server.ExecuteRemote.DosCommand(install, false, opt => opt.WaitIntervalInSeconds(10));
             if (!string.IsNullOrWhiteSpace(serviceFailureCommand)) server.ExecuteRemote.DosCommand(serviceFailureCommand);
             if (!string.IsNullOrWhiteSpace(serviceConfigCommand)) server.ExecuteRemote.DosCommand(serviceConfigCommand);
 
