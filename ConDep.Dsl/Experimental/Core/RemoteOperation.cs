@@ -40,7 +40,6 @@ namespace ConDep.Dsl.Experimental.Core
             WebDeployOptions options = null;
             try
             {
-                _logger.LogSectionStart(server.Name);
                 options = _webDeploy.GetWebDeployOptions(server, OnWebDeployTraceMessage);//GetWebDeployOptions(webDeploySource, webDeployDestination);
 
                 if (_provider is WebDeployCompositeProviderBase)
@@ -63,8 +62,6 @@ namespace ConDep.Dsl.Experimental.Core
             {
                 if (options != null && options.DestBaseOptions != null) options.DestBaseOptions.Trace -= OnWebDeployTraceMessage;
                 if (options != null && options.SourceBaseOptions != null) options.SourceBaseOptions.Trace -= OnWebDeployTraceMessage;
-
-                _logger.LogSectionEnd(server.Name);
             }
 
             return status;

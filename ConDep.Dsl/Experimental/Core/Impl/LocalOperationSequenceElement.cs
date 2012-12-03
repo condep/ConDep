@@ -14,7 +14,15 @@ namespace ConDep.Dsl.Experimental.Core.Impl
 
         public IReportStatus Execute(IReportStatus status)
         {
-            return _operation.Execute(status);
+            try
+            {
+                Logger.LogSectionStart(_operation.GetType().Name);
+                return _operation.Execute(status);
+            }
+            finally
+            {
+                Logger.LogSectionEnd(_operation.GetType().Name);
+            }
         }
 
         public bool IsValid(Notification notification)

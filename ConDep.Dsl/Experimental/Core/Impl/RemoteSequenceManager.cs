@@ -35,11 +35,27 @@ namespace ConDep.Dsl.Experimental.Core.Impl
         {
             foreach(var server in _servers)
             {
-                foreach(var element in _sequence)
+                try
                 {
-                    element.Execute(server, status);
-                    if (status.HasErrors)
-                        return status;
+                    Logger.LogSectionStart(server.Name);
+                    foreach (var element in _sequence)
+                    {
+                        try
+                        {
+                            Logger.LogSectionStart(element.GetType().Name);
+                            element.Execute(server, status);
+                            if (status.HasErrors)
+                                return status;
+                        }
+                        finally
+                        {
+                            Logger.LogSectionEnd(element.GetType().Name);
+                        }
+                    }
+                }
+                finally
+                {
+                    Logger.LogSectionEnd(server.Name);
                 }
             }
             return status;

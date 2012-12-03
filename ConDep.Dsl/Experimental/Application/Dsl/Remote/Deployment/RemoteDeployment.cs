@@ -1,7 +1,6 @@
 ﻿using System;
 using ConDep.Dsl.Experimental.Application.Dsl.Remote;
 using ConDep.Dsl.Experimental.Core;
-using ConDep.Dsl.Experimental.Core.Impl;
 using ConDep.Dsl.WebDeployProviders.Deployment.CopyDir;
 using ConDep.Dsl.WebDeployProviders.Deployment.CopyFile;
 using ConDep.Dsl.WebDeployProviders.Deployment.IIS.WebApp;
@@ -64,7 +63,6 @@ namespace ConDep.Dsl.Experimental.Application.Deployment
             var nServiceBusProvider = new NServiceBusOperation(sourceDir, destDir, serviceName);
             nServiceBusOptions(new NServiceBusOptions(nServiceBusProvider));
             nServiceBusProvider.Configure(_remoteServerOffer);
-            //_remoteSequence.Add(nServiceBusProvider);
             return this;
         }
 

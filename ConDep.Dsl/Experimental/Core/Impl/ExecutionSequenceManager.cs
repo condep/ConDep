@@ -46,11 +46,19 @@ namespace ConDep.Dsl.Experimental.Core.Impl
 
         public IReportStatus Execute(IReportStatus status)
         {
-            foreach(var element in _sequence)
+            try
             {
-                element.Execute(status);
-                if (status.HasErrors)
-                    return status;
+                Logger.LogSectionStart("ConDep");
+                foreach (var element in _sequence)
+                {
+                    element.Execute(status);
+                    if (status.HasErrors)
+                        return status;
+                }
+            }
+            finally
+            {
+                Logger.LogSectionEnd("ConDep");
             }
             return status;
         }

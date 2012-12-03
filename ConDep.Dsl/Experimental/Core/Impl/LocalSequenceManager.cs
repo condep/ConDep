@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.Experimental.Core.Impl
 {
@@ -17,9 +16,17 @@ namespace ConDep.Dsl.Experimental.Core.Impl
         {
             foreach(var element in _sequence)
             {
-                element.Execute(status);
-                if (status.HasErrors)
-                    return status;
+                try
+                {
+                    Logger.LogSectionStart(element.GetType().Name);
+                    element.Execute(status);
+                    if (status.HasErrors)
+                        return status;
+                }
+                finally
+                {
+                    Logger.LogSectionEnd(element.GetType().Name);
+                }
             }
             return status;
         }
