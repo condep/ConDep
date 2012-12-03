@@ -1,10 +1,12 @@
-﻿namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
+﻿using ConDep.Dsl.Experimental.Application.Dsl.Remote;
+
+namespace ConDep.Dsl.WebDeployProviders.Deployment.NServiceBus
 {
     public class NServiceBusOptions
     {
-        private readonly NServiceBusProvider _nservicebusProvider;
+        private readonly NServiceBusOperation _nservicebusProvider;
 
-        public NServiceBusOptions(NServiceBusProvider nservicebusProvider)
+        public NServiceBusOptions(NServiceBusOperation nservicebusProvider)
         {
             _nservicebusProvider = nservicebusProvider;
         }

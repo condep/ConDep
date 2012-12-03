@@ -13,9 +13,9 @@ namespace ConDep.Dsl
 
         public static void NServiceBus(this ProvideForDeployment providerCollection, string sourceDir, string destDir, string serviceName, Action<NServiceBusOptions> nServiceBusOptions)
         {
-            var nservicebusProvider = new NServiceBusProvider(sourceDir, destDir, serviceName);
-	        nServiceBusOptions(new NServiceBusOptions(nservicebusProvider));
-            ((IProvideOptions)providerCollection).AddProviderAction(nservicebusProvider);
+            //var nservicebusProvider = new NServiceBusProvider(sourceDir, destDir, serviceName);
+            //nServiceBusOptions(new NServiceBusOptions(nservicebusProvider));
+            //((IProvideOptions)providerCollection).AddProviderAction(nservicebusProvider);
         }
     }
 }

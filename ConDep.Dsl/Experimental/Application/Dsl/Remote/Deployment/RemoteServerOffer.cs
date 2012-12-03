@@ -17,8 +17,8 @@ namespace ConDep.Dsl.Experimental.Application
             _logger = logger;
             _remoteSequence = executionSequence.NewRemoteSequence(servers);
  
-            Deploy = new RemoteDeployment(_remoteSequence, new SslCertificateDeployer(), _webDeploy, _logger);
-            ExecuteRemote = new RemoteExecutor(_remoteSequence, webDeploy, logger);
+            Deploy = new RemoteDeployment(_remoteSequence, new SslCertificateDeployer(), _webDeploy, _logger, this);
+            ExecuteRemote = new RemoteExecutor(_remoteSequence, webDeploy, logger, this);
         }
 
         public IOfferRemoteDeployment Deploy { get; private set; }

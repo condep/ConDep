@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using ConDep.Dsl.Model.Config;
-using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.Experimental.Core.Impl
 {
@@ -20,6 +18,11 @@ namespace ConDep.Dsl.Experimental.Core.Impl
         {
             _sequence.Add(remoteOperation);
         }
+
+        //public void Add(RemoteCompositeOperation remoteOperation)
+        //{
+        //    _sequence.Add(remoteOperation);
+        //}
 
         //public IManageLocalSequence NewLocalSequence()
         //{

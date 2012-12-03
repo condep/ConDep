@@ -1,5 +1,7 @@
 ﻿using System;
+using ConDep.Dsl.Experimental.Application.Dsl.Remote;
 using ConDep.Dsl.Experimental.Core;
+using ConDep.Dsl.Experimental.Core.Impl;
 using ConDep.Dsl.WebDeployProviders.Deployment.CopyDir;
 using ConDep.Dsl.WebDeployProviders.Deployment.CopyFile;
 using ConDep.Dsl.WebDeployProviders.Deployment.IIS.WebApp;
@@ -13,13 +15,15 @@ namespace ConDep.Dsl.Experimental.Application.Deployment
         private readonly IOfferRemoteSslOperations _sslCertDeployment;
         private readonly IOperateWebDeploy _webDeploy;
         private readonly ILogForConDep _logger;
+        private readonly RemoteServerOffer _remoteServerOffer;
 
-        public RemoteDeployment(IManageRemoteSequence remoteSequence, IOfferRemoteSslOperations sslCertDeployment, IOperateWebDeploy webDeploy, ILogForConDep logger)
+        public RemoteDeployment(IManageRemoteSequence remoteSequence, IOfferRemoteSslOperations sslCertDeployment, IOperateWebDeploy webDeploy, ILogForConDep logger, RemoteServerOffer remoteServerOffer)
         {
             _remoteSequence = remoteSequence;
             _sslCertDeployment = sslCertDeployment;
             _webDeploy = webDeploy;
             _logger = logger;
+            _remoteServerOffer = remoteServerOffer;
         }
 
         public IOfferRemoteDeployment Directory(string sourceDir, string destDir)
@@ -50,16 +54,17 @@ namespace ConDep.Dsl.Experimental.Application.Deployment
 
         public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName)
         {
-            var nServiceBusProvider = new NServiceBusProvider(sourceDir, destDir, serviceName);
-            _remoteSequence.Add(new RemoteOperation(nServiceBusProvider));
+            var nServiceBusProvider = new NServiceBusOperation(sourceDir, destDir, serviceName);
+            nServiceBusProvider.Configure(_remoteServerOffer);
             return this;
         }
 
         public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, Action<NServiceBusOptions> nServiceBusOptions)
         {
-            var nServiceBusProvider = new NServiceBusProvider(sourceDir, destDir, serviceName);
+            var nServiceBusProvider = new NServiceBusOperation(sourceDir, destDir, serviceName);
+            nServiceBusProvider.Configure(_remoteServerOffer);
             nServiceBusOptions(new NServiceBusOptions(nServiceBusProvider));
-            _remoteSequence.Add(new RemoteOperation(nServiceBusProvider));
+            //_remoteSequence.Add(nServiceBusProvider);
             return this;
         }
 

@@ -20,17 +20,16 @@ namespace IntegrationTests
                                         x.Deploy
                                             .Directory(@"C:\website1", @"C:\Temp\ConDep\MyWebApp");
 
-                                        x.Deploy
-                                            .Directory2(@"C:\website1", @"C:\Temp\ConDep\MyWebApp");
+                                        x.Deploy.NServiceBusEndpoint(@"C:\website1", @"C:\Temp\ConDep\NSB", "MyService");
 
-                                            //.NServiceBusEndpoint("", "", "", opt => opt.Profile(""));
+                                        //.NServiceBusEndpoint("", "", "", opt => opt.Profile(""));
 
                                         //x.ExecuteRemote
-                                        //    .Powershell();
+                                        //    .PowerShell();
 
                                         //x.Deploy
                                         //    .SslCertificate.FromFile();
-                                        
+
                                         //x.FromLocalMachineToServer
                                         //    .ExecuteWebRequest("GET", "http://www.con-dep.net")
                                         //    .ExecuteWebRequest("GET", "http://www.google.com");

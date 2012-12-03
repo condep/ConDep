@@ -60,13 +60,14 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="Experimental\Application\ApplicationArtifact.cs" />
-    <Compile Include="Experimental\Application\Dsl\RemoteCompositeOperation.cs" />
     <Compile Include="Experimental\Application\Dsl\Remote\Deployment\RemoteDeployment.cs" />
     <Compile Include="Experimental\Application\Dsl\Remote\Deployment\IOfferRemoteOptions.cs" />
     <Compile Include="Experimental\Application\Dsl\Local\ApplicationOps.cs" />
     <Compile Include="Experimental\Application\Dsl\Remote\Execution\RemoteExecutor.cs" />
     <Compile Include="Experimental\Application\Dsl\Remote\Deployment\RemoteServerOffer.cs" />
     <Compile Include="Experimental\Application\Dsl\Remote\Deployment\Ssl\SslCertificateDeployer.cs" />
+    <Compile Include="Experimental\Application\Dsl\Remote\NServiceBusOperation.cs" />
+    <Compile Include="Experimental\Application\Dsl\Remote\RemoteCompositeOperation.cs" />
     <Compile Include="Experimental\Core\Impl\ExecutionSequenceManager.cs" />
     <Compile Include="Experimental\Core\IManageExecutionSequence.cs" />
     <Compile Include="Experimental\Application\Dsl\Remote\Deployment\IOfferRemoteDeployment.cs" />
@@ -223,6 +224,7 @@
     <Compile Include="WebDeploy\WebDeployProviderBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Experimental\Application\Dsl\Remote\NServiceBus.ps1" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

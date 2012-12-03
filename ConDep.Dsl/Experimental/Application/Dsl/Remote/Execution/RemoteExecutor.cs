@@ -12,7 +12,7 @@ namespace ConDep.Dsl.Experimental.Application
         private readonly IOperateWebDeploy _webDeploy;
         private readonly ILogForConDep _logger;
 
-        public RemoteExecutor(IManageRemoteSequence remoteSequence, IOperateWebDeploy webDeploy, ILogForConDep logger)
+        public RemoteExecutor(IManageRemoteSequence remoteSequence, IOperateWebDeploy webDeploy, ILogForConDep logger, RemoteServerOffer remoteServerOffer)
         {
             _remoteSequence = remoteSequence;
             _webDeploy = webDeploy;
@@ -39,21 +39,21 @@ namespace ConDep.Dsl.Experimental.Application
             return this;
         }
 
-        public IOfferRemoteExecution Powershell(string commandOrScript)
+        public IOfferRemoteExecution PowerShell(string commandOrScript)
         {
             var psProvider = new PowerShellProvider(commandOrScript);
             _remoteSequence.Add(new RemoteOperation(psProvider, _logger, _webDeploy));
             return this;
         }
 
-        public IOfferRemoteExecution Powershell(FileInfo scriptFile)
+        public IOfferRemoteExecution PowerShell(FileInfo scriptFile)
         {
             var psProvider = new PowerShellProvider(scriptFile);
             _remoteSequence.Add(new RemoteOperation(psProvider, _logger, _webDeploy));
             return this;
         }
 
-        public IOfferRemoteExecution Powershell(string commandOrScript, Action<PowerShellOptions> powerShellOptions)
+        public IOfferRemoteExecution PowerShell(string commandOrScript, Action<PowerShellOptions> powerShellOptions)
         {
             var psProvider = new PowerShellProvider(commandOrScript);
             powerShellOptions(new PowerShellOptions(psProvider));
@@ -61,7 +61,7 @@ namespace ConDep.Dsl.Experimental.Application
             return this;
         }
 
-        public IOfferRemoteExecution Powershell(FileInfo scriptFile, Action<PowerShellOptions> powerShellOptions)
+        public IOfferRemoteExecution PowerShell(FileInfo scriptFile, Action<PowerShellOptions> powerShellOptions)
         {
             var psProvider = new PowerShellProvider(scriptFile);
             powerShellOptions(new PowerShellOptions(psProvider));
