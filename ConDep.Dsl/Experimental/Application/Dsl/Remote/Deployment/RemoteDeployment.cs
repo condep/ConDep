@@ -62,8 +62,8 @@ namespace ConDep.Dsl.Experimental.Application.Deployment
         public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, Action<NServiceBusOptions> nServiceBusOptions)
         {
             var nServiceBusProvider = new NServiceBusOperation(sourceDir, destDir, serviceName);
-            nServiceBusProvider.Configure(_remoteServerOffer);
             nServiceBusOptions(new NServiceBusOptions(nServiceBusProvider));
+            nServiceBusProvider.Configure(_remoteServerOffer);
             //_remoteSequence.Add(nServiceBusProvider);
             return this;
         }
