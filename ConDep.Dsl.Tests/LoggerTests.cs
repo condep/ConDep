@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.ServiceProcess;
+using ConDep.Dsl.Logging;
 using NUnit.Framework;
 using log4net;
 using log4net.Appender;
 using log4net.Config;
 using log4net.Repository.Hierarchy;
+using Logger = ConDep.Dsl.Logging.Logger;
 
 namespace ConDep.Dsl.Tests
 {

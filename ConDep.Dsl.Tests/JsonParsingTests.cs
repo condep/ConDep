@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Text;
-using ConDep.Dsl.Model.Config;
+using ConDep.Dsl.Config;
+using ConDep.Dsl.SemanticModel;
 using NUnit.Framework;
 
 namespace ConDep.Dsl.Tests

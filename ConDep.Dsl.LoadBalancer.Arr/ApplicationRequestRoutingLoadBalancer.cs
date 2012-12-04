@@ -1,10 +1,13 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using ConDep.Dsl;
-using ConDep.Dsl.Experimental.Core;
-using ConDep.Dsl.LoadBalancer;
-using ConDep.Dsl.Model.Config;
+using ConDep.Dsl.Builders;
+using ConDep.Dsl.Config;
+using ConDep.Dsl.Operations.LoadBalancer;
+using ConDep.Dsl.SemanticModel;
+using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.LoadBalancer.Arr
@@ -20,38 +23,30 @@ namespace ConDep.LoadBalancer.Arr
         {
             _settings = settings;
             _user = new DeploymentUserConfig { UserName = settings.UserName, Password = settings.Password };
-            _server = new ServerConfig {DeploymentUser = _user, Name = _settings.Name};
+            _server = new ServerConfig { DeploymentUser = _user, Name = _settings.Name };
         }
 
         public void BringOnline(string serverName, IReportStatus status)
         {
-            var operation = GetOperation(LoadBalanceState.Online, serverName);
-            operation.Execute(status);
+            Execute(LoadBalanceState.Online, serverName, status);
         }
 
-        public void BringOffline(string serverName, IReportStatus status)
+        public void BringOffline(string serverName, LoadBalancerSuspendMethod suspendMethod, IReportStatus status)
         {
-            var operation = GetOperation(LoadBalanceState.Offline, serverName);
-            operation.Execute(status);
+            Execute(LoadBalanceState.Offline, serverName, status);
         }
 
-        private WebDeployOperation GetOperation(LoadBalanceState state, string serverName)
+        private void Execute(LoadBalanceState state, string serverName, IReportStatus status)
         {
-            var webDepDef = CreateWebDeployDefinition();
-
             var provider = new ApplicationRequestRoutingProvider(state, serverName);
-            provider.Configure(_server);
-            //Todo: Why is the child providers in the wrong order by default??
-            provider.ChildProviders.ToList().Reverse();
-            webDepDef.AddProvider(provider, null);
+            
+            var sequence = new ExecutionSequenceManager();
+            var webDeploy = new WebDeployOperator();
 
-            var webOp = new WebDeployOperation(webDepDef);
-            return webOp;
-        }
+            var server = new RemoteOperationsBuilder(sequence, new[] {_server}, webDeploy);
 
-        private WebDeployServerDefinition CreateWebDeployDefinition()
-        {
-            return  WebDeployServerDefinition.CreateOrGetForServer(_server);
+            provider.Configure(server);
+            sequence.Execute(status);
         }
     }
 }

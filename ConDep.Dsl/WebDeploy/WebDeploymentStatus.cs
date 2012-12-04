@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConDep.Dsl.Experimental.Core;
+using ConDep.Dsl.Logging;
+using ConDep.Dsl.SemanticModel;
 using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.WebDeploy
@@ -60,6 +61,9 @@ namespace ConDep.Dsl.WebDeploy
             }
 
             string message = string.Format(@"
+=======
+Summery
+=======
 Objects Added     : {0}
 Objects Deleted   : {1}
 Objects Updated   : {2}

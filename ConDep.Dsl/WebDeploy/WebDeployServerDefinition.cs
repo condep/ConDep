@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
-using ConDep.Dsl.Experimental.Core;
-using ConDep.Dsl.Model.Config;
+using ConDep.Dsl.Config;
+using ConDep.Dsl.Logging;
+using ConDep.Dsl.SemanticModel;
 using Microsoft.Web.Deployment;
 using System.Linq;
 
@@ -79,18 +79,8 @@ namespace ConDep.Dsl.WebDeploy
 				  options = GetWebDeployOptions();
 
 				  foreach (var provider in Providers)
-				  {
-                      if(provider is WebDeployCompositeProviderBase)
-                      {
-                          ((WebDeployCompositeProviderBase) provider).BeforeExecute();
-                      }
-					  
+				  {					  
                       provider.Sync(options, status);
-                  
-                      if (provider is WebDeployCompositeProviderBase)
-                      {
-                          ((WebDeployCompositeProviderBase)provider).AfterExecute();
-                      }
                   }
 			  }
 			  catch (Exception ex)
@@ -193,8 +183,4 @@ namespace ConDep.Dsl.WebDeploy
             }
         }
 	}
-
-    public interface IRequireCustomConfiguration
-    {
-    }
 }

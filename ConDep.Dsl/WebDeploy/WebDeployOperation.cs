@@ -1,8 +1,10 @@
-using ConDep.Dsl.Experimental.Core;
+using ConDep.Dsl.Logging;
+using ConDep.Dsl.Operations.Application.Local;
+using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.WebDeploy
 {
-	public class WebDeployOperation : LocalOperation, IRequireLoadBalancing
+	public class WebDeployOperation : LocalOperation
 	{
 		private readonly WebDeployServerDefinition _webDeployServerDefinition;
 

@@ -1,4 +1,5 @@
 using System;
+using ConDep.Dsl.Logging;
 using log4net;
 using log4net.Appender;
 using log4net.Core;

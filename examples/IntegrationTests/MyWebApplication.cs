@@ -1,13 +1,12 @@
-﻿using ConDep.Dsl.Experimental;
-using ConDep.Dsl.Experimental.Application;
-using ConDep.Dsl.Experimental.Application.Infrastructure;
-using ConDep.Dsl.Model.Config;
+﻿using ConDep.Dsl;
+using ConDep.Dsl.Builders;
+using ConDep.Dsl.Config;
 
 namespace IntegrationTests
 {
     public class MyWebApplication : ApplicationArtifact, IDependOnInfrastructure<WebServerInfrastructure>//, IDependOnApplication<RaadgivewerbLiv>
     {
-        public override void Configure(IOfferApplicationOps onLocalMachine, ConDepConfig config)
+        public override void Configure(IOfferLocalOperations onLocalMachine, ConDepConfig config)
         {
             onLocalMachine.ExecuteWebRequest("GET", "http://www.con-dep.net");
             //onLocalMachine
@@ -20,7 +19,8 @@ namespace IntegrationTests
                                         x.Deploy
                                             .Directory(@"C:\website1", @"C:\Temp\ConDep\MyWebApp");
 
-                                        x.Deploy.NServiceBusEndpoint(@"C:\website1", @"C:\Temp\ConDep\NSB", "MyService");
+                                        x.ExecuteRemote.PowerShell("ipconfig", o => o.WaitIntervalInSeconds(10));
+                                        //x.Deploy.NServiceBusEndpoint(@"C:\website1", @"C:\Temp\ConDep\NSB", "MyService");
 
                                         //.NServiceBusEndpoint("", "", "", opt => opt.Profile(""));
 
@@ -43,7 +43,7 @@ namespace IntegrationTests
                                     }
                 );
 
-            onLocalMachine.ExecuteWebRequest2("GET", "http://www.con-dep.net");
+            //onLocalMachine.ExecuteWebRequest2("GET", "http://www.con-dep.net");
             //fromLocalMachine.ToEachServer(x => x.Deploy.Directory(@"C:\temp", @"e:\temp"));
         }
     }

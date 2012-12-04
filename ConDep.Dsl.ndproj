@@ -2,22 +2,11 @@
 <NDepend AppName="ConDep.Dsl" Platform="DotNet">
   <OutputDir KeepHistoric="False" KeepXmlFiles="True">C:\GitHub\ConDep\NDependOut</OutputDir>
   <Assemblies>
-    <Name>ConDep.Dsl.Operations.TransformConfig</Name>
     <Name>ConDep</Name>
-    <Name>CmdLetHelpGen</Name>
-    <Name>ConDep.Dsl</Name>
+    <Name>ConDep.Dsl.LoadBalancer.Ace</Name>
   </Assemblies>
   <FrameworkAssemblies>
     <Name>mscorlib</Name>
-    <Name>System</Name>
-    <Name>Microsoft.Web.Deployment</Name>
-    <Name>System.Core</Name>
-    <Name>Microsoft.Web.Publishing.Tasks</Name>
-    <Name>System.Xml</Name>
-    <Name>Newtonsoft.Json</Name>
-    <Name>NDesk.Options</Name>
-    <Name>Lapointe.PowerShell.MamlGenerator</Name>
-    <Name>System.Web</Name>
   </FrameworkAssemblies>
   <Dirs>
     <Dir>C:\GitHub\ConDep\ConDep.Dsl.Operations\bin\Debug</Dir>
@@ -35,6 +24,9 @@
     <Dir>C:\Windows\assembly\GAC_MSIL\System.Management.Automation\1.0.0.0__31bf3856ad364e35</Dir>
     <Dir>C:\GitHub\ConDep\ConDep.Dsl\bin\Debug</Dir>
     <Dir>C:\Windows\System32\inetsrv</Dir>
+    <Dir>C:\GitHub\ConDep\ConDep.Dsl.LoadBalancer.Arr\bin\Debug</Dir>
+    <Dir>C:\GitHub\ConDep\examples\IntegrationTests\bin\Debug</Dir>
+    <Dir>C:\GitHub\ConDep\ConDep.Dsl.LoadBalancer.Ace\bin\Debug</Dir>
   </Dirs>
   <Report Kind="0" SectionsEnabled="28671" XslPath="" Flags="64512">
     <Section Enabled="True">Application Metrics</Section>

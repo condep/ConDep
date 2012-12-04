@@ -1,4 +1,5 @@
-﻿using Microsoft.Web.Deployment;
+﻿using ConDep.Dsl.SemanticModel;
+using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.WebDeploy
 {

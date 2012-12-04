@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using ConDep.Dsl.Operations.TransformConfig;
+using ConDep.Dsl.Operations.Application.Local.TransformConfig;
 using ConDep.Dsl.WebDeploy;
 using NUnit.Framework;
 

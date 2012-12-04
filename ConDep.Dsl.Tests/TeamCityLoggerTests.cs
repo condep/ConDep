@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ConDep.Dsl.Logging;
 using NUnit.Framework;
 using log4net;
 using log4net.Appender;

@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using ConDep.Dsl;
+﻿using System.Collections.Generic;
+using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.WebDeploy;
 using NUnit.Framework;
 
@@ -9,7 +8,7 @@ namespace ConDep.Dsl.Tests
 	[TestFixture]
 	public abstract class ProviderTestFixture<TProvider, TProvideFor> : SimpleTestFixtureBase 
         where TProvider : class, IProvide
-        where TProvideFor : class, IProvideOptions, new()
+        where TProvideFor : class, new()
 	{
 		private TProvideFor _providers;
 		private List<IProvide> _internalProviders;
@@ -23,7 +22,7 @@ namespace ConDep.Dsl.Tests
 				{
 					_internalProviders = new List<IProvide>();
                     _providers = new TProvideFor();
-				    ((IProvideOptions) _providers).AddProviderAction = AddSubProvidersCalled;
+                    //((IProvideOptions) _providers).AddProviderAction = AddSubProvidersCalled;
 				}
 				return _providers;
 			}

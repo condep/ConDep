@@ -1,8 +1,9 @@
-using ConDep.Dsl.Experimental.Application;
-using ConDep.Dsl.Experimental.Core;
-using ConDep.Dsl.Experimental.Core.Impl;
-using ConDep.Dsl.WebDeployProviders.Deployment.CopyDir;
-using ConDep.Dsl.WebDeployProviders.RunCmd;
+using ConDep.Dsl.Builders;
+using ConDep.Dsl.Operations.Application.Deployment.CopyDir;
+using ConDep.Dsl.Operations.Application.Execution.RunCmd;
+using ConDep.Dsl.Operations.Application.Local.WebRequest;
+using ConDep.Dsl.SemanticModel;
+using ConDep.Dsl.SemanticModel.Sequence;
 
 namespace ConDep.Dsl.Experimental
 {
@@ -22,9 +23,9 @@ namespace ConDep.Dsl.Experimental
             return execution;
         }
 
-        public static IOfferApplicationOps ExecuteWebRequest2(this IOfferApplicationOps appOps, string method, string url)
+        public static IOfferLocalOperations ExecuteWebRequest2(this IOfferLocalOperations appOps, string method, string url)
         {
-            var operation = new Operations.WebRequest.WebRequestOperation(url, method);
+            var operation = new WebRequestOperation(url, method);
             ExecutionSequenceManager.GetSequenceFor(appOps).Add(operation);
             return appOps;
         }

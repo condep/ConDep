@@ -2,7 +2,9 @@
 using System.IO;
 using System.Reflection;
 using ConDep.Dsl;
-using ConDep.Dsl.Model.Config;
+using ConDep.Dsl.Config;
+using ConDep.Dsl.Logging;
+using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Console
@@ -21,18 +23,11 @@ namespace ConDep.Console
                 var configAssemblyLoader = new ConDepAssemblyHandler(optionHandler.Params.AssemblyName);
                 var assembly = configAssemblyLoader.GetConfigAssembly();
 
-                var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.PrintSequence);
+                var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly);
                 var envSettings = GetEnvConfig(optionHandler.Params, assembly);
 
                 var status = new WebDeploymentStatus();
-                if(optionHandler.Params.Experimental)
-                {
-                    ConDepConfigurationExecutor.ExecuteExperimentalFromAssembly(assembly, envSettings, conDepOptions, status);
-                }
-                else
-                {
-                    ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions, status);
-                }
+                ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions, status);
 
                 if(status.HasErrors)
                 {

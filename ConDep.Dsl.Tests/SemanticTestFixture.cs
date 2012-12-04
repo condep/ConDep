@@ -1,4 +1,5 @@
 using ConDep.Dsl;
+using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.Tests

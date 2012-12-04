@@ -1,12 +1,12 @@
 using System.IO;
-using ConDep.Dsl;
-using ConDep.Dsl.LoadBalancer;
-using ConDep.Dsl.Model.Config;
-using ConDep.Dsl.WebDeploy;
+using ConDep.Dsl.Builders;
+using ConDep.Dsl.Operations;
+using ConDep.Dsl.Operations.LoadBalancer;
+using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.LoadBalancer.Arr
 {
-    public class ApplicationRequestRoutingProvider : WebDeployCompositeProviderBase
+    public class ApplicationRequestRoutingProvider : RemoteCompositeOperation
     {
         private readonly LoadBalanceState _state;
         private readonly string _serverNameToChangeStateOn;
@@ -22,29 +22,29 @@ namespace ConDep.LoadBalancer.Arr
             return true;
         }
 
-        public override void Configure(ServerConfig arrServer)
+        public override void Configure(IOfferRemoteOperations server)
         {
-            DeployPsCmdLet(arrServer);
-            Execute(_state, arrServer, _serverNameToChangeStateOn);
+            DeployPsCmdLet(server);
+            Execute(_state, server, _serverNameToChangeStateOn);
         }
 
-        private void DeployPsCmdLet(ServerConfig server)
+        private void DeployPsCmdLet(IOfferRemoteOperations server)
         {
-            var condition = WebDeployExecuteCondition<ProvideForInfrastructure>.IsFailure(p => p.PowerShell("import-module ApplicationRequestRouting"));
+            //var condition = WebDeployExecuteCondition<ProvideForInfrastructure>.IsFailure(p => p.PowerShell("import-module ApplicationRequestRouting"));
 
             var dir = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "ArrLoadBalancer");
-            Configure<ProvideForDeployment, ProvideForInfrastructure>(server, p => p.CopyDir(dir, @"%temp%\ApplicationRequestRouting"), condition);
+            server.Deploy.Directory(dir, @"%temp%\ApplicationRequestRouting");
         }
 
-        private void Execute(LoadBalanceState state, ServerConfig server, string serverNameToChangeStateOn)
+        private void Execute(LoadBalanceState state, IOfferRemoteOperations server, string serverNameToChangeStateOn)
         {
-            Configure<ProvideForInfrastructure>(server, p => 
-                p.PowerShell(string.Format(@"import-module $env:temp\ApplicationRequestRouting; Set-WebFarmServerState -State {0} -Name {1} -UseDnsLookup;", 
-                             state.ToString(), 
-                             serverNameToChangeStateOn), o =>{
-                                                                o.WaitIntervalInSeconds(10);
-                                                                o.RetryAttempts(20);
-                                                             }));
+                server.ExecuteRemote.PowerShell(string.Format(@"import-module $env:temp\ApplicationRequestRouting; Set-WebFarmServerState -State {0} -Name {1} -UseDnsLookup;",
+                             state.ToString(),
+                             serverNameToChangeStateOn), o =>
+                             {
+                                 o.WaitIntervalInSeconds(10);
+                                 o.RetryAttempts(20);
+                             });
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ConDep.Dsl.Experimental.Core;
+using ConDep.Dsl.SemanticModel;
 using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.WebDeploy
@@ -48,20 +48,7 @@ namespace ConDep.Dsl.WebDeploy
                 {
                     webDeployOptions.SyncOptions.Rules.Add(rule);
                 }
-
-                //if(webDeployOptions.FromPackage)
-                //{
-                //    summery = sourceDepObject.SyncTo(DeploymentWellKnownProvider.Auto, "", webDeployOptions.DestBaseOptions, webDeployOptions.SyncOptions);
-                //}
-                //else
-                //{
-
-                //Backup(webDeployOptions);
-                foreach(var factory in DeploymentManager.ProviderFactories)
-                {
-                }
                 summery = sourceDepObject.SyncTo(destProviderOptions, webDeployOptions.DestBaseOptions, webDeployOptions.SyncOptions);
-                //}
             }
 
             status.AddSummery(summery);
@@ -108,47 +95,4 @@ namespace ConDep.Dsl.WebDeploy
             return DeploymentManager.CreateObject(DeploymentWellKnownProvider.Package, webDeployOptions.PackagePath, webDeployOptions.SourceBaseOptions);
 	    }
 	}
-
-    //public class WebDeployProviderCollection : DeploymentObjectProvider
-    //{
-    //    public WebDeployProviderCollection(DeploymentBaseContext baseContext) : base(baseContext)
-    //    {
-    //    }
-
-    //    public WebDeployProviderCollection(DeploymentProviderContext providerContext, DeploymentBaseContext baseContext) : base(providerContext, baseContext)
-    //    {
-    //    }
-
-    //    public override DeploymentObjectAttributeData CreateKeyAttributeData()
-    //    {
-    //        throw new System.NotImplementedException();
-    //    }
-
-    //    public override string Name
-    //    {
-    //        get { throw new System.NotImplementedException(); }
-    //    }
-
-    //    public override DeploymentObjectProvider AddChild(DeploymentObject source, int position, bool whatIf)
-    //    {
-    //        string factoryName = (string)null;
-    //        string factoryPath = (string)null;
-    //        source.GetFactoryInfo(out factoryName, out factoryPath);
-    //        if (this.BaseContext.SourceObject != null)
-    //        {
-    //            foreach (DeploymentSyncParameter deploymentSyncParameter in this.BaseContext.SourceObject.SyncParameters)
-    //            {
-    //                foreach (DeploymentSyncParameterEntry syncParameterEntry in deploymentSyncParameter.Entries)
-    //                {
-    //                    if (syncParameterEntry.Kind == DeploymentSyncParameterEntryKind.ProviderPath && syncParameterEntry.IsScopeMatch(factoryName) && (syncParameterEntry.Match == null || RegexHelper.IsMatch(factoryPath, syncParameterEntry.Match)))
-    //                        factoryPath = deploymentSyncParameter.Value;
-    //                }
-    //            }
-    //        }
-    //        DeploymentProviderOptions providerOptions = source.ProviderContext == null ? new DeploymentProviderOptions(factoryName) : new DeploymentProviderOptions(factoryName, (IEnumerable<DeploymentProviderSetting>)source.ProviderContext.ProviderSettings);
-    //        providerOptions.Path = factoryPath;
-    //        DeploymentProviderContext providerContext = new DeploymentProviderContext(providerOptions);
-    //        return providerOptions.Factory.CreateProvider(providerContext, this.BaseContext);
-    //    }
-    //}
 }
