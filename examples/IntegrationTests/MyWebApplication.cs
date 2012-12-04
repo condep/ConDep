@@ -50,7 +50,7 @@ namespace IntegrationTests
 
     public class WebServerInfrastructure : InfrastructureArtifact
     {
-        protected override void Configure(IConfigureInfrastructure require)
+        protected override void Configure(IOfferInfrastructure require)
         {
             //require.Iis();
             //require.IisWebSite()

@@ -75,7 +75,7 @@
     <Compile Include="Builders\IOfferRemoteCertDeployment.cs" />
     <Compile Include="Builders\IOfferRemoteExecution.cs" />
     <Compile Include="Builders\IOfferLocalOperations.cs" />
-    <Compile Include="IConfigureInfrastructure.cs" />
+    <Compile Include="Builders\IOfferInfrastructure.cs" />
     <Compile Include="IDependOnInfrastructure.cs" />
     <Compile Include="SemanticModel\ConDepContext.cs" />
     <Compile Include="SemanticModel\ConDepConfigurationTypeNotFoundException.cs" />

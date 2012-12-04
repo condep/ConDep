@@ -1,6 +1,6 @@
-namespace ConDep.Dsl
+namespace ConDep.Dsl.Builders
 {
-    public interface IConfigureInfrastructure
+    public interface IOfferInfrastructure
     {
     }
 }
