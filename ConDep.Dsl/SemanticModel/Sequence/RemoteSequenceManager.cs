@@ -12,10 +12,17 @@ namespace ConDep.Dsl.SemanticModel.Sequence
         private readonly ILoadBalance _loadBalancer;
         private readonly List<IOperateRemote> _sequence = new List<IOperateRemote>();
 
-        public RemoteSequenceManager(IEnumerable<ServerConfig> servers)
+        public RemoteSequenceManager(IEnumerable<ServerConfig> servers) : this(servers, false)
+        {
+        }
+
+        public RemoteSequenceManager(IEnumerable<ServerConfig> servers, bool noLoadBalancing)
         {
             _servers = servers;
-            _loadBalancer = TinyIoC.TinyIoCContainer.Current.Resolve<ILoadBalance>();
+            if(!noLoadBalancing)
+            {
+                _loadBalancer = TinyIoC.TinyIoCContainer.Current.Resolve<ILoadBalance>();
+            }
         }
 
         public void Add(IOperateRemote remoteOperation)
@@ -29,9 +36,12 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             {
                 try
                 {
-                    _loadBalancer.BringOffline(server.Name, LoadBalancerSuspendMethod.Suspend, status);
-                    if (status.HasErrors)
-                        return status;
+                    if(_loadBalancer != null)
+                    {
+                        _loadBalancer.BringOffline(server.Name, LoadBalancerSuspendMethod.Suspend, status);
+                        if (status.HasErrors)
+                            return status;
+                    }
 
                     Logger.LogSectionStart(server.Name);
                     foreach (var element in _sequence)
@@ -41,9 +51,12 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                             return status;
                     }
 
-                    _loadBalancer.BringOnline(server.Name, status);
-                    if (status.HasErrors)
-                        return status;
+                    if(_loadBalancer != null)
+                    {
+                        _loadBalancer.BringOnline(server.Name, status);
+                        if (status.HasErrors)
+                            return status;
+                    }
                 }
                 finally
                 {

@@ -8,6 +8,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
         void Add(IManageRemoteSequence remoteSequence);
         void Add(IManageLocalSequence localSequence);
         IManageRemoteSequence NewRemoteSequence(IEnumerable<ServerConfig> servers);
+        IManageRemoteSequence NewRemoteSequenceNoLoadBalancing(IEnumerable<ServerConfig> servers);
         IManageLocalSequence NewLocalSequence();
         IReportStatus Execute(IReportStatus status);
     }

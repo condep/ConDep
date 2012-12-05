@@ -19,6 +19,15 @@ namespace ConDep.Dsl.Builders
             ExecuteRemote = new RemoteExecutionBuilder(_remoteSequence, webDeploy, this);
         }
 
+        public RemoteOperationsBuilder(IManageExecutionSequence executionSequence, IEnumerable<ServerConfig> servers, IOperateWebDeploy webDeploy, bool noLoadBalancer)
+        {
+            _webDeploy = webDeploy;
+            _remoteSequence = noLoadBalancer ? executionSequence.NewRemoteSequenceNoLoadBalancing(servers) : executionSequence.NewRemoteSequence(servers);
+
+            Deploy = new RemoteDeploymentBuilder(_remoteSequence, new RemoteCertDeploymentBuilder(), _webDeploy, this);
+            ExecuteRemote = new RemoteExecutionBuilder(_remoteSequence, webDeploy, this);
+        }
+
         public IOfferRemoteDeployment Deploy { get; private set; }
         public IOfferRemoteExecution ExecuteRemote { get; private set; }
         //public IOperateLocally FromLocalMachineToServer

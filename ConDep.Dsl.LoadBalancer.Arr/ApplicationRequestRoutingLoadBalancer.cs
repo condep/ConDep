@@ -1,16 +1,12 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using ConDep.Dsl;
-using ConDep.Dsl.Builders;
+﻿using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
+using ConDep.LoadBalancer.Arr;
 
-namespace ConDep.LoadBalancer.Arr
+namespace ConDep.Dsl.LoadBalancer.Arr
 {
     //Todo: Use base class instead? In order to guide implementers to provide LoadBalancerSettings in constructor which automatically will be injected.
     public class ApplicationRequestRoutingLoadBalancer : ILoadBalance
@@ -42,8 +38,7 @@ namespace ConDep.LoadBalancer.Arr
             
             var sequence = new ExecutionSequenceManager();
             var webDeploy = new WebDeployOperator();
-
-            var server = new RemoteOperationsBuilder(sequence, new[] {_server}, webDeploy);
+            var server = new RemoteOperationsBuilder(sequence, new[] {_server}, webDeploy, true);
 
             provider.Configure(server);
             sequence.Execute(status);

@@ -39,6 +39,13 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return remoteSeq;
         }
 
+        public IManageRemoteSequence NewRemoteSequenceNoLoadBalancing(IEnumerable<ServerConfig> servers)
+        {
+            var remoteSeq = new RemoteSequenceManager(servers, true);
+            Add(remoteSeq);
+            return remoteSeq;
+        }
+
         public bool IsValid(Notification notification)
         {
             return !_sequence.Any(x => x.IsValid(notification) == false);

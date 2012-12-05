@@ -44,6 +44,10 @@
     <Compile Include="TmpExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ConDep.Dsl.LoadBalancer.Arr\ConDep.Dsl.LoadBalancer.Arr.csproj">
+      <Project>{9653f966-8b4c-4e13-b129-8ae29ce0d4a7}</Project>
+      <Name>ConDep.Dsl.LoadBalancer.Arr</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ConDep.Dsl\ConDep.Dsl.csproj">
       <Project>{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}</Project>
       <Name>ConDep.Dsl</Name>
