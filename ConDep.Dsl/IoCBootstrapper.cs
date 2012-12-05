@@ -24,15 +24,8 @@ namespace ConDep.Dsl
             var container = TinyIoCContainer.Current;
 
             container.Register(_envConfig);
-            if(_envConfig.LoadBalancer != null)
-            {
-                container.Register(new LoadBalancerLookup(_envConfig.LoadBalancer).GetLoadBalancer());
-                container.Register(_envConfig.LoadBalancer);
-            }
-            else
-            {
-                container.Register<ILoadBalance, DefaultLoadBalancer>();
-            }
+            container.Register(_envConfig.LoadBalancer);
+            container.Register(new LoadBalancerLookup(_envConfig.LoadBalancer).GetLoadBalancer());
             //container.Register<ISetupWebDeploy, WebDeploySetup>().AsMultiInstance();
             //container.Register<ISetupConDep, ConDepSetup>().AsMultiInstance();
 
