@@ -73,6 +73,8 @@
     <Compile Include="..\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="AceTests.cs" />
+    <Compile Include="CertTests.cs" />
     <Compile Include="CompositeProviders\NServiceBus.cs" />
     <Compile Include="ConfigTransformTests.cs" />
     <Compile Include="JsonParsingTests.cs" />
@@ -82,22 +84,27 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Providers\Certificate.cs" />
-    <Compile Include="Providers\CopyDir.cs" />
-    <Compile Include="Providers\CopyFile.cs" />
+    <Compile Include="Operations\Certificate.cs" />
+    <Compile Include="Operations\CopyDir.cs" />
+    <Compile Include="Operations\CopyFile.cs" />
     <Compile Include="CompositeProviders\PowerShell.cs" />
-    <Compile Include="Providers\SetAcl.cs" />
-    <Compile Include="Providers\WebApp.cs" />
+    <Compile Include="Operations\SetAcl.cs" />
+    <Compile Include="Operations\WebApp.cs" />
     <Compile Include="ProviderTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SematicModel\SemanticModelTests.cs" />
     <Compile Include="SemanticTestFixture.cs" />
     <Compile Include="TeamCityLoggerTests.cs" />
     <Compile Include="UnitTestLogger.cs" />
+    <Compile Include="WebDeployOperationMock.cs" />
     <Compile Include="WebDeployOptionsTestFixture.cs" />
     <Compile Include="SimpleTestFixtureBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConDep.Dsl.LoadBalancer.Ace\ConDep.Dsl.LoadBalancer.Ace.csproj">
+      <Project>{0653515e-ff25-482c-b316-eb5bb045bf1e}</Project>
+      <Name>ConDep.Dsl.LoadBalancer.Ace</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConDep.Dsl\ConDep.Dsl.csproj">
       <Project>{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}</Project>
       <Name>ConDep.Dsl</Name>
@@ -110,7 +117,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
+    <Content Include="testcert.con-dep.net.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="internal.condep.log4net.xml" />

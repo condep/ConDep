@@ -1,4 +1,4 @@
-namespace ConDep.Dsl.SemanticModel
+namespace ConDep.Dsl.Config
 {
     public interface IRequireCustomConfiguration
     {

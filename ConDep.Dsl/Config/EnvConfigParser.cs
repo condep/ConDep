@@ -1,8 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Json;
-using ConDep.Dsl.Config;
 
-namespace ConDep.Dsl.SemanticModel
+namespace ConDep.Dsl.Config
 {
     public class EnvConfigParser
     {

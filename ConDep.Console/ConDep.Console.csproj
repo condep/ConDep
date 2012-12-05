@@ -71,6 +71,10 @@
       <Project>{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}</Project>
       <Name>ConDep.Dsl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ConDep.Remote\ConDep.Remote.csproj">
+      <Project>{70370a66-9199-4450-b12e-3ef3e176daf2}</Project>
+      <Name>ConDep.Remote</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ConDep.Dsl.LoadBalancer.Ace</RootNamespace>
     <AssemblyName>ConDep.Dsl.LoadBalancer.Ace</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,6 +33,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,12 +44,69 @@
   <ItemGroup>
     <Compile Include="AceLoadBalancer_Anm_v41.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\Ace41\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="test.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="OperationManager41_schema.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Ace41\ConDep.Dsl.LoadBalancer.Ace.Ace41.DeviceID.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Ace41\ConDep.Dsl.LoadBalancer.Ace.Ace41.Rserver.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Ace41\ConDep.Dsl.LoadBalancer.Ace.Ace41.Serverfarm.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Ace41\ConDep.Dsl.LoadBalancer.Ace.Ace41.SessionToken.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Ace41\ConDep.Dsl.LoadBalancer.Ace.Ace41.SfRserver.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Ace41\ConDep.Dsl.LoadBalancer.Ace.Ace41.VMMappingInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Ace41\OperationManager.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Ace41\OperationManagerService.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConDep.Dsl\ConDep.Dsl.csproj">
-      <Project>{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}</Project>
+      <Project>{e7eba0ac-b91d-450f-8a68-5adcf18fe17e}</Project>
       <Name>ConDep.Dsl</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\Ace41\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Ace41\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Ace41\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Ace41\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="OperationManager41.wsdl" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

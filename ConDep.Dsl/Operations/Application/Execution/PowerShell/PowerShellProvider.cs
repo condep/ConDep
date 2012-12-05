@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.SemanticModel;
@@ -26,8 +27,13 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
         public bool ContinueOnError { get; set; }
         public int WaitIntervalInSeconds { get; set; }
         public int RetryAttempts { get; set; }
+
+        public bool RequireRemoteLib { get; set; }
+
         public override void Configure(IOfferRemoteOperations server)
         {
+            string libImport = "";
+
             if (!IsCommand(DestinationPath))
             {
                 var builder = new StringBuilder(DestinationPath);
@@ -39,7 +45,12 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
             //var destFilePath = CopyScriptToDestination(server, filePath);
             //ExecuteScriptOnDestination(server, destFilePath);
 
-            server.ExecuteRemote.DosCommand(string.Format(@"powershell.exe -InputFormat none -Command ""& {{ $ErrorActionPreference='stop'; {0}; exit $LASTEXITCODE }}""", DestinationPath), ContinueOnError, o => o.WaitIntervalInSeconds(WaitIntervalInSeconds));
+            if(RequireRemoteLib)
+            {
+                server.Deploy.File(Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "ConDep.Remote.dll"), @"%temp%\ConDep.Remote.dll");
+                libImport = "Add-Type -Path \"" + @"%temp%\ConDep.Remote.dll" + "\";";
+            }
+            server.ExecuteRemote.DosCommand(string.Format(@"powershell.exe -InputFormat none -Command ""& {{ $ErrorActionPreference='stop'; {0}{1}; exit $LASTEXITCODE }}""", libImport, DestinationPath), ContinueOnError, o => o.WaitIntervalInSeconds(WaitIntervalInSeconds));
         }
 
         //private string AddExitCodeHandlingToScript(string script)

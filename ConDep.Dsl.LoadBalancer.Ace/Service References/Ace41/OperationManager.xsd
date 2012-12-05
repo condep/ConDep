@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://anm.cisco.com" targetNamespace="http://anm.cisco.com" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="DeviceID" type="tns:DeviceID" />
+  <xs:element name="DeviceType" type="tns:DeviceType" />
+  <xs:element name="Rserver" type="tns:Rserver" />
+  <xs:element name="Serverfarm" type="tns:Serverfarm" />
+  <xs:element name="SessionToken" type="tns:SessionToken" />
+  <xs:element name="SfRserver" type="tns:SfRserver" />
+  <xs:element name="SuspendState" type="tns:SuspendState" />
+  <xs:element name="VMMappingInfo" type="tns:VMMappingInfo" />
+  <xs:element name="WSException" type="tns:WSException" />
+  <xs:complexType name="SessionToken">
+    <xs:sequence>
+      <xs:element name="sid" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DeviceID">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="name" type="xs:string" />
+      <xs:element minOccurs="0" name="deviceType" type="tns:DeviceType" />
+      <xs:element minOccurs="0" name="ipAddr" type="xs:string" />
+      <xs:element minOccurs="0" name="slot" type="xs:string" />
+      <xs:element minOccurs="0" name="chassisIPAddr" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SfRserver">
+    <xs:sequence>
+      <xs:element name="serverfarmName" type="xs:string" />
+      <xs:element name="realserverName" type="xs:string" />
+      <xs:element name="adminState" type="tns:realServerStates" />
+      <xs:element minOccurs="0" name="weight" type="xs:int" />
+      <xs:element name="port" type="xs:int" />
+      <xs:element minOccurs="0" name="ipAddr" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WSException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Rserver">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" />
+      <xs:element name="type" type="tns:type" />
+      <xs:element minOccurs="0" name="ipAddr" type="xs:string" />
+      <xs:element name="state" type="tns:state" />
+      <xs:element name="weight" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Serverfarm">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" />
+      <xs:element name="serverFarmType" type="tns:serverFarmType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="VMMappingInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="deviceID" type="tns:DeviceID" />
+      <xs:element minOccurs="0" name="sfname" type="xs:string" />
+      <xs:element minOccurs="0" name="sfrsname" type="xs:string" />
+      <xs:element minOccurs="0" name="port" type="xs:int" />
+      <xs:element minOccurs="0" name="ipaddr" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="DeviceType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="CAT6K" />
+      <xs:enumeration value="ACE_BLADE" />
+      <xs:enumeration value="VIRTUAL_CONTEXT" />
+      <xs:enumeration value="ACE4710" />
+      <xs:enumeration value="GSS" />
+      <xs:enumeration value="CSS" />
+      <xs:enumeration value="CSM" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="realServerStates">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="IS" />
+      <xs:enumeration value="OOS" />
+      <xs:enumeration value="ISS" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="host" />
+      <xs:enumeration value="redirect" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="state">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="IS" />
+      <xs:enumeration value="OOS" />
+      <xs:enumeration value="ISS" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="SuspendState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Graceful" />
+      <xs:enumeration value="Suspend" />
+      <xs:enumeration value="Suspend_Clear_Connections" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="serverFarmType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="host" />
+      <xs:enumeration value="redirect" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DeviceIDArray" final="#all">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="item" nillable="true" type="tns:DeviceID" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SfRserverArray" final="#all">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="item" nillable="true" type="tns:SfRserver" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ServerfarmArray" final="#all">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="item" nillable="true" type="tns:Serverfarm" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="VMMappingInfoArray" final="#all">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="item" nillable="true" type="tns:VMMappingInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RserverArray" final="#all">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="item" nillable="true" type="tns:Rserver" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

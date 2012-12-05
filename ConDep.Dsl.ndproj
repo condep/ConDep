@@ -2,11 +2,20 @@
 <NDepend AppName="ConDep.Dsl" Platform="DotNet">
   <OutputDir KeepHistoric="False" KeepXmlFiles="True">C:\GitHub\ConDep\NDependOut</OutputDir>
   <Assemblies>
-    <Name>ConDep</Name>
-    <Name>ConDep.Dsl.LoadBalancer.Ace</Name>
+    <Name>ConDep.Dsl</Name>
   </Assemblies>
   <FrameworkAssemblies>
     <Name>mscorlib</Name>
+    <Name>System</Name>
+    <Name>Microsoft.Web.Deployment</Name>
+    <Name>log4net</Name>
+    <Name>System.ServiceProcess</Name>
+    <Name>System.Core</Name>
+    <Name>System.Web</Name>
+    <Name>Microsoft.Build.Framework</Name>
+    <Name>System.Runtime.Serialization</Name>
+    <Name>SlowCheetah.Tasks</Name>
+    <Name>Microsoft.Build.Utilities.v4.0</Name>
   </FrameworkAssemblies>
   <Dirs>
     <Dir>C:\GitHub\ConDep\ConDep.Dsl.Operations\bin\Debug</Dir>

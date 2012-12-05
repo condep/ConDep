@@ -9,6 +9,12 @@
             _powerShellProvider = powerShellProvider;
         }
 
+        public PowerShellOptions RequireRemoteLib()
+        {
+            _powerShellProvider.RequireRemoteLib = true;
+            return this;
+        }
+
         public PowerShellOptions ContinueOnError(bool value)
         {
             _powerShellProvider.ContinueOnError = value;

@@ -8,7 +8,7 @@ namespace IntegrationTests
     {
         public override void Configure(IOfferLocalOperations onLocalMachine, ConDepConfig config)
         {
-            onLocalMachine.ExecuteWebRequest("GET", "http://www.con-dep.net");
+            //onLocalMachine.ExecuteWebRequest("GET", "http://www.con-dep.net");
             //onLocalMachine
             //    .PreCompile("MyWebApplication", @"C:\MyWebApp", @"C:\_precompiled\MyWebApp")
             //    .TransformConfigFile(@"C:\MyWebApp\", "web.config", "web.prod.config");
@@ -16,10 +16,11 @@ namespace IntegrationTests
             //fromLocalMachine.ToSpecificServer("MyServer", x => x.Deploy.SslCertificate.FromFile());
             onLocalMachine.ToEachServer(x =>
                                     {
-                                        x.Deploy
-                                            .Directory(@"C:\website1", @"C:\Temp\ConDep\MyWebApp");
+                                        x.Deploy.SslCertificate.FromFile(@"C:\GitHub\ConDep\ConDep.Dsl.Tests\testcert.con-dep.net.pfx", "ConDep");
+                                        //x.Deploy
+                                        //    .Directory(@"C:\website1", @"C:\Temp\ConDep\MyWebApp");
 
-                                        x.ExecuteRemote.PowerShell("ipconfig", o => o.WaitIntervalInSeconds(10));
+                                        //x.ExecuteRemote.PowerShell("ipconfig", o => o.WaitIntervalInSeconds(10));
                                         //x.Deploy.NServiceBusEndpoint(@"C:\website1", @"C:\Temp\ConDep\NSB", "MyService");
 
                                         //.NServiceBusEndpoint("", "", "", opt => opt.Profile(""));

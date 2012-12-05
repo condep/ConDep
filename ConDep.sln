@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "example
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Dsl.LoadBalancer.Ace", "ConDep.Dsl.LoadBalancer.Ace\ConDep.Dsl.LoadBalancer.Ace.csproj", "{0653515E-FF25-482C-B316-EB5BB045BF1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Remote", "ConDep.Remote\ConDep.Remote.csproj", "{70370A66-9199-4450-B12E-3EF3E176DAF2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +91,16 @@ Global
 		{0653515E-FF25-482C-B316-EB5BB045BF1E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0653515E-FF25-482C-B316-EB5BB045BF1E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0653515E-FF25-482C-B316-EB5BB045BF1E}.Release|x86.ActiveCfg = Release|Any CPU
+		{70370A66-9199-4450-B12E-3EF3E176DAF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70370A66-9199-4450-B12E-3EF3E176DAF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70370A66-9199-4450-B12E-3EF3E176DAF2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{70370A66-9199-4450-B12E-3EF3E176DAF2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{70370A66-9199-4450-B12E-3EF3E176DAF2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{70370A66-9199-4450-B12E-3EF3E176DAF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70370A66-9199-4450-B12E-3EF3E176DAF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70370A66-9199-4450-B12E-3EF3E176DAF2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{70370A66-9199-4450-B12E-3EF3E176DAF2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{70370A66-9199-4450-B12E-3EF3E176DAF2}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

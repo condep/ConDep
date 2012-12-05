@@ -2,7 +2,7 @@ namespace ConDep.Dsl.Builders
 {
     public interface IOfferRemoteCertDeployment
     {
-        IOfferRemoteDeployment FromStore();
-        IOfferRemoteDeployment FromFile();
+        IOfferRemoteDeployment FromStore(string thumbprint);
+        IOfferRemoteDeployment FromFile(string path, string password);
     }
 }

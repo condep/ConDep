@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace ConDep.Dsl.SemanticModel
+namespace ConDep.Dsl.Config
 {
     public class ConDepConfigurationTypeNotFoundException : Exception
     {

@@ -15,7 +15,7 @@ namespace ConDep.Dsl.Builders
             _webDeploy = webDeploy;
             _remoteSequence = executionSequence.NewRemoteSequence(servers);
  
-            Deploy = new RemoteDeploymentBuilder(_remoteSequence, new RemoteCertDeploymentBuilder(), _webDeploy, this);
+            Deploy = new RemoteDeploymentBuilder(_remoteSequence, new RemoteCertDeploymentBuilder(_remoteSequence, _webDeploy, Deploy, this), _webDeploy, this);
             ExecuteRemote = new RemoteExecutionBuilder(_remoteSequence, webDeploy, this);
         }
 
@@ -24,7 +24,7 @@ namespace ConDep.Dsl.Builders
             _webDeploy = webDeploy;
             _remoteSequence = noLoadBalancer ? executionSequence.NewRemoteSequenceNoLoadBalancing(servers) : executionSequence.NewRemoteSequence(servers);
 
-            Deploy = new RemoteDeploymentBuilder(_remoteSequence, new RemoteCertDeploymentBuilder(), _webDeploy, this);
+            Deploy = new RemoteDeploymentBuilder(_remoteSequence, new RemoteCertDeploymentBuilder(_remoteSequence, _webDeploy, Deploy, this), _webDeploy, this);
             ExecuteRemote = new RemoteExecutionBuilder(_remoteSequence, webDeploy, this);
         }
 

@@ -1,5 +1,6 @@
 using System.IO;
 using ConDep.Dsl.Builders;
+using ConDep.Dsl.Config;
 using ConDep.Dsl.Resources;
 using ConDep.Dsl.SemanticModel;
 

@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://anm.cisco.com" name="OperationManagerService" targetNamespace="http://anm.cisco.com" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema>
+      <xsd:import schemaLocation="https://10.64.6.74:8443/anm/OperationManager?xsd=1" namespace="http://anm.cisco.com" />
+    </xsd:schema>
+  </types>
+  <message name="login">
+    <part name="user" type="xsd:string" />
+    <part name="password" type="xsd:string" />
+  </message>
+  <message name="loginResponse">
+    <part name="SessionToken" type="tns:SessionToken" />
+  </message>
+  <message name="WSException">
+    <part name="fault" element="tns:WSException" />
+  </message>
+  <message name="logout">
+    <part name="sessionToken" type="tns:SessionToken" />
+  </message>
+  <message name="logoutResponse" />
+  <message name="listServerFarms">
+    <part name="sessionToken" type="tns:SessionToken" />
+    <part name="deviceID" type="tns:DeviceID" />
+  </message>
+  <message name="listServerFarmsResponse">
+    <part name="serverfarms" type="tns:ServerfarmArray" />
+  </message>
+  <message name="listRservers">
+    <part name="sessionToken" type="tns:SessionToken" />
+    <part name="deviceID" type="tns:DeviceID" />
+  </message>
+  <message name="listRserversResponse">
+    <part name="Rservers" type="tns:RserverArray" />
+  </message>
+  <message name="listServerfarmRservers">
+    <part name="sessionToken" type="tns:SessionToken" />
+    <part name="deviceID" type="tns:DeviceID" />
+    <part name="serverfarmname" type="xsd:string" />
+  </message>
+  <message name="listServerfarmRserversResponse">
+    <part name="SfRservers" type="tns:SfRserverArray" />
+  </message>
+  <message name="addRserverToServerfarm">
+    <part name="sessionToken" type="tns:SessionToken" />
+    <part name="deviceID" type="tns:DeviceID" />
+    <part name="serverfarmname" type="xsd:string" />
+    <part name="rserver" type="tns:Rserver" />
+    <part name="port" type="xsd:int" />
+  </message>
+  <message name="addRserverToServerfarmResponse" />
+  <message name="removeRserverFromServerfarm">
+    <part name="sessionToken" type="tns:SessionToken" />
+    <part name="deviceID" type="tns:DeviceID" />
+    <part name="rserver" type="tns:SfRserver" />
+  </message>
+  <message name="removeRserverFromServerfarmResponse" />
+  <message name="listDeviceIds">
+    <part name="sessionToken" type="tns:SessionToken" />
+    <part name="deviceType" type="tns:DeviceType" />
+  </message>
+  <message name="listDeviceIdsResponse">
+    <part name="DeviceIDs" type="tns:DeviceIDArray" />
+  </message>
+  <message name="listVirtualContexts">
+    <part name="sessionToken" type="tns:SessionToken" />
+    <part name="deviceIDs" type="tns:DeviceID" />
+  </message>
+  <message name="listVirtualContextsResponse">
+    <part name="DeviceIDs" type="tns:DeviceIDArray" />
+  </message>
+  <message name="activateServerfarmRserver">
+    <part name="sessionToken" type="tns:SessionToken" />
+    <part name="deviceID" type="tns:DeviceID" />
+    <part name="rserver" type="tns:SfRserver" />
+    <part name="reason" type="xsd:string" />
+  </message>
+  <message name="activateServerfarmRserverResponse" />
+  <message name="suspendServerfarmRserver">
+    <part name="sessionToken" type="tns:SessionToken" />
+    <part name="deviceID" type="tns:DeviceID" />
+    <part name="rserver" type="tns:SfRserver" />
+    <part name="suspendState" type="tns:SuspendState" />
+    <part name="reason" type="xsd:string" />
+  </message>
+  <message name="suspendServerfarmRserverResponse" />
+  <message name="changeServerfarmRserverWeight">
+    <part name="sessionToken" type="tns:SessionToken" />
+    <part name="deviceID" type="tns:DeviceID" />
+    <part name="rserver" type="tns:SfRserver" />
+    <part name="reason" type="xsd:string" />
+  </message>
+  <message name="changeServerfarmRserverWeightResponse" />
+  <message name="getVMMappingInfo">
+    <part name="sessionToken" type="tns:SessionToken" />
+    <part name="vmname" type="xsd:string" />
+  </message>
+  <message name="getVMMappingInfoResponse">
+    <part name="VMMappingInfos" type="tns:VMMappingInfoArray" />
+  </message>
+  <message name="isEmptyOrNull">
+    <part name="arg0" type="xsd:string" />
+  </message>
+  <message name="isEmptyOrNullResponse">
+    <part name="return" type="xsd:boolean" />
+  </message>
+  <message name="validateIPAddress">
+    <part name="arg0" type="xsd:string" />
+  </message>
+  <message name="validateIPAddressResponse" />
+  <portType name="OperationManager">
+    <operation name="login" parameterOrder="user password">
+      <input message="tns:login" />
+      <output message="tns:loginResponse" />
+      <fault name="WSException" message="tns:WSException" />
+    </operation>
+    <operation name="logout">
+      <input message="tns:logout" />
+      <output message="tns:logoutResponse" />
+      <fault name="WSException" message="tns:WSException" />
+    </operation>
+    <operation name="listServerFarms" parameterOrder="sessionToken deviceID">
+      <input message="tns:listServerFarms" />
+      <output message="tns:listServerFarmsResponse" />
+      <fault name="WSException" message="tns:WSException" />
+    </operation>
+    <operation name="listRservers" parameterOrder="sessionToken deviceID">
+      <input message="tns:listRservers" />
+      <output message="tns:listRserversResponse" />
+      <fault name="WSException" message="tns:WSException" />
+    </operation>
+    <operation name="listServerfarmRservers" parameterOrder="sessionToken deviceID serverfarmname">
+      <input message="tns:listServerfarmRservers" />
+      <output message="tns:listServerfarmRserversResponse" />
+      <fault name="WSException" message="tns:WSException" />
+    </operation>
+    <operation name="addRserverToServerfarm" parameterOrder="sessionToken deviceID serverfarmname rserver port">
+      <input message="tns:addRserverToServerfarm" />
+      <output message="tns:addRserverToServerfarmResponse" />
+      <fault name="WSException" message="tns:WSException" />
+    </operation>
+    <operation name="removeRserverFromServerfarm" parameterOrder="sessionToken deviceID rserver">
+      <input message="tns:removeRserverFromServerfarm" />
+      <output message="tns:removeRserverFromServerfarmResponse" />
+      <fault name="WSException" message="tns:WSException" />
+    </operation>
+    <operation name="listDeviceIds" parameterOrder="sessionToken deviceType">
+      <input message="tns:listDeviceIds" />
+      <output message="tns:listDeviceIdsResponse" />
+      <fault name="WSException" message="tns:WSException" />
+    </operation>
+    <operation name="listVirtualContexts" parameterOrder="sessionToken deviceIDs">
+      <input message="tns:listVirtualContexts" />
+      <output message="tns:listVirtualContextsResponse" />
+      <fault name="WSException" message="tns:WSException" />
+    </operation>
+    <operation name="activateServerfarmRserver" parameterOrder="sessionToken deviceID rserver reason">
+      <input message="tns:activateServerfarmRserver" />
+      <output message="tns:activateServerfarmRserverResponse" />
+      <fault name="WSException" message="tns:WSException" />
+    </operation>
+    <operation name="suspendServerfarmRserver" parameterOrder="sessionToken deviceID rserver suspendState reason">
+      <input message="tns:suspendServerfarmRserver" />
+      <output message="tns:suspendServerfarmRserverResponse" />
+      <fault name="WSException" message="tns:WSException" />
+    </operation>
+    <operation name="changeServerfarmRserverWeight" parameterOrder="sessionToken deviceID rserver reason">
+      <input message="tns:changeServerfarmRserverWeight" />
+      <output message="tns:changeServerfarmRserverWeightResponse" />
+      <fault name="WSException" message="tns:WSException" />
+    </operation>
+    <operation name="getVMMappingInfo" parameterOrder="sessionToken vmname">
+      <input message="tns:getVMMappingInfo" />
+      <output message="tns:getVMMappingInfoResponse" />
+      <fault name="WSException" message="tns:WSException" />
+    </operation>
+    <operation name="isEmptyOrNull">
+      <input message="tns:isEmptyOrNull" />
+      <output message="tns:isEmptyOrNullResponse" />
+    </operation>
+    <operation name="validateIPAddress">
+      <input message="tns:validateIPAddress" />
+      <output message="tns:validateIPAddressResponse" />
+      <fault name="WSException" message="tns:WSException" />
+    </operation>
+  </portType>
+  <binding name="OperationManagerPortBinding" type="tns:OperationManager">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <operation name="login">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+      <fault name="WSException">
+        <soap:fault use="literal" name="WSException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="logout">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+      <fault name="WSException">
+        <soap:fault use="literal" name="WSException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="listServerFarms">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+      <fault name="WSException">
+        <soap:fault use="literal" name="WSException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="listRservers">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+      <fault name="WSException">
+        <soap:fault use="literal" name="WSException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="listServerfarmRservers">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+      <fault name="WSException">
+        <soap:fault use="literal" name="WSException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="addRserverToServerfarm">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+      <fault name="WSException">
+        <soap:fault use="literal" name="WSException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="removeRserverFromServerfarm">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+      <fault name="WSException">
+        <soap:fault use="literal" name="WSException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="listDeviceIds">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+      <fault name="WSException">
+        <soap:fault use="literal" name="WSException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="listVirtualContexts">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+      <fault name="WSException">
+        <soap:fault use="literal" name="WSException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="activateServerfarmRserver">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+      <fault name="WSException">
+        <soap:fault use="literal" name="WSException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="suspendServerfarmRserver">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+      <fault name="WSException">
+        <soap:fault use="literal" name="WSException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="changeServerfarmRserverWeight">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+      <fault name="WSException">
+        <soap:fault use="literal" name="WSException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="getVMMappingInfo">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+      <fault name="WSException">
+        <soap:fault use="literal" name="WSException" namespace="" />
+      </fault>
+    </operation>
+    <operation name="isEmptyOrNull">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+    </operation>
+    <operation name="validateIPAddress">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://anm.cisco.com" />
+      </output>
+      <fault name="WSException">
+        <soap:fault use="literal" name="WSException" namespace="" />
+      </fault>
+    </operation>
+  </binding>
+  <service name="OperationManagerService">
+    <port name="OperationManagerPort" binding="tns:OperationManagerPortBinding">
+      <soap:address location="https://10.64.6.74:8443/anm/OperationManager" />
+    </port>
+  </service>
+</definitions>
