@@ -3,7 +3,7 @@ using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel.Sequence;
-using ConDep.Dsl.WebDeploy;
+using ConDep.Dsl.SemanticModel.WebDeploy;
 using TinyIoC;
 
 namespace ConDep.Dsl
@@ -24,10 +24,17 @@ namespace ConDep.Dsl
             var container = TinyIoCContainer.Current;
 
             container.Register(_envConfig);
-            container.Register(new LoadBalancerLookup(_envConfig.LoadBalancer).GetLoadBalancer());
+            if(_envConfig.LoadBalancer != null)
+            {
+                container.Register(new LoadBalancerLookup(_envConfig.LoadBalancer).GetLoadBalancer());
+                container.Register(_envConfig.LoadBalancer);
+            }
+            else
+            {
+                container.Register<ILoadBalance, DefaultLoadBalancer>();
+            }
             //container.Register<ISetupWebDeploy, WebDeploySetup>().AsMultiInstance();
             //container.Register<ISetupConDep, ConDepSetup>().AsMultiInstance();
-            container.Register(_envConfig.LoadBalancer);
 
             container.Register<IOfferLocalOperations, LocalOperationsBuilder>().AsMultiInstance();
             container.Register<IOfferRemoteDeployment, RemoteDeploymentBuilder>().AsMultiInstance();

@@ -5,7 +5,7 @@ using ConDep.Dsl;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.SemanticModel;
-using ConDep.Dsl.WebDeploy;
+using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Console
 {

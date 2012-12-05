@@ -1,6 +1,6 @@
 using ConDep.Dsl;
 using ConDep.Dsl.SemanticModel;
-using ConDep.Dsl.WebDeploy;
+using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.Tests
 {

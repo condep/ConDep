@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.SemanticModel.Sequence;
-using ConDep.Dsl.WebDeploy;
+using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.Builders
 {

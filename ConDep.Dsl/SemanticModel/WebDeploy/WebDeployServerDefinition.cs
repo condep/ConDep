@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
-using ConDep.Dsl.SemanticModel;
 using Microsoft.Web.Deployment;
 using System.Linq;
 
-namespace ConDep.Dsl.WebDeploy
+namespace ConDep.Dsl.SemanticModel.WebDeploy
 {
     public class WebDeployServerDefinition : IValidate
 	{

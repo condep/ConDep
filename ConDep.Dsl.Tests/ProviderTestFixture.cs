@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using ConDep.Dsl.SemanticModel;
-using ConDep.Dsl.WebDeploy;
+using ConDep.Dsl.SemanticModel.WebDeploy;
 using NUnit.Framework;
 
 namespace ConDep.Dsl.Tests

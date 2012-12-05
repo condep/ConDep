@@ -87,7 +87,7 @@
     <Compile Include="SemanticModel\Sequence\IManageLocalSequence.cs" />
     <Compile Include="SemanticModel\Sequence\IManageRemoteSequence.cs" />
     <Compile Include="SemanticModel\IOperateRemote.cs" />
-    <Compile Include="WebDeploy\IOperateWebDeploy.cs" />
+    <Compile Include="SemanticModel\WebDeploy\IOperateWebDeploy.cs" />
     <Compile Include="SemanticModel\Sequence\IRemoteSequenceElement.cs" />
     <Compile Include="SemanticModel\IReportStatus.cs" />
     <Compile Include="SemanticModel\Sequence\ISequenceElement.cs" />
@@ -97,7 +97,7 @@
     <Compile Include="SemanticModel\RemoteOperation.cs" />
     <Compile Include="SemanticModel\StatusReporter.cs" />
     <Compile Include="SemanticModel\IRequireCustomConfiguration.cs" />
-    <Compile Include="WebDeploy\WebDeployOperator.cs" />
+    <Compile Include="SemanticModel\WebDeploy\WebDeployOperator.cs" />
     <Compile Include="Logging\ILogForCondep.cs" />
     <Compile Include="IoCBootstrapper.cs" />
     <Compile Include="Operations\LoadBalancer\ILoadBalance.cs" />
@@ -160,26 +160,25 @@
     <Compile Include="Operations\Infrastructure\IIS\WebApp\WebAppInfrastructureProvider.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IdentityInfrastructureOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\WebSiteInfrastructureProvider.cs" />
-    <Compile Include="WebDeploy\IProvideConditions.cs" />
-    <Compile Include="WebDeploy\ConDepUnsupportedOutcomeException.cs" />
+    <Compile Include="SemanticModel\WebDeploy\ConDepUnsupportedOutcomeException.cs" />
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="SemanticModel\Credentials.cs" />
-    <Compile Include="WebDeploy\WebDeployOperation.cs" />
-    <Compile Include="WebDeploy\WebDeployDestination.cs" />
+    <Compile Include="SemanticModel\WebDeploy\WebDeployOperation.cs" />
+    <Compile Include="SemanticModel\WebDeploy\WebDeployDestination.cs" />
     <Compile Include="SemanticModel\ConDepConfigurationExecutor.cs" />
     <Compile Include="Operations\Application\Local\LocalOperation.cs" />
-    <Compile Include="WebDeploy\IProvide.cs" />
+    <Compile Include="SemanticModel\WebDeploy\IProvide.cs" />
     <Compile Include="SemanticModel\IValidate.cs" />
     <Compile Include="SemanticModel\Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SemanticModel\SemanticValidationError.cs" />
-    <Compile Include="WebDeploy\ConDepWebDeployProviderException.cs" />
-    <Compile Include="WebDeploy\WebDeploySource.cs" />
+    <Compile Include="SemanticModel\WebDeploy\ConDepWebDeployProviderException.cs" />
+    <Compile Include="SemanticModel\WebDeploy\WebDeploySource.cs" />
     <Compile Include="SemanticModel\ValidationErrorType.cs" />
-    <Compile Include="WebDeploy\WebDeployServerDefinition.cs" />
-    <Compile Include="WebDeploy\WebDeploymentStatus.cs" />
-    <Compile Include="WebDeploy\WebDeployOptions.cs" />
-    <Compile Include="WebDeploy\WebDeployProviderBase.cs" />
+    <Compile Include="SemanticModel\WebDeploy\WebDeployServerDefinition.cs" />
+    <Compile Include="SemanticModel\WebDeploy\WebDeploymentStatus.cs" />
+    <Compile Include="SemanticModel\WebDeploy\WebDeployOptions.cs" />
+    <Compile Include="SemanticModel\WebDeploy\WebDeployProviderBase.cs" />
     <Compile Include="TinyIoC.cs" />
   </ItemGroup>
   <ItemGroup>

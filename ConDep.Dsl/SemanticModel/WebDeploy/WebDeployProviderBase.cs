@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ConDep.Dsl.SemanticModel;
 using Microsoft.Web.Deployment;
 
-namespace ConDep.Dsl.WebDeploy
+namespace ConDep.Dsl.SemanticModel.WebDeploy
 {
 	public abstract class WebDeployProviderBase : IProvide, IValidate
 	{
-	    private readonly List<IProvideConditions> _conditions = new List<IProvideConditions>();
-
         public string SourcePath { get; set; }
 		public virtual string DestinationPath { get; set; }
 		public abstract string Name { get; }
@@ -19,19 +16,9 @@ namespace ConDep.Dsl.WebDeploy
         public virtual IList<DeploymentRule> GetReplaceRules() { return new List<DeploymentRule>(); }
 
 		public abstract bool IsValid(Notification notification);
-
-	    public void AddCondition(IProvideConditions condition)
-	    {
-	        _conditions.Add(condition);
-	    }
-
+	 
         public virtual IReportStatus Sync(WebDeployOptions webDeployOptions, IReportStatus status)
         {
-            if (HasConditions())
-            {
-                if (_conditions.Any(condition => !condition.HasExpectedOutcome(webDeployOptions))) return status;
-            }
-
             var defaultWaitInterval = webDeployOptions.DestBaseOptions.RetryInterval;
 
             if (WaitInterval > 0)
@@ -61,11 +48,6 @@ namespace ConDep.Dsl.WebDeploy
             }
             return status;
         }
-
-	    private bool HasConditions()
-	    {
-	        return _conditions.Count > 0;
-	    }
 
 	    private void Backup(WebDeployOptions webDeployOptions)
 	    {

@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
-using ConDep.Dsl.WebDeploy;
+using ConDep.Dsl.SemanticModel.WebDeploy;
 using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.SemanticModel

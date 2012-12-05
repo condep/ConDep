@@ -4,7 +4,7 @@ using ConDep.Dsl.Operations.Application.Execution.PowerShell;
 using ConDep.Dsl.Operations.Application.Execution.RunCmd;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
-using ConDep.Dsl.WebDeploy;
+using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.Builders
 {

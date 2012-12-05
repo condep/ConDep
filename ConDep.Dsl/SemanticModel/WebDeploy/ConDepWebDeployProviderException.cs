@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace ConDep.Dsl.WebDeploy
+namespace ConDep.Dsl.SemanticModel.WebDeploy
 {
     public class ConDepWebDeployProviderException : Exception
     {

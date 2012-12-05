@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ConDep.Dsl.Operations.Application.Local.TransformConfig;
-using ConDep.Dsl.WebDeploy;
+using ConDep.Dsl.SemanticModel.WebDeploy;
 using NUnit.Framework;
 
 namespace ConDep.Dsl.Tests

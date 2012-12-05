@@ -1,8 +1,7 @@
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations.Application.Local;
-using ConDep.Dsl.SemanticModel;
 
-namespace ConDep.Dsl.WebDeploy
+namespace ConDep.Dsl.SemanticModel.WebDeploy
 {
 	public class WebDeployOperation : LocalOperation
 	{

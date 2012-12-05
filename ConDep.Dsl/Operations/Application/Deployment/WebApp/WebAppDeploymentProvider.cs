@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using ConDep.Dsl.SemanticModel;
-using ConDep.Dsl.WebDeploy;
+using ConDep.Dsl.SemanticModel.WebDeploy;
 using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.Operations.Application.Deployment.WebApp

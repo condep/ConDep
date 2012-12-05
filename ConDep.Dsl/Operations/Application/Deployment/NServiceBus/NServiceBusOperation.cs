@@ -2,7 +2,6 @@ using System.IO;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Resources;
 using ConDep.Dsl.SemanticModel;
-using ConDep.Dsl.WebDeploy;
 
 namespace ConDep.Dsl.Operations.Application.Deployment.NServiceBus
 {
