@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ConDep.Dsl.Operations.Application.Local.PreCompile;
 using ConDep.Dsl.Operations.Application.Local.TransformConfig;
 using ConDep.Dsl.Operations.Application.Local.WebRequest;
@@ -10,6 +11,7 @@ namespace ConDep.Dsl.Builders
     public class LocalOperationsBuilder : IOfferLocalOperations
     {
         private readonly IManageGeneralSequence _localSequence;
+        private List<InfrastructureArtifact> _infrastructures = new List<InfrastructureArtifact>();
 
         public LocalOperationsBuilder(IManageGeneralSequence localSequence)
         {
@@ -47,6 +49,11 @@ namespace ConDep.Dsl.Builders
             action(appServerConfigurator);
             return appServerConfigurator;
 
+        }
+
+        public void AddInfrastructure(InfrastructureArtifact infrastructure)
+        {
+            _infrastructures.Add(infrastructure);    
         }
     }
 }

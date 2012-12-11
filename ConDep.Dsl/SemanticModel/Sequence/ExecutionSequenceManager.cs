@@ -9,6 +9,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
     public class ExecutionSequenceManager : IManageExecutionSequence
     {
         private readonly List<ISequenceElement> _sequence = new List<ISequenceElement>();
+        private List<InfrastructureArtifact> _infrastructures = new List<InfrastructureArtifact>();
 
         public void Add(IManageRemoteSequence remoteSequence)
         {
@@ -34,14 +35,14 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         public IManageRemoteSequence NewRemoteSequence(IEnumerable<ServerConfig> servers)
         {
-            var remoteSeq = new RemoteSequenceManager(servers);
+            var remoteSeq = new RemoteSequenceManager(servers, _infrastructures);
             Add(remoteSeq);
             return remoteSeq;
         }
 
         public IManageRemoteSequence NewRemoteSequenceNoLoadBalancing(IEnumerable<ServerConfig> servers)
         {
-            var remoteSeq = new RemoteSequenceManager(servers, true);
+            var remoteSeq = new RemoteSequenceManager(servers, _infrastructures, true);
             Add(remoteSeq);
             return remoteSeq;
         }
@@ -60,6 +61,11 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                     return status;
             }
             return status;
+        }
+
+        public void AddInfrastructure(InfrastructureArtifact infrastructure)
+        {
+            _infrastructures.Add(infrastructure);
         }
 
         public static IManageRemoteSequence GetSequenceFor(IOfferRemoteDeployment deployment)

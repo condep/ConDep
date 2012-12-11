@@ -12,6 +12,7 @@ namespace ConDep.Dsl
     {
         private readonly ConDepConfig _envConfig;
         private ExecutionSequenceManager _execSeq;
+        private IOfferRemoteOperations _remote;
 
         private IoCBootstrapper(ConDepConfig envConfig)
         {
@@ -40,17 +41,21 @@ namespace ConDep.Dsl
             
             container.Register<IOfferRemoteCertDeployment, RemoteCertDeploymentBuilder>().AsMultiInstance();
             //container.Register<RemoteServerOffer>((c,e) => new RemoteServerOffer(execSeq, servers));//().UsingConstructor(() => new RemoteServerOffer(execSeq, _envConfig.Servers));
-            container.Register<IOfferRemoteOperations>(CreateRemoteServers);
+            container.Register(CreateRemoteServers);
             //container.Register<IOfferServerRemoting, RemoteServerOffer>().AsMultiInstance();
 
             container.Register<IOperateWebDeploy, WebDeployOperator>();
             container.Register(new Logger().Resolve());
         }
 
-        private RemoteOperationsBuilder CreateRemoteServers(TinyIoCContainer container, NamedParameterOverloads overloads)
+        private IOfferRemoteOperations CreateRemoteServers(TinyIoCContainer container, NamedParameterOverloads overloads)
         {
-            var webDeploy = container.Resolve<IOperateWebDeploy>();
-            return new RemoteOperationsBuilder(_execSeq, _envConfig.Servers, webDeploy);
+            if(_remote == null)
+            {
+                var webDeploy = container.Resolve<IOperateWebDeploy>();
+                _remote = new RemoteOperationsBuilder(_execSeq, _envConfig.Servers, webDeploy);
+            }
+            return _remote;
         }
 
         public static void Bootstrap(ConDepConfig envSettings)

@@ -5,6 +5,7 @@ using ConDep.Dsl.Operations.Application.Execution.RunCmd;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
+using IOperateWebDeploy = ConDep.Dsl.SemanticModel.WebDeploy.IOperateWebDeploy;
 
 namespace ConDep.Dsl.Builders
 {
@@ -12,9 +13,9 @@ namespace ConDep.Dsl.Builders
     {
         private readonly IManageRemoteSequence _remoteSequence;
         private readonly IOperateWebDeploy _webDeploy;
-        private readonly RemoteOperationsBuilder _remoteOperationsBuilder;
+        private readonly IOfferRemoteOperations _remoteOperationsBuilder;
 
-        public RemoteExecutionBuilder(IManageRemoteSequence remoteSequence, IOperateWebDeploy webDeploy, RemoteOperationsBuilder remoteOperationsBuilder)
+        public RemoteExecutionBuilder(IManageRemoteSequence remoteSequence, IOperateWebDeploy webDeploy, IOfferRemoteOperations remoteOperationsBuilder)
         {
             _remoteSequence = remoteSequence;
             _webDeploy = webDeploy;
@@ -29,7 +30,7 @@ namespace ConDep.Dsl.Builders
         public IOfferRemoteExecution DosCommand(string cmd, bool continueOnError)
         {
             var runCmdProvider = new RunCmdProvider(cmd, continueOnError);
-            _remoteSequence.Add(new RemoteOperation(runCmdProvider, _webDeploy));
+            _remoteSequence.Add(new RemoteWebDeployOperation(runCmdProvider, _webDeploy));
             return this;
         }
 
@@ -37,7 +38,7 @@ namespace ConDep.Dsl.Builders
         {
             var runCmdProvider = new RunCmdProvider(cmd, continueOnError);
             runCmdOptions(new RunCmdOptions(runCmdProvider));
-            _remoteSequence.Add(new RemoteOperation(runCmdProvider, _webDeploy));
+            _remoteSequence.Add(new RemoteWebDeployOperation(runCmdProvider, _webDeploy));
             return this;
         }
 

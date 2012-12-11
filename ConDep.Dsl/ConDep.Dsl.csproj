@@ -60,6 +60,14 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="ApplicationArtifact.cs" />
+    <Compile Include="Operations\Infrastructure\IisInfrastructureIncludeOptions.cs" />
+    <Compile Include="Operations\Infrastructure\IisInfrastructureOptions.cs" />
+    <Compile Include="Operations\Infrastructure\IisInfrastructureOperation.cs" />
+    <Compile Include="Builders\InfrastructureBuilder.cs" />
+    <Compile Include="Builders\IOfferIisAppPool.cs" />
+    <Compile Include="Builders\IOfferIisInfrastructure.cs" />
+    <Compile Include="Builders\IOfferIisInfrastructureRoleServices.cs" />
+    <Compile Include="Builders\IOfferIisWebSite.cs" />
     <Compile Include="Operations\Application\Deployment\Certificate\CertificateOperation.cs" />
     <Compile Include="Operations\LoadBalancer\LoadBalancerSuspendMethod.cs" />
     <Compile Include="Builders\RemoteDeploymentBuilder.cs" />
@@ -95,7 +103,7 @@
     <Compile Include="SemanticModel\Sequence\LocalOperationSequenceElement.cs" />
     <Compile Include="SemanticModel\Sequence\LocalSequenceManager.cs" />
     <Compile Include="SemanticModel\Sequence\RemoteSequenceManager.cs" />
-    <Compile Include="SemanticModel\RemoteOperation.cs" />
+    <Compile Include="SemanticModel\RemoteWebDeployOperation.cs" />
     <Compile Include="SemanticModel\StatusReporter.cs" />
     <Compile Include="Config\IRequireCustomConfiguration.cs" />
     <Compile Include="SemanticModel\WebDeploy\WebDeployOperator.cs" />

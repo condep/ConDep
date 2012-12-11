@@ -7,14 +7,14 @@ using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.SemanticModel
 {
-    public class RemoteOperation : IOperateRemote
+    public class RemoteWebDeployOperation : IOperateRemote
     {
         private readonly IProvide _provider;
         private readonly IOperateWebDeploy _webDeploy;
 
-        public RemoteOperation(IProvide provider) : this(provider, new WebDeployOperator()) { }
+        public RemoteWebDeployOperation(IProvide provider) : this(provider, new WebDeployOperator()) { }
 
-        public RemoteOperation(IProvide provider, IOperateWebDeploy webDeploy)
+        public RemoteWebDeployOperation(IProvide provider, WebDeploy.IOperateWebDeploy webDeploy)
         {
             _provider = provider;
             _webDeploy = webDeploy;

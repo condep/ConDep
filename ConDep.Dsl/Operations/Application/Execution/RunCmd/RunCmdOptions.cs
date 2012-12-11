@@ -14,5 +14,11 @@ namespace ConDep.Dsl.Operations.Application.Execution.RunCmd
 			_provider.WaitInterval = waitInterval;
 			return this;
 		}
+
+	    public RunCmdOptions RetryAttempts(int retryAttempts)
+	    {
+            _provider.RetryAttempts = retryAttempts;
+            return this;
+        }
 	}
 }

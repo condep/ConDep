@@ -1,9 +1,15 @@
 ﻿using ConDep.Dsl.Builders;
+using ConDep.Dsl.Config;
 
 namespace ConDep.Dsl
 {
     public abstract class InfrastructureArtifact
     {
-        protected abstract void Configure(IOfferInfrastructure require);
+        public abstract void Configure(IOfferInfrastructure require);
+
+        public void Execute(ServerConfig server)
+        {
+            
+        }
     }
 }

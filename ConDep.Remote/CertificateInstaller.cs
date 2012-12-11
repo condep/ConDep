@@ -8,7 +8,7 @@ namespace ConDep.Remote
     {
         public static void InstallCert(string filePath)
         {
-            Console.Write(string.Format("Installing certificate from [{0}].", filePath));
+            Console.Write(string.Format("Installing certificate using file: [{0}].", filePath));
             var certificate = new X509Certificate2(filePath);
             AddCertToStore(certificate);
             RemoveCertFileFromDisk(filePath);
@@ -16,20 +16,17 @@ namespace ConDep.Remote
 
         public static void InstallCertToTrustedRoot(string filePath)
         {
-            Console.Write(string.Format("Installing certificate from [{0}].", filePath));
+            Console.Write(string.Format("Installing certificate using file: [{0}].", filePath));
             var certificate = new X509Certificate2(filePath);
             var store = new X509Store(StoreName.CertificateAuthority, StoreLocation.LocalMachine);
-            store.Open(OpenFlags.ReadWrite);
-            store.Add(certificate);
-            store.Close();
-            Console.Write("Certificate installed in store.");
+            AddCertToStore(certificate, store);
             RemoveCertFileFromDisk(filePath);
         }
 
 
         public static void InstallPfx(string filePath, string password, X509KeyStorageFlags storageFlags)
         {
-            Console.Write(string.Format("Installing certificate from [{0}].", filePath));
+            Console.Write(string.Format("Installing certificate using file: [{0}].", filePath));
             var certificate = new X509Certificate2(filePath, password, storageFlags);
             AddCertToStore(certificate);
             RemoveCertFileFromDisk(filePath);
@@ -38,6 +35,11 @@ namespace ConDep.Remote
         private static void AddCertToStore(X509Certificate2 certificate)
         {
             var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+            AddCertToStore(certificate, store);
+        }
+
+        private static void AddCertToStore(X509Certificate2 certificate, X509Store store)
+        {
             store.Open(OpenFlags.ReadWrite);
             store.Add(certificate);
             store.Close();

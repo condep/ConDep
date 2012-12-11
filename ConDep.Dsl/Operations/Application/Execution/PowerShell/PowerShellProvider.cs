@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.SemanticModel;
@@ -16,12 +15,15 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
 
         public PowerShellProvider(FileInfo scriptFile)
         {
-            throw new NotImplementedException();   
+            using(var reader = scriptFile.OpenText())
+            {
+                DestinationPath = reader.ReadToEnd();
+            }
         }
 
-        private bool IsCommand(string scriptOrCommand)
+        private bool IsScript(string scriptOrCommand)
         {
-            return !scriptOrCommand.Contains(Environment.NewLine);
+            return scriptOrCommand.Contains(Environment.NewLine);
         }
 
         public bool ContinueOnError { get; set; }
@@ -34,12 +36,13 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
         {
             string libImport = "";
 
-            if (!IsCommand(DestinationPath))
+            if (IsScript(DestinationPath))
             {
                 var builder = new StringBuilder(DestinationPath);
                 builder.Replace(Environment.NewLine, "`" + Environment.NewLine);
                 DestinationPath = builder.ToString();
             }
+
             //var script = AddExitCodeHandlingToScript(DestinationPath);
             //var filePath = CreateScriptFile(script);
             //var destFilePath = CopyScriptToDestination(server, filePath);
@@ -50,7 +53,7 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
                 server.Deploy.File(Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "ConDep.Remote.dll"), @"%temp%\ConDep.Remote.dll");
                 libImport = "Add-Type -Path \"" + @"%temp%\ConDep.Remote.dll" + "\";";
             }
-            server.ExecuteRemote.DosCommand(string.Format(@"powershell.exe -InputFormat none -Command ""& {{ $ErrorActionPreference='stop'; {0}{1}; exit $LASTEXITCODE }}""", libImport, DestinationPath), ContinueOnError, o => o.WaitIntervalInSeconds(WaitIntervalInSeconds));
+            server.ExecuteRemote.DosCommand(string.Format(@"powershell.exe -InputFormat none -Command ""& {{ $ErrorActionPreference='stop'; set-executionpolicy remotesigned -force; {0}{1}; exit $LASTEXITCODE }}""", libImport, DestinationPath), ContinueOnError, o => o.WaitIntervalInSeconds(WaitIntervalInSeconds).RetryAttempts(RetryAttempts));
         }
 
         //private string AddExitCodeHandlingToScript(string script)
@@ -83,7 +86,12 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
 
         public override bool IsValid(Notification notification)
         {
-            return string.IsNullOrWhiteSpace(SourcePath) && !string.IsNullOrWhiteSpace(DestinationPath);
+            var remoteLibExist = true;
+            if(RequireRemoteLib)
+            {
+                remoteLibExist = File.Exists(Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "ConDep.Remote.dll"));
+            }
+            return string.IsNullOrWhiteSpace(SourcePath) && !string.IsNullOrWhiteSpace(DestinationPath) && remoteLibExist;
         }
     }
 }

@@ -9,7 +9,8 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         public string SourcePath { get; set; }
 		public virtual string DestinationPath { get; set; }
 		public abstract string Name { get; }
-		public int WaitInterval { get; set; }
+        public int WaitInterval { get; set; }
+        public int RetryAttempts { get; set; }
 
 	    public abstract DeploymentProviderOptions GetWebDeployDestinationObject();
 		public abstract DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions);
@@ -20,10 +21,16 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         public virtual IReportStatus Sync(WebDeployOptions webDeployOptions, IReportStatus status)
         {
             var defaultWaitInterval = webDeployOptions.DestBaseOptions.RetryInterval;
+            var defaultRetryAttempts = webDeployOptions.DestBaseOptions.RetryAttempts;
 
             if (WaitInterval > 0)
             {
                 webDeployOptions.DestBaseOptions.RetryInterval = WaitInterval * 1000;
+            }
+
+            if(RetryAttempts > 0)
+            {
+                webDeployOptions.DestBaseOptions.RetryAttempts = RetryAttempts;
             }
 
             DeploymentChangeSummary summery;
@@ -41,6 +48,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             status.AddSummery(summery);
 
             webDeployOptions.DestBaseOptions.RetryInterval = defaultWaitInterval;
+            webDeployOptions.DestBaseOptions.RetryAttempts = defaultRetryAttempts;
 
             if (summery.Errors > 0)
             {

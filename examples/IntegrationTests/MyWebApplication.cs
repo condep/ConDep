@@ -51,8 +51,32 @@ namespace IntegrationTests
 
     public class WebServerInfrastructure : InfrastructureArtifact
     {
-        protected override void Configure(IOfferInfrastructure require)
+        public override void Configure(IOfferInfrastructure require)
         {
+            require.IIS(opt =>
+                            {
+                                opt.Include
+                                    .HttpRedirect()
+                                    .AspNet()
+                                    .CustomLogging()
+                                    .BasicAuth()
+                                    .WindowsAuth();
+                                opt.RemoveIfPresent
+                                    .CertAuth()
+                                    .UrlAuth();
+                            });
+                //.Include
+                //    .HttpRedirect()
+                //    .AspNet()
+                //    .CustomLogging()
+                //    .BasicAuth()
+                //    .WindowsAuth();
+                //.RemoveIfExist
+                //    .HttpRedirect();
+
+
+
+
             //require.Iis();
             //require.IisWebSite()
             //        .ApplicationPool()

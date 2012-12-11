@@ -11,5 +11,11 @@ namespace ConDep.Dsl.SemanticModel.Sequence
         IManageRemoteSequence NewRemoteSequenceNoLoadBalancing(IEnumerable<ServerConfig> servers);
         IManageLocalSequence NewLocalSequence();
         IReportStatus Execute(IReportStatus status);
+        void AddInfrastructure(InfrastructureArtifact infrastructure);
+    }
+
+    public interface IManageInfrastructureSequence
+    {
+        
     }
 }

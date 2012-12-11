@@ -9,16 +9,19 @@ namespace ConDep.Dsl.SemanticModel.Sequence
     public class RemoteSequenceManager : IManageRemoteSequence
     {
         private readonly IEnumerable<ServerConfig> _servers;
+        private readonly IEnumerable<InfrastructureArtifact> _infrastructures;
         private readonly ILoadBalance _loadBalancer;
         private readonly List<IOperateRemote> _sequence = new List<IOperateRemote>();
 
-        public RemoteSequenceManager(IEnumerable<ServerConfig> servers) : this(servers, false)
+        public RemoteSequenceManager(IEnumerable<ServerConfig> servers, IEnumerable<InfrastructureArtifact> infrastructures) : this(servers, infrastructures, false)
         {
         }
 
-        public RemoteSequenceManager(IEnumerable<ServerConfig> servers, bool noLoadBalancing)
+        public RemoteSequenceManager(IEnumerable<ServerConfig> servers, IEnumerable<InfrastructureArtifact> infrastructures, bool noLoadBalancing)
         {
             _servers = servers;
+            _infrastructures = infrastructures;
+
             if(!noLoadBalancing)
             {
                 _loadBalancer = TinyIoC.TinyIoCContainer.Current.Resolve<ILoadBalance>();
@@ -42,6 +45,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                         if (status.HasErrors)
                             return status;
                     }
+
 
                     Logger.LogSectionStart(server.Name);
                     foreach (var element in _sequence)

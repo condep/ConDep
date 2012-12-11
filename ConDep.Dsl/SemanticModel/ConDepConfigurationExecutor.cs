@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Operations.Infrastructure;
 using ConDep.Dsl.SemanticModel.Sequence;
 using TinyIoC;
 
@@ -49,9 +50,19 @@ namespace ConDep.Dsl.SemanticModel
 
             IoCBootstrapper.Bootstrap(envConfig);
             var sequence = TinyIoCContainer.Current.Resolve<IManageExecutionSequence>();
+            //
+            var remoteOpBuilder = TinyIoCContainer.Current.Resolve<IOfferRemoteOperations>(); //returns a new sequence for every call
 
             foreach(var application in applications)
             {
+                var infrastructureBuilder = new InfrastructureBuilder(remoteOpBuilder);
+                if(HasInfrastructureDefined(application))
+                {
+                    var infrastructureInstance = GetInfrastructureArtifaceForApplication(assembly, application);
+                    infrastructureInstance.Configure(infrastructureBuilder);
+                    //sequence.AddInfrastructure(infrastructureInstance);
+                }
+
                 var local = new LocalOperationsBuilder(sequence);
                 application.Configure(local, envConfig);
             }
@@ -63,6 +74,23 @@ namespace ConDep.Dsl.SemanticModel
             }
 
             sequence.Execute(status);
+        }
+
+        private bool HasInfrastructureDefined(ApplicationArtifact application)
+        {
+            var typeName = typeof(IDependOnInfrastructure<>).Name;
+            return application.GetType().GetInterface(typeName) != null;
+        }
+
+        private static InfrastructureArtifact GetInfrastructureArtifaceForApplication(Assembly assembly,
+                                                                                      ApplicationArtifact application)
+        {
+            var typeName = typeof (IDependOnInfrastructure<>).Name;
+            var typeInterface = application.GetType().GetInterface(typeName);
+            var infrastructureType = typeInterface.GetGenericArguments().Single();
+
+            var infrastructureInstance = assembly.CreateInstance(infrastructureType.FullName) as InfrastructureArtifact;
+            return infrastructureInstance;
         }
     }
 }
