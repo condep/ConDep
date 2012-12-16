@@ -34,7 +34,7 @@ namespace ConDep.Dsl.Tests
 
             var infrastructureSequence = new InfrastructureSequence();
 
-            var webDeploy = new WebDeployOperator();
+            var webDeploy = new WebDeployHandler();
             var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);
             _infra.Configure(infrastructureBuilder);
 

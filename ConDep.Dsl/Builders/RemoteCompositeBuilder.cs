@@ -7,7 +7,7 @@ namespace ConDep.Dsl.Builders
     {
         private readonly IOfferRemoteCertDeployment _certDeployment;
 
-        public RemoteCompositeBuilder(CompositeSequence compositeSequence, IOperateWebDeploy webDeploy)
+        public RemoteCompositeBuilder(CompositeSequence compositeSequence, IHandleWebDeploy webDeploy)
         {
             Deploy = new RemoteDeploymentBuilder(compositeSequence, webDeploy);
             ExecuteRemote = new RemoteExecutionBuilder(compositeSequence, webDeploy);

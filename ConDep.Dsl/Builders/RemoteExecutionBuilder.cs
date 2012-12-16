@@ -5,17 +5,16 @@ using ConDep.Dsl.Operations.Application.Execution.RunCmd;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
-using IOperateWebDeploy = ConDep.Dsl.SemanticModel.WebDeploy.IOperateWebDeploy;
 
 namespace ConDep.Dsl.Builders
 {
     public class RemoteExecutionBuilder : IOfferRemoteExecution
     {
         private readonly IManageRemoteSequence _remoteSequence;
-        private readonly IOperateWebDeploy _webDeploy;
+        private readonly IHandleWebDeploy _webDeploy;
         //private readonly IOfferRemoteOperations _remoteOperationsBuilder;
 
-        public RemoteExecutionBuilder(IManageRemoteSequence remoteSequence, IOperateWebDeploy webDeploy)
+        public RemoteExecutionBuilder(IManageRemoteSequence remoteSequence, IHandleWebDeploy webDeploy)
         {
             _remoteSequence = remoteSequence;
             _webDeploy = webDeploy;

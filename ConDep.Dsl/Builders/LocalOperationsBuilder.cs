@@ -15,9 +15,9 @@ namespace ConDep.Dsl.Builders
         private readonly LocalSequence _localSequence;
         private readonly IManageInfrastructureSequence _infrastructureSequence;
         private readonly IEnumerable<ServerConfig> _servers;
-        private readonly IOperateWebDeploy _webDeploy;
+        private readonly IHandleWebDeploy _webDeploy;
 
-        public LocalOperationsBuilder(LocalSequence localSequence, IManageInfrastructureSequence infrastructureSequence, IEnumerable<ServerConfig> servers, IOperateWebDeploy webDeploy)
+        public LocalOperationsBuilder(LocalSequence localSequence, IManageInfrastructureSequence infrastructureSequence, IEnumerable<ServerConfig> servers, IHandleWebDeploy webDeploy)
         {
             _localSequence = localSequence;
             _infrastructureSequence = infrastructureSequence;

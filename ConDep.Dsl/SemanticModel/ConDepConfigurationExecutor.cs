@@ -54,7 +54,7 @@ namespace ConDep.Dsl.SemanticModel
             //
             //var remoteOpBuilder = TinyIoCContainer.Current.Resolve<IOfferRemoteOperations>(); //returns a new sequence for every call
 
-            var webDeploy = new WebDeployOperator();
+            var webDeploy = new WebDeployHandler();
             var sequenceManager = new ExecutionSequenceManager();
 
             foreach (var application in applications)

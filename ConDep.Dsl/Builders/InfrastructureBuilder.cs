@@ -8,7 +8,7 @@ namespace ConDep.Dsl.Builders
     public class InfrastructureBuilder : IOfferInfrastructure
     {
         private readonly IManageInfrastructureSequence _infrastructureSequence;
-        private readonly IOperateWebDeploy _webDeploy;
+        private readonly IHandleWebDeploy _webDeploy;
         //private readonly IOfferRemoteOperations _remote;
 
         //public InfrastructureBuilder(IOfferRemoteOperations remote)
@@ -16,7 +16,7 @@ namespace ConDep.Dsl.Builders
         //    _remote = remote;
         //}
 
-        public InfrastructureBuilder(IManageInfrastructureSequence infrastructureSequence, IOperateWebDeploy webDeploy)
+        public InfrastructureBuilder(IManageInfrastructureSequence infrastructureSequence, IHandleWebDeploy webDeploy)
         {
             _infrastructureSequence = infrastructureSequence;
             _webDeploy = webDeploy;

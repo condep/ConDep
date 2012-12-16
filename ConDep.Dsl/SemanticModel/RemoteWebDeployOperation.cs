@@ -10,11 +10,9 @@ namespace ConDep.Dsl.SemanticModel
     public class RemoteWebDeployOperation : IOperateRemote
     {
         private readonly IProvide _provider;
-        private readonly IOperateWebDeploy _webDeploy;
+        private readonly IHandleWebDeploy _webDeploy;
 
-        //public RemoteWebDeployOperation(IProvide provider) : this(provider, new WebDeployOperator()) { }
-
-        public RemoteWebDeployOperation(IProvide provider, IOperateWebDeploy webDeploy)
+        public RemoteWebDeployOperation(IProvide provider, IHandleWebDeploy webDeploy)
         {
             _provider = provider;
             _webDeploy = webDeploy;
@@ -32,8 +30,7 @@ namespace ConDep.Dsl.SemanticModel
             {
                 Logger.LogSectionStart(_provider.GetType().Name);
                 options = _webDeploy.GetWebDeployOptions(server, OnWebDeployTraceMessage);//GetWebDeployOptions(webDeploySource, webDeployDestination);
-                var syncronizer = new WebDeploySyncronizer();
-                syncronizer.Sync(_provider, options, false, status);
+                _webDeploy.Sync(_provider, options, false, status);
             }
             catch (Exception ex)
             {

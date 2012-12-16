@@ -4,8 +4,9 @@ using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.SemanticModel.WebDeploy
 {
-    public interface IOperateWebDeploy
+    public interface IHandleWebDeploy
     {
         WebDeployOptions GetWebDeployOptions(ServerConfig server, EventHandler<DeploymentTraceEventArgs> onTraceMessage);
+        IReportStatus Sync(IProvide provider, WebDeployOptions webDeployOptions, bool continueOnError, IReportStatus status);
     }
 }

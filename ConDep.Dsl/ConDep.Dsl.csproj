@@ -104,12 +104,12 @@
     <Compile Include="SemanticModel\Sequence\InfrastructureSequence.cs" />
     <Compile Include="SemanticModel\Sequence\LocalSequence.cs" />
     <Compile Include="SemanticModel\Sequence\RemoteSequence.cs" />
-    <Compile Include="SemanticModel\WebDeploy\IOperateWebDeploy.cs" />
+    <Compile Include="SemanticModel\WebDeploy\IHandleWebDeploy.cs" />
     <Compile Include="SemanticModel\IReportStatus.cs" />
     <Compile Include="SemanticModel\RemoteWebDeployOperation.cs" />
     <Compile Include="SemanticModel\StatusReporter.cs" />
     <Compile Include="Config\IRequireCustomConfiguration.cs" />
-    <Compile Include="SemanticModel\WebDeploy\WebDeployOperator.cs" />
+    <Compile Include="SemanticModel\WebDeploy\WebDeployHandler.cs" />
     <Compile Include="Logging\ILogForCondep.cs" />
     <Compile Include="IoCBootstrapper.cs" />
     <Compile Include="Operations\LoadBalancer\ILoadBalance.cs" />
@@ -189,7 +189,6 @@
     <Compile Include="SemanticModel\WebDeploy\WebDeploymentStatus.cs" />
     <Compile Include="SemanticModel\WebDeploy\WebDeployOptions.cs" />
     <Compile Include="SemanticModel\WebDeploy\WebDeployProviderBase.cs" />
-    <Compile Include="SemanticModel\WebDeploy\WebDeploySyncronizer.cs" />
     <Compile Include="TinyIoC.cs" />
   </ItemGroup>
   <ItemGroup>

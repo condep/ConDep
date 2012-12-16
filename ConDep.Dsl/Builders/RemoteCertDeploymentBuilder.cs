@@ -8,10 +8,10 @@ namespace ConDep.Dsl.Builders
     public class RemoteCertDeploymentBuilder : IOfferRemoteCertDeployment
     {
         private readonly IManageRemoteSequence _remoteSequence;
-        private readonly IOperateWebDeploy _webDeploy;
+        private readonly IHandleWebDeploy _webDeploy;
         private readonly IOfferRemoteDeployment _remoteDeploymentBuilder;
 
-        public RemoteCertDeploymentBuilder(IManageRemoteSequence remoteSequence, IOperateWebDeploy webDeploy, IOfferRemoteDeployment remoteDeploymentBuilder)
+        public RemoteCertDeploymentBuilder(IManageRemoteSequence remoteSequence, IHandleWebDeploy webDeploy, IOfferRemoteDeployment remoteDeploymentBuilder)
         {
             _remoteSequence = remoteSequence;
             _webDeploy = webDeploy;
