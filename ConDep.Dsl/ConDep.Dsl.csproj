@@ -175,7 +175,6 @@
     <Compile Include="SemanticModel\WebDeploy\ConDepUnsupportedOutcomeException.cs" />
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="SemanticModel\Credentials.cs" />
-    <Compile Include="SemanticModel\WebDeploy\WebDeployOperation.cs" />
     <Compile Include="SemanticModel\WebDeploy\WebDeployDestination.cs" />
     <Compile Include="SemanticModel\ConDepConfigurationExecutor.cs" />
     <Compile Include="Operations\Application\Local\LocalOperation.cs" />
@@ -187,10 +186,10 @@
     <Compile Include="SemanticModel\WebDeploy\ConDepWebDeployProviderException.cs" />
     <Compile Include="SemanticModel\WebDeploy\WebDeploySource.cs" />
     <Compile Include="SemanticModel\ValidationErrorType.cs" />
-    <Compile Include="SemanticModel\WebDeploy\WebDeployServerDefinition.cs" />
     <Compile Include="SemanticModel\WebDeploy\WebDeploymentStatus.cs" />
     <Compile Include="SemanticModel\WebDeploy\WebDeployOptions.cs" />
     <Compile Include="SemanticModel\WebDeploy\WebDeployProviderBase.cs" />
+    <Compile Include="SemanticModel\WebDeploy\WebDeploySyncronizer.cs" />
     <Compile Include="TinyIoC.cs" />
   </ItemGroup>
   <ItemGroup>

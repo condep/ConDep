@@ -1,9 +1,15 @@
-﻿namespace ConDep.Dsl.SemanticModel.WebDeploy
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Web.Deployment;
+
+namespace ConDep.Dsl.SemanticModel.WebDeploy
 {
     public interface IProvide
     {
         bool IsValid(Notification notification);
 		int WaitInterval { get; set; }
-        IReportStatus Sync(WebDeployOptions webDeployOptions, IReportStatus status);
+        DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions);
+        DeploymentProviderOptions GetWebDeployDestinationObject();
+        IList<DeploymentRule> GetReplaceRules();
     }
 }

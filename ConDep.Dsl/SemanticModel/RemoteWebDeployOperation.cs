@@ -32,7 +32,8 @@ namespace ConDep.Dsl.SemanticModel
             {
                 Logger.LogSectionStart(_provider.GetType().Name);
                 options = _webDeploy.GetWebDeployOptions(server, OnWebDeployTraceMessage);//GetWebDeployOptions(webDeploySource, webDeployDestination);
-                _provider.Sync(options, status);
+                var syncronizer = new WebDeploySyncronizer();
+                syncronizer.Sync(_provider, options, false, status);
             }
             catch (Exception ex)
             {

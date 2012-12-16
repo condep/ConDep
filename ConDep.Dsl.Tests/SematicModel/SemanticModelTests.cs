@@ -1,4 +1,5 @@
-﻿using ConDep.Dsl.SemanticModel;
+﻿using System;
+using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 using Microsoft.Web.Deployment;
 using NUnit.Framework;
@@ -27,26 +28,28 @@ namespace ConDep.Dsl.Tests.SematicModel
 
     public class when_no_source_computer_is_defined : SemanticTestFixture
     {
-        private WebDeployServerDefinition _serverDefinition;
+        //private WebDeployServerDefinition _serverDefinition;
         private DeploymentBaseOptions _webDeployOptions;
         private Notification _notification;
 
         protected override void Given()
         {
-            _serverDefinition = new WebDeployServerDefinition();
+            //_serverDefinition = new WebDeployServerDefinition();
             _notification = new Notification();
         }
 
         protected override void When()
         {
-            _webDeployOptions = _serverDefinition.WebDeploySource.GetSourceBaseOptions();
-            _serverDefinition.WebDeploySource.IsValid(_notification);
+            throw new NotImplementedException();
+            //_webDeployOptions = _serverDefinition.WebDeploySource.GetSourceBaseOptions();
+            //_serverDefinition.WebDeploySource.IsValid(_notification);
         }
 
         [Test]
         public void should_default_to_localhost()
         {
-            Assert.That(_serverDefinition.WebDeploySource.LocalHost, Is.True);
+            throw new NotImplementedException();
+            //Assert.That(_serverDefinition.WebDeploySource.LocalHost, Is.True);
         }
     }
 
@@ -54,18 +57,20 @@ namespace ConDep.Dsl.Tests.SematicModel
 	{
 		protected override void Given()
 		{
-			_serverDefinition = new WebDeployServerDefinition();
-			_serverDefinition.WebDeployDestination.ComputerName = COMPUTER_NAME;
-			_serverDefinition.WebDeployDestination.Credentials.UserName = USERNAME;
-			_serverDefinition.WebDeployDestination.Credentials.Password = PASSWORD;
+            throw new NotImplementedException();
+            //_serverDefinition = new WebDeployServerDefinition();
+            //_serverDefinition.WebDeployDestination.ComputerName = COMPUTER_NAME;
+            //_serverDefinition.WebDeployDestination.Credentials.UserName = USERNAME;
+            //_serverDefinition.WebDeployDestination.Credentials.Password = PASSWORD;
 
 			_notification = new Notification();
 		}
 
 		protected override void When()
 		{
-			_webDeployOptions = _serverDefinition.WebDeployDestination.GetDestinationBaseOptions();
-			_serverDefinition.WebDeployDestination.IsValid(_notification);
+            throw new NotImplementedException();
+            //_webDeployOptions = _serverDefinition.WebDeployDestination.GetDestinationBaseOptions();
+            //_serverDefinition.WebDeployDestination.IsValid(_notification);
 		}
 	}
 
@@ -73,18 +78,20 @@ namespace ConDep.Dsl.Tests.SematicModel
 	{
 		protected override void Given()
 		{
-			_serverDefinition = new WebDeployServerDefinition();
-			_serverDefinition.WebDeploySource.ComputerName = COMPUTER_NAME;
-			_serverDefinition.WebDeploySource.Credentials.UserName = USERNAME;
-			_serverDefinition.WebDeploySource.Credentials.Password = PASSWORD;
+            throw new NotImplementedException();
+            //_serverDefinition = new WebDeployServerDefinition();
+            //_serverDefinition.WebDeploySource.ComputerName = COMPUTER_NAME;
+            //_serverDefinition.WebDeploySource.Credentials.UserName = USERNAME;
+            //_serverDefinition.WebDeploySource.Credentials.Password = PASSWORD;
 
 			_notification = new Notification();
 		}
 
 		protected override void When()
 		{
-			_webDeployOptions = _serverDefinition.WebDeploySource.GetSourceBaseOptions();
-			_serverDefinition.WebDeploySource.IsValid(_notification);
+            throw new NotImplementedException();
+            //_webDeployOptions = _serverDefinition.WebDeploySource.GetSourceBaseOptions();
+            //_serverDefinition.WebDeploySource.IsValid(_notification);
 		}
 	}
 }
