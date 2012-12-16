@@ -26,7 +26,7 @@ namespace ConDep.Dsl.Tests
         }
 
         [Test]
-        public void TestThat()
+        public void TestThatExecutionSequenceIsValid()
         {
             var config = new ConDepConfig {EnvironmentName = "bogusEnv"};
             var server = new ServerConfig { Name = "jat-web03" };
