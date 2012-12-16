@@ -13,7 +13,7 @@
             _infraOnly = infraOnly;
         }
 
-        public string Context { get { return string.IsNullOrWhiteSpace(_context) ? ConDepContext.Default : _context; } }
+        public string Context { get { return string.IsNullOrWhiteSpace(_context) ? "Default" : _context; } }
 
         public bool DeployOnly
         {
@@ -27,7 +27,7 @@
 
         public bool HasContext()
         {
-            return !string.IsNullOrWhiteSpace(Context) && Context != ConDepContext.Default;
+            return !string.IsNullOrWhiteSpace(Context) && Context != "Default";
         }
     }
 }

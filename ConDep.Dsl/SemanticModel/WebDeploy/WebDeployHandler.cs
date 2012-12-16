@@ -40,7 +40,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             return new WebDeployOptions(webDeploySource.PackagePath, sourceBaseOptions, destBaseOptions, syncOptions);
         }
 
-        public virtual IReportStatus Sync(IProvide provider, WebDeployOptions webDeployOptions, bool continueOnError, IReportStatus status)
+        public IReportStatus Sync(IProvide provider, WebDeployOptions webDeployOptions, bool continueOnError, IReportStatus status)
         {
             try
             {
@@ -112,14 +112,14 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             }
         }
 
-        public static DeploymentObject GetPackageSourceObject(WebDeployOptions webDeployOptions)
+        private static DeploymentObject GetPackageSourceObject(WebDeployOptions webDeployOptions)
         {
             return DeploymentManager.CreateObject(DeploymentWellKnownProvider.Package, webDeployOptions.PackagePath, webDeployOptions.SourceBaseOptions);
         }
 
 
-        protected int RetryAttempts { get; set; }
-        protected int WaitInterval { get; set; }
+        public int RetryAttempts { get; set; }
+        public int WaitInterval { get; set; }
 
     }
 }

@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace ConDep.Dsl.Resources
 {
-    public class ConDepResourceFiles
+    public static class ConDepResourceFiles
     {
         public static string GetFilePath(string resourceNamespace, string resourceName)
         {
