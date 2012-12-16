@@ -11,7 +11,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.Binding
             throw new NotImplementedException();
         }
 
-        public override void Configure(IOfferRemoteOperations server)
+        public override void Configure(IOfferRemoteComposition server)
         {
             throw new NotImplementedException();
         }

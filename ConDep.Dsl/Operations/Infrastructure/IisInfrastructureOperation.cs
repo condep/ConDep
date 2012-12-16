@@ -9,10 +9,10 @@ namespace ConDep.Dsl.Operations.Infrastructure
         private readonly List<string> _roleServicesToAdd = new List<string>();
         private readonly List<string> _roleServicesToRemove = new List<string>();
 
-        public override void Configure(IOfferRemoteOperations server)
+        public override void Configure(IOfferRemoteComposition server)
         {
             var removeFeatures = _roleServicesToRemove.Count > 0 ? "$featureRemoved = Remove-WindowsFeature " + string.Join(",", _roleServicesToRemove) : "";
-            server.ExecuteRemote.PowerShell("Import-Module Servermanager; $feature = Add-WindowsFeature Web-Server,Web-WebServer," + string.Join(",", _roleServicesToAdd) + "; $feature; $feature.FeatureResult; " + removeFeatures, opt => opt.WaitIntervalInSeconds(5).RetryAttempts(100));
+            server.ExecuteRemote.PowerShell("Import-Module Servermanager; $feature = Add-WindowsFeature Web-Server,Web-WebServer" + (_roleServicesToAdd.Count > 0 ? "," : "") + string.Join(",", _roleServicesToAdd) + "; $feature; $feature.FeatureResult; " + removeFeatures, opt => opt.WaitIntervalInSeconds(5).RetryAttempts(100));
         }
 
         public override bool IsValid(Notification notification)

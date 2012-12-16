@@ -34,14 +34,13 @@ namespace ConDep.Dsl.LoadBalancer.Arr
 
         private void Execute(LoadBalanceState state, string serverName, IReportStatus status)
         {
-            var provider = new ApplicationRequestRoutingProvider(state, serverName);
+            //var provider = new ApplicationRequestRoutingProvider(state, serverName);
             
-            var sequence = new ExecutionSequenceManager();
-            var webDeploy = new WebDeployOperator();
-            var server = new RemoteOperationsBuilder(sequence, new[] {_server}, webDeploy, true);
-
-            provider.Configure(server);
-            sequence.Execute(status);
+            //var sequence = new ExecutionSequenceManager();
+            //var webDeploy = new WebDeployOperator();
+            //var server = new RemoteCompositeBuilder(new RemoteSequenceManager(new[] { _server }, null), new[] { _server }, webDeploy);
+            //provider.Configure(server);
+            //sequence.Execute(status);
         }
     }
 }

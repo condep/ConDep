@@ -32,7 +32,7 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
 
         public bool RequireRemoteLib { get; set; }
 
-        public override void Configure(IOfferRemoteOperations server)
+        public override void Configure(IOfferRemoteComposition server)
         {
             string libImport = "";
 
@@ -53,7 +53,7 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
                 server.Deploy.File(Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "ConDep.Remote.dll"), @"%temp%\ConDep.Remote.dll");
                 libImport = "Add-Type -Path \"" + @"%temp%\ConDep.Remote.dll" + "\";";
             }
-            server.ExecuteRemote.DosCommand(string.Format(@"powershell.exe -InputFormat none -Command ""& {{ $ErrorActionPreference='stop'; set-executionpolicy remotesigned -force; {0}{1}; exit $LASTEXITCODE }}""", libImport, DestinationPath), ContinueOnError, o => o.WaitIntervalInSeconds(WaitIntervalInSeconds).RetryAttempts(RetryAttempts));
+            server.ExecuteRemote.DosCommand(string.Format(@"powershell.exe -noprofile -InputFormat none -Command ""& {{ $ErrorActionPreference='stop'; set-executionpolicy remotesigned -force; {0}{1}; exit $LASTEXITCODE }}""", libImport, DestinationPath), ContinueOnError, o => o.WaitIntervalInSeconds(WaitIntervalInSeconds).RetryAttempts(RetryAttempts));
         }
 
         //private string AddExitCodeHandlingToScript(string script)

@@ -15,33 +15,34 @@ namespace IntegrationTests
 
             //fromLocalMachine.ToSpecificServer("MyServer", x => x.Deploy.SslCertificate.FromFile());
             onLocalMachine.ToEachServer(x =>
-                                    {
-                                        x.Deploy.SslCertificate.FromFile(@"C:\GitHub\ConDep\ConDep.Dsl.Tests\testcert.con-dep.net.pfx", "ConDep");
-                                        //x.Deploy
-                                        //    .Directory(@"C:\website1", @"C:\Temp\ConDep\MyWebApp");
+                                            {
+                                                x.ExecuteRemote.PowerShell("ipconfig");
+                                                x.Deploy.SslCertificate.FromFile(@"C:\GitHub\ConDep\ConDep.Dsl.Tests\testcert.con-dep.net.pfx", "ConDep");
+                                                //x.Deploy
+                                                //    .Directory(@"C:\website1", @"C:\Temp\ConDep\MyWebApp");
 
-                                        //x.ExecuteRemote.PowerShell("ipconfig", o => o.WaitIntervalInSeconds(10));
-                                        //x.Deploy.NServiceBusEndpoint(@"C:\website1", @"C:\Temp\ConDep\NSB", "MyService");
+                                                //x.ExecuteRemote.PowerShell("ipconfig", o => o.WaitIntervalInSeconds(10));
+                                                //x.Deploy.NServiceBusEndpoint(@"C:\website1", @"C:\Temp\ConDep\NSB", "MyService");
 
-                                        //.NServiceBusEndpoint("", "", "", opt => opt.Profile(""));
+                                                //.NServiceBusEndpoint("", "", "", opt => opt.Profile(""));
 
-                                        //x.ExecuteRemote
-                                        //    .PowerShell();
+                                                //x.ExecuteRemote
+                                                //    .PowerShell();
 
-                                        //x.Deploy
-                                        //    .SslCertificate.FromFile();
+                                                //x.Deploy
+                                                //    .SslCertificate.FromFile();
 
-                                        //x.FromLocalMachineToServer
-                                        //    .ExecuteWebRequest("GET", "http://www.con-dep.net")
-                                        //    .ExecuteWebRequest("GET", "http://www.google.com");
+                                                //x.FromLocalMachineToServer
+                                                //    .ExecuteWebRequest("GET", "http://www.con-dep.net")
+                                                //    .ExecuteWebRequest("GET", "http://www.google.com");
 
-                                        //x.Deploy
-                                        //    .Directory(@"C:\MyWebApp", @"E:\SomeWebSite\MyWebApp")
-                                        //    .Directory(@"C:\temp", @"c:\temp");
+                                                //x.Deploy
+                                                //    .Directory(@"C:\MyWebApp", @"E:\SomeWebSite\MyWebApp")
+                                                //    .Directory(@"C:\temp", @"c:\temp");
 
-                                        //x.FromLocalMachineToServer
-                                        //    .ExecuteWebRequest("GET", "http://www.con-dep.net");
-                                    }
+                                                //x.FromLocalMachineToServer
+                                                //    .ExecuteWebRequest("GET", "http://www.con-dep.net");
+                                            }
                 );
 
             //onLocalMachine.ExecuteWebRequest2("GET", "http://www.con-dep.net");
@@ -53,26 +54,30 @@ namespace IntegrationTests
     {
         public override void Configure(IOfferInfrastructure require)
         {
-            require.IIS(opt =>
-                            {
-                                opt.Include
-                                    .HttpRedirect()
-                                    .AspNet()
-                                    .CustomLogging()
-                                    .BasicAuth()
-                                    .WindowsAuth();
-                                opt.RemoveIfPresent
-                                    .CertAuth()
-                                    .UrlAuth();
-                            });
-                //.Include
-                //    .HttpRedirect()
-                //    .AspNet()
-                //    .CustomLogging()
-                //    .BasicAuth()
-                //    .WindowsAuth();
-                //.RemoveIfExist
-                //    .HttpRedirect();
+            require.IIS();
+            //require
+            //    .IIS(opt =>
+            //             {
+            //                 opt.Include
+            //                     .HttpRedirect()
+            //                     .AspNet()
+            //                     .CustomLogging()
+            //                     .BasicAuth()
+            //                     .WindowsAuth();
+            //                 opt.RemoveIfPresent
+            //                     .CertAuth()
+            //                     .UrlAuth();
+            //             });
+            //.IISWebSite("MyWebSite", 1)
+            //.IISAppPool("MyAppPool");
+            //.Include
+            //    .HttpRedirect()
+            //    .AspNet()
+            //    .CustomLogging()
+            //    .BasicAuth()
+            //    .WindowsAuth();
+            //.RemoveIfExist
+            //    .HttpRedirect();
 
 
 

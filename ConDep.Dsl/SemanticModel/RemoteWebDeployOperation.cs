@@ -12,9 +12,9 @@ namespace ConDep.Dsl.SemanticModel
         private readonly IProvide _provider;
         private readonly IOperateWebDeploy _webDeploy;
 
-        public RemoteWebDeployOperation(IProvide provider) : this(provider, new WebDeployOperator()) { }
+        //public RemoteWebDeployOperation(IProvide provider) : this(provider, new WebDeployOperator()) { }
 
-        public RemoteWebDeployOperation(IProvide provider, WebDeploy.IOperateWebDeploy webDeploy)
+        public RemoteWebDeployOperation(IProvide provider, IOperateWebDeploy webDeploy)
         {
             _provider = provider;
             _webDeploy = webDeploy;

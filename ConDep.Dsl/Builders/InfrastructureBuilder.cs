@@ -1,28 +1,43 @@
 using System;
 using ConDep.Dsl.Operations.Infrastructure;
+using ConDep.Dsl.SemanticModel.Sequence;
+using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.Builders
 {
     public class InfrastructureBuilder : IOfferInfrastructure
     {
-        private readonly IOfferRemoteOperations _remote;
-        //private readonly IisInfrastructureOperation _operation;
+        private readonly IManageInfrastructureSequence _infrastructureSequence;
+        private readonly IOperateWebDeploy _webDeploy;
+        //private readonly IOfferRemoteOperations _remote;
 
-        //public InfrastructureBuilder(IisInfrastructureOperation operation)
+        //public InfrastructureBuilder(IOfferRemoteOperations remote)
         //{
-        //    _operation = operation;
+        //    _remote = remote;
         //}
 
-        public InfrastructureBuilder(IOfferRemoteOperations remote)
+        public InfrastructureBuilder(IManageInfrastructureSequence infrastructureSequence, IOperateWebDeploy webDeploy)
         {
-            _remote = remote;
+            _infrastructureSequence = infrastructureSequence;
+            _webDeploy = webDeploy;
         }
 
         public IOfferInfrastructure IIS(Action<IisInfrastructureOptions> options)
         {
             var iisOperation = new IisInfrastructureOperation();
             options(new IisInfrastructureOptions(iisOperation));
-            iisOperation.Configure(_remote);
+            iisOperation.Configure(new RemoteCompositeBuilder(_infrastructureSequence.NewCompositeSequence("IIS"), _webDeploy));
+            //_infrastructureSequence.Add(iisOperation);
+            //iisOperation.Configure(_remote);
+            return this;
+        }
+
+        public IOfferInfrastructure IIS()
+        {
+            var iisOperation = new IisInfrastructureOperation();
+            iisOperation.Configure(new RemoteCompositeBuilder(_infrastructureSequence.NewCompositeSequence("IIS"), _webDeploy));
+            //_infrastructureSequence.Add(iisOperation);
+            //iisOperation.Configure(_remote);
             return this;
         }
 
@@ -31,7 +46,7 @@ namespace ConDep.Dsl.Builders
             throw new NotImplementedException();
         }
 
-        public IOfferIisWebSite IISWebSite(string name, int id)
+        public IOfferInfrastructure IISWebSite(string name, int id)
         {
             throw new NotImplementedException();
         }

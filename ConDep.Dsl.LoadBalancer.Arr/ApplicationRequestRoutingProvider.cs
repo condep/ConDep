@@ -22,7 +22,7 @@ namespace ConDep.LoadBalancer.Arr
             return true;
         }
 
-        public override void Configure(IOfferRemoteOperations server)
+        public override void Configure(IOfferRemoteComposition server)
         {
             DeployPsCmdLet(server);
             Execute(_state, server, _serverNameToChangeStateOn);

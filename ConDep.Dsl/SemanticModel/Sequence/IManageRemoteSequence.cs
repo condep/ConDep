@@ -1,9 +1,7 @@
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
-    public interface IManageRemoteSequence : ISequenceElement
+    public interface IManageRemoteSequence : IManageSequence<IOperateRemote>
     {
-        void Add(IOperateRemote remoteOperation);
-        //IManageLocalSequence NewLocalSequence();
-        //void Add(RemoteCompositeOperation remoteOperation);
+        CompositeSequence NewCompositeSequence(string compositeName);
     }
 }

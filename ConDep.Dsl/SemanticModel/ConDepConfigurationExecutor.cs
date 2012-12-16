@@ -6,6 +6,7 @@ using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Operations.Infrastructure;
 using ConDep.Dsl.SemanticModel.Sequence;
+using ConDep.Dsl.SemanticModel.WebDeploy;
 using TinyIoC;
 
 namespace ConDep.Dsl.SemanticModel
@@ -49,31 +50,36 @@ namespace ConDep.Dsl.SemanticModel
             }
 
             IoCBootstrapper.Bootstrap(envConfig);
-            var sequence = TinyIoCContainer.Current.Resolve<IManageExecutionSequence>();
+            //var sequence = TinyIoCContainer.Current.Resolve<IManageExecutionSequence>();
             //
-            var remoteOpBuilder = TinyIoCContainer.Current.Resolve<IOfferRemoteOperations>(); //returns a new sequence for every call
+            //var remoteOpBuilder = TinyIoCContainer.Current.Resolve<IOfferRemoteOperations>(); //returns a new sequence for every call
 
-            foreach(var application in applications)
+            var webDeploy = new WebDeployOperator();
+            var sequenceManager = new ExecutionSequenceManager();
+
+            foreach (var application in applications)
             {
-                var infrastructureBuilder = new InfrastructureBuilder(remoteOpBuilder);
-                if(HasInfrastructureDefined(application))
+                var infrastructureSequence = new InfrastructureSequence();
+                var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);//(sequence.RemoteSequence(envConfig.Servers));
+
+                if (HasInfrastructureDefined(application))
                 {
                     var infrastructureInstance = GetInfrastructureArtifaceForApplication(assembly, application);
                     infrastructureInstance.Configure(infrastructureBuilder);
                     //sequence.AddInfrastructure(infrastructureInstance);
                 }
 
-                var local = new LocalOperationsBuilder(sequence);
+                var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(), infrastructureSequence, envConfig.Servers, webDeploy);
                 application.Configure(local, envConfig);
             }
 
             var notification = new Notification();
-            if (!sequence.IsValid(notification))
+            if (!sequenceManager.IsValid(notification))
             {
                 notification.Throw();
             }
 
-            sequence.Execute(status);
+            sequenceManager.Execute(status);
         }
 
         private bool HasInfrastructureDefined(ApplicationArtifact application)

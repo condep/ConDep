@@ -16,6 +16,12 @@ namespace ConDep.Dsl.Builders
         /// 
         /// </summary>
         /// <returns></returns>
+        IOfferInfrastructure IIS();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         IOfferInfrastructure MSMQ();
         
         /// <summary>
@@ -24,7 +30,7 @@ namespace ConDep.Dsl.Builders
         /// <param name="name"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        IOfferIisWebSite IISWebSite(string name, int id);
+        IOfferInfrastructure IISWebSite(string name, int id);
         
         /// <summary>
         /// 

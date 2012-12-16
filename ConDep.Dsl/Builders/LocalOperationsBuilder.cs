@@ -1,24 +1,31 @@
 using System;
 using System.Collections.Generic;
+using ConDep.Dsl.Config;
 using ConDep.Dsl.Operations.Application.Local.PreCompile;
 using ConDep.Dsl.Operations.Application.Local.TransformConfig;
 using ConDep.Dsl.Operations.Application.Local.WebRequest;
 using ConDep.Dsl.SemanticModel.Sequence;
+using ConDep.Dsl.SemanticModel.WebDeploy;
 using TinyIoC;
 
 namespace ConDep.Dsl.Builders
 {
     public class LocalOperationsBuilder : IOfferLocalOperations
     {
-        private readonly IManageGeneralSequence _localSequence;
-        private List<InfrastructureArtifact> _infrastructures = new List<InfrastructureArtifact>();
+        private readonly LocalSequence _localSequence;
+        private readonly IManageInfrastructureSequence _infrastructureSequence;
+        private readonly IEnumerable<ServerConfig> _servers;
+        private readonly IOperateWebDeploy _webDeploy;
 
-        public LocalOperationsBuilder(IManageGeneralSequence localSequence)
+        public LocalOperationsBuilder(LocalSequence localSequence, IManageInfrastructureSequence infrastructureSequence, IEnumerable<ServerConfig> servers, IOperateWebDeploy webDeploy)
         {
             _localSequence = localSequence;
+            _infrastructureSequence = infrastructureSequence;
+            _servers = servers;
+            _webDeploy = webDeploy;
         }
 
-        public IManageGeneralSequence Sequence { get { return _localSequence; } }
+        //public IManageGeneralSequence Sequence { get { return _localSequence; } }
 
         public IOfferLocalOperations TransformConfigFile(string configDirPath, string configName, string transformName)
         {
@@ -45,15 +52,14 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteOperations ToEachServer(Action<IOfferRemoteOperations> action)
         {
-            var appServerConfigurator = TinyIoCContainer.Current.Resolve<IOfferRemoteOperations>();
-            action(appServerConfigurator);
-            return appServerConfigurator;
-
+            var builder = new RemoteOperationsBuilder(_localSequence.NewRemoteSequence(_infrastructureSequence, _servers), _webDeploy);
+            action(builder);
+            return builder;
         }
 
-        public void AddInfrastructure(InfrastructureArtifact infrastructure)
-        {
-            _infrastructures.Add(infrastructure);    
-        }
+        //public void AddInfrastructure(InfrastructureArtifact infrastructure)
+        //{
+        //    _infrastructures.Add(infrastructure);    
+        //}
     }
 }

@@ -60,6 +60,9 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="ApplicationArtifact.cs" />
+    <Compile Include="Builders\IExecuteSequence.cs" />
+    <Compile Include="Builders\IOfferRemoteComposition.cs" />
+    <Compile Include="Builders\RemoteCompositeBuilder.cs" />
     <Compile Include="Operations\Infrastructure\IisInfrastructureIncludeOptions.cs" />
     <Compile Include="Operations\Infrastructure\IisInfrastructureOptions.cs" />
     <Compile Include="Operations\Infrastructure\IisInfrastructureOperation.cs" />
@@ -78,8 +81,9 @@
     <Compile Include="Builders\RemoteCertDeploymentBuilder.cs" />
     <Compile Include="Operations\Application\Deployment\NServiceBus\NServiceBusOperation.cs" />
     <Compile Include="Operations\RemoteCompositeOperation.cs" />
+    <Compile Include="SemanticModel\IOperateRemote.cs" />
+    <Compile Include="SemanticModel\Sequence\CompositeSequence.cs" />
     <Compile Include="SemanticModel\Sequence\ExecutionSequenceManager.cs" />
-    <Compile Include="SemanticModel\Sequence\IManageExecutionSequence.cs" />
     <Compile Include="Builders\IOfferRemoteDeployment.cs" />
     <Compile Include="Builders\IOfferRemoteCertDeployment.cs" />
     <Compile Include="Builders\IOfferRemoteExecution.cs" />
@@ -92,17 +96,16 @@
     <Compile Include="Resources\ConDepResourceNotFoundException.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Config\EnvConfigParser.cs" />
-    <Compile Include="SemanticModel\Sequence\IManageGeneralSequence.cs" />
-    <Compile Include="SemanticModel\Sequence\IManageLocalSequence.cs" />
-    <Compile Include="SemanticModel\Sequence\IManageRemoteSequence.cs" />
-    <Compile Include="SemanticModel\IOperateRemote.cs" />
+    <Compile Include="SemanticModel\Sequence\IManageInfrastructureSequence.cs" />
+    <Compile Include="SemanticModel\Sequence\IManageRemoteSequence.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SemanticModel\Sequence\IManageSequence.cs" />
+    <Compile Include="SemanticModel\Sequence\InfrastructureSequence.cs" />
+    <Compile Include="SemanticModel\Sequence\LocalSequence.cs" />
+    <Compile Include="SemanticModel\Sequence\RemoteSequence.cs" />
     <Compile Include="SemanticModel\WebDeploy\IOperateWebDeploy.cs" />
-    <Compile Include="SemanticModel\Sequence\IRemoteSequenceElement.cs" />
     <Compile Include="SemanticModel\IReportStatus.cs" />
-    <Compile Include="SemanticModel\Sequence\ISequenceElement.cs" />
-    <Compile Include="SemanticModel\Sequence\LocalOperationSequenceElement.cs" />
-    <Compile Include="SemanticModel\Sequence\LocalSequenceManager.cs" />
-    <Compile Include="SemanticModel\Sequence\RemoteSequenceManager.cs" />
     <Compile Include="SemanticModel\RemoteWebDeployOperation.cs" />
     <Compile Include="SemanticModel\StatusReporter.cs" />
     <Compile Include="Config\IRequireCustomConfiguration.cs" />

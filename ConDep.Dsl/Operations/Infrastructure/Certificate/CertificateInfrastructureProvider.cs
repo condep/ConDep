@@ -39,7 +39,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.Certificate
             return File.Exists(_certFile);
         }
 
-        public override void Configure(IOfferRemoteOperations server)
+        public override void Configure(IOfferRemoteComposition server)
         {
             if (_copyCertFromFile)
             {

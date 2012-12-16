@@ -9,7 +9,7 @@ namespace ConDep.Dsl.Tests
     {
         public WebDeployOptions GetWebDeployOptions(ServerConfig server, EventHandler<DeploymentTraceEventArgs> onTraceMessage)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

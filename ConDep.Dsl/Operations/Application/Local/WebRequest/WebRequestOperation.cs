@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.SemanticModel;
 
@@ -17,7 +18,7 @@ namespace ConDep.Dsl.Operations.Application.Local.WebRequest
 
         public override bool IsValid(Notification notification)
         {
-            return !string.IsNullOrWhiteSpace(_url) || !string.IsNullOrWhiteSpace(_method);
+            return !string.IsNullOrWhiteSpace(_url) && Uri.IsWellFormedUriString(_url, UriKind.Absolute) && !string.IsNullOrWhiteSpace(_method);
         }
 
         public override IReportStatus Execute(IReportStatus status)

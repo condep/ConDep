@@ -18,7 +18,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebApp
 
         public string ApplicationPool { get; set; }
 
-        public override void Configure(IOfferRemoteOperations server)
+        public override void Configure(IOfferRemoteComposition server)
         {
             //Todo: Remove web app before adding, cause -force have no effect.
             var command = string.Format("$webSite = Get-WebSite | where-object {{ $_.Name -eq '{0}' }}; ", _webSiteName);

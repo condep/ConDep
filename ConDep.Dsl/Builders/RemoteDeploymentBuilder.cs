@@ -6,23 +6,18 @@ using ConDep.Dsl.Operations.Application.Deployment.WebApp;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
-using IOperateWebDeploy = ConDep.Dsl.SemanticModel.WebDeploy.IOperateWebDeploy;
 
 namespace ConDep.Dsl.Builders
 {
     public class RemoteDeploymentBuilder : IOfferRemoteDeployment
     {
         private readonly IManageRemoteSequence _remoteSequence;
-        private readonly IOfferRemoteCertDeployment _sslCertDeployment;
         private readonly IOperateWebDeploy _webDeploy;
-        private readonly IOfferRemoteOperations _remote;
 
-        public RemoteDeploymentBuilder(IManageRemoteSequence remoteSequence, IOfferRemoteCertDeployment sslCertDeployment, IOperateWebDeploy webDeploy, IOfferRemoteOperations remote)
+        public RemoteDeploymentBuilder(IManageRemoteSequence remoteSequence, IOperateWebDeploy webDeploy)
         {
             _remoteSequence = remoteSequence;
-            _sslCertDeployment = sslCertDeployment;
             _webDeploy = webDeploy;
-            _remote = remote;
         }
 
         public IOfferRemoteDeployment Directory(string sourceDir, string destDir)
@@ -42,7 +37,7 @@ namespace ConDep.Dsl.Builders
         public IOfferRemoteDeployment IisWebApplication(string sourceDir, string webAppName, string webSiteName)
         {
             var webAppProvider = new WebAppDeploymentProvider(sourceDir, webAppName, webSiteName);
-            _remoteSequence.Add(new RemoteWebDeployOperation(webAppProvider));
+            _remoteSequence.Add(new RemoteWebDeployOperation(webAppProvider, _webDeploy));
             return this;
         }
 
@@ -54,7 +49,7 @@ namespace ConDep.Dsl.Builders
         public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName)
         {
             var nServiceBusProvider = new NServiceBusOperation(sourceDir, destDir, serviceName);
-            nServiceBusProvider.Configure(_remote);
+            nServiceBusProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence("NServiceBus"), _webDeploy));
             return this;
         }
 
@@ -62,12 +57,10 @@ namespace ConDep.Dsl.Builders
         {
             var nServiceBusProvider = new NServiceBusOperation(sourceDir, destDir, serviceName);
             nServiceBusOptions(new NServiceBusOptions(nServiceBusProvider));
-            nServiceBusProvider.Configure(_remote);
+            nServiceBusProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence("NServiceBus"), _webDeploy));
             return this;
         }
 
-        public IOfferRemoteCertDeployment SslCertificate { get { return _sslCertDeployment; } }
-
-        public IManageRemoteSequence Sequence { get { return _remoteSequence; } }
+        public IOfferRemoteCertDeployment SslCertificate { get { return new RemoteCertDeploymentBuilder(_remoteSequence, _webDeploy, this); } }
     }
 }

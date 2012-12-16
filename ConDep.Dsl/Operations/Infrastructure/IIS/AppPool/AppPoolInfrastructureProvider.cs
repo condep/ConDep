@@ -26,7 +26,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
             return !string.IsNullOrWhiteSpace(_appPoolName);
         }
 
-        public override void Configure(IOfferRemoteOperations server)
+        public override void Configure(IOfferRemoteComposition server)
         {
             var psCommand = string.Format("Set-Location IIS:\\AppPools; try {{ Remove-WebAppPool '{0}' }} catch {{ }}; $newAppPool = New-WebAppPool '{0}'; ", _appPoolName);
 

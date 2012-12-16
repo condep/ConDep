@@ -34,7 +34,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.NServiceBus
             set { _serviceInstallerName = value; }
         }
 
-        public override void Configure(IOfferRemoteOperations server)
+        public override void Configure(IOfferRemoteComposition server)
         {
             CopyPowerShellScriptsToTarget(server.Deploy);
 

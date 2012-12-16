@@ -34,29 +34,30 @@ namespace ConDep.Dsl
             container.Register<IOfferRemoteDeployment, RemoteDeploymentBuilder>().AsMultiInstance();
             container.Register<IOfferRemoteExecution, RemoteExecutionBuilder>().AsMultiInstance();
 
-            container.Register<IManageExecutionSequence, ExecutionSequenceManager>(_execSeq);
+            //////////////container.Register<IManageExecutionSequence, ExecutionSequenceManager>(_execSeq);
 
-            container.Register<IManageRemoteSequence, RemoteSequenceManager>().AsMultiInstance();
-            container.Register<IManageLocalSequence, LocalSequenceManager>().AsMultiInstance();
+            //////////////container.Register<IManageRemoteSequence, RemoteSequenceManager>().AsMultiInstance();
+            //////////////container.Register<IManageLocalSequence, LocalSequenceManager>().AsMultiInstance();
             
-            container.Register<IOfferRemoteCertDeployment, RemoteCertDeploymentBuilder>().AsMultiInstance();
+            //////////////container.Register<IOfferRemoteCertDeployment, RemoteCertDeploymentBuilder>().AsMultiInstance();
             //container.Register<RemoteServerOffer>((c,e) => new RemoteServerOffer(execSeq, servers));//().UsingConstructor(() => new RemoteServerOffer(execSeq, _envConfig.Servers));
-            container.Register(CreateRemoteServers);
+            //////////////container.Register(CreateRemoteServers);
             //container.Register<IOfferServerRemoting, RemoteServerOffer>().AsMultiInstance();
 
             container.Register<IOperateWebDeploy, WebDeployOperator>();
             container.Register(new Logger().Resolve());
         }
 
-        private IOfferRemoteOperations CreateRemoteServers(TinyIoCContainer container, NamedParameterOverloads overloads)
-        {
-            if(_remote == null)
-            {
-                var webDeploy = container.Resolve<IOperateWebDeploy>();
-                _remote = new RemoteOperationsBuilder(_execSeq, _envConfig.Servers, webDeploy);
-            }
-            return _remote;
-        }
+        //private IOfferRemoteOperations CreateRemoteServers(TinyIoCContainer container, NamedParameterOverloads overloads)
+        //{
+        //    if(_remote == null)
+        //    {
+        //        //var webDeploy = container.Resolve<IOperateWebDeploy>();
+        //        //_remote = new RemoteOperationsBuilder(_execSeq, _envConfig.Servers, webDeploy);
+        //        _remote = new RemoteOperationsBuilder(new );
+        //    }
+        //    return _remote;
+        //}
 
         public static void Bootstrap(ConDepConfig envSettings)
         {

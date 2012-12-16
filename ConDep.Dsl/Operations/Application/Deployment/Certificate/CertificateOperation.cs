@@ -14,7 +14,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.Certificate
             _password = password;
         }
 
-        public override void Configure(IOfferRemoteOperations server)
+        public override void Configure(IOfferRemoteComposition server)
         {
             var destPath = @"%temp%\condepcert.pfx";
             server.Deploy.File(_path, destPath);

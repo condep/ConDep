@@ -28,7 +28,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.Binding
 
         public string Ip { get; set; }
 
-        public override void Configure(IOfferRemoteOperations server)
+        public override void Configure(IOfferRemoteComposition server)
         {
             //Todo: get bindingtype
             var psCommand = CreateBinding(_webSiteName, Ip, HostHeader, _port.ToString(), BindingType.http);

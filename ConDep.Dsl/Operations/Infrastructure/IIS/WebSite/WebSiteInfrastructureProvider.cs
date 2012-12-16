@@ -33,7 +33,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
             return !string.IsNullOrWhiteSpace(_webSiteName);
         }
 
-        public override void Configure(IOfferRemoteOperations server)
+        public override void Configure(IOfferRemoteComposition server)
         {
             throw new NotImplementedException();
             //var webSiteConfig = server.WebSites.SingleOrDefault(x => x.Name == WebSiteName);

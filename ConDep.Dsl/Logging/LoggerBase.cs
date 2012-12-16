@@ -78,7 +78,7 @@ namespace ConDep.Dsl.Logging
             }
         }
 
-        public void Log(string message, TraceLevel traceLevel, params object[] formatArgs)
+        public virtual void Log(string message, TraceLevel traceLevel, params object[] formatArgs)
         {
             var level = GetLog4NetLevel(traceLevel);
             var formattedMessage = (formatArgs != null && formatArgs.Length > 0) ? string.Format(message, formatArgs) : message;

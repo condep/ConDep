@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using ConDep.Dsl.Config;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 
@@ -7,34 +5,14 @@ namespace ConDep.Dsl.Builders
 {
     public class RemoteOperationsBuilder : IOfferRemoteOperations
     {
-        private readonly IOperateWebDeploy _webDeploy;
-        private readonly IManageRemoteSequence _remoteSequence;
-
-        public RemoteOperationsBuilder(IManageExecutionSequence executionSequence, IEnumerable<ServerConfig> servers, IOperateWebDeploy webDeploy)
+        public RemoteOperationsBuilder(RemoteSequence remoteSequence, IOperateWebDeploy webDeploy)
         {
-            _webDeploy = webDeploy;
-            _remoteSequence = executionSequence.NewRemoteSequence(servers);
  
-            Deploy = new RemoteDeploymentBuilder(_remoteSequence, new RemoteCertDeploymentBuilder(_remoteSequence, _webDeploy, Deploy, this), _webDeploy, this);
-            ExecuteRemote = new RemoteExecutionBuilder(_remoteSequence, webDeploy, this);
-        }
-
-        public RemoteOperationsBuilder(IManageExecutionSequence executionSequence, IEnumerable<ServerConfig> servers, IOperateWebDeploy webDeploy, bool noLoadBalancer)
-        {
-            _webDeploy = webDeploy;
-            _remoteSequence = noLoadBalancer ? executionSequence.NewRemoteSequenceNoLoadBalancing(servers) : executionSequence.NewRemoteSequence(servers);
-
-            Deploy = new RemoteDeploymentBuilder(_remoteSequence, new RemoteCertDeploymentBuilder(_remoteSequence, _webDeploy, Deploy, this), _webDeploy, this);
-            ExecuteRemote = new RemoteExecutionBuilder(_remoteSequence, webDeploy, this);
+            Deploy = new RemoteDeploymentBuilder(remoteSequence, webDeploy);
+            ExecuteRemote = new RemoteExecutionBuilder(remoteSequence, webDeploy);
         }
 
         public IOfferRemoteDeployment Deploy { get; private set; }
         public IOfferRemoteExecution ExecuteRemote { get; private set; }
-        //public IOperateLocally FromLocalMachineToServer
-        //{
-        //    get {
-        //        return new LocalExecutor(_remoteSequence.NewLocalSequence());
-        //    }
-        //}
     }
 }

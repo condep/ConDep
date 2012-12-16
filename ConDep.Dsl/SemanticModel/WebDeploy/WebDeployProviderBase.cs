@@ -4,7 +4,7 @@ using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.SemanticModel.WebDeploy
 {
-	public abstract class WebDeployProviderBase : IProvide, IValidate
+    public abstract class WebDeployProviderBase : IProvide, IValidate
 	{
         public string SourcePath { get; set; }
 		public virtual string DestinationPath { get; set; }

@@ -2,7 +2,6 @@ using ConDep.Dsl.Operations.Application.Deployment.Certificate;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
-using IOperateWebDeploy = ConDep.Dsl.SemanticModel.WebDeploy.IOperateWebDeploy;
 
 namespace ConDep.Dsl.Builders
 {
@@ -11,14 +10,12 @@ namespace ConDep.Dsl.Builders
         private readonly IManageRemoteSequence _remoteSequence;
         private readonly IOperateWebDeploy _webDeploy;
         private readonly IOfferRemoteDeployment _remoteDeploymentBuilder;
-        private readonly IOfferRemoteOperations _remoteBuilder;
 
-        public RemoteCertDeploymentBuilder(IManageRemoteSequence remoteSequence, IOperateWebDeploy webDeploy, IOfferRemoteDeployment remoteDeploymentBuilder, IOfferRemoteOperations remoteBuilder)
+        public RemoteCertDeploymentBuilder(IManageRemoteSequence remoteSequence, IOperateWebDeploy webDeploy, IOfferRemoteDeployment remoteDeploymentBuilder)
         {
             _remoteSequence = remoteSequence;
             _webDeploy = webDeploy;
             _remoteDeploymentBuilder = remoteDeploymentBuilder;
-            _remoteBuilder = remoteBuilder;
         }
 
         public IOfferRemoteDeployment FromStore(string thumbprint)
@@ -31,7 +28,8 @@ namespace ConDep.Dsl.Builders
         public IOfferRemoteDeployment FromFile(string path, string password)
         {
             var certOp = new CertificateOperation(path, password);
-            certOp.Configure(_remoteBuilder);
+            var compositeSequence = _remoteSequence.NewCompositeSequence("CertificateFromFile");
+            certOp.Configure(new RemoteCompositeBuilder(compositeSequence, _webDeploy));
             return _remoteDeploymentBuilder;
         }
     }

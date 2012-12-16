@@ -13,13 +13,13 @@ namespace ConDep.Dsl.Builders
     {
         private readonly IManageRemoteSequence _remoteSequence;
         private readonly IOperateWebDeploy _webDeploy;
-        private readonly IOfferRemoteOperations _remoteOperationsBuilder;
+        //private readonly IOfferRemoteOperations _remoteOperationsBuilder;
 
-        public RemoteExecutionBuilder(IManageRemoteSequence remoteSequence, IOperateWebDeploy webDeploy, IOfferRemoteOperations remoteOperationsBuilder)
+        public RemoteExecutionBuilder(IManageRemoteSequence remoteSequence, IOperateWebDeploy webDeploy)
         {
             _remoteSequence = remoteSequence;
             _webDeploy = webDeploy;
-            _remoteOperationsBuilder = remoteOperationsBuilder;
+            //_remoteOperationsBuilder = remoteOperationsBuilder;
         }
 
         public IOfferRemoteExecution DosCommand(string cmd)
@@ -45,14 +45,16 @@ namespace ConDep.Dsl.Builders
         public IOfferRemoteExecution PowerShell(string commandOrScript)
         {
             var psProvider = new PowerShellProvider(commandOrScript);
-            psProvider.Configure(_remoteOperationsBuilder);
+            //_remoteSequence.Add(psProvider);
+            psProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence("PowerShell"), _webDeploy));
             return this;
         }
 
         public IOfferRemoteExecution PowerShell(FileInfo scriptFile)
         {
             var psProvider = new PowerShellProvider(scriptFile);
-            psProvider.Configure(_remoteOperationsBuilder);
+            //_remoteSequence.Add(psProvider);
+            psProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence("PowerShell"), _webDeploy));
             return this;
         }
 
@@ -60,7 +62,8 @@ namespace ConDep.Dsl.Builders
         {
             var psProvider = new PowerShellProvider(commandOrScript);
             powerShellOptions(new PowerShellOptions(psProvider));
-            psProvider.Configure(_remoteOperationsBuilder);
+            //_remoteSequence.Add(psProvider);
+            psProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence("PowerShell"), _webDeploy));
             return this;
         }
 
@@ -68,14 +71,15 @@ namespace ConDep.Dsl.Builders
         {
             var psProvider = new PowerShellProvider(scriptFile);
             powerShellOptions(new PowerShellOptions(psProvider));
-            psProvider.Configure(_remoteOperationsBuilder);
+            //_remoteSequence.Add(psProvider);
+            psProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence("PowerShell"), _webDeploy));
             return this;
         }
 
 
-        public IManageRemoteSequence Sequence
-        {
-            get { return _remoteSequence; }
-        }
+        //public IManageRemoteSequence Sequence
+        //{
+        //    get { return _remoteSequence; }
+        //}
     }
 }
