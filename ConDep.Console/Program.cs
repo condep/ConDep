@@ -38,10 +38,12 @@ namespace ConDep.Console
                     status.PrintSummery();
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 exitCode = 1;
-                throw;
+                Logger.Error("ConDep reported a fatal error:");
+                Logger.Error("Message: " + ex.Message);
+                Logger.Error("Stack trace:\n" + ex.StackTrace);
             }
             finally
             {

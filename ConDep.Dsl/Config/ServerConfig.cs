@@ -7,5 +7,7 @@ namespace ConDep.Dsl.Config
         public string Name { get; set; }
         public IList<WebSiteConfig> WebSites { get; set; }
         public DeploymentUserConfig DeploymentUser { get; set; }
+
+        public string WebDeployAgentUrl { get; set; }
     }
 }

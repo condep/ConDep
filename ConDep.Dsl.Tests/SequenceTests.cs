@@ -3,7 +3,6 @@ using ConDep.Dsl.Config;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
-using ConDep.Dsl.SemanticModel.WebDeploy;
 using NUnit.Framework;
 
 namespace ConDep.Dsl.Tests
@@ -34,15 +33,12 @@ namespace ConDep.Dsl.Tests
 
             var infrastructureSequence = new InfrastructureSequence();
 
-            var webDeploy = new WebDeployHandler();
+            var webDeploy = new WebDeployHandlerMock();
             var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);
             _infra.Configure(infrastructureBuilder);
 
             var local = new LocalOperationsBuilder(_sequenceManager.NewLocalSequence(), infrastructureSequence, config.Servers, webDeploy);
             _app.Configure(local, config);
-
-            //var status = new StatusReporter();
-            //_sequenceManager.Execute(status);
 
             var notification = new Notification();
             Assert.That(_sequenceManager.IsValid(notification));

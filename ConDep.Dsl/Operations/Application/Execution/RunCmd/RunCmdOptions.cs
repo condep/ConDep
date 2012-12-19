@@ -11,7 +11,7 @@ namespace ConDep.Dsl.Operations.Application.Execution.RunCmd
 
 		public RunCmdOptions WaitIntervalInSeconds(int waitInterval)
 		{
-			_provider.WaitInterval = waitInterval;
+			_provider.WaitIntervalInSeconds = waitInterval;
 			return this;
 		}
 

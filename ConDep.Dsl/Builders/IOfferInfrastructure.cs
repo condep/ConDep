@@ -1,5 +1,7 @@
 using System;
 using ConDep.Dsl.Operations.Infrastructure;
+using ConDep.Dsl.Operations.Infrastructure.IIS;
+using ConDep.Dsl.Operations.Infrastructure.IIS.WebSite;
 
 namespace ConDep.Dsl.Builders
 {
@@ -31,12 +33,29 @@ namespace ConDep.Dsl.Builders
         /// <param name="id"></param>
         /// <returns></returns>
         IOfferInfrastructure IISWebSite(string name, int id);
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="id"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        IOfferInfrastructure IISWebSite(string name, int id, Action<IOfferIisWebSiteOptions> options);
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        IOfferIisAppPool IISAppPool(string name);
+        IOfferInfrastructure IISAppPool(string name);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        IOfferInfrastructure IISAppPool(string name, Action<IisAppPoolOptions> options);
     }
 }

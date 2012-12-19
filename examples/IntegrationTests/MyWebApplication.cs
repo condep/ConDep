@@ -1,6 +1,7 @@
 ﻿using ConDep.Dsl;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Operations.Infrastructure.IIS;
 
 namespace IntegrationTests
 {
@@ -55,6 +56,12 @@ namespace IntegrationTests
         public override void Configure(IOfferInfrastructure require)
         {
             require.IIS();
+            require.IISWebSite("ConDepWebSite", 5   );
+
+            //require.IISAppPool("MyAppPool", opt =>
+            //                                    {
+            //                                        opt.LoadUserProfile = true;
+            //                                    });
             //require
             //    .IIS(opt =>
             //             {

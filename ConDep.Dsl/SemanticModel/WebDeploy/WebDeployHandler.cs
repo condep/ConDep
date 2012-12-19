@@ -13,7 +13,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         public WebDeployOptions GetWebDeployOptions(ServerConfig server, EventHandler<DeploymentTraceEventArgs> onTraceMessage)
         {
             var webDeploySource = new WebDeploySource { LocalHost = true };
-            var webDeployDestination = new WebDeployDestination { ComputerName = server.Name };
+            var webDeployDestination = new WebDeployDestination { ComputerName = server.WebDeployAgentUrl };
 
             if (server.DeploymentUser != null && server.DeploymentUser.IsDefined)
             {
@@ -49,14 +49,14 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
 
                 webDeployOptions.DestBaseOptions.Trace += CheckForUntrappedExitCodes;
 
-                if (WaitInterval > 0)
+                if (provider.WaitIntervalInSeconds > 0)
                 {
-                    webDeployOptions.DestBaseOptions.RetryInterval = WaitInterval * 1000;
+                    webDeployOptions.DestBaseOptions.RetryInterval = provider.WaitIntervalInSeconds * 1000;
                 }
 
-                if (RetryAttempts > 0)
+                if (provider.RetryAttempts > 0)
                 {
-                    webDeployOptions.DestBaseOptions.RetryAttempts = RetryAttempts;
+                    webDeployOptions.DestBaseOptions.RetryAttempts = provider.RetryAttempts;
                 }
 
                 DeploymentChangeSummary summery;
@@ -116,10 +116,5 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         {
             return DeploymentManager.CreateObject(DeploymentWellKnownProvider.Package, webDeployOptions.PackagePath, webDeployOptions.SourceBaseOptions);
         }
-
-
-        public int RetryAttempts { get; set; }
-        public int WaitInterval { get; set; }
-
     }
 }

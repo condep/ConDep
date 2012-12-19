@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using System.Linq;
+using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
@@ -27,37 +28,40 @@ namespace ConDep.Dsl.SemanticModel.Sequence
         {
             foreach (var server in _servers)
             {
-                try
+                using(new WebDeployDeployer(server))
                 {
-                    Logger.LogSectionStart(server.Name);
-                    _infrastructureSequence.Execute(server, status);
-                    if (status.HasErrors)
-                        return status;
-
-                    foreach (var element in _sequence)
+                    try
                     {
-                        if(element is IOperateRemote)
+                        Logger.LogSectionStart(server.Name);
+                        _infrastructureSequence.Execute(server, status);
+                        if (status.HasErrors)
+                            return status;
+
+                        foreach (var element in _sequence)
                         {
-                            ((IOperateRemote) element).Execute(server, status);
+                            if (element is IOperateRemote)
+                            {
+                                ((IOperateRemote)element).Execute(server, status);
+                                if (status.HasErrors)
+                                    return status;
+                            }
+                            else if (element is CompositeSequence)
+                            {
+                                ((CompositeSequence)element).Execute(server, status);
+                            }
+                            else
+                            {
+                                throw new NotSupportedException();
+                            }
+
                             if (status.HasErrors)
                                 return status;
                         }
-                        else if(element is CompositeSequence)
-                        {
-                            ((CompositeSequence) element).Execute(server, status);
-                        }
-                        else
-                        {
-                            throw new NotSupportedException();
-                        }
-
-                        if (status.HasErrors)
-                            return status;
                     }
-                }
-                finally
-                {
-                    Logger.LogSectionEnd(server.Name);
+                    finally
+                    {
+                        Logger.LogSectionEnd(server.Name);
+                    }
                 }
             }
             return status;

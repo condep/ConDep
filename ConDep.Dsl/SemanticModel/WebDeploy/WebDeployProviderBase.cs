@@ -9,7 +9,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         public string SourcePath { get; set; }
 		public virtual string DestinationPath { get; set; }
 		public abstract string Name { get; }
-        public int WaitInterval { get; set; }
+        public int WaitIntervalInSeconds { get; set; }
         public int RetryAttempts { get; set; }
 
 	    public abstract DeploymentProviderOptions GetWebDeployDestinationObject();

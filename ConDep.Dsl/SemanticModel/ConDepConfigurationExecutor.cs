@@ -4,10 +4,8 @@ using System.Linq;
 using System.Reflection;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
-using ConDep.Dsl.Operations.Infrastructure;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
-using TinyIoC;
 
 namespace ConDep.Dsl.SemanticModel
 {
@@ -50,9 +48,6 @@ namespace ConDep.Dsl.SemanticModel
             }
 
             IoCBootstrapper.Bootstrap(envConfig);
-            //var sequence = TinyIoCContainer.Current.Resolve<IManageExecutionSequence>();
-            //
-            //var remoteOpBuilder = TinyIoCContainer.Current.Resolve<IOfferRemoteOperations>(); //returns a new sequence for every call
 
             var webDeploy = new WebDeployHandler();
             var sequenceManager = new ExecutionSequenceManager();

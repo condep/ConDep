@@ -50,6 +50,7 @@
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web" />
@@ -63,15 +64,16 @@
     <Compile Include="Builders\IExecuteSequence.cs" />
     <Compile Include="Builders\IOfferRemoteComposition.cs" />
     <Compile Include="Builders\RemoteCompositeBuilder.cs" />
+    <Compile Include="Impersonation\Impersonator.cs" />
     <Compile Include="Operations\Infrastructure\IisInfrastructureIncludeOptions.cs" />
     <Compile Include="Operations\Infrastructure\IisInfrastructureOptions.cs" />
     <Compile Include="Operations\Infrastructure\IisInfrastructureOperation.cs" />
     <Compile Include="Builders\InfrastructureBuilder.cs" />
-    <Compile Include="Builders\IOfferIisAppPool.cs" />
     <Compile Include="Builders\IOfferIisInfrastructure.cs" />
     <Compile Include="Builders\IOfferIisInfrastructureRoleServices.cs" />
     <Compile Include="Builders\IOfferIisWebSite.cs" />
     <Compile Include="Operations\Application\Deployment\Certificate\CertificateOperation.cs" />
+    <Compile Include="Operations\Infrastructure\IIS\WebSite\IisWebSiteOptions.cs" />
     <Compile Include="Operations\LoadBalancer\LoadBalancerSuspendMethod.cs" />
     <Compile Include="Builders\RemoteDeploymentBuilder.cs" />
     <Compile Include="Builders\IOfferRemoteOperations.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="SemanticModel\RemoteWebDeployOperation.cs" />
     <Compile Include="SemanticModel\StatusReporter.cs" />
     <Compile Include="Config\IRequireCustomConfiguration.cs" />
+    <Compile Include="SemanticModel\WebDeploy\WebDeployDeployer.cs" />
     <Compile Include="SemanticModel\WebDeploy\WebDeployHandler.cs" />
     <Compile Include="Logging\ILogForCondep.cs" />
     <Compile Include="IoCBootstrapper.cs" />
@@ -156,9 +159,9 @@
     <Compile Include="Operations\Infrastructure\Certificate\ConDepCertificateDuplicationException.cs" />
     <Compile Include="Operations\Infrastructure\Certificate\CertificateInfrastructureProvider.cs" />
     <Compile Include="Operations\Infrastructure\Certificate\ConDepCertificateNotFoundException.cs" />
-    <Compile Include="Operations\Infrastructure\IIS\ApplicationPool.cs" />
+    <Compile Include="Operations\Infrastructure\IIS\IisAppPoolOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\AppPool\AppPoolInfrastructureOptions.cs" />
-    <Compile Include="Operations\Infrastructure\IIS\AppPool\AppPoolInfrastructureProvider.cs" />
+    <Compile Include="Operations\Infrastructure\IIS\AppPool\IisAppPoolInfrastructureOperation.cs" />
     <Compile Include="Operations\Infrastructure\IIS\AppPool\ConDepUnknowNetFrameworkException.cs" />
     <Compile Include="Operations\Infrastructure\IIS\BindingType.cs" />
     <Compile Include="Operations\Infrastructure\IIS\Binding\HttpBindingInfrastructureProvider.cs" />

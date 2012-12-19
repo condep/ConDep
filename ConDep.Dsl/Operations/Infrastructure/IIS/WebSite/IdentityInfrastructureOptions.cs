@@ -2,22 +2,22 @@
 {
     public class IdentityInfrastructureOptions
     {
-        private readonly ApplicationPool _applicationPool;
+        private readonly IisAppPoolOptions _iisAppPoolOptions;
 
-        public IdentityInfrastructureOptions(ApplicationPool applicationPool)
+        public IdentityInfrastructureOptions(IisAppPoolOptions iisAppPoolOptions)
         {
-            _applicationPool = applicationPool;
+            _iisAppPoolOptions = iisAppPoolOptions;
         }
 
         public IdentityInfrastructureOptions UserName(string userName)
         {
-            _applicationPool.IdentityUsername = userName;
+            _iisAppPoolOptions.IdentityUsername = userName;
             return this;
         }
 
         public IdentityInfrastructureOptions Password(string password)
         {
-            _applicationPool.IdentityPassword = password;
+            _iisAppPoolOptions.IdentityPassword = password;
             return this;
         }
     }

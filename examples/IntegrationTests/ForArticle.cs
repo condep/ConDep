@@ -4,9 +4,7 @@ using ConDep.Dsl.Config;
 
 namespace IntegrationTests
 {
-    public class SomeWebApplication : 
-        ApplicationArtifact, 
-        IDependOnInfrastructure<MyServerInfrastructure>
+    public class ConDepWebApp : ApplicationArtifact, IDependOnInfrastructure<WebServer>
     {
         public override void Configure(IOfferLocalOperations local, ConDepConfig config)
         {
@@ -14,41 +12,15 @@ namespace IntegrationTests
         }
     }
 
-    public class MyServerInfrastructure : InfrastructureArtifact
+    public class WebServer : InfrastructureArtifact
     {
         public override void Configure(IOfferInfrastructure require)
         {
-            //require.IIS(TODO)
-            //    .Include
-            //        .HttpRedirect()
-            //        .DAVPublishing()
-            //        .AspNet()
-            //        .ASP()
-            //        .CGI()
-            //        .ServerSideIncludes()
-            //        .LogLibraries()
-            //        .HttpTracing()
-            //        .CustomLogging()
-            //        .ODBCLogging()
-            //        .BasicAuth()
-            //        .WindowsAuth()
-            //        .DigestAuth()
-            //        .ClientAuth()
-            //        .CertAuth()
-            //        .UrlAuth()
-            //        .IPSecurity()
-            //        .DynamicCompression()
-            //        .ScriptingTools()
-            //        .MgmtService()
-            //    .RemoveIfExist
-            //        .HttpRedirect();
-
-            //require.IISWebSite("WebSiteName", 5)
-            //    .WebApp("MyWebApp");
-
-            //require.IISAppPool("MyAppPool");
-
-            //require.MSMQ();
+            require
+                .IIS()
+                .IISWebSite("ConDepWebSite", 1)
+                .IISAppPool("ConDepAppPool");
+            //.IISWebApp("ConDep");
         }
     }
 }

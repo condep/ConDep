@@ -10,12 +10,12 @@ namespace ConDep.Dsl.Tests
     {
         public WebDeployOptions GetWebDeployOptions(ServerConfig server, EventHandler<DeploymentTraceEventArgs> onTraceMessage)
         {
-            throw new NotSupportedException();
+            return new WebDeployOptions("", null, null, null);
         }
 
         public IReportStatus Sync(IProvide provider, WebDeployOptions webDeployOptions, bool continueOnError, IReportStatus status)
         {
-            throw new NotImplementedException();
+            return status;
         }
     }
 }

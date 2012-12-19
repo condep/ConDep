@@ -4,51 +4,51 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
 {
     public class AppPoolInfrastructureOptions
     {
-        private readonly AppPoolInfrastructureProvider _appPoolProvider;
+        private readonly IisAppPoolInfrastructureOperation _iisAppPoolProvider;
         private IdentityInfrastructureOptions _identityOptions;
 
-        public AppPoolInfrastructureOptions(AppPoolInfrastructureProvider appPoolProvider)
+        public AppPoolInfrastructureOptions(IisAppPoolInfrastructureOperation iisAppPoolProvider)
         {
-            _appPoolProvider = appPoolProvider;
+            _iisAppPoolProvider = iisAppPoolProvider;
         }
 
         public void NetFrameworkVersion(NetFrameworkVersion netFrameworkVersion)
         {
-            _appPoolProvider.AppPool.NetFrameworkVersion = netFrameworkVersion;
+            _iisAppPoolProvider.AppPoolOptions.NetFrameworkVersion = netFrameworkVersion;
         }
 
         public void ManagedPipeline(ManagedPipeline managedPipeline)
         {
-            _appPoolProvider.AppPool.ManagedPipeline = managedPipeline;
+            _iisAppPoolProvider.AppPoolOptions.ManagedPipeline = managedPipeline;
         }
 
         public IdentityInfrastructureOptions Identity
         {
-            get { return _identityOptions ?? (_identityOptions = new IdentityInfrastructureOptions(_appPoolProvider.AppPool)); }
+            get { return _identityOptions ?? (_identityOptions = new IdentityInfrastructureOptions(_iisAppPoolProvider.AppPoolOptions)); }
         }
 
         public bool Enable32Bit
         {
-            get { return _appPoolProvider.AppPool.Enable32Bit.HasValue ? _appPoolProvider.AppPool.Enable32Bit.Value : false; }
-            set { _appPoolProvider.AppPool.Enable32Bit = value; }
+            get { return _iisAppPoolProvider.AppPoolOptions.Enable32Bit.HasValue ? _iisAppPoolProvider.AppPoolOptions.Enable32Bit.Value : false; }
+            set { _iisAppPoolProvider.AppPoolOptions.Enable32Bit = value; }
         }
 
         public int IdleTimeoutInMinutes
         {
-            get { return _appPoolProvider.AppPool.IdleTimeoutInMinutes.HasValue ? _appPoolProvider.AppPool.IdleTimeoutInMinutes.Value : 0; }
-            set { _appPoolProvider.AppPool.IdleTimeoutInMinutes = value; }
+            get { return _iisAppPoolProvider.AppPoolOptions.IdleTimeoutInMinutes.HasValue ? _iisAppPoolProvider.AppPoolOptions.IdleTimeoutInMinutes.Value : 0; }
+            set { _iisAppPoolProvider.AppPoolOptions.IdleTimeoutInMinutes = value; }
         }
 
         public bool LoadUserProfile
         {
-            get { return _appPoolProvider.AppPool.LoadUserProfile.HasValue ? _appPoolProvider.AppPool.LoadUserProfile.Value : false; }
-            set { _appPoolProvider.AppPool.LoadUserProfile = value; }
+            get { return _iisAppPoolProvider.AppPoolOptions.LoadUserProfile.HasValue ? _iisAppPoolProvider.AppPoolOptions.LoadUserProfile.Value : false; }
+            set { _iisAppPoolProvider.AppPoolOptions.LoadUserProfile = value; }
         }
 
         public int RecycleTimeIntervalInMinutes
         {
-            get { return _appPoolProvider.AppPool.RecycleTimeInMinutes.HasValue ? _appPoolProvider.AppPool.RecycleTimeInMinutes.Value : 0; }
-            set { _appPoolProvider.AppPool.RecycleTimeInMinutes = value; }
+            get { return _iisAppPoolProvider.AppPoolOptions.RecycleTimeInMinutes.HasValue ? _iisAppPoolProvider.AppPoolOptions.RecycleTimeInMinutes.Value : 0; }
+            set { _iisAppPoolProvider.AppPoolOptions.RecycleTimeInMinutes = value; }
         }
     }
 }

@@ -7,19 +7,25 @@ using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 {
-    public class WebSiteInfrastructureProvider : RemoteCompositeOperation
+    public class WebSiteInfrastructureProvider : RemoteCompositeOperation, IRequireCustomConfiguration
     {
         private readonly string _webSiteName;
         private readonly int _id;
-        private readonly string _physicalDir;
+        private readonly IisWebSiteOptions _options;
         private readonly IList<IisBinding> _bindings = new List<IisBinding>();
 
-        public WebSiteInfrastructureProvider(string webSiteName, int id, string physicalDir)
+        public WebSiteInfrastructureProvider(string webSiteName, int id)
         {
             _webSiteName = webSiteName;
             _id = id;
-            _physicalDir = physicalDir;
+            _options = new IisWebSiteOptions();
+        }
 
+        public WebSiteInfrastructureProvider(string webSiteName, int id, IisWebSiteOptions options)
+        {
+            _webSiteName = webSiteName;
+            _id = id;
+            _options = options;
         }
 
         public string WebSiteName { get { return _webSiteName; } }
@@ -35,17 +41,19 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 
         public override void Configure(IOfferRemoteComposition server)
         {
-            throw new NotImplementedException();
             //var webSiteConfig = server.WebSites.SingleOrDefault(x => x.Name == WebSiteName);
 
-            //string psCommand = GetRemoveExistingWebSiteCommand(_id);
+            string psCommand = GetRemoveExistingWebSiteCommand(_id);
             ////psCommand += GetCreateAppPoolCommand();
-            //psCommand += GetCreateWebSiteDirCommand(_physicalDir);
-            //psCommand += GetCreateWebSiteCommand(_webSiteName, AppPoolName, webSiteConfig.Bindings);
+            psCommand += GetCreateWebSiteDirCommand(PhysicalDirectory);
+            psCommand += GetCreateWebSiteCommand(_webSiteName, AppPoolName);
             //psCommand += GetCreateBindings(_webSiteName, Bindings, webSiteConfig.Bindings);
             //psCommand += GetCertificateCommand();
-            //Configure<ProvideForInfrastructure>(server, po => po.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20)));
+
+            server.ExecuteRemote.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20));
         }
+
+        protected string PhysicalDirectory { get; set; }
 
         private string GetCreateWebSiteDirCommand(string webSiteDir)
         {
@@ -119,26 +127,25 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 
         }
 
-        private string GetCreateWebSiteCommand(string webSiteName, string appPoolName, IList<WebSiteBindingConfig> serverWebSiteBindings)
+        private string GetCreateWebSiteCommand(string webSiteName, string appPoolName)
         {
-
             string bindingString = "";
-            if(Bindings.Count > 0)
-            {
-                var binding = Bindings[0];
-                bindingString = GetFirstWebSiteBinding(binding.Port.ToString(), binding.BindingType, binding.Ip, binding.HostHeader);
-            } 
-            else if(serverWebSiteBindings != null && serverWebSiteBindings.Count() > 0)
-            {
-                var binding = serverWebSiteBindings[0];
-                var bindingType = binding.BindingType.ToLower() == "https" ? BindingType.https : BindingType.http;
-                bindingString = GetFirstWebSiteBinding(binding.Port, bindingType, binding.Ip, binding.HostHeader);
-            }
+            //if(Bindings.Count > 0)
+            //{
+            //    var binding = Bindings[0];
+            //    bindingString = GetFirstWebSiteBinding(binding.Port.ToString(), binding.BindingType, binding.Ip, binding.HostHeader);
+            //} 
+            //else if(serverWebSiteBindings != null && serverWebSiteBindings.Count() > 0)
+            //{
+            //    var binding = serverWebSiteBindings[0];
+            //    var bindingType = binding.BindingType.ToLower() == "https" ? BindingType.https : BindingType.http;
+            //    bindingString = GetFirstWebSiteBinding(binding.Port, bindingType, binding.Ip, binding.HostHeader);
+            //}
 
             var appPool = !string.IsNullOrWhiteSpace(appPoolName) ? string.Format(" -ApplicationPool \"{0}\" ", appPoolName) : "";
-            var physicalPath = string.IsNullOrWhiteSpace(_physicalDir) ? "" : string.Format("-PhysicalPath \"{0}\" ", _physicalDir);
-
-            return string.Format("New-Website -Name \"{0}\" -Id {1} {2}{3}{4}-force; ", webSiteName, _id, physicalPath, bindingString, appPool);
+            var physicalPath = string.IsNullOrWhiteSpace(PhysicalDirectory) ? "" : string.Format("-PhysicalPath \"{0}\" ", PhysicalDirectory);
+            var port = _options.PortNumber > 0 ? "-Port " + _options.PortNumber + " " : "";
+            return string.Format("$newWebSite = New-Website -Name \"{0}\" -Id {1} {2}{3}{4}{5}-force; if($newWebSite.State -eq 'Stopped') {{ throw 'Failed to start web site.' }} else {{ $newWebSite; }} ", webSiteName, _id, physicalPath, bindingString, appPool, port);
         }
 
         private string GetFirstWebSiteBinding(string port, BindingType bindingType, string ip, string hostHeader)

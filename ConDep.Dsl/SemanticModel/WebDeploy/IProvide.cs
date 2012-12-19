@@ -7,7 +7,8 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
     public interface IProvide
     {
         bool IsValid(Notification notification);
-		int WaitInterval { get; set; }
+		int WaitIntervalInSeconds { get; set; }
+        int RetryAttempts { get; set; }
         DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions);
         DeploymentProviderOptions GetWebDeployDestinationObject();
         IList<DeploymentRule> GetReplaceRules();

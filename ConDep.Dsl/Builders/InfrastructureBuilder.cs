@@ -1,5 +1,8 @@
 using System;
 using ConDep.Dsl.Operations.Infrastructure;
+using ConDep.Dsl.Operations.Infrastructure.IIS;
+using ConDep.Dsl.Operations.Infrastructure.IIS.AppPool;
+using ConDep.Dsl.Operations.Infrastructure.IIS.WebSite;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 
@@ -27,8 +30,6 @@ namespace ConDep.Dsl.Builders
             var iisOperation = new IisInfrastructureOperation();
             options(new IisInfrastructureOptions(iisOperation));
             iisOperation.Configure(new RemoteCompositeBuilder(_infrastructureSequence.NewCompositeSequence("IIS"), _webDeploy));
-            //_infrastructureSequence.Add(iisOperation);
-            //iisOperation.Configure(_remote);
             return this;
         }
 
@@ -36,8 +37,6 @@ namespace ConDep.Dsl.Builders
         {
             var iisOperation = new IisInfrastructureOperation();
             iisOperation.Configure(new RemoteCompositeBuilder(_infrastructureSequence.NewCompositeSequence("IIS"), _webDeploy));
-            //_infrastructureSequence.Add(iisOperation);
-            //iisOperation.Configure(_remote);
             return this;
         }
 
@@ -48,12 +47,36 @@ namespace ConDep.Dsl.Builders
 
         public IOfferInfrastructure IISWebSite(string name, int id)
         {
-            throw new NotImplementedException();
+            var webSiteOperation = new WebSiteInfrastructureProvider(name, id);
+            webSiteOperation.Configure(new RemoteCompositeBuilder(_infrastructureSequence.NewCompositeSequence("IIS Web Site"), _webDeploy));
+            return this;
         }
 
-        public IOfferIisAppPool IISAppPool(string name)
+        public IOfferInfrastructure IISWebSite(string name, int id, Action<IOfferIisWebSiteOptions> options)
         {
-            throw new NotImplementedException();
+            var webSiteOptions = new IisWebSiteOptions();
+            options(webSiteOptions);
+            var webSiteOperation = new WebSiteInfrastructureProvider(name, id, webSiteOptions);
+            webSiteOperation.Configure(new RemoteCompositeBuilder(_infrastructureSequence.NewCompositeSequence("IIS Web Site"), _webDeploy));
+            return this;
+        }
+
+        public IOfferInfrastructure IISAppPool(string name)
+        {
+            var op = new IisAppPoolInfrastructureOperation(name);
+            op.Configure(new RemoteCompositeBuilder(_infrastructureSequence.NewCompositeSequence("IIS App Pool"), _webDeploy));
+            return this;
+        }
+
+        public IOfferInfrastructure IISAppPool(string name, Action<IisAppPoolOptions> options)
+        {
+            var appPoolOptions = new IisAppPoolOptions();
+            options(appPoolOptions);
+
+            var appPoolOperation = new IisAppPoolInfrastructureOperation(name, appPoolOptions);
+
+            appPoolOperation.Configure(new RemoteCompositeBuilder(_infrastructureSequence.NewCompositeSequence("IIS App Pool"), _webDeploy));
+            return this;
         }
     }
 }
