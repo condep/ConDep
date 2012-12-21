@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using log4net;
 using log4net.Core;
@@ -23,12 +24,22 @@ namespace ConDep.Dsl.Logging
 
         public override void Warn(string message, params object[] formatArgs)
         {
-            TeamCityMessage(message, "", TeamCityMessageStatus.WARNING, formatArgs);
+            TeamCityMessage(message, null, TeamCityMessageStatus.WARNING, formatArgs);
         }
 
-        public override void Error(string message, string errorDetails, params object[] formatArgs)
+        public override void Warn(string message, Exception ex, params object[] formatArgs)
         {
-            TeamCityMessage(message, errorDetails, TeamCityMessageStatus.ERROR, formatArgs);
+            TeamCityMessage(message, null, TeamCityMessageStatus.WARNING, formatArgs);
+        }
+
+        public override void Error(string message, params object[] formatArgs)
+        {
+            TeamCityMessage(message, null, TeamCityMessageStatus.ERROR, formatArgs);
+        }
+
+        public override void Error(string message, Exception ex, params object[] formatArgs)
+        {
+            TeamCityMessage(message, ex, TeamCityMessageStatus.ERROR, formatArgs);
         }
 
         public override void LogSectionStart(string name)
@@ -42,7 +53,7 @@ namespace ConDep.Dsl.Logging
             TeamCityBlockEnd(name);
         }
 
-        private void TeamCityMessage(string message, string errorDetails, TeamCityMessageStatus status, params object[] formatArgs)
+        private void TeamCityMessage(string message, Exception ex, TeamCityMessageStatus status, params object[] formatArgs)
         {
             var formattedMessage = (formatArgs != null && formatArgs.Length > 0) ? string.Format(message, formatArgs) : message;
             var sb = new StringBuilder(formattedMessage);
@@ -55,6 +66,12 @@ namespace ConDep.Dsl.Logging
                 .Replace("\u2029", "|p")
                 .Replace("[", "|[")
                 .Replace("]", "|]");
+
+            var errorDetails = "";
+            if(ex != null)
+            {
+                errorDetails = string.Format("Message: {0}\n\nStack Trace:\n{1}", ex.Message, ex.StackTrace);
+            }
 
             var tcMessage = string.Format("##teamcity[message text='{0}' errorDetails='{1}' status='{2}']", sb, errorDetails, status);
             _serviceMessageLogger.Logger.Log(typeof(Logger), Level.All, tcMessage, null);

@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using log4net;
 using log4net.Core;
@@ -18,9 +19,19 @@ namespace ConDep.Dsl.Logging
             Log(message, TraceLevel.Warning, formatArgs);
         }
 
+        public virtual void Warn(string message, Exception ex, params object[] formatArgs)
+        {
+            Log(message, ex, TraceLevel.Warning, formatArgs);
+        }
+
         public virtual void Verbose(string message, params object[] formatArgs)
         {
             Log(message, TraceLevel.Verbose, formatArgs);
+        }
+
+        public virtual void Verbose(string message, Exception ex, params object[] formatArgs)
+        {
+            Log(message, ex, TraceLevel.Verbose, formatArgs);
         }
 
         public virtual void Info(string message, params object[] formatArgs)
@@ -28,15 +39,19 @@ namespace ConDep.Dsl.Logging
             Log(message, TraceLevel.Info, formatArgs);
         }
 
-        public void Error(string message, params object[] formatArgs)
+        public virtual void Info(string message, Exception ex, params object[] formatArgs)
+        {
+            Log(message, ex, TraceLevel.Info, formatArgs);
+        }
+
+        public virtual void Error(string message, params object[] formatArgs)
         {
             Log(message, TraceLevel.Error, formatArgs);
         }
 
-        public virtual void Error(string message, string errorDetails, params object[] formatArgs)
+        public virtual void Error(string message, Exception ex, params object[] formatArgs)
         {
-            //Todo: handle errorDetails
-            Log(message, TraceLevel.Error, formatArgs);
+            Log(message, ex, TraceLevel.Error, formatArgs);
         }
 
         public abstract void LogSectionStart(string name);
@@ -80,9 +95,14 @@ namespace ConDep.Dsl.Logging
 
         public virtual void Log(string message, TraceLevel traceLevel, params object[] formatArgs)
         {
+            Log(message, null, traceLevel, formatArgs);
+        }
+
+        public virtual void Log(string message, Exception ex, TraceLevel traceLevel, params object[] formatArgs)
+        {
             var level = GetLog4NetLevel(traceLevel);
             var formattedMessage = (formatArgs != null && formatArgs.Length > 0) ? string.Format(message, formatArgs) : message;
-            _log4netLog.Logger.Log(typeof(Logger), level, formattedMessage, null);
+            _log4netLog.Logger.Log(typeof(Logger), level, formattedMessage, ex);
         }
 
         private static Level GetLog4NetLevel(TraceLevel traceLevel)

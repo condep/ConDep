@@ -20,7 +20,17 @@ namespace ConDep.Dsl.Tests
             throw new NotImplementedException();
         }
 
+        public override void Warn(string message, Exception ex, object[] formatArgs)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Verbose(string message, object[] formatArgs)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Verbose(string message, Exception ex, object[] formatArgs)
         {
             throw new NotImplementedException();
         }
@@ -30,7 +40,17 @@ namespace ConDep.Dsl.Tests
             throw new NotImplementedException();
         }
 
-        public override void Error(string message, string errorDetails, object[] formatArgs)
+        public override void Info(string message, Exception ex, object[] formatArgs)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Error(string message, object[] formatArgs)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Error(string message, Exception ex, object[] formatArgs)
         {
             throw new NotImplementedException();
         }
