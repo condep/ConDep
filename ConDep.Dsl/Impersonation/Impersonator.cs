@@ -15,11 +15,11 @@ namespace ConDep.Dsl.Impersonation
         private WindowsImpersonationContext _impersonationContext;
         private IntPtr _token;
 
-        public Impersonator(string username, string password, string domain)
+        public Impersonator(string username, string password)
         {
-            _username = username;
+            _username = GetUserName(username);
+            _domain = GetDomain(username);
             _password = password;
-            _domain = domain;
 
             try
             {
@@ -30,6 +30,34 @@ namespace ConDep.Dsl.Impersonation
                 Dispose();
                 throw;
             }
+        }
+
+        public static string GetUserName(string username)
+        {
+            var split = username.Split('\\');
+            if (split.Length == 1)
+            {
+                return username;
+            }
+            if (split.Length == 2)
+            {
+                return split[1];
+            }
+            throw new NotSupportedException("Username format not supported. More than one '\\' found in username string.");
+        }
+
+        public static string GetDomain(string username)
+        {
+            var split = username.Split('\\');
+            if (split.Length == 1)
+            {
+                return "";
+            }
+            if (split.Length == 2)
+            {
+                return split[0];
+            }
+            throw new NotSupportedException("Username format not supported. More than one '\\' found in username string.");
         }
 
         private void Initialize()

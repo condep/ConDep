@@ -24,8 +24,6 @@ namespace ConDep.Dsl.Operations.Application.Local.TransformConfig
 			var transformFilePath = Path.Combine(_configDirPath, _transformName);
             var backupPath = "";
 
-			ValidatePaths(configFilePath, transformFilePath);
-
             if(ConDepConfigBackupExist(_configDirPath, _configName))
             {
                 Logger.Info("Using [{0}] as configuration file to transform", _configDirPath + CONDEP_CONFIG_EXTENSION);
@@ -52,19 +50,6 @@ namespace ConDep.Dsl.Operations.Application.Local.TransformConfig
 			return status;
 		}
 
-	    private static void ValidatePaths(string configFilePath, string transformFilePath)
-	    {
-	        if (!File.Exists(configFilePath))
-	        {
-	            throw new FileNotFoundException(string.Format("File [{0}] does not exist.", configFilePath));
-	        }
-
-	        if (!File.Exists(transformFilePath))
-	        {
-	            throw new FileNotFoundException(string.Format("File [{0}] does not exist.", transformFilePath));
-	        }
-	    }
-
 	    private bool ConDepConfigBackupExist(string dir, string name)
 	    {
 	        return File.Exists(Path.Combine(dir, name + CONDEP_CONFIG_EXTENSION));
@@ -78,7 +63,10 @@ namespace ConDep.Dsl.Operations.Application.Local.TransformConfig
 
 	    public override bool IsValid(Notification notification)
 		{
-			return true;
+			return Directory.Exists(_configDirPath) 
+                && !string.IsNullOrWhiteSpace(_configName) 
+                && File.Exists(Path.Combine(_configDirPath, _configName))
+                && File.Exists(Path.Combine(_configDirPath, _transformName));
 		}
 	}
 }

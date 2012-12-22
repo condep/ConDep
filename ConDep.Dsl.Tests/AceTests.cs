@@ -9,7 +9,8 @@ namespace ConDep.Dsl.Tests
     public class AceTests
     {
         [Test]
-         public void Test()
+        [Ignore]
+        public void Test()
         {
             var loadBalancer = new AceLoadBalancer_Anm_v41();
             var status = new StatusReporter();

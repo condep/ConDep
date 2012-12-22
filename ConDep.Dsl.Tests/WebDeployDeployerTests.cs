@@ -8,6 +8,7 @@ namespace ConDep.Dsl.Tests
     public class WebDeployDeployerTests
     {
         [Test]
+        [Ignore]
         public void Test()
         {
             var server = new ServerConfig() {Name = "jat-web03"};
@@ -16,6 +17,6 @@ namespace ConDep.Dsl.Tests
                 
             }
         }
-         
+
     }
 }

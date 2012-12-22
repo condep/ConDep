@@ -3,7 +3,7 @@ using ConDep.Dsl.Logging;
 
 namespace ConDep.Dsl.Operations.Application.Local.PreCompile
 {
-    internal class PreCompileCallback : ClientBuildManagerCallback
+    public class PreCompileCallback : ClientBuildManagerCallback
 	{
 		public override void ReportCompilerError(System.CodeDom.Compiler.CompilerError error)
 		{

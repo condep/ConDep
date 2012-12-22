@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Management;
-using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Logging;
 using Microsoft.Win32;
 
 namespace ConDep.Dsl.SemanticModel.WebDeploy
@@ -18,7 +18,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         private bool _remoteNeedsCleanup;
         private string _remoteServerGuid;
         private ManagementObject _processObject;
-        private bool _disposed = false;
+        private bool _disposed;
         private string _webDeployInstallPath;
 
         public WebDeployDeployer(ServerConfig server)
@@ -39,7 +39,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         private void Init()
         {
             CreateRemoteDirectories();
-            InstallWebDeployFilesOnServer();
+            InstallWebDeployFilesOnRemoteServer();
             StartWebDeployServiceOnRemoteServer();
         }
 
@@ -58,7 +58,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             }
         }
 
-        private void InstallWebDeployFilesOnServer()
+        private void InstallWebDeployFilesOnRemoteServer()
         {
             var config = @"
 <configuration>
@@ -88,33 +88,6 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             }
         }
 
-        private static ManagementScope GetManagementScope(ServerConfig server)
-        {
-            var options = new ConnectionOptions
-            {
-                Impersonation = ImpersonationLevel.Impersonate,
-                EnablePrivileges = true
-            };
-            if ((server.DeploymentUser != null))
-            {
-                options.Username = server.DeploymentUser.UserName;
-                options.Password = server.DeploymentUser.Password;
-            }
-            var scope = new ManagementScope(string.Format(CultureInfo.InvariantCulture, @"\\{0}\ROOT\CIMV2", server.Name), options);
-            //try
-            //{
-                scope.Connect();
-            //}
-            //catch (COMException exception)
-            //{
-                //if (COMHelper.IsExceptionSameAsError(exception, (ErrorCode)(-2147023174)))
-                //{
-                //throw new DeploymentFatalException(exception, "CannotConnectToRemoteWMI", new object[] { computerNameWithoutPort });
-                //}
-            //}
-            return scope;
-        }
-
         private void StartWebDeployServiceOnRemoteServer()
         {
             var options = new ObjectGetOptions();
@@ -137,7 +110,6 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
                         remoteProcessId = management["ProcessId"].ToString();
                     }
 
-                    //string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MSDEPLOYBREAK"));
                     var query = new ObjectQuery("SELECT * FROM Win32_Process WHERE ProcessId = " + remoteProcessId);
                     using (var searcher = new ManagementObjectSearcher(GetManagementScope(_server), query))
                     {
@@ -152,6 +124,29 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
 
                 }
             }
+        }
+
+        private static ManagementScope GetManagementScope(ServerConfig server)
+        {
+            var options = GetWmiConnectionOptions(server);
+            var scope = new ManagementScope(string.Format(CultureInfo.InvariantCulture, @"\\{0}\ROOT\CIMV2", server.Name), options);
+            scope.Connect();
+            return scope;
+        }
+
+        private static ConnectionOptions GetWmiConnectionOptions(ServerConfig server)
+        {
+            var options = new ConnectionOptions
+                              {
+                                  Impersonation = ImpersonationLevel.Impersonate,
+                                  EnablePrivileges = true
+                              };
+            if ((server.DeploymentUser != null))
+            {
+                options.Username = server.DeploymentUser.UserName;
+                options.Password = server.DeploymentUser.Password;
+            }
+            return options;
         }
 
         protected string AgentUrl { get; set; }
@@ -180,42 +175,25 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             }
         }
 
-        private bool Is64Bit
-        {
-            get { return IntPtr.Size == 8; }
-        }
-
-        private bool Is32Bit
-        {
-            get { return IntPtr.Size == 4; }
-        }
-
-        private bool Is32BitWOW
-        {
-            get { return Is32Bit && !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")); }
-        }
-
         private string WebDeployInstallPath
         {
             get
             {
                 if(_webDeployInstallPath == null)
                 {
-                    var installPath = "";
-                    var installPathx64 = "";
-
                     using (RegistryKey key = Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\IIS Extensions\\MSDeploy\\3"))
                     {
                         var installPathValue = key.GetValue("InstallPath");
-                        installPath = installPathValue == null ? "" : installPathValue.ToString();
-
                         var installPathx64Value = key.GetValue("InstallPath_x64");
-                        installPathx64 = installPathx64Value == null ? "" : installPathx64Value.ToString();
+
+                        if(installPathValue == null && installPathx64Value == null)
+                        {
+                            throw new NotSupportedException("Cannot find WebDeploy installation.");
+                        }
+                        _webDeployInstallPath = installPathValue != null
+                                                    ? installPathValue.ToString()
+                                                    : installPathx64Value.ToString();
                     }
-
-
-                    string str = Is64Bit ? (!Is32BitWOW ? installPath : installPathx64) : installPath;
-                    _webDeployInstallPath = string.IsNullOrWhiteSpace(str) ? string.Empty : str;
                 }
                 return _webDeployInstallPath;
             }
@@ -228,22 +206,10 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
 
         private static string GetRemoteTemp(ServerConfig server)
         {
-            var options = new ConnectionOptions
-            {
-                Impersonation = ImpersonationLevel.Impersonate,
-                EnablePrivileges = true
-            };
-            if (server.DeploymentUser != null)
-            {
-                options.Username = server.DeploymentUser.UserName;
-                options.Password = server.DeploymentUser.Password;
-            }
-
             Exception innerException = null;
             try
             {
-                var manScope = new ManagementScope(string.Format("\\\\{0}\\root\\CIMV2", server.Name), options);
-                manScope.Connect();
+                var manScope = GetManagementScope(server);
 
                 using (var managementClass = new ManagementClass(manScope, new ManagementPath("Win32_OperatingSystem"), new ObjectGetOptions()))
                 {
@@ -262,9 +228,9 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             }
             catch (Exception exception2)
             {
-                innerException = exception2;
+                Logger.Warn(string.Format("Could not find system temp folder (%temp%) on remote server [{0}]. Please check that server exist and provided user have admin rights on server.", server.Name), exception2);
             }
-            throw new DirectoryNotFoundException(string.Format("Could not find system temp folder (%temp%) on remote server [{0}]", server.Name), innerException);
+            throw new DirectoryNotFoundException(string.Format("Could not find system temp folder (%temp%) on remote server [{0}]. Please check that server exist and provided user have admin rights on server.", server.Name), innerException);
         }
 
         public static string ConvertToRemotePath(string localPath, string computerName)
@@ -305,15 +271,15 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
 
         private void RemoveWebDeployServiceFromServer()
         {
-            if (this._processObject != null)
+            if (_processObject != null)
             {
                 try
                 {
                     _processObject.InvokeMethod("Terminate", new object[] {0});
                 }
-                catch (ManagementException exception)
+                catch
                 {
-                    //this.BaseContext.RaiseEvent(new DeploymentAgentTraceEvent(TraceLevel.Warning, Resources.DeleteElementErrorMessage, new object[] { obj2, "remote process", exception }));
+                    Logger.Warn("Unable to terminate WebDeploy on remote server [{0}].", _server);
                 }
                 finally
                 {
@@ -324,11 +290,9 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             }
             if (_remoteNeedsCleanup)
             {
-                //this.BaseContext.RaiseEvent(new DeploymentAgentTraceEvent(Resources.DeletingTempAgentDirectory, new object[] { this.RemoteDestShare }));
-                int retryAttempt = 0;
+                var retryAttempt = 0;
                 do
                 {
-                    Exception exception2 = new IOException();
                     try
                     {
                         if (Directory.Exists(RemotePath))
@@ -337,26 +301,22 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
                         }
                         _remoteNeedsCleanup = false;
                     }
-                    catch (UnauthorizedAccessException exception3)
+                    catch (UnauthorizedAccessException accessDeniedEx)
                     {
-                        exception2 = exception3;
-                        //Tracer.TraceError(DeploymentTraceSource.Agent, exception3.ToString());
+                        Logger.Warn(string.Format("Access denied when deleting WebDeploy files on remote server [{0}].", _server), accessDeniedEx);
                     }
-                    catch (IOException exception4)
+                    catch (IOException ioEx)
                     {
-                        exception2 = exception4;
-                        //Tracer.TraceError(DeploymentTraceSource.Agent, exception4.ToString());
+                        Logger.Warn(string.Format("Unable to delete files on remote server [{0}]", _server), ioEx);
                     }
                     if (_remoteNeedsCleanup)
                     {
                         if (++retryAttempt > RetryAttempts)
                         {
-                            //this.BaseContext.RaiseEvent(new DeploymentAgentTraceEvent(TraceLevel.Warning, Resources.DeleteElementErrorMessage, new object[] { this.RemoteDestShare, Resources.DirPathProviderDescription, exception2 }));
                             _remoteNeedsCleanup = false;
                         }
                         else
                         {
-                            //this.BaseContext.RaiseEvent(new DeploymentRetryEventArgs(exception2.Message, DeploymentOperationKind.Delete, "dirPath", this.RemoteDestShare, retryAttempt, this.BaseContext.RetryAttempts));
                             Thread.Sleep(RetryInterval);
                         }
                     }

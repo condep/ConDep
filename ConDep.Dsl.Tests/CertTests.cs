@@ -6,6 +6,7 @@ namespace ConDep.Dsl.Tests
     public class CertTests
     {
         [Test]
+        [Ignore]
         public void Test()
         {
                         

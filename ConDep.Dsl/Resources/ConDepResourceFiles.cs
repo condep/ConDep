@@ -4,9 +4,9 @@ using System.Reflection;
 
 namespace ConDep.Dsl.Resources
 {
-    public static class ConDepResourceFiles
+    public class ConDepResourceFiles
     {
-        public static string GetFilePath(string resourceNamespace, string resourceName)
+        public static string GetFilePath(Assembly assembly, string resourceNamespace, string resourceName)
         {
             //Todo: not thread safe
             var tempFolder = Path.GetTempPath();
@@ -14,7 +14,7 @@ namespace ConDep.Dsl.Resources
 
             try
             {
-                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceNamespace + "." + resourceName))
+                using (var stream = assembly.GetManifestResourceStream(resourceNamespace + "." + resourceName))
                 {
                     using (var writeStream = File.Create(filePath))
                     {
@@ -23,10 +23,15 @@ namespace ConDep.Dsl.Resources
                 }
                 return filePath;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new ConDepResourceNotFoundException(string.Format("Resource [{0}]", resourceName), ex);
             }
+        }
+
+        public static string GetFilePathInternal(string resourceNamespace, string resourceName)
+        {
+            return GetFilePath(Assembly.GetExecutingAssembly(), resourceNamespace, resourceName);
         }
     }
 }
