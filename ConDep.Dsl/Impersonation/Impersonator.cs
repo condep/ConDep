@@ -17,6 +17,9 @@ namespace ConDep.Dsl.Impersonation
 
         public Impersonator(string username, string password)
         {
+            if (username == null || password == null)
+                return;
+
             _username = GetUserName(username);
             _domain = GetDomain(username);
             _password = password;
@@ -100,8 +103,11 @@ namespace ConDep.Dsl.Impersonation
                 // and unmanaged resources. 
                 if (disposing)
                 {
-                    _impersonationContext.Undo();
-                    _impersonationContext.Dispose();
+                    if(_impersonationContext != null)
+                    {
+                        _impersonationContext.Undo();
+                        _impersonationContext.Dispose();
+                    }
 
                     if (_tokenDuplicate != IntPtr.Zero)
                     {
@@ -120,7 +126,6 @@ namespace ConDep.Dsl.Impersonation
                             ////throw new Win32Exception();
                         }
                     }
-
                 }
 
                 _disposed = true;
