@@ -144,7 +144,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 
             var appPool = !string.IsNullOrWhiteSpace(appPoolName) ? string.Format(" -ApplicationPool \"{0}\" ", appPoolName) : "";
             var physicalPath = string.IsNullOrWhiteSpace(PhysicalDirectory) ? "" : string.Format("-PhysicalPath \"{0}\" ", PhysicalDirectory);
-            var port = _options.PortNumber > 0 ? "-Port " + _options.PortNumber + " " : "";
+            var port = "";// _options.PortNumber > 0 ? "-Port " + _options.PortNumber + " " : "";
             return string.Format("$newWebSite = New-Website -Name \"{0}\" -Id {1} {2}{3}{4}{5}-force; if($newWebSite.State -eq 'Stopped') {{ throw 'Failed to start web site.' }} else {{ $newWebSite; }} ", webSiteName, _id, physicalPath, bindingString, appPool, port);
         }
 

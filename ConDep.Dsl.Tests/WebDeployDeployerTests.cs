@@ -11,7 +11,9 @@ namespace ConDep.Dsl.Tests
         [Ignore]
         public void Test()
         {
-            var server = new ServerConfig() {Name = "jat-web03"};
+            var user = new DeploymentUserConfig();
+
+            var server = new ServerConfig() {Name = "jat-web03", DeploymentUser = user };
             using(new WebDeployDeployer(server))
             {
                 
