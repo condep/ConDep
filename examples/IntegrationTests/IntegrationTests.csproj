@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ForArticle.cs" />
     <Compile Include="MyWebApplication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TmpExtensions.cs" />
