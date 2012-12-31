@@ -98,7 +98,6 @@
     <Compile Include="UnitTestLogger.cs" />
     <Compile Include="WebDeployDeployerTests.cs" />
     <Compile Include="WebDeployHandlerMock.cs" />
-    <Compile Include="WebDeployOptionsTestFixture.cs" />
     <Compile Include="SimpleTestFixtureBase.cs" />
   </ItemGroup>
   <ItemGroup>

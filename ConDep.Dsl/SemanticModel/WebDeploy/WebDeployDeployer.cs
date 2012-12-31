@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Management;
+using System.Net;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
+using Microsoft.Web.Deployment;
 using Microsoft.Win32;
 
 namespace ConDep.Dsl.SemanticModel.WebDeploy
@@ -38,9 +40,14 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
 
         private void Init()
         {
-            CreateRemoteDirectories();
-            InstallWebDeployFilesOnRemoteServer();
-            StartWebDeployServiceOnRemoteServer();
+            using (new Impersonation.Impersonator(_server.DeploymentUser.UserName, _server.DeploymentUser.Password))
+            {
+
+                CreateRemoteDirectories();
+                InstallWebDeployFilesOnRemoteServer();
+                StartWebDeployServiceOnRemoteServer();
+                MakeSureWebDeployEndpointIsRunning();
+            }
         }
 
         private void CreateRemoteDirectories()
@@ -51,7 +58,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             var remoteRootDir = Directory.CreateDirectory(RemotePath, directorySecurity);
             _remoteNeedsCleanup = true;
 
-            var subDirs = new [] { "x86", "x64", "Extensibility" };
+            var subDirs = new[] { "x86", "x64", "Extensibility" };
             foreach (var str in subDirs)
             {
                 remoteRootDir.CreateSubdirectory(str);
@@ -126,6 +133,115 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             }
         }
 
+        private void MakeSureWebDeployEndpointIsRunning()
+        {
+            try
+            {
+                var num = 0;
+                while (true)
+                {
+                    try
+                    {
+                        using (GetHttpResponse()) { }
+                        break;
+                    }
+                    catch
+                    {
+                        if (++num <= RetryAttempts)
+                        {
+                            Thread.Sleep(RetryInterval*1000);
+                        }
+                        else
+                            throw;
+                    }
+                }
+            }
+            catch
+            {
+                Dispose();
+                throw;
+            }
+        }
+
+        private static string GetResponseHeader(HttpWebResponse response, string headerName)
+        {
+            return response == null ? string.Empty : response.Headers[headerName];
+        }
+
+        private HttpWebRequest CreateHttpRequest()
+        {
+            HttpWebRequest request;
+            try
+            {
+                request = (HttpWebRequest)WebRequest.Create(_server.WebDeployAgentUrl);
+            }
+            catch (UriFormatException ex)
+            {
+                throw new DeploymentException(ex, "BadURI", new object[] { _server.WebDeployAgentUrl });
+            }
+            request.Proxy = null;
+            request.Credentials = new NetworkCredential(_server.DeploymentUser.UserNameWithoutDomain, _server.DeploymentUser.Password, _server.DeploymentUser.Domain);
+            request.UnsafeAuthenticatedConnectionSharing = true;
+            request.PreAuthenticate = true;
+            request.AllowWriteStreamBuffering = false;
+            request.Method = "HEAD";
+            request.Headers.Add("MSDeploy.VersionMin", "7.1.600.0");
+            request.Headers.Add("MSDeploy.VersionMax", "9.0.1631.0");
+            string name1 = CultureInfo.CurrentUICulture.Name;
+            string name2 = CultureInfo.CurrentCulture.Name;
+            request.Headers.Add("MSDeploy.RequestUICulture", name1);
+            request.Headers.Add("MSDeploy.RequestCulture", name2);
+            request.Headers.Add("Version", "9.0.0.0");
+            return request;
+        }
+
+        private HttpWebResponse GetHttpResponse()
+        {
+            var request = CreateHttpRequest();
+
+            HttpWebResponse response;
+            try
+            {
+                response = (HttpWebResponse)request.GetResponse();
+            }
+            catch (WebException ex)
+            {
+                if (ex.Response == null)
+                    throw;
+
+                using (WebResponse response2 = ex.Response)
+                {
+                    var response3 = response2 as HttpWebResponse;
+                    string responseHeader1 = GetResponseHeader(response3, "MSDeploy.ExceptionMessage");
+                    if (!string.IsNullOrEmpty(responseHeader1))
+                    {
+                        throw new DeploymentException(new DeploymentException(Encoding.UTF8.GetString(Convert.FromBase64String(responseHeader1))), "RemoteDeploymentException", new object[1] { (object) DateTime.Now });
+                    }
+                    else
+                    {
+                        var responseHeader2 = GetResponseHeader(response3, "MSDeploy.Exception");
+                        if (string.IsNullOrEmpty(responseHeader2))
+                            throw;
+
+                        DateTime dateTime = DateTime.Now;
+                        string responseHeader3 = GetResponseHeader(response3, "MSDeploy.ExceptionTimeStamp");
+                        long result;
+                        if (!string.IsNullOrEmpty(responseHeader3) && long.TryParse(responseHeader3, NumberStyles.None, (IFormatProvider)CultureInfo.InvariantCulture, out result))
+                            dateTime = DateTime.FromBinary(result).ToLocalTime();
+                        throw;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DeploymentException(ex, "AgentRequestFailure", new object[1] { (object) request.Address });
+            }
+            if (string.Equals(GetResponseHeader(response, "MSDeploy.Response"), "v1", StringComparison.Ordinal))
+                return response;
+            response.Close();
+            throw new DeploymentDetailedException(DeploymentErrorCode.ERROR_DESTINATION_NOT_REACHABLE, "ERROR_DESTINATION_NOT_REACHABLE", new [] { (object) request.Address.Host });
+        }
+
         private static ManagementScope GetManagementScope(ServerConfig server)
         {
             var options = GetWmiConnectionOptions(server);
@@ -148,8 +264,6 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             }
             return options;
         }
-
-        protected string AgentUrl { get; set; }
 
         private string RemotePath
         {
@@ -190,9 +304,10 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
                         {
                             throw new NotSupportedException("Cannot find WebDeploy installation.");
                         }
-                        _webDeployInstallPath = installPathValue != null
-                                                    ? installPathValue.ToString()
-                                                    : installPathx64Value.ToString();
+
+                        _webDeployInstallPath = installPathx64Value != null
+                                                    ? installPathx64Value.ToString()
+                                                    : installPathValue.ToString();
                     }
                 }
                 return _webDeployInstallPath;
@@ -285,42 +400,48 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
                 {
                     _processObject.Dispose();
                     _processObject = null;
-                    GC.SuppressFinalize(this);
                 }
             }
             if (_remoteNeedsCleanup)
             {
-                var retryAttempt = 0;
-                do
+                using (new Impersonation.Impersonator(_server.DeploymentUser.UserName, _server.DeploymentUser.Password))
                 {
-                    try
+                    var retryAttempt = 0;
+                    do
                     {
-                        if (Directory.Exists(RemotePath))
+                        try
                         {
-                            Directory.Delete(RemotePath, true);
-                        }
-                        _remoteNeedsCleanup = false;
-                    }
-                    catch (UnauthorizedAccessException accessDeniedEx)
-                    {
-                        Logger.Warn(string.Format("Access denied when deleting WebDeploy files on remote server [{0}].", _server), accessDeniedEx);
-                    }
-                    catch (IOException ioEx)
-                    {
-                        Logger.Warn(string.Format("Unable to delete files on remote server [{0}]", _server), ioEx);
-                    }
-                    if (_remoteNeedsCleanup)
-                    {
-                        if (++retryAttempt > RetryAttempts)
-                        {
+                            if (Directory.Exists(RemotePath))
+                            {
+                                Directory.Delete(RemotePath, true);
+                            }
                             _remoteNeedsCleanup = false;
+                            Logger.Info(string.Format("Successfully cleaned up WebDeploy files on remote server [{0}]", _server.Name));
                         }
-                        else
+                        catch (UnauthorizedAccessException)
                         {
-                            Thread.Sleep(RetryInterval);
+                            var retryMessage = retryAttempt < RetryAttempts ? "Will retry." : "Retries failed and will abort.";
+                            Logger.Verbose(string.Format("Access denied when deleting WebDeploy files on remote server [{0}]. {1}", _server.Name, retryMessage));
                         }
-                    }
-                } while (_remoteNeedsCleanup);
+                        catch (IOException)
+                        {
+                            var retryMessage = retryAttempt < RetryAttempts ? "Will retry." : "Retries failed and will abort.";
+                            Logger.Verbose(string.Format("Unable to delete files on remote server [{0}]. {1}", _server.Name, retryMessage));
+                        }
+                        if (_remoteNeedsCleanup)
+                        {
+                            if (++retryAttempt > RetryAttempts)
+                            {
+                                _remoteNeedsCleanup = false;
+                                Logger.Warn(string.Format("Failed to cleanup WebDeploy files on remote server [{0}]", _server.Name));
+                            }
+                            else
+                            {
+                                Thread.Sleep(RetryInterval*1000);
+                            }
+                        }
+                    } while (_remoteNeedsCleanup);
+                }
             }
         }
 

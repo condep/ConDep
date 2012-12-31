@@ -55,8 +55,21 @@ namespace IntegrationTests
     {
         public override void Configure(IOfferInfrastructure require)
         {
-            require.IIS();
-            require.IISWebSite("ConDepWebSite", 5   );
+            require
+                .IIS(opt => opt.Include.AspNet())
+                .IISAppPool("MyAppPool", opt =>
+                                             {
+                                                 opt.LoadUserProfile = true;
+                                                 opt.NetFrameworkVersion = NetFrameworkVersion.Net4_0;
+                                                 opt.RecycleTimeInMinutes = 0;
+                                             }
+                );
+            //.IISWebSite("ConDepWebSite", 5, opt => opt
+            //.Port(8080)
+            //.HttpBinding(httpOpt => httpOpt.HostName("www.con-dep.net").Port(8080))
+            //.WebApp("MyWebApp")
+            //.WebApp("MyOtherWebApp", @"E:\MyOtherWebApp")
+            //);
 
             //require.IISAppPool("MyAppPool", opt =>
             //                                    {

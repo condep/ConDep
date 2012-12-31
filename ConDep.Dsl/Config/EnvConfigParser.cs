@@ -25,7 +25,7 @@ namespace ConDep.Dsl.Config
 
             foreach (var server in config.Servers)
             {
-                if (server.DeploymentUser == null)
+                if (!server.DeploymentUser.IsDefined)
                 {
                     server.DeploymentUser = config.DeploymentUser;
                 }
