@@ -40,7 +40,8 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
 
         private void Init()
         {
-            using (new Impersonation.Impersonator(_server.DeploymentUser.UserName, _server.DeploymentUser.Password))
+            Logger.Info(string.Format("Deploying Microsoft WebDeploy to remote server [{0}]. Make sure you comply with the Web Deploy license on that server.", _server.Name));
+            using (new Impersonation.Impersonator(_server.DeploymentUserRemote.UserName, _server.DeploymentUserRemote.Password))
             {
 
                 CreateRemoteDirectories();
@@ -71,7 +72,6 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
 <configuration>
     <startup  useLegacyV2RuntimeActivationPolicy='true' >
         <supportedRuntime version='v4.0' />
-        <supportedRuntime version='v2.0.50727' />
     </startup>
     <runtime>
         <assemblyBinding xmlns='urn:schemas-microsoft-com:asm.v1'>
@@ -180,7 +180,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
                 throw new DeploymentException(ex, "BadURI", new object[] { _server.WebDeployAgentUrl });
             }
             request.Proxy = null;
-            request.Credentials = new NetworkCredential(_server.DeploymentUser.UserNameWithoutDomain, _server.DeploymentUser.Password, _server.DeploymentUser.Domain);
+            request.Credentials = new NetworkCredential(_server.DeploymentUserRemote.UserNameWithoutDomain, _server.DeploymentUserRemote.Password, _server.DeploymentUserRemote.Domain);
             request.UnsafeAuthenticatedConnectionSharing = true;
             request.PreAuthenticate = true;
             request.AllowWriteStreamBuffering = false;
@@ -257,10 +257,10 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
                                   Impersonation = ImpersonationLevel.Impersonate,
                                   EnablePrivileges = true
                               };
-            if ((server.DeploymentUser != null))
+            if ((server.DeploymentUserRemote != null))
             {
-                options.Username = server.DeploymentUser.UserName;
-                options.Password = server.DeploymentUser.Password;
+                options.Username = server.DeploymentUserRemote.UserName;
+                options.Password = server.DeploymentUserRemote.Password;
             }
             return options;
         }
@@ -404,7 +404,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             }
             if (_remoteNeedsCleanup)
             {
-                using (new Impersonation.Impersonator(_server.DeploymentUser.UserName, _server.DeploymentUser.Password))
+                using (new Impersonation.Impersonator(_server.DeploymentUserRemote.UserName, _server.DeploymentUserRemote.Password))
                 {
                     var retryAttempt = 0;
                     do

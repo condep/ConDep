@@ -1,50 +1,80 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 {
-    public interface IOfferIisWebSiteOptions
-    {
-        IOfferIisWebSiteOptions HttpBinding(Action<IOfferHttpBindingOptions> httpBindingOptions);
-        IOfferIisWebSiteOptions HttpsBinding(Action<IOfferHttpsBindingOptions> httpBindingOptions);
-    }
-
-    public interface IOfferHttpBindingOptions
-    {
-        IOfferHttpBindingOptions Ip(string ip);
-        IOfferHttpBindingOptions Port(int port);
-        IOfferHttpBindingOptions HostName(string hostName);
-    }
-
-    public interface IOfferHttpsBindingOptions
-    {
-        IOfferHttpsBindingOptions Ip(string ip);
-        IOfferHttpsBindingOptions Port(int port);
-        IOfferHttpsBindingOptions HostName(string hostName);
-        /// <summary>
-        /// Bind existing certificate to web site. To deploy certificate, use the certificate operation for your application artifact.
-        /// </summary>
-        /// <param name="commonName">The certificate common name to look for in certificate store. Supports wildcard search.</param>
-        /// <returns></returns>
-        IOfferHttpsBindingOptions Certificate(string commonName);
-    }
-
     public class IisWebSiteOptions : IOfferIisWebSiteOptions
     {
-        private readonly HttpBindingOptions _httpBindingOptions = new HttpBindingOptions();
-        private readonly HttpsBindingOptions _httpsBindingOptions = new HttpsBindingOptions();
         private readonly IisWebSiteOptionsValues _values = new IisWebSiteOptionsValues();
 
-        public IOfferIisWebSiteOptions HttpBinding(Action<IOfferHttpBindingOptions> httpBindingOptions)
+        public IOfferIisWebSiteOptions PhysicalPath(string path)
         {
-            httpBindingOptions(_httpBindingOptions);
-            _values.HttpBindingValues = _httpBindingOptions.Values;
+            _values.PhysicalPath = path;
             return this;
         }
 
-        public IOfferIisWebSiteOptions HttpsBinding(Action<IOfferHttpsBindingOptions> httpsBindingOptions)
+        public IOfferIisWebSiteOptions AddHttpBinding(Action<IOfferBindingOptions> httpBindingOptions)
         {
-            httpsBindingOptions(_httpsBindingOptions);
-            _values.HttpsBindingValues = _httpsBindingOptions.Values;
+            var options = new BindingOptions();
+            httpBindingOptions(options);
+            _values.HttpBindings.Add(options.Values);
+            return this;
+        }
+
+        public IOfferIisWebSiteOptions AddHttpsBinding(X509FindType findType, string findName, Action<IOfferBindingOptions> bindingOptions)
+        {
+            var options = new BindingOptions();
+            bindingOptions(options);
+
+            var httpsOptions = new BindingOptions.SslBindingOptionsValues
+                                   {
+                                       FindType = findType, 
+                                       FindName = findName, 
+                                       BindingOptions = options.Values, 
+                                       CertLocation = CertLocation.Store
+                                   };
+
+            _values.HttpsBindings.Add(httpsOptions);
+            return this;
+        }
+
+        public IOfferIisWebSiteOptions AddHttpsBinding(string filePath, Action<IOfferBindingOptions> bindingOptions)
+        {
+            var options = new BindingOptions();
+            bindingOptions(options);
+
+            var httpsOptions = new BindingOptions.SslBindingOptionsValues
+            {
+                FilePath = filePath,
+                BindingOptions = options.Values,
+                CertLocation = CertLocation.File
+            };
+
+            _values.HttpsBindings.Add(httpsOptions);
+            return this;
+        }
+
+        public IOfferIisWebSiteOptions AddHttpsBinding(string filePath, string privateKeyPassword, Action<IOfferBindingOptions> bindingOptions)
+        {
+            var options = new BindingOptions();
+            bindingOptions(options);
+
+            var httpsOptions = new BindingOptions.SslBindingOptionsValues
+            {
+                FilePath = filePath,
+                PrivateKeyPassword = privateKeyPassword,
+                BindingOptions = options.Values,
+                CertLocation = CertLocation.File
+            };
+
+            _values.HttpsBindings.Add(httpsOptions);
+            return this;
+        }
+
+        public IOfferIisWebSiteOptions ApplicationPool(string appPoolName)
+        {
+            _values.AppPool = appPoolName;
             return this;
         }
 
@@ -52,79 +82,14 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 
         public class IisWebSiteOptionsValues
         {
-            public HttpBindingOptions.HttpBindingOptionsValues HttpBindingValues { get; set; }
-            public HttpsBindingOptions.HttpsBindingOptionsValues HttpsBindingValues { get; set; }
-        }
-    }
+            private readonly IList<BindingOptions.BindingOptionsValues> _httpBindingValues = new List<BindingOptions.BindingOptionsValues>();
+            private readonly IList<BindingOptions.SslBindingOptionsValues> _httpsBindingValues = new List<BindingOptions.SslBindingOptionsValues>();
 
-    public class HttpsBindingOptions : IOfferHttpsBindingOptions
-    {
-        private readonly HttpsBindingOptionsValues _values = new HttpsBindingOptionsValues();
+            public IList<BindingOptions.BindingOptionsValues> HttpBindings { get { return _httpBindingValues; } }
+            public IList<BindingOptions.SslBindingOptionsValues> HttpsBindings { get { return _httpsBindingValues; } }
 
-        public IOfferHttpsBindingOptions Ip(string ip)
-        {
-            _values.Ip = ip;
-            return this;
-        }
-
-        public IOfferHttpsBindingOptions Port(int port)
-        {
-            _values.Port = port;
-            return this;
-        }
-
-        public IOfferHttpsBindingOptions HostName(string hostName)
-        {
-            _values.HostName = hostName;
-            return this;
-        }
-
-        public IOfferHttpsBindingOptions Certificate(string certName)
-        {
-            _values.Certificate = certName;
-            return this;
-        }
-
-        public HttpsBindingOptionsValues Values { get { return _values; } }
-
-        public class HttpsBindingOptionsValues
-        {
-            public int Port { get; set; }
-            public string Ip { get; set; }
-            public string HostName { get; set; }
-            public string Certificate { get; set; }
-        }
-    }
-
-    public class HttpBindingOptions : IOfferHttpBindingOptions
-    {
-        private readonly HttpBindingOptionsValues _values = new HttpBindingOptionsValues();
-
-        public IOfferHttpBindingOptions Ip(string ip)
-        {
-            _values.Ip = ip;
-            return this;
-        }
-
-        public IOfferHttpBindingOptions Port(int port)
-        {
-            _values.Port = port;
-            return this;
-        }
-
-        public IOfferHttpBindingOptions HostName(string hostName)
-        {
-            _values.HostName = hostName;
-            return this;
-        }
-
-        public HttpBindingOptionsValues Values { get { return _values; } }
-
-        public class HttpBindingOptionsValues
-        {
-            public int Port { get; set; }
-            public string Ip { get; set; }
-            public string HostName { get; set; }
+            public string PhysicalPath { get; set; }
+            public string AppPool { get; set; }
         }
     }
 }

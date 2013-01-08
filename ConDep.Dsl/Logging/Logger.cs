@@ -104,5 +104,6 @@ namespace ConDep.Dsl.Logging
         {
             _log.LogSectionEnd(name);
         }
+
     }
 }

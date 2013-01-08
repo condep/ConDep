@@ -16,6 +16,11 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.Binding
             throw new NotImplementedException();
         }
 
+        public override string Name
+        {
+            get { return "IIS Https Binding"; }
+        }
+
         public override bool IsValid(Notification notification)
         {
             throw new NotImplementedException();

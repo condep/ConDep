@@ -1,11 +1,12 @@
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Operations;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
     public interface IManageInfrastructureSequence
     {
-        IReportStatus Execute(ServerConfig server, IReportStatus status);
-        CompositeSequence NewCompositeSequence(string compositeName);
+        IReportStatus Execute(ServerConfig server, IReportStatus status, ConDepOptions options);
+        CompositeSequence NewCompositeSequence(RemoteCompositeOperation operation);
         bool IsvValid(Notification notification);
     }
 }

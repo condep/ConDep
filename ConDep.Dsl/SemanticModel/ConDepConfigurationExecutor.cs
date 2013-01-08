@@ -52,6 +52,7 @@ namespace ConDep.Dsl.SemanticModel
             var webDeploy = new WebDeployHandler();
             var sequenceManager = new ExecutionSequenceManager();
 
+            var notification = new Notification();
             foreach (var application in applications)
             {
                 var infrastructureSequence = new InfrastructureSequence();
@@ -59,22 +60,24 @@ namespace ConDep.Dsl.SemanticModel
 
                 if (HasInfrastructureDefined(application))
                 {
-                    var infrastructureInstance = GetInfrastructureArtifaceForApplication(assembly, application);
+                    var infrastructureInstance = GetInfrastructureArtifactForApplication(assembly, application);
+                    if(!infrastructureSequence.IsvValid(notification))
+                    {
+                        notification.Throw();
+                    }
                     infrastructureInstance.Configure(infrastructureBuilder);
-                    //sequence.AddInfrastructure(infrastructureInstance);
                 }
 
                 var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(), infrastructureSequence, envConfig.Servers, webDeploy);
                 application.Configure(local, envConfig);
             }
 
-            var notification = new Notification();
             if (!sequenceManager.IsValid(notification))
             {
                 notification.Throw();
             }
 
-            sequenceManager.Execute(status);
+            sequenceManager.Execute(status, options);
         }
 
         private bool HasInfrastructureDefined(ApplicationArtifact application)
@@ -83,7 +86,7 @@ namespace ConDep.Dsl.SemanticModel
             return application.GetType().GetInterface(typeName) != null;
         }
 
-        private static InfrastructureArtifact GetInfrastructureArtifaceForApplication(Assembly assembly,
+        private static InfrastructureArtifact GetInfrastructureArtifactForApplication(Assembly assembly,
                                                                                       ApplicationArtifact application)
         {
             var typeName = typeof (IDependOnInfrastructure<>).Name;

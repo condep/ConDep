@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using ConDep.Dsl.Config;
 using ConDep.Dsl.Operations.Application.Local.PreCompile;
 using ConDep.Dsl.SemanticModel;
 using Moq;
@@ -29,7 +30,7 @@ namespace ConDep.Dsl.Tests.Operations.Local
             var operation = new PreCompileOperation("MyWebApp", @"C:\temp\MyWebApp", @"C:\temp\MyWebAppCompiled", _buildManager.Object);
             
             var status = new StatusReporter();
-            operation.Execute(status);
+            operation.Execute(status, new ConDepOptions("", false, false, false));
 
             Assert.That(status.HasErrors, Is.False);
             _buildManager.Verify(manager => manager.PrecompileApplication(It.IsAny<PreCompileCallback>()));

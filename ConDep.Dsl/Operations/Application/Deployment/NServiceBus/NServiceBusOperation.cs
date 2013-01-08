@@ -73,6 +73,11 @@ namespace ConDep.Dsl.Operations.Application.Deployment.NServiceBus
             server.ExecuteRemote.PowerShell(start, o => o.WaitIntervalInSeconds(10).RetryAttempts(10).ContinueOnError(IgnoreFailureOnServiceStartStop));
         }
 
+        public override string Name
+        {
+            get { return "NServiceBus"; }
+        }
+
         public override bool IsValid(Notification notification)
         {
             throw new System.NotImplementedException();
@@ -80,7 +85,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.NServiceBus
 
         private void CopyPowerShellScriptsToTarget(IOfferRemoteDeployment deploy)
         {
-            var filePath = ConDepResourceFiles.GetFilePathInternal(GetType().Namespace, "NServiceBus.ps1");
+            var filePath = ConDepResourceFiles.GetFilePath(GetType().Namespace, "NServiceBus.ps1");
             deploy.File(filePath, @"%temp%\NServiceBus.ps1");
         }
 

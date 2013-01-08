@@ -21,6 +21,11 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
 
         public IisAppPoolOptions AppPoolOptions { get { return _appPoolOptions; } }
 
+        public override string Name
+        {
+            get { return "IIS Application Pool"; }
+        }
+
         public override bool IsValid(Notification notification)
         {
             return !string.IsNullOrWhiteSpace(_appPoolName);

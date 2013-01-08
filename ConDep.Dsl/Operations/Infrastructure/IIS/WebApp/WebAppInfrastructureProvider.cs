@@ -30,6 +30,11 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebApp
             server.ExecuteRemote.PowerShell("Import-Module WebAdministration; " + command, o => o.WaitIntervalInSeconds(10));
         }
 
+        public override string Name
+        {
+            get { return "Web Application"; }
+        }
+
         public override bool IsValid(Notification notification)
         {
             return !string.IsNullOrWhiteSpace(_webAppName) 

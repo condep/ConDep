@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ConDep.Dsl.Operations.Application.Local.TransformConfig;
+using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 using NUnit.Framework;
 
@@ -50,7 +51,7 @@ namespace ConDep.Dsl.Tests
 
             var trans = new TransformConfigOperation(Path.GetDirectoryName(source), Path.GetFileName(source), Path.GetFileName(transform));
             var webDepStatus = new WebDeploymentStatus();
-            trans.Execute(webDepStatus);
+            trans.Execute(webDepStatus, new ConDepOptions("", false, false, false));
 
             Assert.That(webDepStatus.HasErrors, Is.False);
 

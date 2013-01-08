@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using ConDep.Dsl.Operations.Application.Deployment.Certificate;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
@@ -25,10 +26,18 @@ namespace ConDep.Dsl.Builders
             return _remoteDeploymentBuilder;
         }
 
+        public IOfferRemoteDeployment FromStore(X509FindType findType, string findValue)
+        {
+            var certOp = new CertificateFromStoreOperation(findType, findValue);
+            var compositeSequence = _remoteSequence.NewCompositeSequence(certOp);
+            certOp.Configure(new RemoteCompositeBuilder(compositeSequence, _webDeploy));
+            return _remoteDeploymentBuilder;
+        }
+
         public IOfferRemoteDeployment FromFile(string path, string password)
         {
-            var certOp = new CertificateOperation(path, password);
-            var compositeSequence = _remoteSequence.NewCompositeSequence("CertificateFromFile");
+            var certOp = new CertificateFromFileOperation(path, password);
+            var compositeSequence = _remoteSequence.NewCompositeSequence(certOp);
             certOp.Configure(new RemoteCompositeBuilder(compositeSequence, _webDeploy));
             return _remoteDeploymentBuilder;
         }

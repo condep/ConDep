@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.SemanticModel;
 
@@ -21,7 +22,7 @@ namespace ConDep.Dsl.Operations.Application.Local.WebRequest
             return !string.IsNullOrWhiteSpace(_url) && Uri.IsWellFormedUriString(_url, UriKind.Absolute) && !string.IsNullOrWhiteSpace(_method);
         }
 
-        public override IReportStatus Execute(IReportStatus status)
+        public override IReportStatus Execute(IReportStatus status, ConDepOptions envConfig)
         {
             var webRequest = System.Net.WebRequest.Create(_url);
             webRequest.Method = _method;

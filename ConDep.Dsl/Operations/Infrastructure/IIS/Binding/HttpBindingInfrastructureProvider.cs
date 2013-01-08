@@ -35,6 +35,11 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.Binding
             server.ExecuteRemote.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20));
         }
 
+        public override string Name
+        {
+            get { return "IIS Http Binding"; }
+        }
+
         public override bool IsValid(Notification notification)
         {
             //todo: add validation

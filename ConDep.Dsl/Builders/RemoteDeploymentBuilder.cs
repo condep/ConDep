@@ -49,7 +49,7 @@ namespace ConDep.Dsl.Builders
         public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName)
         {
             var nServiceBusProvider = new NServiceBusOperation(sourceDir, destDir, serviceName);
-            nServiceBusProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence("NServiceBus"), _webDeploy));
+            nServiceBusProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence(nServiceBusProvider), _webDeploy));
             return this;
         }
 
@@ -57,7 +57,7 @@ namespace ConDep.Dsl.Builders
         {
             var nServiceBusProvider = new NServiceBusOperation(sourceDir, destDir, serviceName);
             nServiceBusOptions(new NServiceBusOptions(nServiceBusProvider));
-            nServiceBusProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence("NServiceBus"), _webDeploy));
+            nServiceBusProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence(nServiceBusProvider), _webDeploy));
             return this;
         }
 

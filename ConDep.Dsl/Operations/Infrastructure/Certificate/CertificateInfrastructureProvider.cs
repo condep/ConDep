@@ -34,6 +34,11 @@ namespace ConDep.Dsl.Operations.Infrastructure.Certificate
             _copyCertFromFile = true;
         }
 
+        public override string Name
+        {
+            get { return "Certificate"; }
+        }
+
         public override bool IsValid(Notification notification)
         {
             return File.Exists(_certFile);

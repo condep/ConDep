@@ -13,7 +13,7 @@ namespace ConDep.Dsl.Tests
         {
             var user = new DeploymentUserConfig();
 
-            var server = new ServerConfig() {Name = "jat-web03", DeploymentUser = user };
+            var server = new ServerConfig() {Name = "jat-web03", DeploymentUserRemote = user };
             using(new WebDeployDeployer(server))
             {
                 

@@ -65,6 +65,16 @@
     <Compile Include="Builders\IExecuteSequence.cs" />
     <Compile Include="Builders\IOfferRemoteComposition.cs" />
     <Compile Include="Builders\RemoteCompositeBuilder.cs" />
+    <Compile Include="Operations\Application\Deployment\Certificate\CertificateFromStoreOperation.cs" />
+    <Compile Include="Operations\Application\Deployment\PowerShellScript\PowerShellScriptDeployOperation.cs" />
+    <Compile Include="Operations\Application\Execution\PowerShell\IRequireRemotePowerShellScript.cs" />
+    <Compile Include="Operations\Infrastructure\IIS\WebSite\BindingOptions.cs" />
+    <Compile Include="Operations\Infrastructure\IIS\WebSite\CertificateBindingOptions.cs" />
+    <Compile Include="Operations\Infrastructure\IIS\WebSite\IOfferCertificateBindingOptions.cs" />
+    <Compile Include="Operations\Infrastructure\IIS\WebSite\IOfferHttpBindingOptions.cs" />
+    <Compile Include="Operations\Infrastructure\IIS\WebSite\IOfferIisWebSiteOptions.cs" />
+    <Compile Include="Scripts\ScriptNamespaceMarker.cs" />
+    <Compile Include="SemanticModel\RemotePowerShellScripts.cs" />
     <Compile Include="Impersonation\Impersonator.cs" />
     <Compile Include="Operations\Infrastructure\IisInfrastructureIncludeOptions.cs" />
     <Compile Include="Operations\Infrastructure\IisInfrastructureOptions.cs" />
@@ -73,7 +83,7 @@
     <Compile Include="Builders\IOfferIisInfrastructure.cs" />
     <Compile Include="Builders\IOfferIisInfrastructureRoleServices.cs" />
     <Compile Include="Builders\IOfferIisWebSite.cs" />
-    <Compile Include="Operations\Application\Deployment\Certificate\CertificateOperation.cs" />
+    <Compile Include="Operations\Application\Deployment\Certificate\CertificateFromFileOperation.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IisWebSiteOptions.cs" />
     <Compile Include="Operations\LoadBalancer\LoadBalancerSuspendMethod.cs" />
     <Compile Include="Builders\RemoteDeploymentBuilder.cs" />
@@ -174,7 +184,7 @@
     <Compile Include="Operations\Infrastructure\IIS\WebApp\WebAppInfrastructureOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebApp\WebAppInfrastructureProvider.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IdentityInfrastructureOptions.cs" />
-    <Compile Include="Operations\Infrastructure\IIS\WebSite\WebSiteInfrastructureProvider.cs" />
+    <Compile Include="Operations\Infrastructure\IIS\WebSite\IisWebSiteOperation.cs" />
     <Compile Include="SemanticModel\WebDeploy\ConDepUnsupportedOutcomeException.cs" />
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="SemanticModel\Credentials.cs" />
@@ -196,7 +206,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Operations\Application\Deployment\NServiceBus\NServiceBus.ps1" />
+    <EmbeddedResource Include="Scripts\ConDep.psm1" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Scripts\Iis.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Operations\Infrastructure\IIS\Scripts\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

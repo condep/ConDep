@@ -8,9 +8,16 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
 {
     public class WebDeploymentStatus : IReportStatus
     {
+        private readonly DateTime _startTime;
         private readonly List<DeploymentChangeSummary> _summeries = new List<DeploymentChangeSummary>();
         private readonly List<Exception> _untrappedExceptions = new List<Exception>();
         private readonly List<string> _conditionMessages = new List<string>();
+        private DateTime _endTime;
+
+        public WebDeploymentStatus()
+        {
+            _startTime = DateTime.Now;
+        }
 
         public void AddSummery(DeploymentChangeSummary summery)
         {
@@ -33,6 +40,17 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         public bool HasExitCodeErrors
         {
             get { return _untrappedExceptions.Count > 0; }
+        }
+
+        public DateTime StartTime
+        {
+            get { return _startTime; }
+        }
+
+        public DateTime EndTime
+        {
+            get { return _endTime; }
+            set { _endTime = value; }
         }
 
         public void AddConditionMessage(string message)
@@ -60,13 +78,16 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             }
 
             string message = string.Format(@"
+
 =======
 Summery
 =======
 Objects Added     : {0}
 Objects Deleted   : {1}
 Objects Updated   : {2}
-Mega Bytes Copied : {3}", objectsAdded, objectsDeleted, objectsUpdated, mBytesCopied.ToString("N"));
+Mega Bytes Copied : {3}
+Time taken        : {4}
+", objectsAdded, objectsDeleted, objectsUpdated, mBytesCopied.ToString("N"), (EndTime - StartTime).ToString(@"hh\:mm\:ss"));
 
             Logger.Info(message);
         }

@@ -17,6 +17,11 @@ namespace ConDep.LoadBalancer.Arr
             _serverNameToChangeStateOn = serverNameToChangeStateOn;
         }
 
+        public override string Name
+        {
+            get { return "Application Request Routing Load Balancer"; }
+        }
+
         public override bool IsValid(Notification notification)
         {
             return true;

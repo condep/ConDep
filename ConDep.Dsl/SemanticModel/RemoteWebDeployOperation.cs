@@ -23,7 +23,7 @@ namespace ConDep.Dsl.SemanticModel
             return _provider.IsValid(notification);
         }
 
-        public IReportStatus Execute(ServerConfig server, IReportStatus status)
+        public IReportStatus Execute(ServerConfig server, IReportStatus status, ConDepOptions conDepOptions)
         {
             WebDeployOptions options = null;
             try

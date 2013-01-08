@@ -1,7 +1,7 @@
-﻿using ConDep.Dsl;
+﻿using System.Security.Cryptography.X509Certificates;
+using ConDep.Dsl;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
-using ConDep.Dsl.Operations.Infrastructure.IIS;
 
 namespace IntegrationTests
 {
@@ -18,7 +18,8 @@ namespace IntegrationTests
             onLocalMachine.ToEachServer(x =>
                                             {
                                                 x.ExecuteRemote.PowerShell("ipconfig");
-                                                x.Deploy.SslCertificate.FromFile(@"C:\GitHub\ConDep\ConDep.Dsl.Tests\testcert.con-dep.net.pfx", "ConDep");
+                                                //x.Deploy.SslCertificate.FromFile(@"C:\GitHub\ConDep\ConDep.Dsl.Tests\testcert.con-dep.net.pfx", "ConDep");
+                                                //x.Deploy.SslCertificate.FromStore(X509FindType.FindBySubjectName, "test");
                                                 //x.Deploy
                                                 //    .Directory(@"C:\website1", @"C:\Temp\ConDep\MyWebApp");
 
@@ -28,7 +29,7 @@ namespace IntegrationTests
                                                 //.NServiceBusEndpoint("", "", "", opt => opt.Profile(""));
 
                                                 //x.ExecuteRemote
-                                                //    .PowerShell();
+                                                //    .PowerShell();        
 
                                                 //x.Deploy
                                                 //    .SslCertificate.FromFile();
@@ -55,21 +56,39 @@ namespace IntegrationTests
     {
         public override void Configure(IOfferInfrastructure require)
         {
+            //Requirements:
+            //.net 4.0
+            //dotNetFx40_Full_setup.exe /norestart /q /log %temp%\dotnet40install.log
+
             require
-                .IIS(opt => opt.Include.AspNet())
-                .IISAppPool("MyAppPool", opt =>
-                                             {
-                                                 opt.LoadUserProfile = true;
-                                                 opt.NetFrameworkVersion = NetFrameworkVersion.Net4_0;
-                                                 opt.RecycleTimeInMinutes = 0;
-                                             }
+                .IIS(opt =>
+                         {
+                             opt.Include.AspNet();
+                             opt.RemoveIfPresent.WindowsAuth();
+                         })
+                //.IIS(opt =>
+                //         {
+                //             opt.Include.AspNet();
+                //         })
+                //.IISAppPool("MyAppPool", opt =>
+                //                             {
+                //                                 opt.LoadUserProfile = true;
+                //                                 opt.NetFrameworkVersion = NetFrameworkVersion.Net4_0;
+                //                                 opt.RecycleTimeInMinutes = 0;
+                //                             }
+                //)
+
+                .IISWebSite("ConDepWebSite55", 5, opt => opt
+                                                             .AddHttpBinding(httpOpt => httpOpt.HostName("www.con-dep.net").Port(8080))
+                                                             .AddHttpBinding(httpOpt => httpOpt.HostName("www.con-dep.com").Port(8080))
+                                                             //.AddHttpsBinding(httpsOpt => httpsOpt.Certificate("test").Port(8081))
+                                                             .AddHttpsBinding(X509FindType.FindBySubjectName, "testcert2.con-dep.net", binding => binding.HostName("www.con-dep.net").Port(8081))
+                                                             //.AddHttpsBinding("", binding => binding.HostName("www.con-dep.com").Port(8081))
+                                                             //.AddHttpsBinding("", "", binding => binding.HostName("www.con-dep.com").Port(8081))
+                //.ApplicationPool("")
+                //.WebApp("MyWebApp")
+                //.WebApp("MyOtherWebApp", @"E:\MyOtherWebApp")
                 );
-            //.IISWebSite("ConDepWebSite", 5, opt => opt
-            //.Port(8080)
-            //.HttpBinding(httpOpt => httpOpt.HostName("www.con-dep.net").Port(8080))
-            //.WebApp("MyWebApp")
-            //.WebApp("MyOtherWebApp", @"E:\MyOtherWebApp")
-            //);
 
             //require.IISAppPool("MyAppPool", opt =>
             //                                    {

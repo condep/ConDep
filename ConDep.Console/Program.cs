@@ -23,7 +23,7 @@ namespace ConDep.Console
                 var configAssemblyLoader = new ConDepAssemblyHandler(optionHandler.Params.AssemblyName);
                 var assembly = configAssemblyLoader.GetConfigAssembly();
 
-                var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly);
+                var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.WebDeployExist);
                 var envSettings = GetEnvConfig(optionHandler.Params, assembly);
 
                 var status = new WebDeploymentStatus();
@@ -35,6 +35,7 @@ namespace ConDep.Console
                 }
                 else
                 {
+                    status.EndTime = DateTime.Now;
                     status.PrintSummery();
                 }
             }

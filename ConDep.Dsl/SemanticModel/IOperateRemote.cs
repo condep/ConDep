@@ -5,6 +5,6 @@ namespace ConDep.Dsl.SemanticModel
     public interface IOperateRemote
     {
         bool IsValid(Notification notification);
-        IReportStatus Execute(ServerConfig server, IReportStatus status);
+        IReportStatus Execute(ServerConfig server, IReportStatus status, ConDepOptions envConfig);
     }
 }

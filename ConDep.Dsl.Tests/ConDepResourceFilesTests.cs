@@ -20,7 +20,7 @@ namespace ConDep.Dsl.Tests
         [ExpectedException(typeof(ConDepResourceNotFoundException))]
         public void TestThatUsingFilePathInternalFailsWhenUsingFromExternalAssembly()
         {
-            ConDepResourceFiles.GetFilePathInternal(GetType().Namespace, "ResourceTestFile.txt");
+            ConDepResourceFiles.GetFilePath(GetType().Assembly, GetType().Namespace, "ResourceTestFile.txt");
         }
     }
 }

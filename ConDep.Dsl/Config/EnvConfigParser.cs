@@ -25,9 +25,14 @@ namespace ConDep.Dsl.Config
 
             foreach (var server in config.Servers)
             {
-                if (!server.DeploymentUser.IsDefined)
+                if (!server.DeploymentUserRemote.IsDefined)
                 {
-                    server.DeploymentUser = config.DeploymentUser;
+                    server.DeploymentUserRemote = config.DeploymentUserRemote;
+                }
+
+                if (!server.DeploymentUserLocal.IsDefined)
+                {
+                    server.DeploymentUserLocal = config.DeploymentUserLocal;
                 }
             }
             return config;

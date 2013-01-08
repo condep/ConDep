@@ -23,19 +23,19 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return sequence;
         }
 
-        public IReportStatus Execute(IReportStatus status)
+        public IReportStatus Execute(IReportStatus status, ConDepOptions options)
         {
             foreach (var element in _sequence)
             {
                 if(element is LocalOperation)
                 {
                     Logger.LogSectionStart(element.GetType().Name);
-                    ((LocalOperation) element).Execute(status);
+                    ((LocalOperation) element).Execute(status, options);
                     Logger.LogSectionEnd(element.GetType().Name);
                 }
                 else if(element is RemoteSequence)
                 {
-                    ((RemoteSequence) element).Execute(status);
+                    return ((RemoteSequence) element).Execute(status, options);
                 }
                 else
                 {

@@ -15,14 +15,16 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             var webDeploySource = new WebDeploySource { LocalHost = true };
             var webDeployDestination = new WebDeployDestination { ComputerName = server.WebDeployAgentUrl };
 
-            if (server.DeploymentUser != null && server.DeploymentUser.IsDefined)
+            if (server.DeploymentUserRemote != null && server.DeploymentUserRemote.IsDefined)
             {
-                webDeployDestination.Credentials.UserName = server.DeploymentUser.UserName;
-                webDeployDestination.Credentials.Password = server.DeploymentUser.Password;
+                webDeployDestination.Credentials.UserName = server.DeploymentUserRemote.UserName;
+                webDeployDestination.Credentials.Password = server.DeploymentUserRemote.Password;
+            }
 
-                //Todo: Should this user also be used for source?
-                webDeploySource.Credentials.UserName = server.DeploymentUser.UserName;
-                webDeploySource.Credentials.Password = server.DeploymentUser.Password;
+            if (server.DeploymentUserLocal != null && server.DeploymentUserLocal.IsDefined)
+            {
+                webDeploySource.Credentials.UserName = server.DeploymentUserLocal.UserName;
+                webDeploySource.Credentials.Password = server.DeploymentUserLocal.Password;
             }
 
             var syncOptions = new DeploymentSyncOptions();// { WhatIf = Configuration.UseWhatIf };

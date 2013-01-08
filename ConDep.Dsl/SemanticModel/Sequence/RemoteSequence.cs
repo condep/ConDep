@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
+using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using System.Linq;
+using ConDep.Dsl.Operations;
+using ConDep.Dsl.Operations.Application.Deployment.PowerShellScript;
+using ConDep.Dsl.Operations.Application.Execution.PowerShell;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
@@ -24,52 +28,80 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             _sequence.Add(operation);
         }
 
-        public IReportStatus Execute(IReportStatus status)
+        public IReportStatus Execute(IReportStatus status, ConDepOptions options)
         {
             foreach (var server in _servers)
             {
-                using(new WebDeployDeployer(server))
+                if(!options.WebDeployExist)
                 {
-                    try
+                    using (new WebDeployDeployer(server))
                     {
-                        Logger.LogSectionStart(server.Name);
-                        _infrastructureSequence.Execute(server, status);
-                        if (status.HasErrors)
-                            return status;
-
-                        foreach (var element in _sequence)
-                        {
-                            if (element is IOperateRemote)
-                            {
-                                ((IOperateRemote)element).Execute(server, status);
-                                if (status.HasErrors)
-                                    return status;
-                            }
-                            else if (element is CompositeSequence)
-                            {
-                                ((CompositeSequence)element).Execute(server, status);
-                            }
-                            else
-                            {
-                                throw new NotSupportedException();
-                            }
-
-                            if (status.HasErrors)
-                                return status;
-                        }
+                        ExecuteOnServer(server, status, options);
                     }
-                    finally
-                    {
-                        Logger.LogSectionEnd(server.Name);
-                    }
+                }
+                else
+                {
+                    ExecuteOnServer(server, status, options);
                 }
             }
             return status;
         }
 
-        public CompositeSequence NewCompositeSequence(string compositeName)
+        private IReportStatus ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepOptions options)
         {
-            var sequence = new CompositeSequence(compositeName);
+            try
+            {
+                Logger.LogSectionStart(server.Name);
+                _infrastructureSequence.Execute(server, status, options);
+
+                if (status.HasErrors)
+                    return status;
+
+                foreach (var element in _sequence)
+                {
+                    if (element.GetType().IsAssignableFrom(typeof(IRequireRemotePowerShellScript)))
+                    {
+                        var scriptPaths = ((IRequireRemotePowerShellScript)element).ScriptPaths;
+                        RemotePowerShellScripts.Add(scriptPaths);
+                        //DeployPowerShellScripts(scriptPaths);
+                    }
+
+                    if (element is IOperateRemote)
+                    {
+                        ((IOperateRemote)element).Execute(server, status, options);
+                        if (status.HasErrors)
+                            return status;
+                    }
+                    else if (element is CompositeSequence)
+                    {
+                        ((CompositeSequence)element).Execute(server, status, options);
+                    }
+                    else
+                    {
+                        throw new NotSupportedException();
+                    }
+
+                    if (status.HasErrors)
+                        return status;
+                }
+                return status;
+            }
+            finally
+            {
+                Logger.LogSectionEnd(server.Name);
+            }
+        }
+
+        public CompositeSequence NewCompositeSequence(RemoteCompositeOperation operation)
+        {
+            var sequence = new CompositeSequence(operation.Name);
+
+            if (operation is IRequireRemotePowerShellScript)
+            {
+                var scriptOp = new PowerShellScriptDeployOperation(((IRequireRemotePowerShellScript)operation).ScriptPaths);
+                scriptOp.Configure(new RemoteCompositeBuilder(sequence, new WebDeployHandler()));
+            }
+
             _sequence.Add(sequence);
             return sequence;
         }

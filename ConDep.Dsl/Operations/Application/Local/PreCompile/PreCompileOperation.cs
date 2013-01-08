@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Web.Compilation;
+using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.SemanticModel;
 
@@ -29,7 +30,7 @@ namespace ConDep.Dsl.Operations.Application.Local.PreCompile
             _buildManager = buildManager;
         }
 
-        public override IReportStatus Execute(IReportStatus status)
+        public override IReportStatus Execute(IReportStatus status, ConDepOptions envConfig)
 		{
 			try
 			{

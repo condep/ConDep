@@ -1,4 +1,5 @@
 using System.IO;
+using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.SemanticModel;
 
@@ -18,7 +19,7 @@ namespace ConDep.Dsl.Operations.Application.Local.TransformConfig
 			_transformName = transformName;
 		}
 
-        public override IReportStatus Execute(IReportStatus status)
+        public override IReportStatus Execute(IReportStatus status, ConDepOptions envConfig)
         {
 			var configFilePath = Path.Combine(_configDirPath, _configName);
 			var transformFilePath = Path.Combine(_configDirPath, _transformName);

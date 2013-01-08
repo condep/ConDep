@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ConDep.Dsl.Config;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
@@ -19,11 +20,11 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return sequence;
         }
 
-        public IReportStatus Execute(IReportStatus status)
+        public IReportStatus Execute(IReportStatus status, ConDepOptions options)
         {
             foreach (var localSequence in _sequence)
             {
-                localSequence.Execute(status);
+                localSequence.Execute(status, options);
                 if (status.HasErrors)
                     return status;
             }

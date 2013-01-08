@@ -14,6 +14,13 @@ namespace ConDep.Remote
             RemoveCertFileFromDisk(filePath);
         }
 
+        public static void InstallCertFromBase64(string base64Cert)
+        {
+            var cert = Convert.FromBase64String(base64Cert);
+            var certificate = new X509Certificate2(cert);
+            AddCertToStore(certificate);
+        }
+
         public static void InstallCertToTrustedRoot(string filePath)
         {
             Console.Write(string.Format("Installing certificate using file: [{0}].", filePath));
@@ -24,11 +31,19 @@ namespace ConDep.Remote
         }
 
 
-        public static void InstallPfx(string filePath, string password, X509KeyStorageFlags storageFlags)
+        public static void InstallPfx(string filePath, string password)
         {
             Console.Write(string.Format("Installing certificate using file: [{0}].", filePath));
-            var certificate = new X509Certificate2(filePath, password, storageFlags);
-            AddCertToStore(certificate);
+
+            var certCollection = new X509Certificate2Collection();
+            certCollection.Import(filePath, password, X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable );
+
+            //var certificate = new X509Certificate2(filePath, password, storageFlags);
+
+            foreach (var certificate in certCollection)
+            {
+                AddCertToStore(certificate);
+            }
             RemoveCertFileFromDisk(filePath);
         }
 
@@ -40,6 +55,7 @@ namespace ConDep.Remote
 
         private static void AddCertToStore(X509Certificate2 certificate, X509Store store)
         {
+
             store.Open(OpenFlags.ReadWrite);
             store.Add(certificate);
             store.Close();
