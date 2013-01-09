@@ -69,7 +69,7 @@ namespace ConDep.Dsl.Impersonation
                 _username,
                 _domain,
                 _password,
-                NativeMethods.LogonType.NetworkCleartext,//.NewCredentials,
+                NativeMethods.LogonType.NewCredentials, //NetworkCleartext
                 NativeMethods.LogonProvider.Default,
                 out _token))
             {

@@ -24,7 +24,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.Certificate
             {
                 var destPath = string.Format(@"%temp%\{0}.pfx", Guid.NewGuid());
                 server.Deploy.File(_path, destPath);
-                server.ExecuteRemote.PowerShell("$path='" + destPath + "'; $password='" + _password + "'; $storageFlags=[System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::Exportable; [ConDep.Remote.CertificateInstaller]::InstallPfx($path, $password, $storageFlags);", opt => opt.RequireRemoteLib().WaitIntervalInSeconds(10));
+                server.ExecuteRemote.PowerShell("$path='" + destPath + "'; $password='" + _password + "'; [ConDep.Remote.CertificateInstaller]::InstallPfx($path, $password);", opt => opt.RequireRemoteLib().WaitIntervalInSeconds(10));
             }
             else
             {

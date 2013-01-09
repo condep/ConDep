@@ -118,6 +118,8 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
                     }
 
                     var query = new ObjectQuery("SELECT * FROM Win32_Process WHERE ProcessId = " + remoteProcessId);
+
+                    bool processStarted = false;
                     using (var searcher = new ManagementObjectSearcher(GetManagementScope(_server), query))
                     {
                         using (ManagementObjectCollection objects = searcher.Get())
@@ -125,8 +127,14 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
                             foreach (ManagementObject managementObject in objects)
                             {
                                 _processObject = managementObject;
+                                processStarted = true;
                             }
                         }
+                    }
+
+                    if(!processStarted)
+                    {
+                        throw new ConDepWebDeployProviderException("Unable to start Microsoft Web Deploy on remote server. Make sure .NET Framework 4.0 is installed.");
                     }
 
                 }
@@ -394,7 +402,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
                 }
                 catch
                 {
-                    Logger.Warn("Unable to terminate WebDeploy on remote server [{0}].", _server);
+                    Logger.Warn("Unable to terminate WebDeploy on remote server [{0}].", _server.Name);
                 }
                 finally
                 {
