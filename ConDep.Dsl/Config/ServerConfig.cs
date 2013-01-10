@@ -5,7 +5,6 @@ namespace ConDep.Dsl.Config
     public class ServerConfig
     {
         private DeploymentUserConfig _deploymentUserRemote;
-        private DeploymentUserConfig _deploymentUserLocal;
         private string _agentUrl;
 
         public string Name { get; set; }
@@ -14,12 +13,6 @@ namespace ConDep.Dsl.Config
         { 
             get { return _deploymentUserRemote ?? (_deploymentUserRemote = new DeploymentUserConfig()); }
             set { _deploymentUserRemote = value; }
-        }
-
-        public DeploymentUserConfig DeploymentUserLocal
-        {
-            get { return _deploymentUserLocal ?? (_deploymentUserLocal = new DeploymentUserConfig()); }
-            set { _deploymentUserLocal = value; }
         }
 
         public string WebDeployAgentUrl { 

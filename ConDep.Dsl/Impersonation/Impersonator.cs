@@ -16,7 +16,7 @@ namespace ConDep.Dsl.Impersonation
         private WindowsImpersonationContext _impersonationContext;
         private IntPtr _token;
 
-        public Impersonator(string username, string password, bool crossDomain)
+        public Impersonator(string username, string password)
         {
             if (username == null || password == null)
                 return;
@@ -24,7 +24,6 @@ namespace ConDep.Dsl.Impersonation
             _username = GetUserName(username);
             _domain = GetDomain(username);
             _password = password;
-            _crossDomain = crossDomain;
 
             try
             {
@@ -71,7 +70,7 @@ namespace ConDep.Dsl.Impersonation
                 _username,
                 _domain,
                 _password,
-                _crossDomain ? NativeMethods.LogonType.NewCredentials : NativeMethods.LogonType.NetworkCleartext,
+                NativeMethods.LogonType.NewCredentials,
                 NativeMethods.LogonProvider.Default,
                 out _token))
             {
@@ -87,7 +86,7 @@ namespace ConDep.Dsl.Impersonation
             }
 
             _impersonationContext = new WindowsIdentity(_tokenDuplicate).Impersonate();
-                // Do stuff with your share here.
+            // Do stuff with your share here.
         }
 
         public void Dispose()

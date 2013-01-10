@@ -27,12 +27,7 @@ namespace ConDep.Dsl.Config
             {
                 if (!server.DeploymentUserRemote.IsDefined)
                 {
-                    server.DeploymentUserRemote = config.DeploymentUserRemote;
-                }
-
-                if (!server.DeploymentUserLocal.IsDefined)
-                {
-                    server.DeploymentUserLocal = config.DeploymentUserLocal;
+                    server.DeploymentUserRemote = config.DeploymentUser;
                 }
             }
             return config;

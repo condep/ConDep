@@ -40,10 +40,9 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
 
         private void Init()
         {
-            Logger.Info(string.Format("Deploying Microsoft WebDeploy to remote server [{0}]. Make sure you comply with the Web Deploy license on that server.", _server.Name));
-            using (new Impersonation.Impersonator(_server.DeploymentUserRemote.UserName, _server.DeploymentUserRemote.Password, _server.DeploymentUserRemote.CrossDomain))
+            Logger.Info(string.Format("Deploying Microsoft WebDeploy 2.0 to remote server [{0}]. Make sure you comply with the Web Deploy license on that server.", _server.Name));
+            using (new Impersonation.Impersonator(_server.DeploymentUserRemote.UserName, _server.DeploymentUserRemote.Password))
             {
-
                 CreateRemoteDirectories();
                 InstallWebDeployFilesOnRemoteServer();
                 StartWebDeployServiceOnRemoteServer();
@@ -70,9 +69,9 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         {
             var config = @"
 <configuration>
-    <startup>
+    <!--<startup>
         <supportedRuntime version='v4.0' />
-    </startup>
+    </startup>-->
     <runtime>
         <assemblyBinding xmlns='urn:schemas-microsoft-com:asm.v1'>
             <dependentAssembly>
@@ -82,7 +81,10 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         </assemblyBinding>
     </runtime>
 </configuration>";
-            config = string.Format(config, "7.1.0.0", "9.0.0.0");
+            //WebDeploy 3.0
+            //config = string.Format(config, "7.1.0.0", "9.0.0.0");
+            
+            config = string.Format(config, "7.1.0.0", "7.1.0.0");
 
             File.Copy(Path.Combine(WebDeployV1InstallPath, "MsDepSvc.exe"), Path.Combine(RemotePath, "MsDepSvc.exe"));
 
@@ -199,7 +201,10 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             string name2 = CultureInfo.CurrentCulture.Name;
             request.Headers.Add("MSDeploy.RequestUICulture", name1);
             request.Headers.Add("MSDeploy.RequestCulture", name2);
-            request.Headers.Add("Version", "9.0.0.0");
+            request.Headers.Add("Version", "7.1.0.0");
+
+            //WebDeploy 3.0
+            //request.Headers.Add("Version", "9.0.0.0");            
             return request;
         }
 
@@ -303,8 +308,11 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             {
                 if(_webDeployInstallPath == null)
                 {
-                    using (RegistryKey key = Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\IIS Extensions\\MSDeploy\\3"))
+                    using (RegistryKey key = Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\IIS Extensions\\MSDeploy\\2"))
                     {
+                        if(key == null)
+                            throw new ConDepWebDeployProviderException("Could not find Web Deploy 3.0 installation on local machine.");
+
                         var installPathValue = key.GetValue("InstallPath");
                         var installPathx64Value = key.GetValue("InstallPath_x64");
 
@@ -412,7 +420,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             }
             if (_remoteNeedsCleanup)
             {
-                using (new Impersonation.Impersonator(_server.DeploymentUserRemote.UserName, _server.DeploymentUserRemote.Password, _server.DeploymentUserRemote.CrossDomain))
+                using (new Impersonation.Impersonator(_server.DeploymentUserRemote.UserName, _server.DeploymentUserRemote.Password))
                 {
                     var retryAttempt = 0;
                     do

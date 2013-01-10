@@ -31,7 +31,5 @@ namespace ConDep.Dsl.Config
                 return split.Length == 1 ? string.Empty : split[0];
             }
         }
-
-        public bool CrossDomain { get; set; }
     }
 }

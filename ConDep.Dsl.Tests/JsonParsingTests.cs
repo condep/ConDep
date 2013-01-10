@@ -139,14 +139,14 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThatDeploymentUserExist()
         {
-            Assert.That(_config.DeploymentUserRemote, Is.Not.Null);
+            Assert.That(_config.DeploymentUser, Is.Not.Null);
         }
 
         [Test]
         public void TestThatDeploymentUserHasValuesInAllFields()
         {
-            Assert.That(_config.DeploymentUserRemote.UserName, Is.Not.Null.Or.Empty);
-            Assert.That(_config.DeploymentUserRemote.Password, Is.Not.Null.Or.Empty);
+            Assert.That(_config.DeploymentUser.UserName, Is.Not.Null.Or.Empty);
+            Assert.That(_config.DeploymentUser.Password, Is.Not.Null.Or.Empty);
         }
 
         [Test]
@@ -274,7 +274,7 @@ namespace ConDep.Dsl.Tests
         {
             foreach (var server in _config.Servers)
             {
-                Assert.That(server.DeploymentUserRemote, Is.SameAs(_config.DeploymentUserRemote));
+                Assert.That(server.DeploymentUserRemote, Is.SameAs(_config.DeploymentUser));
             }
         }
     }
