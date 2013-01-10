@@ -12,11 +12,18 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         public int WaitIntervalInSeconds { get; set; }
         public int RetryAttempts { get; set; }
 
-	    public abstract DeploymentProviderOptions GetWebDeployDestinationObject();
-		public abstract DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions);
+        public abstract DeploymentProviderOptions GetWebDeploySourceProviderOptions();
+	    public abstract DeploymentProviderOptions GetWebDeployDestinationProviderOptions();
         public virtual IList<DeploymentRule> GetReplaceRules() { return new List<DeploymentRule>(); }
-
-		public abstract bool IsValid(Notification notification);
+        public virtual DeploymentBaseOptions GetWebDeploySourceBaseOptions()
+        {
+            return new DeploymentBaseOptions();
+        }
+        public virtual DeploymentBaseOptions GetWebDeployDestBaseOptions()
+        {
+            return new DeploymentBaseOptions();
+        }
+        public abstract bool IsValid(Notification notification);
 	 
         //private void Backup(WebDeployOptions webDeployOptions)
         //{

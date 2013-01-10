@@ -18,15 +18,14 @@ namespace ConDep.Dsl.Operations.Application.Deployment.Certificate
 			get { return NAME; }
 		}
 
-		public override DeploymentProviderOptions GetWebDeployDestinationObject()
+	    public override DeploymentProviderOptions GetWebDeploySourceProviderOptions()
+	    {
+            return new DeploymentProviderOptions(NAME) { Path = SourcePath};
+        }
+
+	    public override DeploymentProviderOptions GetWebDeployDestinationProviderOptions()
 		{
 			return new DeploymentProviderOptions(DeploymentWellKnownProvider.Auto);
-		}
-
-		public override DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions)
-		{
-			var obj = DeploymentManager.CreateObject(Name, SourcePath, sourceBaseOptions);
-			return obj;
 		}
 
 		public override bool IsValid(Notification notification)

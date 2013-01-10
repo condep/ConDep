@@ -9,13 +9,14 @@ namespace ConDep.Dsl.Impersonation
     {
         private readonly string _username;
         private readonly string _password;
+        private readonly bool _crossDomain;
         private readonly string _domain;
         private bool _disposed = false;
         private IntPtr _tokenDuplicate;
         private WindowsImpersonationContext _impersonationContext;
         private IntPtr _token;
 
-        public Impersonator(string username, string password)
+        public Impersonator(string username, string password, bool crossDomain)
         {
             if (username == null || password == null)
                 return;
@@ -23,6 +24,7 @@ namespace ConDep.Dsl.Impersonation
             _username = GetUserName(username);
             _domain = GetDomain(username);
             _password = password;
+            _crossDomain = crossDomain;
 
             try
             {
@@ -69,7 +71,7 @@ namespace ConDep.Dsl.Impersonation
                 _username,
                 _domain,
                 _password,
-                NativeMethods.LogonType.NewCredentials, //NetworkCleartext
+                _crossDomain ? NativeMethods.LogonType.NewCredentials : NativeMethods.LogonType.NetworkCleartext,
                 NativeMethods.LogonProvider.Default,
                 out _token))
             {

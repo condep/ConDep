@@ -20,7 +20,12 @@ namespace ConDep.Dsl.Operations.Application.Deployment.SetAcl
 			get { return "setAcl"; }
 		}
 
-		public override DeploymentProviderOptions GetWebDeployDestinationObject()
+	    public override DeploymentProviderOptions GetWebDeploySourceProviderOptions()
+	    {
+            return new DeploymentProviderOptions(Name) { Path = SourcePath };
+        }
+
+	    public override DeploymentProviderOptions GetWebDeployDestinationProviderOptions()
 		{
 			var destProviderOptions = new DeploymentProviderOptions(Name) { Path = DestinationPath };
 
@@ -36,11 +41,6 @@ namespace ConDep.Dsl.Operations.Application.Deployment.SetAcl
 				permissionSetting.Value = Permissions.ToString();
 			}
 			return destProviderOptions;
-		}
-
-		public override DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions)
-		{
-			return DeploymentManager.CreateObject(Name, "", sourceBaseOptions);
 		}
 
 		public override bool IsValid(Notification notification)

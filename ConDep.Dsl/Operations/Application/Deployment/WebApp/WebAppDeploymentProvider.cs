@@ -39,14 +39,15 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WebApp
 			get { return NAME; }
 		}
 
-		public override DeploymentProviderOptions GetWebDeployDestinationObject()
+	    public override DeploymentProviderOptions GetWebDeploySourceProviderOptions()
+	    {
+            return new DeploymentProviderOptions(NAME) { Path = SourcePath };
+
+	    }
+
+	    public override DeploymentProviderOptions GetWebDeployDestinationProviderOptions()
 		{
 			return new DeploymentProviderOptions(Name) { Path = DestinationPath };
-		}
-
-		public override DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions)
-		{
-			return DeploymentManager.CreateObject(Name, SourcePath, sourceBaseOptions);
 		}
 
 		public override bool IsValid(Notification notification)

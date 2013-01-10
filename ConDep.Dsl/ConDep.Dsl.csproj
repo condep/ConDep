@@ -188,7 +188,6 @@
     <Compile Include="SemanticModel\WebDeploy\ConDepUnsupportedOutcomeException.cs" />
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="SemanticModel\Credentials.cs" />
-    <Compile Include="SemanticModel\WebDeploy\WebDeployDestination.cs" />
     <Compile Include="SemanticModel\ConDepConfigurationExecutor.cs" />
     <Compile Include="Operations\Application\Local\LocalOperation.cs" />
     <Compile Include="SemanticModel\WebDeploy\IProvide.cs" />

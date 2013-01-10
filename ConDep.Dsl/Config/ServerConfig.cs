@@ -6,6 +6,7 @@ namespace ConDep.Dsl.Config
     {
         private DeploymentUserConfig _deploymentUserRemote;
         private DeploymentUserConfig _deploymentUserLocal;
+        private string _agentUrl;
 
         public string Name { get; set; }
         public IList<WebSiteConfig> WebSites { get; set; }
@@ -21,6 +22,19 @@ namespace ConDep.Dsl.Config
             set { _deploymentUserLocal = value; }
         }
 
-        public string WebDeployAgentUrl { get; set; }
+        public string WebDeployAgentUrl { 
+            get
+            {
+                if(string.IsNullOrEmpty(_agentUrl))
+                {
+                    _agentUrl = Name;
+                }
+                return _agentUrl;
+            }
+            set
+            {
+                _agentUrl = value;
+            }
+        }
     }
 }

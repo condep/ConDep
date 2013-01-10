@@ -13,19 +13,19 @@ namespace ConDep.Dsl.Operations.Application.Execution.RunCmd
 		    DestinationPath = command;
 		}
 
-	    public override DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions)
-		{
-			return DeploymentManager.CreateObject(Name, "", sourceBaseOptions);
-		}
+        public override DeploymentProviderOptions GetWebDeploySourceProviderOptions()
+        {
+            return new DeploymentProviderOptions(NAME) { Path = DestinationPath };
+        }
 
-		public override string Name
+    	public override string Name
 		{
 			get { return NAME; }
 		}
 
-		public override DeploymentProviderOptions GetWebDeployDestinationObject()
+		public override DeploymentProviderOptions GetWebDeployDestinationProviderOptions()
 		{
-			var destProviderOptions = new DeploymentProviderOptions(Name) { Path = DestinationPath };
+		    var destProviderOptions = new DeploymentProviderOptions("Auto");// { Path = DestinationPath };
             //DeploymentProviderSetting dontUseCmdExe;
             //if (destProviderOptions.ProviderSettings.TryGetValue("dontUseCommandExe", out dontUseCmdExe))
             //{

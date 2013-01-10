@@ -41,7 +41,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         private void Init()
         {
             Logger.Info(string.Format("Deploying Microsoft WebDeploy to remote server [{0}]. Make sure you comply with the Web Deploy license on that server.", _server.Name));
-            using (new Impersonation.Impersonator(_server.DeploymentUserRemote.UserName, _server.DeploymentUserRemote.Password))
+            using (new Impersonation.Impersonator(_server.DeploymentUserRemote.UserName, _server.DeploymentUserRemote.Password, _server.DeploymentUserRemote.CrossDomain))
             {
 
                 CreateRemoteDirectories();
@@ -70,7 +70,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         {
             var config = @"
 <configuration>
-    <startup  useLegacyV2RuntimeActivationPolicy='true' >
+    <startup>
         <supportedRuntime version='v4.0' />
     </startup>
     <runtime>
@@ -412,7 +412,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             }
             if (_remoteNeedsCleanup)
             {
-                using (new Impersonation.Impersonator(_server.DeploymentUserRemote.UserName, _server.DeploymentUserRemote.Password))
+                using (new Impersonation.Impersonator(_server.DeploymentUserRemote.UserName, _server.DeploymentUserRemote.Password, _server.DeploymentUserRemote.CrossDomain))
                 {
                     var retryAttempt = 0;
                     do

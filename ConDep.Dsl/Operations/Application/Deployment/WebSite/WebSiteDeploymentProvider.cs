@@ -59,13 +59,19 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WebSite
             set { SetExcludeValue("HttpCertConfigExtension", value); }
         }
 
-        public override DeploymentProviderOptions GetWebDeployDestinationObject()
+        public override DeploymentProviderOptions GetWebDeploySourceProviderOptions()
+        {
+            return new DeploymentProviderOptions(Name) { Path = SourcePath };
+        }
+
+        public override DeploymentProviderOptions GetWebDeployDestinationProviderOptions()
         {
             return new DeploymentProviderOptions(Name) { Path = DestinationPath };
         }
 
-        public override DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions)
+        public override DeploymentBaseOptions GetWebDeploySourceBaseOptions()
         {
+            var sourceBaseOptions = new DeploymentBaseOptions();
             var excludedLinks = (from link in sourceBaseOptions.LinkExtensions
                                 from excludedLink in _linkExtensions
                                 where excludedLink.Value && link.Name == excludedLink.Key
@@ -80,8 +86,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WebSite
 
             includedLinks.ForEach(x => x.Enabled = true);
 
-            return DeploymentManager.CreateObject(Name, SourcePath, sourceBaseOptions);
-            
+            return sourceBaseOptions;
         }
 
         public override IList<DeploymentRule> GetReplaceRules()

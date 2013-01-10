@@ -6,7 +6,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
 {
     public interface IHandleWebDeploy
     {
-        WebDeployOptions GetWebDeployOptions(ServerConfig server, EventHandler<DeploymentTraceEventArgs> onTraceMessage);
-        IReportStatus Sync(IProvide provider, WebDeployOptions webDeployOptions, bool continueOnError, IReportStatus status);
+        IReportStatus Sync(IProvide provider, ServerConfig server, bool continueOnError, IReportStatus status,
+                           EventHandler<DeploymentTraceEventArgs> onTraceMessage);
     }
 }

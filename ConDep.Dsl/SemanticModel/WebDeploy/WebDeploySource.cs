@@ -40,27 +40,6 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
 
 	    public string EncryptionPassword { get; set; }
 
-	    public DeploymentBaseOptions GetSourceBaseOptions()
-		{
-			var sourceBaseOptions = new DeploymentBaseOptions();
-			if (!LocalHost)
-			{
-				sourceBaseOptions.ComputerName = ComputerName;
-			}
-
-			if (HasCredentials)
-			{
-				sourceBaseOptions.UserName = Credentials.UserName;
-				sourceBaseOptions.Password = Credentials.Password;
-			}
-
-            if(HasEncryptionPassword)
-            {
-                sourceBaseOptions.EncryptPassword = EncryptionPassword;
-            }
-			return sourceBaseOptions;
-		}
-
 	    protected bool HasEncryptionPassword
 	    {
             get { return !string.IsNullOrWhiteSpace(EncryptionPassword); }

@@ -8,12 +8,7 @@ namespace ConDep.Dsl.Tests
 {
     public class WebDeployHandlerMock : IHandleWebDeploy
     {
-        public WebDeployOptions GetWebDeployOptions(ServerConfig server, EventHandler<DeploymentTraceEventArgs> onTraceMessage)
-        {
-            return new WebDeployOptions("", null, null, null);
-        }
-
-        public IReportStatus Sync(IProvide provider, WebDeployOptions webDeployOptions, bool continueOnError, IReportStatus status)
+        public IReportStatus Sync(IProvide provider, ServerConfig server, bool continueOnError, IReportStatus status, EventHandler<DeploymentTraceEventArgs> onTraceMessage)
         {
             return status;
         }

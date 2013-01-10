@@ -9,8 +9,10 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         bool IsValid(Notification notification);
 		int WaitIntervalInSeconds { get; set; }
         int RetryAttempts { get; set; }
-        DeploymentObject GetWebDeploySourceObject(DeploymentBaseOptions sourceBaseOptions);
-        DeploymentProviderOptions GetWebDeployDestinationObject();
+        DeploymentProviderOptions GetWebDeploySourceProviderOptions();
+        DeploymentProviderOptions GetWebDeployDestinationProviderOptions();
+        DeploymentBaseOptions GetWebDeploySourceBaseOptions();
+        DeploymentBaseOptions GetWebDeployDestBaseOptions();
         IList<DeploymentRule> GetReplaceRules();
     }
 }
