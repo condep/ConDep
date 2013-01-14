@@ -25,7 +25,11 @@ namespace ConDep.Dsl.SemanticModel
 
 	    public void Throw()
 	    {
-	        throw _validationErrors.Aggregate<SemanticValidationError, Exception>(null, (current, error) => new ConDepInvalidSetupException(error.Message, current));
+	        if(_validationErrors.Count > 0)
+            {
+                throw _validationErrors.Aggregate<SemanticValidationError, Exception>(null, (current, error) => new ConDepInvalidSetupException(error.Message, current));
+            }
+	        throw new ConDepInvalidSetupException("Validation failed for unknown reason");
 	    }
 	}
 }

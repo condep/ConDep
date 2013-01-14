@@ -50,7 +50,7 @@ namespace ConDep.Dsl.Operations.Application.Local.PreCompile
         public override bool IsValid(Notification notification)
         {
             return Directory.Exists(_webApplicationPhysicalPath) 
-                && Directory.Exists(_preCompileOutputpath)
+                //&& Directory.Exists(_preCompileOutputpath)
                 && !string.IsNullOrWhiteSpace(_webApplicationName);
         }
 	}
