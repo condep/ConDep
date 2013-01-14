@@ -15,12 +15,5 @@ namespace ConDep.Dsl.Tests
             Assert.That(File.Exists(path));
             File.Delete(path);
         }
-
-        [Test]
-        [ExpectedException(typeof(ConDepResourceNotFoundException))]
-        public void TestThatUsingFilePathInternalFailsWhenUsingFromExternalAssembly()
-        {
-            ConDepResourceFiles.GetFilePath(GetType().Assembly, GetType().Namespace, "ResourceTestFile.txt");
-        }
     }
 }

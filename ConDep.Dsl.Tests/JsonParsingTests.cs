@@ -80,12 +80,7 @@ namespace ConDep.Dsl.Tests
 			]
         }
     ],
-    ""DeploymentUserRemote"": 
-    {
-        ""UserName"": ""torresdal\\condepuser"",
-        ""Password"": ""verySecureP@ssw0rd""
-    },
-    ""DeploymentUserLocal"": 
+    ""DeploymentUser"": 
     {
         ""UserName"": ""torresdal\\condepuser"",
         ""Password"": ""verySecureP@ssw0rd""
