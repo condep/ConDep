@@ -64,10 +64,7 @@ namespace ConDep.Dsl.Operations.Application.Local.TransformConfig
 
 	    public override bool IsValid(Notification notification)
 		{
-			return Directory.Exists(_configDirPath) 
-                && !string.IsNullOrWhiteSpace(_configName) 
-                && File.Exists(Path.Combine(_configDirPath, _configName))
-                && File.Exists(Path.Combine(_configDirPath, _transformName));
+			return !string.IsNullOrWhiteSpace(_configName);
 		}
 	}
 }
