@@ -48,7 +48,7 @@ param(
 	[array]$files,
 	[string]$file = $(throw "file is a required parameter.")
 )
-	$preString = if($pre_release) { "-pre" } else { "" }	
+	$preString = if($pre_release) { "-rc" } else { "" }	
 	$nuspec = "<?xml version=""1.0""?>
 <package>
   <metadata>

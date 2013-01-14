@@ -28,12 +28,12 @@ task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init {
 		-pre_release $true `
 		-id "$condep_dsl" `
 		-title "$condep_dsl" `
-		-licenseUrl "https://github.com/torresdal/ConDep/blob/master/LICENSE" `
-		-projectUrl "https://github.com/torresdal/ConDep/" `
-		-description "Note: This package is for extending the ConDep.Dsl. If you're looking for ConDep to do deployment or infrastructure as code, please use the ConDep package. ConDep is a highly extendable Domain Specific Language for Continuous Deployment, Continuous Delivery and Infrastructure as Code on Windows." `
+		-licenseUrl "http://www.con-dep.net/license/" `
+		-projectUrl "http://www.con-dep.net/" `
+		-description "Note: This package is for extending the ConDep DSL. If you're looking for ConDep to do deployment or infrastructure as code, please use the ConDep package. ConDep is a highly extendable Domain Specific Language for Continuous Deployment, Continuous Delivery and Infrastructure as Code on Windows." `
 		-iconUrl "https://raw.github.com/torresdal/ConDep/master/images/ConDepNugetLogo.png" `
 		-releaseNotes "Initial pre-release." `
-		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy" `
+		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy msdeploy IIS automation powershell remote" `
 		-dependencies @(
 			@{ Name="log4net"; Version="2.0.0"}
 		) `
@@ -53,12 +53,12 @@ task Build-ConDep-Console -depends Clean-ConDep-Console, Init {
 		-pre_release $true `
 		-id "$condep" `
 		-title "$condep" `
-		-licenseUrl "https://github.com/torresdal/ConDep/blob/master/LICENSE" `
-		-projectUrl "https://github.com/torresdal/ConDep/" `
+		-licenseUrl "http://www.con-dep.net/license/" `
+		-projectUrl "http://www.con-dep.net/" `
 		-description "ConDep is a highly extendable Domain Specific Language for Continuous Deployment, Continuous Delivery and Infrastructure as Code on Windows." `
 		-iconUrl "https://raw.github.com/torresdal/ConDep/master/images/ConDepNugetLogo.png" `
 		-releaseNotes "Initial pre-release." `
-		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy" `
+		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy msdeploy IIS automation powershell remote" `
 		-dependencies @(
 			@{ Name="$condep_dsl"; Version="$nugetVersion-pre"},
 			@{ Name="NDesk.Options"; Version="0.2.1"}
@@ -79,12 +79,12 @@ task Build-ConDep-Dsl-LB-ARR -depends Clean-ConDep-Dsl-LB-ARR, Init {
 		-pre_release $true `
 		-id "$condep_dsl_lb_arr" `
 		-title "$condep_dsl_lb_arr" `
-		-licenseUrl "https://github.com/torresdal/ConDep/blob/master/LICENSE" `
-		-projectUrl "https://github.com/torresdal/ConDep/" `
+		-licenseUrl "http://www.con-dep.net/license/" `
+		-projectUrl "http://www.con-dep.net/" `
 		-description "ConDep is a highly extendable Domain Specific Language for Continuous Deployment, Continuous Delivery and Infrastructure as Code on Windows." `
 		-iconUrl "https://raw.github.com/torresdal/ConDep/master/images/ConDepNugetLogo.png" `
 		-releaseNotes "Initial pre-release." `
-		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy" `
+		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy msdeploy IIS automation powershell remote" `
 		-dependencies @(
 			@{ Name="$condep_dsl"; Version="$nugetVersion-pre"},
 			@{ Name="ArrLoadBalancerCmdlet"; Version="1.0.2"}
