@@ -1,25 +1,29 @@
+using System.Collections.Generic;
+using System.Globalization;
 using ConDep.Dsl.Builders;
+using ConDep.Dsl.Operations.Application.Execution.PowerShell;
+using ConDep.Dsl.Resources;
+using ConDep.Dsl.Scripts;
 using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
 {
-    public class IisAppPoolInfrastructureOperation : RemoteCompositeOperation
+    public class IisAppPoolOperation : RemoteCompositeInfrastructureOperation, IRequireRemotePowerShellScript
     {
         private readonly string _appPoolName;
-        private readonly IisAppPoolOptions _appPoolOptions = new IisAppPoolOptions();
+        private readonly IisAppPoolOptions.IisAppPoolOptionsValues _appPoolOptions;
+        private List<string> _scriptPaths = new List<string>();
 
-        public IisAppPoolInfrastructureOperation(string appPoolName)
+        public IisAppPoolOperation(string appPoolName)
         {
             _appPoolName = appPoolName;
         }
 
-        public IisAppPoolInfrastructureOperation(string appPoolName, IisAppPoolOptions appPoolOptions) 
+        public IisAppPoolOperation(string appPoolName, IisAppPoolOptions.IisAppPoolOptionsValues appPoolOptions) 
         {
             _appPoolName = appPoolName;
             _appPoolOptions = appPoolOptions;
         }
-
-        public IisAppPoolOptions AppPoolOptions { get { return _appPoolOptions; } }
 
         public override string Name
         {
@@ -31,7 +35,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
             return !string.IsNullOrWhiteSpace(_appPoolName);
         }
 
-        public override void Configure(IOfferRemoteComposition server)
+        public override void Configure(IOfferRemoteComposition server, IOfferInfrastructure require)
         {
             var psCommand = string.Format("Set-Location IIS:\\AppPools; try {{ Remove-WebAppPool '{0}' }} catch {{ }}; $newAppPool = New-WebAppPool '{0}'; ", _appPoolName);
 
@@ -47,7 +51,26 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
             }
 
             psCommand += "$newAppPool | set-item;";
-            server.ExecuteRemote.PowerShell("Import-Module WebAdministration; " + psCommand, o => o.WaitIntervalInSeconds(2).RetryAttempts(20));
+            string appPoolOptions;
+
+            if(_appPoolOptions != null)
+            {
+                appPoolOptions = string.Format("$appPoolOptions = @{{Enable32Bit=${0}; IdentityUsername='{1}'; IdentityPassword='{2}'; IdleTimeoutInMinutes={3}; LoadUserProfile=${4}; ManagedPipeline={5}; NetFrameworkVersion={6}; RecycleTimeInMinutes={7}}};"
+                    , _appPoolOptions.Enable32Bit.HasValue ? _appPoolOptions.Enable32Bit.Value.ToString() : "false"
+                    , _appPoolOptions.IdentityUsername
+                    , _appPoolOptions.IdentityPassword
+                    , _appPoolOptions.IdleTimeoutInMinutes.HasValue ? _appPoolOptions.IdleTimeoutInMinutes.Value.ToString(CultureInfo.InvariantCulture.NumberFormat) : "$null"
+                    , _appPoolOptions.LoadUserProfile.HasValue ? _appPoolOptions.LoadUserProfile.Value.ToString() : "false"
+                    , _appPoolOptions.ManagedPipeline.HasValue ? "'" + _appPoolOptions.ManagedPipeline.Value + "'" : "$null"
+                    , _appPoolOptions.NetFrameworkVersion.HasValue ? "'" + ExtractNetFrameworkVersion() + "'" : "$null"
+                    , _appPoolOptions.RecycleTimeInMinutes.HasValue ? _appPoolOptions.RecycleTimeInMinutes.Value.ToString(CultureInfo.InvariantCulture.NumberFormat) : "$null"
+                    );
+            }
+            else
+            {
+                appPoolOptions = "$appPoolOptions = $null;";
+            }
+            server.ExecuteRemote.PowerShell(string.Format(@"Import-Module $env:temp\ConDepPowerShellScripts\ConDep; {0} New-ConDepAppPool '{1}' $appPoolOptions;", appPoolOptions, _appPoolName), psOptions => psOptions.WaitIntervalInSeconds(30));
         }
 
         private string ExtractNetFrameworkVersion()
@@ -70,5 +93,17 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
 
         }
 
+        public IEnumerable<string> ScriptPaths
+        {
+            get
+            {
+                if (_scriptPaths.Count == 0)
+                {
+                    _scriptPaths.Add(ConDepResourceFiles.GetFilePath(typeof(ScriptNamespaceMarker).Namespace, "Iis.ps1", true));
+                    _scriptPaths.Add(ConDepResourceFiles.GetFilePath(typeof(ScriptNamespaceMarker).Namespace, "ConDep.psm1", true));
+                }
+                return _scriptPaths;
+            }
+        }
     }
 }

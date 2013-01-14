@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
@@ -10,7 +11,7 @@ using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 {
-    public class IisWebSiteOperation : RemoteCompositeOperation, IRequireCustomConfiguration, IRequireRemotePowerShellScript
+    public class IisWebSiteOperation : RemoteCompositeInfrastructureOperation, IRequireCustomConfiguration, IRequireRemotePowerShellScript
     {
         private readonly string _webSiteName;
         private readonly int _id;
@@ -41,12 +42,18 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
             return !string.IsNullOrWhiteSpace(_webSiteName);
         }
 
-        public override void Configure(IOfferRemoteComposition server)
+        public override void Configure(IOfferRemoteComposition server, IOfferInfrastructure require)
         {
-            var bindingScript = "";
-            foreach(var httpBinding in _options.Values.HttpBindings)
+            var bindings = _options.Values.HttpBindings.Select(httpBinding => string.Format("@{{protocol='http';bindingInformation='{0}:{1}:{2}'}}", httpBinding.Ip, httpBinding.Port, httpBinding.HostName)).ToList();
+
+            foreach (var httpsBinding in _options.Values.HttpsBindings)
             {
-                bindingScript += string.Format("New-ConDepIisHttpBinding '{0}' '{1}' '{2}' '{3}'; ", _webSiteName, httpBinding.Port, httpBinding.Ip, httpBinding.HostName);
+                if (httpsBinding.FindType == X509FindType.FindByThumbprint)
+                {
+                    httpsBinding.FindName = httpsBinding.FindName.Replace(" ", "");
+                }
+                var type = httpsBinding.FindType.GetType();
+                bindings.Add(string.Format("@{{protocol='https';bindingInformation='{0}:{1}:{2}';findType=[{3}]::{4};findValue='{5}'}}", httpsBinding.BindingOptions.Ip, httpsBinding.BindingOptions.Port, httpsBinding.BindingOptions.HostName, type.FullName, httpsBinding.FindType, httpsBinding.FindName));
             }
 
             foreach (var httpsBinding in _options.Values.HttpsBindings)
@@ -64,24 +71,20 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
                     default:
                         throw new Exception();
                 }
-
-                var type = httpsBinding.FindType.GetType();
-                var findType = string.Format("[{0}]::{1}", type.FullName, httpsBinding.FindType);
-
-                if(httpsBinding.FindType == X509FindType.FindByThumbprint)
-                {
-                    httpsBinding.FindName = httpsBinding.FindName.Replace(" ", "");
-                }
-                bindingScript += string.Format("New-ConDepIisHttpsBinding '{0}' {1} '{2}' '{3}' '{4}' '{5}'; ", _webSiteName, httpsBinding.FindType, httpsBinding.FindName, httpsBinding.BindingOptions.Port, httpsBinding.BindingOptions.Ip, httpsBinding.BindingOptions.HostName);
             }
 
-            server.ExecuteRemote.PowerShell(string.Format(@"Import-Module $env:temp\ConDepPowerShellScripts\ConDep; New-ConDepIisWebSite '{0}' {1} {2} '{3}'; {4}"
+            server.ExecuteRemote.PowerShell(string.Format(@"Import-Module $env:temp\ConDepPowerShellScripts\ConDep; New-ConDepIisWebSite '{0}' {1} {2} {3} {4};"
                 , _webSiteName
                 , _id
+                , "@(" + string.Join(",", bindings) + ")"
                 , (string.IsNullOrWhiteSpace(_options.Values.PhysicalPath) ? "$null" : "'" + _options.Values.PhysicalPath + "'")
-                , _options.Values.AppPool
-                , bindingScript)
-                , o => o.WaitIntervalInSeconds(2).RetryAttempts(20));
+                , _options.Values.AppPool)
+                , o => o.WaitIntervalInSeconds(30).RetryAttempts(3));
+
+            foreach(var webApp in _options.Values.WebApps)
+            {
+                require.IISWebApp(webApp.Item1, _webSiteName, webApp.Item2);
+            }
         }
 
         public IEnumerable<string> ScriptPaths

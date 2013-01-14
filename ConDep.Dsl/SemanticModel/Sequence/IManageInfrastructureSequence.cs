@@ -6,7 +6,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
     public interface IManageInfrastructureSequence
     {
         IReportStatus Execute(ServerConfig server, IReportStatus status, ConDepOptions options);
-        CompositeSequence NewCompositeSequence(RemoteCompositeOperation operation);
+        CompositeSequence NewCompositeSequence(RemoteCompositeInfrastructureOperation operation);
         bool IsvValid(Notification notification);
     }
 }

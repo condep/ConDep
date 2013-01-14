@@ -1,5 +1,6 @@
 using System;
 using System.Security.Cryptography.X509Certificates;
+using ConDep.Dsl.Builders;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 {
@@ -34,5 +35,8 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
         /// <returns></returns>
         IOfferIisWebSiteOptions AddHttpsBinding(string filePath, string privateKeyPassword, Action<IOfferBindingOptions> bindingOptions);
         IOfferIisWebSiteOptions ApplicationPool(string appPoolName);
+
+        IOfferIisWebSiteOptions WebApp(string name);
+        IOfferIisWebSiteOptions WebApp(string name, Action<IOfferIisWebAppOptions> options);
     }
 }

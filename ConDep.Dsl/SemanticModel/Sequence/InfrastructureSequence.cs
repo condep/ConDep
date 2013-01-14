@@ -14,7 +14,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
     {
         private readonly List<CompositeSequence> _sequence = new List<CompositeSequence>();
         
-        public CompositeSequence NewCompositeSequence(RemoteCompositeOperation operation)
+        public CompositeSequence NewCompositeSequence(RemoteCompositeInfrastructureOperation operation)
         {
             var sequence = new CompositeSequence(operation.Name);
 

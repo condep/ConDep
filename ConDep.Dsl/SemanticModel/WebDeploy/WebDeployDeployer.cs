@@ -23,6 +23,15 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         private bool _disposed;
         private string _webDeployInstallPath;
 
+        //Web Deploy 2.0
+        //private const string MSDEPLOY_VERSION = "7.1.0.0";
+
+        //Web Deploy 2.1
+        private const string MSDEPLOY_VERSION = "8.0.0.0";
+
+        //Web Deploy 3.0
+        //private const string MSDEPLOY_VERSION = "9.0.0.0";
+
         public WebDeployDeployer(ServerConfig server)
         {
             _server = server;
@@ -69,9 +78,10 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         {
             var config = @"
 <configuration>
-    <!--<startup>
+    <startup>
+        <supportedRuntime version='v2.0.50727' />
         <supportedRuntime version='v4.0' />
-    </startup>-->
+    </startup>    
     <runtime>
         <assemblyBinding xmlns='urn:schemas-microsoft-com:asm.v1'>
             <dependentAssembly>
@@ -81,10 +91,13 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         </assemblyBinding>
     </runtime>
 </configuration>";
+
+
             //WebDeploy 3.0
             //config = string.Format(config, "7.1.0.0", "9.0.0.0");
-            
-            config = string.Format(config, "7.1.0.0", "7.1.0.0");
+
+            //WebDeploy 2.1
+            config = string.Format(config, "7.1.0.0", MSDEPLOY_VERSION);
 
             File.Copy(Path.Combine(WebDeployV1InstallPath, "MsDepSvc.exe"), Path.Combine(RemotePath, "MsDepSvc.exe"));
 
@@ -201,10 +214,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             string name2 = CultureInfo.CurrentCulture.Name;
             request.Headers.Add("MSDeploy.RequestUICulture", name1);
             request.Headers.Add("MSDeploy.RequestCulture", name2);
-            request.Headers.Add("Version", "7.1.0.0");
-
-            //WebDeploy 3.0
-            //request.Headers.Add("Version", "9.0.0.0");            
+            request.Headers.Add("Version", MSDEPLOY_VERSION);
             return request;
         }
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using ConDep.Dsl.Builders;
+using ConDep.Dsl.Operations.Infrastructure.IIS.WebApp;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 {
@@ -78,18 +80,37 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
             return this;
         }
 
+        public IOfferIisWebSiteOptions WebApp(string name)
+        {
+            _values.AddWebApp(name);
+            return this;
+        }
+
+        public IOfferIisWebSiteOptions WebApp(string name, Action<IOfferIisWebAppOptions> options)
+        {
+            _values.AddWebApp(name, options);
+            return this;
+        }
+
         public IisWebSiteOptionsValues Values { get { return _values; } }
 
         public class IisWebSiteOptionsValues
         {
             private readonly IList<BindingOptions.BindingOptionsValues> _httpBindingValues = new List<BindingOptions.BindingOptionsValues>();
             private readonly IList<BindingOptions.SslBindingOptionsValues> _httpsBindingValues = new List<BindingOptions.SslBindingOptionsValues>();
+            private readonly List<Tuple<string, Action<IOfferIisWebAppOptions>>> _webApps = new List<Tuple<string, Action<IOfferIisWebAppOptions>>>();
 
             public IList<BindingOptions.BindingOptionsValues> HttpBindings { get { return _httpBindingValues; } }
             public IList<BindingOptions.SslBindingOptionsValues> HttpsBindings { get { return _httpsBindingValues; } }
 
             public string PhysicalPath { get; set; }
             public string AppPool { get; set; }
+            public IEnumerable<Tuple<string, Action<IOfferIisWebAppOptions>>> WebApps { get { return _webApps; } }
+
+            public void AddWebApp(string name, Action<IOfferIisWebAppOptions> options = null)
+            {
+                _webApps.Add(new Tuple<string, Action<IOfferIisWebAppOptions>>(name, options));                
+            }
         }
     }
 }

@@ -56,6 +56,10 @@ namespace ConDep.Dsl.Builders
         /// <param name="name"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        IOfferInfrastructure IISAppPool(string name, Action<IisAppPoolOptions> options);
+        IOfferInfrastructure IISAppPool(string name, Action<IOfferIisAppPoolOptions> options);
+
+        IOfferInfrastructure IISWebApp(string name, string webSite);
+        
+        IOfferInfrastructure IISWebApp(string name, string webSite, Action<IOfferIisWebAppOptions> options);
     }
 }

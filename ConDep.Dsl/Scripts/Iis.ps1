@@ -1,21 +1,86 @@
 ﻿Import-Module WebAdministration; 
 
 function New-ConDepIisWebSite {
+	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory=$true)] [string] $Name, 
-		[Parameter(Mandatory=$true)] [int] $Id, 
+		[Parameter(Mandatory=$true)] [int] $Id,
+		[Parameter(Mandatory=$True)] [hashtable[]] $Bindings,
 		[string] $Path = "", 
 		[string] $AppPool = "")
 		
-	$webSiteCmd = GetNewWebSiteCommand $Name $Id $Path $AppPool $Ssl
+	$defaultPath = "$env:SystemDrive\inetpub\$Name"
+	$physicalPath = if($Path) { $Path } else { $defaultPath }
 
 	RemoveWebSite $Id
-	CreateWebSiteDir $Path
-	
-	$webSite = Invoke-Expression $webSiteCmd
+	CreateWebSiteDir $physicalPath
 
-	#StartWebSite $webSite
-	Write-Host
+	$webSite = new-item -force IIS:\Sites\$Name -Id $Id -Bindings $bindings -PhysicalPath $physicalPath -ApplicationPool $AppPool
+	$Bindings | Where-Object {$_.protocol -eq "https"} | AssociateCertificateWithBinding
+	StartWebSite $webSite
+}
+
+function New-ConDepAppPool {
+	param (
+		[Parameter(Mandatory=$true)] [string] $AppPool, 
+		[hashtable] $AppPoolOptions
+	)
+	try {
+		Remove-WebAppPool $AppPool 
+	}
+	catch {}
+
+	$newAppPool = New-WebAppPool $AppPool -Force
+	write-host "$($newAppPool.GetType())"
+	#$newAppPool
+	if($AppPoolOptions) {
+		if($AppPoolOptions.Enable32Bit) { $newAppPool.enable32BitAppOnWin64 = $AppPoolOptions.Enable32Bit }
+		if($AppPoolOptions.IdentityUsername) { 
+			$newAppPool.processModel.identityType = 'SpecificUser'
+			$newAppPool.processModel.username = $AppPoolOptions.IdentityUsername
+			$newAppPool.processModel.password = $AppPoolOptions.IdentityPassword
+		}
+		
+		if($AppPoolOptions.IdleTimeoutInMinutes) { $newAppPool.processModel.idleTimeout = [TimeSpan]::FromMinutes($AppPoolOptions.IdleTimeoutInMinutes) }
+		if($AppPoolOptions.LoadUserProfile) { $newAppPool.processModel.loadUserProfile =  $AppPoolOptions.LoadUserProfile }
+		if($AppPoolOptions.ManagedPipeline) { $newAppPool.managedPipelineMode = $AppPoolOptions.ManagedPipeline }
+		if($AppPoolOptions.NetFrameworkVersion) { $newAppPool.managedRuntimeVersion = $AppPoolOptions.NetFrameworkVersion }
+		if($AppPoolOptions.RecycleTimeInMinutes -ne $null) { if($AppPoolOptions.RecycleTimeInMinutes -eq 0) { $newAppPool.recycling.periodicrestart.time = [TimeSpan]::Zero } else { $newAppPool.recycling.periodicrestart.time = [TimeSpan]::FromMinutes($AppPoolOptions.RecycleTimeInMinutes)} }
+		
+		$newAppPool | set-item
+	}
+	$newAppPool
+}
+
+function New-ConDepWebApp {
+	param (
+		[Parameter(Mandatory=$true)] [string] $Name,
+		[Parameter(Mandatory=$true)] [string] $WebSite,
+		[string] $PhysicalPath,
+		[string] $AppPool
+	)
+	
+	$existingWebSite = Get-WebSite | where-object { $_.Name -eq $WebSite }
+	
+	if(!$existingWebSite) {
+		throw "Web Site with name [$WebSite] not found!"
+	}
+	
+	if(!$PhysicalPath) {
+		$webSitePath = [System.Environment]::ExpandEnvironmentVariables($existingWebSite.physicalPath)
+		$PhysicalPath = "$webSitePath\$Name"
+		if(!(Test-Path -path ($PhysicalPath))) { 
+			New-Item ($PhysicalPath) -type Directory 
+		}
+	}
+	
+	if(!$AppPool) {
+		$AppPool = $existingWebSite.applicationPool
+	}
+
+	if(!(Test-Path -path $PhysicalPath)) { New-Item $PhysicalPath -type Directory }; 
+	
+	New-WebApplication -Name $Name -Site $WebSite -PhysicalPath $PhysicalPath -ApplicationPool $AppPool -force; 
 }
 
 function New-ConDepIisHttpBinding {
@@ -23,7 +88,8 @@ function New-ConDepIisHttpBinding {
 		[Parameter(Mandatory=$true)] [string] $WebSiteName, 
 		[string] $Port = "", 
 		[string] $Ip = "", 
-		[string] $HostHeader = "")
+		[string] $HostHeader = ""
+	)
 
 #	try {
 		$cmd = GetNewWebBindingCommand $WebSiteName $Port $Ip $HostHeader $false
@@ -52,36 +118,40 @@ function New-ConDepIisHttpsBinding {
 	#StartWebSite $webSite
 }
 
-function AssociateCertificateWithBinding([string] $port, [System.Security.Cryptography.X509Certificates.X509FindType] $findType, $findValue, [string] $bindingIp = "0.0.0.0") {
-	#$matchString = "CN=*$certCommonName*"
-    #$webSiteCerts = Get-ChildItem cert:\\LocalMachine\\MY | Where-Object {$_.Subject -match $matchString}
-	
-	if(!$bindingIp) {
-		Write-Host "No binding ip, setting ip to [0.0.0.0]. Port is [$port]."
-		$bindingIp = "0.0.0.0"
+function AssociateCertificateWithBinding {
+	 [CmdletBinding()]
+	 param(
+		[Parameter(Mandatory=$True,ValueFromPipeline=$True,ValueFromPipelinebyPropertyName=$True)] 
+		[hashtable[]] $Bindings
+	)
+	PROCESS {
+		foreach($Binding in $Bindings) {
+			$bindingDetails = $Binding.bindingInformation.Split(":")
+			$bindingIp = $bindingDetails[0]
+			$Port = $bindingDetails[1]
+			
+			if(!$bindingIp) {
+				Write-Host "No binding ip, setting ip to [0.0.0.0]. Port is [$port]."
+				$bindingIp = "0.0.0.0"
+			}
+
+			$certsInStore = Get-ChildItem cert:\\LocalMachine\\MY
+			$certFinder = new-object System.Security.Cryptography.X509Certificates.X509Certificate2Collection(,$certsInStore)
+			$findResult = $certFinder.Find($Binding.FindType, $Binding.FindValue, $false)
+
+			if(!$findResult) { 
+				throw "No Certificate found when looking for [$findType] with value [$findValue] found."
+			}
+
+			if($findResult.Count -gt 1) {
+				throw "Certificates with $findValue returned more than 1 result."
+			}
+
+			$webSiteCert = $findResult | Select-Object -First 1
+			Remove-Item -Path "IIS:\\SslBindings\$bindingIp!$port" -ErrorAction SilentlyContinue
+		    New-Item -Path "IIS:\\SslBindings\$bindingIp!$port" -Value $webSiteCert
+		}
 	}
-
-	$certs = Get-ChildItem cert:\\LocalMachine\\MY
-	$certsArray = @(0)
-	$certsArray[0] = $certs
-	$certFinder = new-object System.Security.Cryptography.X509Certificates.X509Certificate2Collection($certsArray)
-	$findResult = $certFinder.Find($findType, $findValue, $false)
-
-	if(!$findResult) { 
-		throw "No Certificate found when looking for [$findType] with value [$findValue] found."
-	}
-
-	if($findResult.Count -gt 1) {
-		throw "Certificates with $findValue returned more than 1 result."
-	}
-
-	$webSiteCert = $findResult | Select-Object -First 1
-	Write-Host "Certificate found:"
-	$webSiteCert
-	Remove-Item -Path "IIS:\\SslBindings\$bindingIp!$port" -ErrorAction SilentlyContinue
-	
-	Write-Host "Command to execute: New-Item -Path IIS:\\SslBindings\$bindingIp!$port -Value $webSiteCert"
-    New-Item -Path "IIS:\\SslBindings\$bindingIp!$port" -Value $webSiteCert
 }
 
 function GetNewWebBindingCommand ([string] $WebSiteName, [string] $Port = "", [string] $Ip = "", [string] $HostHeader = "", [bool] $Ssl) {
@@ -120,11 +190,8 @@ function CreateWebSiteDir($dirPath) {
 		return
 	}
 	
-	if((Test-Path -path $dirPath) -ne $True) {
+	if(!(Test-Path -path $dirPath)) {
 		New-Item $dirPath -type Directory 
-	} 
-	else {
-		Write-Host "Web site directory $dirPath already exist."
 	}
 }
 
@@ -166,7 +233,7 @@ function StartWebSite($webSite) {
 }
 
 function GetNewWebSiteCommand([string]$name, [int]$id, [string]$path = "", [string]$port = "", [string]$ip = "", [string]$hostHeader = "", [string] $appPool = "", [bool] $ssl) {
-	$newWebSiteCmd = "New-Website -force -Name $name -Id $id "
+	$newWebSiteCmd = "New-Item -force IIS:\Sites\$name -id $id -bindings @{}"
 	
 	if($path) {
 		$newWebSiteCmd += "-PhysicalPath $path "

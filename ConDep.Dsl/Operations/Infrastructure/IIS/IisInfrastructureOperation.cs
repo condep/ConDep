@@ -4,12 +4,12 @@ using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Infrastructure
 {
-    public class IisInfrastructureOperation : RemoteCompositeOperation
+    public class IisInfrastructureOperation : RemoteCompositeInfrastructureOperation
     {
         private readonly List<string> _roleServicesToAdd = new List<string>();
         private readonly List<string> _roleServicesToRemove = new List<string>();
 
-        public override void Configure(IOfferRemoteComposition server)
+        public override void Configure(IOfferRemoteComposition server, IOfferInfrastructure require)
         {
             var removeFeatures = _roleServicesToRemove.Count > 0 ? "$featureRemoved = Remove-WindowsFeature " + string.Join(",", _roleServicesToRemove) : "";
             server.ExecuteRemote.PowerShell("Import-Module Servermanager; $feature = Add-WindowsFeature Web-Server,Web-WebServer" + (_roleServicesToAdd.Count > 0 ? "," : "") + string.Join(",", _roleServicesToAdd) + "; $feature; $feature.FeatureResult; " + removeFeatures, opt => opt.WaitIntervalInSeconds(640).RetryAttempts(3));
