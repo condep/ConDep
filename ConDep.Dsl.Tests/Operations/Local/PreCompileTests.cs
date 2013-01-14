@@ -37,26 +37,9 @@ namespace ConDep.Dsl.Tests.Operations.Local
         }
 
         [Test]
-        public void TestThatValidationFailsWhenWebAppDirDoesNotExist()
-        {
-            var operation = new PreCompileOperation("MyWebApp", @"C:\temp\" + Guid.NewGuid(), _validOutputPath, _buildManager.Object);
-            var notification = new Notification();
-            Assert.That(operation.IsValid(notification), Is.False);
-        }
-
-        [Test]
         public void TestThatValidationsFailsWhenAppNameIsEmpty()
         {
             var operation = new PreCompileOperation("", _validWebAppPath, _validOutputPath, _buildManager.Object);
-            var notification = new Notification();
-            Assert.That(operation.IsValid(notification), Is.False);
-        }
-
-        [Test]
-        [Ignore]
-        public void TestThatValidationFailsWhenOutputDirDoesNotExist()
-        {
-            var operation = new PreCompileOperation("MyWebApp", _validWebAppPath, @"C:\temp\" + Guid.NewGuid(), _buildManager.Object);
             var notification = new Notification();
             Assert.That(operation.IsValid(notification), Is.False);
         }
