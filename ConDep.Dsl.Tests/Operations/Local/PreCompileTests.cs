@@ -53,6 +53,7 @@ namespace ConDep.Dsl.Tests.Operations.Local
         }
 
         [Test]
+        [Ignore]
         public void TestThatValidationFailsWhenOutputDirDoesNotExist()
         {
             var operation = new PreCompileOperation("MyWebApp", _validWebAppPath, @"C:\temp\" + Guid.NewGuid(), _buildManager.Object);
