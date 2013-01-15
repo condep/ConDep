@@ -32,16 +32,25 @@ namespace ConDep.Dsl.SemanticModel.Sequence
         {
             foreach (var server in _servers)
             {
-                if(!options.WebDeployExist)
+                try
                 {
-                    using (new WebDeployDeployer(server))
+                    Logger.LogSectionStart(server.Name);
+
+                    if (!options.WebDeployExist)
+                    {
+                        using (new WebDeployDeployer(server))
+                        {
+                            ExecuteOnServer(server, status, options);
+                        }
+                    }
+                    else
                     {
                         ExecuteOnServer(server, status, options);
                     }
                 }
-                else
+                finally
                 {
-                    ExecuteOnServer(server, status, options);
+                    Logger.LogSectionEnd(server.Name);
                 }
             }
             return status;
@@ -49,47 +58,39 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         private IReportStatus ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepOptions options)
         {
-            try
+            _infrastructureSequence.Execute(server, status, options);
+
+            if (status.HasErrors)
+                return status;
+
+            foreach (var element in _sequence)
             {
-                Logger.LogSectionStart(server.Name);
-                _infrastructureSequence.Execute(server, status, options);
-
-                if (status.HasErrors)
-                    return status;
-
-                foreach (var element in _sequence)
+                if (element.GetType().IsAssignableFrom(typeof(IRequireRemotePowerShellScript)))
                 {
-                    if (element.GetType().IsAssignableFrom(typeof(IRequireRemotePowerShellScript)))
-                    {
-                        var scriptPaths = ((IRequireRemotePowerShellScript)element).ScriptPaths;
-                        RemotePowerShellScripts.Add(scriptPaths);
-                        //DeployPowerShellScripts(scriptPaths);
-                    }
+                    var scriptPaths = ((IRequireRemotePowerShellScript)element).ScriptPaths;
+                    RemotePowerShellScripts.Add(scriptPaths);
+                    //DeployPowerShellScripts(scriptPaths);
+                }
 
-                    if (element is IOperateRemote)
-                    {
-                        ((IOperateRemote)element).Execute(server, status, options);
-                        if (status.HasErrors)
-                            return status;
-                    }
-                    else if (element is CompositeSequence)
-                    {
-                        ((CompositeSequence)element).Execute(server, status, options);
-                    }
-                    else
-                    {
-                        throw new NotSupportedException();
-                    }
-
+                if (element is IOperateRemote)
+                {
+                    ((IOperateRemote)element).Execute(server, status, options);
                     if (status.HasErrors)
                         return status;
                 }
-                return status;
+                else if (element is CompositeSequence)
+                {
+                    ((CompositeSequence)element).Execute(server, status, options);
+                }
+                else
+                {
+                    throw new NotSupportedException();
+                }
+
+                if (status.HasErrors)
+                    return status;
             }
-            finally
-            {
-                Logger.LogSectionEnd(server.Name);
-            }
+            return status;
         }
 
         public CompositeSequence NewCompositeSequence(RemoteCompositeOperation operation)

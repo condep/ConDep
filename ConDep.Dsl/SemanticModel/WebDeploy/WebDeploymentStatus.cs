@@ -89,7 +89,9 @@ Mega Bytes Copied : {3}
 Time taken        : {4}
 ", objectsAdded, objectsDeleted, objectsUpdated, mBytesCopied.ToString("N"), (EndTime - StartTime).ToString(@"hh\:mm\:ss"));
 
+            Logger.LogSectionStart("Summery");
             Logger.Info(message);
+            Logger.LogSectionEnd("Summery");
         }
     }
 }

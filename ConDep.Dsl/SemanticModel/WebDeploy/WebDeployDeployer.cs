@@ -56,7 +56,18 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
                 InstallWebDeployFilesOnRemoteServer();
                 StartWebDeployServiceOnRemoteServer();
                 MakeSureWebDeployEndpointIsRunning();
+                PrintStartMessage();
             }
+        }
+
+        private void PrintStartMessage()
+        {
+            var info = @"
+Microsoft (R) Web Deployment Command Line Tool (MSDeploy.exe)
+Version 7.1.1070.1
+Copyright (c) Microsoft Corporation. All rights reserved.
+";
+            Logger.Info(info);
         }
 
         private void CreateRemoteDirectories()
@@ -452,7 +463,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
                         catch (IOException)
                         {
                             var retryMessage = retryAttempt < RetryAttempts ? "Will retry." : "Retries failed and will abort.";
-                            Logger.Verbose(string.Format("Unable to delete files on remote server [{0}]. {1}", _server.Name, retryMessage));
+                            Logger.Verbose(string.Format("Unable to delete Web Deploy files on remote server [{0}]. {1}", _server.Name, retryMessage));
                         }
                         if (_remoteNeedsCleanup)
                         {
