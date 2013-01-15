@@ -35,7 +35,7 @@ namespace ConDep.Dsl.Tests
 
             var webDeploy = new WebDeployHandlerMock();
             var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);
-            _infra.Configure(infrastructureBuilder);
+            _infra.Configure(infrastructureBuilder, config);
 
             var local = new LocalOperationsBuilder(_sequenceManager.NewLocalSequence(), infrastructureSequence, config.Servers, webDeploy);
             _app.Configure(local, config);
@@ -58,7 +58,7 @@ namespace ConDep.Dsl.Tests
 
     public class SequenceTestInfrastructure : InfrastructureArtifact
     {
-        public override void Configure(IOfferInfrastructure require)
+        public override void Configure(IOfferInfrastructure require, ConDepConfig config)
         {
             require.IIS();
         }

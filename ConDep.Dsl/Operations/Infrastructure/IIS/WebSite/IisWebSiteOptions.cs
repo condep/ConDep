@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using ConDep.Dsl.Builders;
-using ConDep.Dsl.Operations.Infrastructure.IIS.WebApp;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 {
@@ -36,22 +35,6 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
                                        BindingOptions = options.Values, 
                                        CertLocation = CertLocation.Store
                                    };
-
-            _values.HttpsBindings.Add(httpsOptions);
-            return this;
-        }
-
-        public IOfferIisWebSiteOptions AddHttpsBinding(string filePath, Action<IOfferBindingOptions> bindingOptions)
-        {
-            var options = new BindingOptions();
-            bindingOptions(options);
-
-            var httpsOptions = new BindingOptions.SslBindingOptionsValues
-            {
-                FilePath = filePath,
-                BindingOptions = options.Values,
-                CertLocation = CertLocation.File
-            };
 
             _values.HttpsBindings.Add(httpsOptions);
             return this;

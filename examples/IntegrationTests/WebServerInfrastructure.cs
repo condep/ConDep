@@ -1,6 +1,7 @@
 using System.Security.Cryptography.X509Certificates;
 using ConDep.Dsl;
 using ConDep.Dsl.Builders;
+using ConDep.Dsl.Config;
 using ConDep.Dsl.Operations.Infrastructure.IIS;
 
 //Requirements:
@@ -11,8 +12,9 @@ namespace IntegrationTests
 {
     public class WebServerInfrastructure : InfrastructureArtifact
     {
-        public override void Configure(IOfferInfrastructure require)
+        public override void Configure(IOfferInfrastructure require, ConDepConfig config)
         {
+            require.IIS();
             require
                 .IIS()
                 .IISAppPool("Bogus", options => options

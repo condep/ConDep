@@ -65,7 +65,7 @@ namespace ConDep.Dsl.SemanticModel
                     {
                         notification.Throw();
                     }
-                    infrastructureInstance.Configure(infrastructureBuilder);
+                    infrastructureInstance.Configure(infrastructureBuilder, envConfig);
                 }
 
                 var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(), infrastructureSequence, envConfig.Servers, webDeploy);
