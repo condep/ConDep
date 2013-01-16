@@ -12,6 +12,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
 
         public IReportStatus Sync(IProvide provider, ServerConfig server, bool continueOnError, IReportStatus status, EventHandler<DeploymentTraceEventArgs> onTraceMessage)
         {
+            _untrappedExitCodeException = null;
             var destBaseOptions = provider.GetWebDeployDestBaseOptions();
 
             try
