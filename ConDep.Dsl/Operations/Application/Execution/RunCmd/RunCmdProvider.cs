@@ -11,6 +11,7 @@ namespace ConDep.Dsl.Operations.Application.Execution.RunCmd
 		public RunCmdProvider(string command, bool continueOnError)
 		{
 		    DestinationPath = command;
+		    ContinueOnError = continueOnError;
 		}
 
         public override DeploymentProviderOptions GetWebDeploySourceProviderOptions()

@@ -9,6 +9,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         bool IsValid(Notification notification);
 		int WaitIntervalInSeconds { get; set; }
         int RetryAttempts { get; set; }
+        bool ContinueOnError { get; set; }
         DeploymentProviderOptions GetWebDeploySourceProviderOptions();
         DeploymentProviderOptions GetWebDeployDestinationProviderOptions();
         DeploymentBaseOptions GetWebDeploySourceBaseOptions();

@@ -29,7 +29,7 @@ namespace ConDep.Dsl.SemanticModel
             try
             {
                 Logger.LogSectionStart(_provider.GetType().Name);
-                _webDeploy.Sync(_provider, server, false, status, OnWebDeployTraceMessage);
+                _webDeploy.Sync(_provider, server, _provider.ContinueOnError, status, OnWebDeployTraceMessage);
             }
             catch (Exception ex)
             {

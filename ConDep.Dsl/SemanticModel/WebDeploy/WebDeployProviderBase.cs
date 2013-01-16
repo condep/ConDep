@@ -11,6 +11,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
 		public abstract string Name { get; }
         public int WaitIntervalInSeconds { get; set; }
         public int RetryAttempts { get; set; }
+        public virtual bool ContinueOnError { get; set; }
 
         public abstract DeploymentProviderOptions GetWebDeploySourceProviderOptions();
 	    public abstract DeploymentProviderOptions GetWebDeployDestinationProviderOptions();
