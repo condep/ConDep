@@ -76,8 +76,9 @@
     <Compile Include="Operations\Application\Execution\PowerShell\IRequireRemotePowerShellScript.cs" />
     <Compile Include="Operations\Infrastructure\IIS\AppPool\IOfferIisAppPoolOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\BindingOptions.cs" />
-    <Compile Include="Operations\Infrastructure\IIS\WebSite\CertificateBindingOptions.cs" />
+    <Compile Include="Operations\Infrastructure\IIS\WebSite\CertificateOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IOfferCertificateBindingOptions.cs" />
+    <Compile Include="Operations\Infrastructure\IIS\WebSite\IOfferCertificateOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IOfferHttpBindingOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IOfferIisWebSiteOptions.cs" />
     <Compile Include="Scripts\ScriptNamespaceMarker.cs" />
@@ -214,7 +215,6 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="Scripts\Iis.ps1" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

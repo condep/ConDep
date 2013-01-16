@@ -7,9 +7,11 @@ properties {
 	$condep = "ConDep"
 	$condep_dsl = "ConDep.Dsl"
 	$condep_console = "ConDep.Console"
+	$condep_remote = "ConDep.Remote"
 	$condep_dsl_lb_arr = "ConDep.Dsl.LoadBalancer.Arr"
 	$condep_tests = "ConDep.Dsl.Tests"
 	$lib = "$pwd\lib"
+	$preString = "-rc"
 }
  
 include .\tools\psake_ext.ps1
@@ -25,7 +27,7 @@ task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init {
 	Generate-Nuspec-File `
 		-file "$build_directory\$condep_dsl.nuspec" `
 		-version $nugetVersion `
-		-pre_release $true `
+		-preString $preString `
 		-id "$condep_dsl" `
 		-title "$condep_dsl" `
 		-licenseUrl "http://www.con-dep.net/license/" `
@@ -50,7 +52,7 @@ task Build-ConDep-Console -depends Clean-ConDep-Console, Init {
 	Generate-Nuspec-File `
 		-file "$build_directory\$condep.nuspec" `
 		-version $nugetVersion `
-		-pre_release $true `
+		-preString $preString `
 		-id "$condep" `
 		-title "$condep" `
 		-licenseUrl "http://www.con-dep.net/license/" `
@@ -60,12 +62,13 @@ task Build-ConDep-Console -depends Clean-ConDep-Console, Init {
 		-releaseNotes "Initial pre-release." `
 		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy msdeploy IIS automation powershell remote" `
 		-dependencies @(
-			@{ Name="$condep_dsl"; Version="$nugetVersion-pre"},
+			@{ Name="$condep_dsl"; Version="$nugetVersion$preString"},
 			@{ Name="NDesk.Options"; Version="0.2.1"}
 			@{ Name="log4net"; Version="2.0.0"}
 		) `
 		-files @(
 			@{ Path="$condep_console\$condep.exe"; Target="lib/net40"},
+			@{ Path="$condep_console\$condep_remote.dll"; Target="lib/net40"},
 			@{ Path="$lib\SlowCheetah\v2.4\SlowCheetah.Tasks.dll"; Target="lib/net40"}
 		)
 }
@@ -76,7 +79,7 @@ task Build-ConDep-Dsl-LB-ARR -depends Clean-ConDep-Dsl-LB-ARR, Init {
 	Generate-Nuspec-File `
 		-file "$build_directory\$condep_dsl_lb_arr.nuspec" `
 		-version $nugetVersion `
-		-pre_release $true `
+		-preString $preString `
 		-id "$condep_dsl_lb_arr" `
 		-title "$condep_dsl_lb_arr" `
 		-licenseUrl "http://www.con-dep.net/license/" `
@@ -86,7 +89,7 @@ task Build-ConDep-Dsl-LB-ARR -depends Clean-ConDep-Dsl-LB-ARR, Init {
 		-releaseNotes "Initial pre-release." `
 		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy msdeploy IIS automation powershell remote" `
 		-dependencies @(
-			@{ Name="$condep_dsl"; Version="$nugetVersion-pre"},
+			@{ Name="$condep_dsl"; Version="$nugetVersion$preString"},
 			@{ Name="ArrLoadBalancerCmdlet"; Version="1.0.2"}
 		) `
 		-files @(@{ Path="$condep_dsl_lb_arr\$condep_dsl_lb_arr.dll"; Target="lib/net40"} )       

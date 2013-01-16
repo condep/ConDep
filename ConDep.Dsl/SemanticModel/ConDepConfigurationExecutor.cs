@@ -56,20 +56,27 @@ namespace ConDep.Dsl.SemanticModel
             foreach (var application in applications)
             {
                 var infrastructureSequence = new InfrastructureSequence();
-                var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);//(sequence.RemoteSequence(envConfig.Servers));
-
-                if (HasInfrastructureDefined(application))
+                if (!options.DeployOnly)
                 {
-                    var infrastructureInstance = GetInfrastructureArtifactForApplication(assembly, application);
-                    if(!infrastructureSequence.IsvValid(notification))
+                    var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);
+
+                    if (HasInfrastructureDefined(application))
                     {
-                        notification.Throw();
+                        var infrastructureInstance = GetInfrastructureArtifactForApplication(assembly, application);
+                        if (!infrastructureSequence.IsvValid(notification))
+                        {
+                            notification.Throw();
+                        }
+                        infrastructureInstance.Configure(infrastructureBuilder, envConfig);
                     }
-                    infrastructureInstance.Configure(infrastructureBuilder, envConfig);
                 }
 
                 var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(), infrastructureSequence, envConfig.Servers, webDeploy);
-                application.Configure(local, envConfig);
+
+                if(!options.InfraOnly)
+                {
+                    application.Configure(local, envConfig);
+                }
             }
 
             if (!sequenceManager.IsValid(notification))

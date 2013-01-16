@@ -96,5 +96,11 @@ namespace ConDep.Dsl.Builders
             op.Configure(new RemoteCompositeBuilder(_infrastructureSequence.NewCompositeSequence(op), _webDeploy), new InfrastructureBuilder(_infrastructureSequence, _webDeploy));
             return this;
         }
+
+        public IOfferSslInfrastructure SslCertificate
+        {
+            get { return new SslInfrastructureBuilder(_infrastructureSequence, _webDeploy, this); }
+        }//new RemoteCertDeploymentBuilder(_infrastructureSequence, _webDeploy, this); } }
+
     }
 }

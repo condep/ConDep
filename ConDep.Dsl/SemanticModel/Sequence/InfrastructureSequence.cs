@@ -28,6 +28,13 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return sequence;
         }
 
+        public CompositeSequence NewCompositeSequence(RemoteCompositeOperation operation)
+        {
+            var sequence = new CompositeSequence(operation.Name);
+            _sequence.Add(sequence);
+            return sequence;
+        }
+
         public bool IsvValid(Notification notification)
         {
             return _sequence.All(x => x.IsValid(notification));

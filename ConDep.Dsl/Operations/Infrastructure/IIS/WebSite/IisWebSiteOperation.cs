@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using ConDep.Dsl.Builders;
@@ -56,24 +57,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
                 bindings.Add(string.Format("@{{protocol='https';bindingInformation='{0}:{1}:{2}';findType=[{3}]::{4};findValue='{5}'}}", httpsBinding.BindingOptions.Ip, httpsBinding.BindingOptions.Port, httpsBinding.BindingOptions.HostName, type.FullName, httpsBinding.FindType, httpsBinding.FindName));
             }
 
-            foreach (var httpsBinding in _options.Values.HttpsBindings)
-            {
-                switch (httpsBinding.CertLocation)
-                {
-                    case CertLocation.Store:
-                        server.Deploy.SslCertificate.FromStore(httpsBinding.FindType, httpsBinding.FindName);
-                        break;
-
-                    case CertLocation.File:
-                        server.Deploy.SslCertificate.FromFile(httpsBinding.FilePath, httpsBinding.PrivateKeyPassword);
-                        break;
-
-                    default:
-                        throw new Exception();
-                }
-            }
-
-            server.ExecuteRemote.PowerShell(string.Format(@"Import-Module $env:temp\ConDepPowerShellScripts\ConDep; New-ConDepIisWebSite '{0}' {1} {2} {3} {4};"
+            server.ExecuteRemote.PowerShell(string.Format(@"Import-Module $env:temp\ConDepPowerShellScripts\ConDep; New-ConDepIisWebSite '{0}' {1} {2} {3} '{4}';"
                 , _webSiteName
                 , _id
                 , "@(" + string.Join(",", bindings) + ")"

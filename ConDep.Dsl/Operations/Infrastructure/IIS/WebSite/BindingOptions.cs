@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
@@ -52,6 +54,8 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
             public string FilePath { get; set; }
 
             public string PrivateKeyPassword { get; set; }
+
+            public Action<IOfferCertificateOptions> CertOptions { get; set; }
         }
     }
 }

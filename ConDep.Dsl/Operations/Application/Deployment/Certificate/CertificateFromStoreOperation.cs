@@ -1,8 +1,10 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Operations.Infrastructure.Certificate;
+using ConDep.Dsl.Operations.Infrastructure.IIS.WebSite;
 using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Application.Deployment.Certificate
@@ -11,11 +13,13 @@ namespace ConDep.Dsl.Operations.Application.Deployment.Certificate
     {
         private readonly X509FindType _findType;
         private readonly string _findValue;
+        private readonly CertificateOptions _certOptions;
 
-        public CertificateFromStoreOperation(X509FindType findType, string findValue)
+        public CertificateFromStoreOperation(X509FindType findType, string findValue, CertificateOptions certOptions = null)
         {
             _findType = findType;
             _findValue = findValue;
+            _certOptions = certOptions;
         }
 
         public override void Configure(IOfferRemoteComposition server)
@@ -51,7 +55,12 @@ namespace ConDep.Dsl.Operations.Application.Deployment.Certificate
                     File.WriteAllBytes(sourcePath, exportedCert);
 
                     server.Deploy.File(sourcePath, destPath);
-                    server.ExecuteRemote.PowerShell("$path='" + destPath + "'; $password='" + password + "'; [ConDep.Remote.CertificateInstaller]::InstallPfx($path, $password);", opt => opt.RequireRemoteLib().WaitIntervalInSeconds(10));
+
+                    var formattedUserArray = _certOptions.Values.PrivateKeyPermissions.Select(user => "'" + user + "'").ToList();
+                    var users = string.Join(",", formattedUserArray);
+                    var psUserArray = string.Format("@({0})", users);
+
+                    server.ExecuteRemote.PowerShell("$path='" + destPath + "'; $password='" + password + "'; $privateKeyUsers = " + psUserArray + "; [ConDep.Remote.CertificateInstaller]::InstallPfx($path, $password, $privateKeyUsers);", opt => opt.RequireRemoteLib().WaitIntervalInSeconds(10));
                 }
                 else
                 {
@@ -67,7 +76,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.Certificate
 
         public override string Name
         {
-            get { return "Certificate"; }
+            get { return "CertificateFromStore"; }
         }
 
         public override bool IsValid(Notification notification)
