@@ -8,6 +8,8 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
 {
     public class PowerShellProvider : RemoteCompositeOperation
     {
+        private int _waitInterval = 30;
+
         public PowerShellProvider(string scriptOrCommand)
         {
             DestinationPath = scriptOrCommand;
@@ -27,7 +29,7 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
         }
 
         public bool ContinueOnError { get; set; }
-        public int WaitIntervalInSeconds { get; set; }
+        public int WaitIntervalInSeconds { get { return _waitInterval; } set { _waitInterval = value; } }
         public int RetryAttempts { get; set; }
 
         public bool RequireRemoteLib { get; set; }
