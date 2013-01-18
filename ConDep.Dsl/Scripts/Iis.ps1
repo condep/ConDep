@@ -5,17 +5,21 @@ function New-ConDepIisWebSite {
 	param (
 		[Parameter(Mandatory=$true)] [string] $Name, 
 		[Parameter(Mandatory=$true)] [int] $Id,
-		[Parameter(Mandatory=$True)] [hashtable[]] $Bindings,
+		[hashtable[]] $Bindings = @(),
 		[string] $Path = "", 
 		[string] $AppPool = "")
 		
 	$defaultPath = "$env:SystemDrive\inetpub\$Name"
 	$physicalPath = if($Path) { $Path } else { $defaultPath }
 
+	if(!$Bindings) {
+		$Bindings = @(@{protocol='http';bindingInformation=':80:'})
+	}
 	RemoveWebSite $Id
 	CreateWebSiteDir $physicalPath
 
 	$webSite = new-item -force IIS:\Sites\$Name -Id $Id -Bindings $bindings -PhysicalPath $physicalPath -ApplicationPool $AppPool
+	
 	$Bindings | Where-Object {$_.protocol -eq "https"} | AssociateCertificateWithBinding
 	StartWebSite $webSite
 }
