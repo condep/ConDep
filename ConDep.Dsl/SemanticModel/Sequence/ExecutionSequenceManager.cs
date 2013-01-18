@@ -13,9 +13,9 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             _sequence.Add(localOperation);
         }
 
-        public LocalSequence NewLocalSequence()
+        public LocalSequence NewLocalSequence(string name)
         {
-            var sequence = new LocalSequence();
+            var sequence = new LocalSequence(name);
             _sequence.Add(sequence);
             return sequence;
         }

@@ -9,7 +9,13 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 {
     public class LocalSequence : IManageSequence<LocalOperation>
     {
+        private readonly string _name;
         private readonly List<object> _sequence = new List<object>();
+
+        public LocalSequence(string name)
+        {
+            _name = name;
+        }
 
         public void Add(LocalOperation operation)
         {
@@ -25,27 +31,36 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         public IReportStatus Execute(IReportStatus status, ConDepOptions options)
         {
-            foreach (var element in _sequence)
+            try
             {
-                if(element is LocalOperation)
+                Logger.LogSectionStart(_name);
+                foreach (var element in _sequence)
                 {
-                    Logger.LogSectionStart(element.GetType().Name);
-                    ((LocalOperation) element).Execute(status, options);
-                    Logger.LogSectionEnd(element.GetType().Name);
-                }
-                else if(element is RemoteSequence)
-                {
-                    return ((RemoteSequence) element).Execute(status, options);
-                }
-                else
-                {
-                    throw new NotSupportedException();
-                }
+                    if (element is LocalOperation)
+                    {
+                        Logger.LogSectionStart(element.GetType().Name);
+                        ((LocalOperation)element).Execute(status, options);
+                        Logger.LogSectionEnd(element.GetType().Name);
+                    }
+                    else if (element is RemoteSequence)
+                    {
+                        return ((RemoteSequence)element).Execute(status, options);
+                    }
+                    else
+                    {
+                        throw new NotSupportedException();
+                    }
 
-                if (status.HasErrors)
-                    return status;
+                    if (status.HasErrors)
+                        return status;
+                }
+                return status;
+                
             }
-            return status;
+            finally
+            {
+                Logger.LogSectionEnd(_name);
+            }
         }
 
         public bool IsValid(Notification notification)

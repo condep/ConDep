@@ -71,7 +71,7 @@ namespace ConDep.Dsl.SemanticModel
                     }
                 }
 
-                var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(), infrastructureSequence, envConfig.Servers, webDeploy);
+                var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(application.GetType().Name), infrastructureSequence, envConfig.Servers, webDeploy);
 
                 if(!options.InfraOnly)
                 {
@@ -93,7 +93,7 @@ namespace ConDep.Dsl.SemanticModel
             return application.GetType().GetInterface(typeName) != null;
         }
 
-        private static InfrastructureArtifact GetInfrastructureArtifactForApplication(Assembly assembly,
+        private InfrastructureArtifact GetInfrastructureArtifactForApplication(Assembly assembly,
                                                                                       ApplicationArtifact application)
         {
             var typeName = typeof (IDependOnInfrastructure<>).Name;

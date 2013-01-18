@@ -13,7 +13,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
     public class InfrastructureSequence : IManageInfrastructureSequence
     {
         private readonly List<CompositeSequence> _sequence = new List<CompositeSequence>();
-        
+ 
         public CompositeSequence NewCompositeSequence(RemoteCompositeInfrastructureOperation operation)
         {
             var sequence = new CompositeSequence(operation.Name);

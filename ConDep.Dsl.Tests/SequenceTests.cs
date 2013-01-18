@@ -37,7 +37,7 @@ namespace ConDep.Dsl.Tests
             var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);
             _infra.Configure(infrastructureBuilder, config);
 
-            var local = new LocalOperationsBuilder(_sequenceManager.NewLocalSequence(), infrastructureSequence, config.Servers, webDeploy);
+            var local = new LocalOperationsBuilder(_sequenceManager.NewLocalSequence("Test"), infrastructureSequence, config.Servers, webDeploy);
             _app.Configure(local, config);
 
             var notification = new Notification();
