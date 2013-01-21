@@ -46,17 +46,13 @@ namespace ConDep.Dsl.Builders
             throw new System.NotImplementedException();
         }
 
-        public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName)
+        public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, Action<NServiceBusOptions> nServiceBusOptions = null)
         {
             var nServiceBusProvider = new NServiceBusOperation(sourceDir, destDir, serviceName);
-            nServiceBusProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence(nServiceBusProvider), _webDeploy));
-            return this;
-        }
-
-        public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, Action<NServiceBusOptions> nServiceBusOptions)
-        {
-            var nServiceBusProvider = new NServiceBusOperation(sourceDir, destDir, serviceName);
-            nServiceBusOptions(new NServiceBusOptions(nServiceBusProvider));
+            if(nServiceBusOptions != null)
+            {
+                nServiceBusOptions(new NServiceBusOptions(nServiceBusProvider));
+            }
             nServiceBusProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence(nServiceBusProvider), _webDeploy));
             return this;
         }

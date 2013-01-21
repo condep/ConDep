@@ -20,5 +20,11 @@ namespace ConDep.Dsl.Operations.Application.Execution.RunCmd
             _provider.RetryAttempts = retryAttempts;
             return this;
         }
+
+        public RunCmdOptions ContinueOnError(bool continueOnError)
+        {
+            _provider.ContinueOnError = continueOnError;
+            return this;
+        }
 	}
 }

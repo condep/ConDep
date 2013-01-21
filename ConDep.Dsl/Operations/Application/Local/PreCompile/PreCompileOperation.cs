@@ -30,7 +30,7 @@ namespace ConDep.Dsl.Operations.Application.Local.PreCompile
             _buildManager = buildManager;
         }
 
-        public override IReportStatus Execute(IReportStatus status, ConDepOptions envConfig)
+        public override IReportStatus Execute(IReportStatus status, ConDepConfig config, ConDepOptions options)
 		{
 			try
 			{

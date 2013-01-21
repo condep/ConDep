@@ -29,7 +29,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return sequence;
         }
 
-        public IReportStatus Execute(IReportStatus status, ConDepOptions options)
+        public IReportStatus Execute(IReportStatus status, ConDepConfig config, ConDepOptions options)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                     if (element is LocalOperation)
                     {
                         Logger.LogSectionStart(element.GetType().Name);
-                        ((LocalOperation)element).Execute(status, options);
+                        ((LocalOperation)element).Execute(status, config, options);
                         Logger.LogSectionEnd(element.GetType().Name);
                     }
                     else if (element is RemoteSequence)

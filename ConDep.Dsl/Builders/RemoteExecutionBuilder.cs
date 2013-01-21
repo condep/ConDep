@@ -21,19 +21,14 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteExecution DosCommand(string cmd)
         {
-            return DosCommand(cmd, false);
-        }
-
-        public IOfferRemoteExecution DosCommand(string cmd, bool continueOnError)
-        {
-            var runCmdProvider = new RunCmdProvider(cmd, continueOnError);
+            var runCmdProvider = new RunCmdProvider(cmd);
             _remoteSequence.Add(new RemoteWebDeployOperation(runCmdProvider, _webDeploy));
             return this;
         }
 
-        public IOfferRemoteExecution DosCommand(string cmd, bool continueOnError, Action<RunCmdOptions> runCmdOptions)
+        public IOfferRemoteExecution DosCommand(string cmd, Action<RunCmdOptions> runCmdOptions)
         {
-            var runCmdProvider = new RunCmdProvider(cmd, continueOnError);
+            var runCmdProvider = new RunCmdProvider(cmd);
             runCmdOptions(new RunCmdOptions(runCmdProvider));
             _remoteSequence.Add(new RemoteWebDeployOperation(runCmdProvider, _webDeploy));
             return this;

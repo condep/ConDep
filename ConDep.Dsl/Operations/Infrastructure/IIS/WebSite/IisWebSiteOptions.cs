@@ -40,23 +40,6 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
             return this;
         }
 
-        public IOfferIisWebSiteOptions AddHttpsBinding(string filePath, string privateKeyPassword, Action<IOfferBindingOptions> bindingOptions)
-        {
-            var options = new BindingOptions();
-            bindingOptions(options);
-
-            var httpsOptions = new BindingOptions.SslBindingOptionsValues
-            {
-                FilePath = filePath,
-                PrivateKeyPassword = privateKeyPassword,
-                BindingOptions = options.Values,
-                CertLocation = CertLocation.File
-            };
-
-            _values.HttpsBindings.Add(httpsOptions);
-            return this;
-        }
-
         public IOfferIisWebSiteOptions ApplicationPool(string appPoolName)
         {
             _values.AppPool = appPoolName;

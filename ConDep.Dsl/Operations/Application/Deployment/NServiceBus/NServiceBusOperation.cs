@@ -65,12 +65,12 @@ namespace ConDep.Dsl.Operations.Application.Deployment.NServiceBus
             server.Deploy.Directory(SourcePath, DestinationPath);
 
             //Allow continue on error??
-            server.ExecuteRemote.DosCommand(install, false, opt => opt.WaitIntervalInSeconds(10));
+            server.ExecuteRemote.DosCommand(install, opt => opt.WaitIntervalInSeconds(10));
             if (!string.IsNullOrWhiteSpace(serviceFailureCommand)) server.ExecuteRemote.DosCommand(serviceFailureCommand);
             if (!string.IsNullOrWhiteSpace(serviceConfigCommand)) server.ExecuteRemote.DosCommand(serviceConfigCommand);
 
             var start = string.Format(". $env:temp\\NServiceBus.ps1; start-nsbservice {0}", ServiceName);
-            server.ExecuteRemote.PowerShell(start, o => o.WaitIntervalInSeconds(10).RetryAttempts(10).ContinueOnError(IgnoreFailureOnServiceStartStop));
+            server.ExecuteRemote.PowerShell(start, o => o.WaitIntervalInSeconds(30).RetryAttempts(3).ContinueOnError(IgnoreFailureOnServiceStartStop));
         }
 
         public override string Name

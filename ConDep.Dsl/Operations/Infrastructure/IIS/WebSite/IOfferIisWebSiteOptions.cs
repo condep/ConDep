@@ -28,15 +28,6 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
         /// <param name="bindingOptions">Binding options for setting port, ip and host name.</param>
         /// <returns></returns>
         IOfferIisWebSiteOptions AddHttpsBinding(X509FindType findType, string findName, Action<IOfferBindingOptions> bindingOptions);
-
-        /// <summary>
-        /// Copies certificate with private key from local file to server, add to cert store on server and adds to binding.
-        /// </summary>
-        /// <param name="filePath">File path to certificate with private key (.pfx)</param>
-        /// <param name="privateKeyPassword">Password to use for the private key. This password is needed to read and install private key server side.</param>
-        /// <param name="bindingOptions">Binding options for setting port, ip and host name.</param>
-        /// <returns></returns>
-        IOfferIisWebSiteOptions AddHttpsBinding(string filePath, string privateKeyPassword, Action<IOfferBindingOptions> bindingOptions);
         
         /// <summary>
         /// Associate application pool with Web Site. To create an Application Pool, use the IISAppPool operation (e.g. require.IISAppPool)

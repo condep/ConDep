@@ -1,3 +1,5 @@
+using ConDep.Dsl.Builders;
+
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
 {
     public class IisAppPoolOptions : IOfferIisAppPoolOptions

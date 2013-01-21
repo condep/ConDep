@@ -9,8 +9,7 @@ namespace ConDep.Dsl.Builders
         IOfferRemoteDeployment File(string sourceFile, string destFile);
         IOfferRemoteDeployment IisWebApplication(string sourceDir, string webAppName, string webSiteName);
         IOfferRemoteDeployment WindowsService();
-        IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName);
-        IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, Action<NServiceBusOptions> nServiceBusOptions);
+        IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, Action<NServiceBusOptions> nServiceBusOptions = null);
         IOfferRemoteCertDeployment SslCertificate { get; }
     }
 }

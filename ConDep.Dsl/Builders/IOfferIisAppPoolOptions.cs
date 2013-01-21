@@ -1,4 +1,6 @@
-namespace ConDep.Dsl.Operations.Infrastructure.IIS
+using ConDep.Dsl.Operations.Infrastructure.IIS;
+
+namespace ConDep.Dsl.Builders
 {
     public interface IOfferIisAppPoolOptions
     {

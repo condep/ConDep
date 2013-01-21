@@ -8,10 +8,9 @@ namespace ConDep.Dsl.Operations.Application.Execution.RunCmd
 	{
         private const string NAME = "runCommand";
 
-		public RunCmdProvider(string command, bool continueOnError)
+		public RunCmdProvider(string command)
 		{
 		    DestinationPath = command;
-		    ContinueOnError = continueOnError;
 		}
 
         public override DeploymentProviderOptions GetWebDeploySourceProviderOptions()

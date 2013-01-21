@@ -56,7 +56,7 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
                 libImport = "Add-Type -Path \"" + @"%temp%\ConDep.Remote.dll" + "\";";
             }
             //elseif($Error.Count -gt 0) {{ Write-Error $Error[0]; exit 1; }} 
-            server.ExecuteRemote.DosCommand(string.Format(@"powershell.exe -noprofile -InputFormat none -Command ""& {{ $ErrorActionPreference='stop'; set-executionpolicy remotesigned -force; {0}{1}; if(!$?) {{ exit 1; }} else {{ exit $LASTEXITCODE; }} }}""", libImport, DestinationPath), ContinueOnError, o => o.WaitIntervalInSeconds(WaitIntervalInSeconds).RetryAttempts(RetryAttempts));
+            server.ExecuteRemote.DosCommand(string.Format(@"powershell.exe -noprofile -InputFormat none -Command ""& {{ $ErrorActionPreference='stop'; set-executionpolicy remotesigned -force; {0}{1}; if(!$?) {{ exit 1; }} else {{ exit $LASTEXITCODE; }} }}""", libImport, DestinationPath), o => o.ContinueOnError(ContinueOnError).WaitIntervalInSeconds(WaitIntervalInSeconds).RetryAttempts(RetryAttempts));
         }
 
         //private string AddExitCodeHandlingToScript(string script)

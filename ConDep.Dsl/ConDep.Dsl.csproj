@@ -74,7 +74,7 @@
     <Compile Include="Operations\Application\Deployment\Certificate\CertificateFromStoreOperation.cs" />
     <Compile Include="Operations\Application\Deployment\PowerShellScript\PowerShellScriptDeployOperation.cs" />
     <Compile Include="Operations\Application\Execution\PowerShell\IRequireRemotePowerShellScript.cs" />
-    <Compile Include="Operations\Infrastructure\IIS\AppPool\IOfferIisAppPoolOptions.cs" />
+    <Compile Include="Builders\IOfferIisAppPoolOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\BindingOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\CertificateOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IOfferCertificateBindingOptions.cs" />
@@ -88,7 +88,7 @@
     <Compile Include="Operations\Infrastructure\IIS\IisInfrastructureOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\IisInfrastructureOperation.cs" />
     <Compile Include="Builders\InfrastructureBuilder.cs" />
-    <Compile Include="Operations\Infrastructure\IIS\IOfferIisInfrastructure.cs" />
+    <Compile Include="Builders\IOfferIisInfrastructure.cs" />
     <Compile Include="Builders\IOfferIisInfrastructureRoleServices.cs" />
     <Compile Include="Builders\IOfferIisWebSite.cs" />
     <Compile Include="Operations\Application\Deployment\Certificate\CertificateFromFileOperation.cs" />

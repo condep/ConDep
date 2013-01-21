@@ -1,4 +1,6 @@
-﻿namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
+﻿using ConDep.Dsl.Builders;
+
+namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 {
     public class IdentityInfrastructureOptions
     {

@@ -22,7 +22,7 @@ namespace ConDep.Dsl.Operations.Application.Local.WebRequest
             return !string.IsNullOrWhiteSpace(_url) && Uri.IsWellFormedUriString(_url, UriKind.Absolute) && !string.IsNullOrWhiteSpace(_method);
         }
 
-        public override IReportStatus Execute(IReportStatus status, ConDepOptions envConfig)
+        public override IReportStatus Execute(IReportStatus status, ConDepConfig config, ConDepOptions options)
         {
             var webRequest = System.Net.WebRequest.Create(_url);
             webRequest.Method = _method;

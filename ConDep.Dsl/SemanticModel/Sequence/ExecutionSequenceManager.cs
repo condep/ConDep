@@ -20,11 +20,11 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return sequence;
         }
 
-        public IReportStatus Execute(IReportStatus status, ConDepOptions options)
+        public IReportStatus Execute(IReportStatus status, ConDepConfig config, ConDepOptions options)
         {
             foreach (var localSequence in _sequence)
             {
-                localSequence.Execute(status, options);
+                localSequence.Execute(status, config, options);
                 if (status.HasErrors)
                     return status;
             }

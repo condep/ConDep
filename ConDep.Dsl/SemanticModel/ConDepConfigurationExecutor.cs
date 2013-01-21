@@ -84,7 +84,7 @@ namespace ConDep.Dsl.SemanticModel
                 notification.Throw();
             }
 
-            sequenceManager.Execute(status, options);
+            sequenceManager.Execute(status, envConfig, options);
         }
 
         private bool HasInfrastructureDefined(ApplicationArtifact application)

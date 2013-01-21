@@ -19,7 +19,7 @@ namespace ConDep.Dsl.Operations.Application.Local.TransformConfig
 			_transformName = transformName;
 		}
 
-        public override IReportStatus Execute(IReportStatus status, ConDepOptions envConfig)
+        public override IReportStatus Execute(IReportStatus status, ConDepConfig config, ConDepOptions options)
         {
 			var configFilePath = Path.Combine(_configDirPath, _configName);
 			var transformFilePath = Path.Combine(_configDirPath, _transformName);
