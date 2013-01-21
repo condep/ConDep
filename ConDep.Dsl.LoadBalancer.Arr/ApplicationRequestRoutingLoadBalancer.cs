@@ -22,12 +22,12 @@ namespace ConDep.Dsl.LoadBalancer.Arr
             _server = new ServerConfig { DeploymentUserRemote = _user, Name = _settings.Name };
         }
 
-        public void BringOnline(string serverName, IReportStatus status)
+        public void BringOnline(string serverName, string farm, IReportStatus status)
         {
             Execute(LoadBalanceState.Online, serverName, status);
         }
 
-        public void BringOffline(string serverName, LoadBalancerSuspendMethod suspendMethod, IReportStatus status)
+        public void BringOffline(string serverName, string farm, LoadBalancerSuspendMethod suspendMethod, IReportStatus status)
         {
             Execute(LoadBalanceState.Offline, serverName, status);
         }
