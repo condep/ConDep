@@ -4,17 +4,20 @@ using System.Linq;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations.Application.Local;
+using ConDep.Dsl.Operations.LoadBalancer;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
     public class LocalSequence : IManageSequence<LocalOperation>
     {
         private readonly string _name;
+        private readonly ILoadBalance _loadBalancer;
         private readonly List<object> _sequence = new List<object>();
 
-        public LocalSequence(string name)
+        public LocalSequence(string name, ILoadBalance loadBalancer)
         {
             _name = name;
+            _loadBalancer = loadBalancer;
         }
 
         public void Add(LocalOperation operation)
@@ -24,7 +27,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         public RemoteSequence NewRemoteSequence(IManageInfrastructureSequence infrastructureSequence, IEnumerable<ServerConfig> servers)
         {
-            var sequence = new RemoteSequence(infrastructureSequence, servers);
+            var sequence = new RemoteSequence(infrastructureSequence, servers, _loadBalancer);
             _sequence.Add(sequence);
             return sequence;
         }

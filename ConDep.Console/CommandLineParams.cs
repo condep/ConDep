@@ -24,5 +24,9 @@ namespace ConDep.Console
         public bool BypassLB { get; set; }
 
         public bool WebDeployExist { get; set; }
+
+        public bool StopAfterMarkedServer { get; set; }
+
+        public bool ContinueAfterMarkedServer { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ConDep.Dsl.Logging;
+﻿using ConDep.Dsl.Config;
+using ConDep.Dsl.Logging;
 using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.LoadBalancer
@@ -14,5 +15,7 @@ namespace ConDep.Dsl.Operations.LoadBalancer
         {
             Logger.Warn("Warning: No load balancer is used. If this is not by intention, make sure you configure a provider for load balancing.");
         }
+
+        public LbMode Mode { get; set; }
     }
 }

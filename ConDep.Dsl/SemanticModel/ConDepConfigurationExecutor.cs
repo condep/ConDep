@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 
@@ -24,9 +25,9 @@ namespace ConDep.Dsl.SemanticModel
             if (status == null) { throw new ArgumentException("status"); }
 
             var applications = new List<ApplicationArtifact>();
-            if(options.HasContext())
+            if(options.HasApplicationDefined())
             {
-                var type = assembly.GetTypes().Where(t => typeof(ApplicationArtifact).IsAssignableFrom(t) && t.Name == options.Context).Single();
+                var type = assembly.GetTypes().Where(t => typeof(ApplicationArtifact).IsAssignableFrom(t) && t.Name == options.Application).Single();
                 if (type == null)
                 {
                     throw new ConDepConfigurationTypeNotFoundException(string.Format("A class inheriting from [{0}] must be present in assembly [{1}] for ConDep to work.", typeof(ApplicationArtifact).FullName, assembly.FullName));
@@ -50,7 +51,9 @@ namespace ConDep.Dsl.SemanticModel
             IoCBootstrapper.Bootstrap(envConfig);
 
             var webDeploy = new WebDeployHandler();
-            var sequenceManager = new ExecutionSequenceManager();
+            var lbLookup = new LoadBalancerLookup(envConfig.LoadBalancer);
+
+            var sequenceManager = new ExecutionSequenceManager(lbLookup.GetLoadBalancer());
 
             var notification = new Notification();
             foreach (var application in applications)

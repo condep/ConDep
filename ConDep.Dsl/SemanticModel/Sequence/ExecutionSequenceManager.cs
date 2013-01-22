@@ -1,12 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Operations.LoadBalancer;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
     public class ExecutionSequenceManager
     {
+        private readonly ILoadBalance _loadBalancer;
         private readonly List<LocalSequence> _sequence = new List<LocalSequence>();
+
+        public ExecutionSequenceManager(ILoadBalance loadBalancer)
+        {
+            _loadBalancer = loadBalancer;
+        }
 
         public void Add(LocalSequence localOperation)
         {
@@ -15,7 +22,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         public LocalSequence NewLocalSequence(string name)
         {
-            var sequence = new LocalSequence(name);
+            var sequence = new LocalSequence(name, _loadBalancer);
             _sequence.Add(sequence);
             return sequence;
         }

@@ -11,13 +11,13 @@ namespace ConDep.Dsl
     internal class IoCBootstrapper
     {
         private readonly ConDepConfig _envConfig;
-        private ExecutionSequenceManager _execSeq;
+        //private ExecutionSequenceManager _execSeq;
         private IOfferRemoteOperations _remote;
 
         private IoCBootstrapper(ConDepConfig envConfig)
         {
             _envConfig = envConfig;
-            _execSeq = new ExecutionSequenceManager();
+            //_execSeq = new ExecutionSequenceManager();
         }
 
         public void BootstrapTinyIoC()

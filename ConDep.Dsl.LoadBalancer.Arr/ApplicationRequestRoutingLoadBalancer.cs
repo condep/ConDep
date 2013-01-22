@@ -27,6 +27,8 @@ namespace ConDep.Dsl.LoadBalancer.Arr
             Execute(LoadBalanceState.Online, serverName, status);
         }
 
+        public LbMode Mode { get; set; }
+
         public void BringOffline(string serverName, string farm, LoadBalancerSuspendMethod suspendMethod, IReportStatus status)
         {
             Execute(LoadBalanceState.Offline, serverName, status);

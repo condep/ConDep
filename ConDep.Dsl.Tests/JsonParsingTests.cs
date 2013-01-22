@@ -2,6 +2,7 @@
 using System.Text;
 using ConDep.Dsl.Config;
 using NUnit.Framework;
+using System.Linq;
 
 namespace ConDep.Dsl.Tests
 {
@@ -13,14 +14,17 @@ namespace ConDep.Dsl.Tests
     ""LoadBalancer"": 
     {
         ""Name"": ""jat-nlb01"",
-        ""Provider"": ""ConDep.Dsl.LoadBalancer.Arr.dll"",
+        ""Provider"": ""ConDep.Dsl.LoadBalancer.Ace.dll"",
         ""UserName"": ""torresdal\\nlbUser"",
-        ""Password"": ""verySecureP@ssw0rd""
+        ""Password"": ""verySecureP@ssw0rd"",
+        ""Mode"": ""Sticky""
     },
 	""Servers"":
     [
         {
             ""Name"" : ""jat-web01"",
+            ""LoadBalancerFarm"": ""farm1"",
+            ""StopServer"": true,
 		    ""WebSites"" : 
 		    [
 			    { 
@@ -51,6 +55,7 @@ namespace ConDep.Dsl.Tests
         },
         {
             ""Name"" : ""jat-web02"",
+            ""LoadBalancerFarm"": ""farm1"",
 		    ""WebSites"" : 
 		    [
 			    { 
@@ -129,6 +134,8 @@ namespace ConDep.Dsl.Tests
             Assert.That(_config.LoadBalancer.Password, Is.Not.Null.Or.Empty);
             Assert.That(_config.LoadBalancer.Provider, Is.Not.Null.Or.Empty);
             Assert.That(_config.LoadBalancer.UserName, Is.Not.Null.Or.Empty);
+            Assert.That(_config.LoadBalancer.Mode, Is.Not.Null.Or.Empty);
+            Assert.That(_config.LoadBalancer.ModeAsEnum, Is.Not.Null.Or.Empty);
         }
 
         [Test]
@@ -197,6 +204,22 @@ namespace ConDep.Dsl.Tests
             foreach (var server in _config.Servers)
             {
                 Assert.That(server.Name, Is.Not.Null.Or.Empty);
+            }
+        }
+
+        [Test]
+        public void TestThatOnlyOneServerIsTestServer()
+        {
+            var value = _config.Servers.Single(x => x.StopServer);
+            Assert.That(value.StopServer);
+        }
+
+        [Test]
+        public void TestThatServersHaveFarm()
+        {
+            foreach(var server in _config.Servers)
+            {
+                Assert.That(server.LoadBalancerFarm, Is.Not.Null.Or.Empty);
             }
         }
 

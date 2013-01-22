@@ -94,13 +94,15 @@ namespace ConDep.Console
 
             var optionSet = new OptionSet()
                                 {
-                                    {"s=|server=", "Server to deploy to", v => Params.Server = v},
-                                    {"c=|context=", "Context to deploy", v => Params.Context = v},
+                                    {"s=|server=", "Limit deployment to one specific server.", v => Params.Server = v},
+                                    {"a=|application=", "Application to deploy.", v => Params.Context = v},
                                     {"t=|traceLevel=", "The level of verbosity on output. Valid values are Off, Info, Warning, Error, Verbose. Default is Info.", v => Logger.TraceLevel = ConvertStringToTraceLevel(v)},
                                     {"webDeployExist", "Tells ConDep not to deploy WebDeploy, because it already exist on server.", v => Params.WebDeployExist = v != null },
                                     {"infraOnly", "Deploy infrastructure only", v => Params.InfraOnly = v != null },
                                     {"deployOnly", "Deploy all except infrastructure", v => Params.DeployOnly = v != null},
                                     {"bypassLB", "Don't use configured load balancer during execution.", v => Params.BypassLB = v != null},
+                                    {"sams|stopAfterMarkedServer", "Will only deploy to server marked as StopServer in json config, or first server if no server is marked. After execution, run ConDep with the continueAfterMarkedServer switch to continue deployment to remaining servers.", v => Params.StopAfterMarkedServer = v != null},
+                                    {"cams|continueAfterMarkedServer", "Will continue deployment to remaining servers. Used after ConDep has previously executed with the stopAfterMarkedServer switch.", v => Params.ContinueAfterMarkedServer = v != null},
                                     {"h|?|help",  "show this message and exit", v => Params.ShowHelp = v != null }
                                 };
             try

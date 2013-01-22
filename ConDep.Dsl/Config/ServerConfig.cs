@@ -8,6 +8,7 @@ namespace ConDep.Dsl.Config
         private string _agentUrl;
 
         public string Name { get; set; }
+        public bool StopServer { get; set; }
         public IList<WebSiteConfig> WebSites { get; set; }
         public DeploymentUserConfig DeploymentUserRemote 
         { 
@@ -29,5 +30,7 @@ namespace ConDep.Dsl.Config
                 _agentUrl = value;
             }
         }
+
+        public string LoadBalancerFarm { get; set; }
     }
 }

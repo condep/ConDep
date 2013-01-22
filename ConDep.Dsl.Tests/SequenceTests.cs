@@ -17,7 +17,7 @@ namespace ConDep.Dsl.Tests
         [SetUp]
         public void Setup()
         {
-            _sequenceManager = new ExecutionSequenceManager();
+            _sequenceManager = new ExecutionSequenceManager(new DefaultLoadBalancer());
             _app = new SequenceTestApp();
             _infra = new SequenceTestInfrastructure();
 
@@ -43,7 +43,6 @@ namespace ConDep.Dsl.Tests
             var notification = new Notification();
             Assert.That(_sequenceManager.IsValid(notification));
         }
-         
     }
 
     public class SequenceTestApp : ApplicationArtifact, IDependOnInfrastructure<SequenceTestInfrastructure>

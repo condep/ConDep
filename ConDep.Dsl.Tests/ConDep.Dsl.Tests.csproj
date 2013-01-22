@@ -84,7 +84,9 @@
     <Compile Include="ConfigTransformTests.cs" />
     <Compile Include="ImpersonatorTests.cs" />
     <Compile Include="JsonParsingTests.cs" />
+    <Compile Include="LoadBalancerTests.cs" />
     <Compile Include="LoggerTests.cs" />
+    <Compile Include="MockLoadBalancer.cs" />
     <Compile Include="Operations\Local\PreCompileTests.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

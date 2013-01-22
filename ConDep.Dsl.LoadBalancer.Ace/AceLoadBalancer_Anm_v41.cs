@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using ConDep.Dsl.Config;
 using ConDep.Dsl.LoadBalancer.Ace.Proxy;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel;
@@ -87,6 +88,8 @@ namespace ConDep.Dsl.LoadBalancer.Ace
                 }
             }
         }
+
+        public LbMode Mode { get; set; }
 
         private SessionToken LogIn()
         {

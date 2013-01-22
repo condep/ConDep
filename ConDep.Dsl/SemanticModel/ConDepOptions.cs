@@ -2,20 +2,24 @@
 {
     public class ConDepOptions
     {
-        private readonly string _context;
+        private readonly string _application;
         private readonly bool _deployOnly;
         private readonly bool _infraOnly;
         private readonly bool _webDeployExist;
+        private readonly bool _stopAfterMarkedServer;
+        private readonly bool _continueAfterMarkedServer;
 
-        public ConDepOptions(string context, bool deployOnly, bool infraOnly, bool webDeployExist)
+        public ConDepOptions(string application, bool deployOnly, bool infraOnly, bool webDeployExist, bool stopAfterMarkedServer, bool continueAfterMarkedServer)
         {
-            _context = context;
+            _application = application;
             _deployOnly = deployOnly;
             _infraOnly = infraOnly;
             _webDeployExist = webDeployExist;
+            _stopAfterMarkedServer = stopAfterMarkedServer;
+            _continueAfterMarkedServer = continueAfterMarkedServer;
         }
 
-        public string Context { get { return string.IsNullOrWhiteSpace(_context) ? "Default" : _context; } }
+        public string Application { get { return string.IsNullOrWhiteSpace(_application) ? "Default" : _application; } }
 
         public bool DeployOnly
         {
@@ -32,9 +36,19 @@
             get { return _webDeployExist; }
         }
 
-        public bool HasContext()
+        public bool StopAfterMarkedServer
         {
-            return !string.IsNullOrWhiteSpace(Context) && Context != "Default";
+            get { return _stopAfterMarkedServer; }
+        }
+
+        public bool ContinueAfterMarkedServer
+        {
+            get { return _continueAfterMarkedServer; }
+        }
+
+        public bool HasApplicationDefined()
+        {
+            return !string.IsNullOrWhiteSpace(Application) && Application != "Default";
         }
     }
 }
