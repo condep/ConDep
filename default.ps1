@@ -9,6 +9,7 @@ properties {
 	$condep_console = "ConDep.Console"
 	$condep_remote = "ConDep.Remote"
 	$condep_dsl_lb_arr = "ConDep.Dsl.LoadBalancer.Arr"
+	$condep_dsl_lb_ace = "ConDep.Dsl.LoadBalancer.Ace"
 	$condep_tests = "ConDep.Dsl.Tests"
 	$lib = "$pwd\lib"
 	$preString = "-rc"
@@ -19,7 +20,7 @@ include .\tools\psake_ext.ps1
 task default -depends Build-All
 task ci -depends Build-All
 
-task Build-All -depends Init, Build-ConDep-Dsl, Build-ConDep-Console, Build-ConDep-Dsl-LB-ARR, Build-Tests
+task Build-All -depends Init, Build-ConDep-Dsl, Build-ConDep-Console, Build-ConDep-Dsl-LB-ARR, Build-ConDep-Dsl-LB-ACE, Build-Tests
 
 task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init { 
 	Exec { msbuild "$pwd\$condep_dsl\$condep_dsl.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_dsl\ }
@@ -95,6 +96,27 @@ task Build-ConDep-Dsl-LB-ARR -depends Clean-ConDep-Dsl-LB-ARR, Init {
 		-files @(@{ Path="$condep_dsl_lb_arr\$condep_dsl_lb_arr.dll"; Target="lib/net40"} )       
 }
 
+task Build-ConDep-Dsl-LB-ACE -depends Clean-ConDep-Dsl-LB-ACE, Init { 
+	Exec { msbuild "$pwd\$condep_dsl_lb_ace\$condep_dsl_lb_ace.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_dsl_lb_ace\ }
+
+	Generate-Nuspec-File `
+		-file "$build_directory\$condep_dsl_lb_ace.nuspec" `
+		-version $nugetVersion `
+		-preString $preString `
+		-id "$condep_dsl_lb_ace" `
+		-title "$condep_dsl_lb_ace" `
+		-licenseUrl "http://www.con-dep.net/license/" `
+		-projectUrl "http://www.con-dep.net/" `
+		-description "ConDep is a highly extendable Domain Specific Language for Continuous Deployment, Continuous Delivery and Infrastructure as Code on Windows." `
+		-iconUrl "https://raw.github.com/torresdal/ConDep/master/images/ConDepNugetLogo.png" `
+		-releaseNotes "Initial pre-release." `
+		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy msdeploy IIS automation powershell remote" `
+		-dependencies @(
+			@{ Name="$condep_dsl"; Version="$nugetVersion$preString"}
+		) `
+		-files @(@{ Path="$condep_dsl_lb_ace\$condep_dsl_lb_ace.dll"; Target="lib/net40"} )       
+}
+
 task Build-Tests -depends Clean-Tests, Init {
 	Exec { msbuild "$pwd\$condep_tests\$condep_tests.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_tests\ }
 }
@@ -128,6 +150,11 @@ task Clean-ConDep-Console {
 task Clean-ConDep-Dsl-LB-ARR {
 	Write-Host "Cleaning Build output"  -ForegroundColor Green
 	Remove-Item $build_directory\$condep_dsl_lb_arr -Force -Recurse -ErrorAction SilentlyContinue
+}
+
+task Clean-ConDep-Dsl-LB-ACE {
+	Write-Host "Cleaning Build output"  -ForegroundColor Green
+	Remove-Item $build_directory\$condep_dsl_lb_ace -Force -Recurse -ErrorAction SilentlyContinue
 }
 
 task Clean-Tests {
