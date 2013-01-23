@@ -21,7 +21,7 @@ namespace ConDep.Console
 
                 var optionHandler = new CommandLineOptionHandler(args);
                 var configAssemblyLoader = new ConDepAssemblyHandler(optionHandler.Params.AssemblyName);
-                var assembly = configAssemblyLoader.GetConfigAssembly();
+                var assembly = configAssemblyLoader.GetAssembly();
 
                 var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.WebDeployExist, optionHandler.Params.StopAfterMarkedServer, optionHandler.Params.ContinueAfterMarkedServer);
                 var envSettings = GetEnvConfig(optionHandler.Params, assembly);

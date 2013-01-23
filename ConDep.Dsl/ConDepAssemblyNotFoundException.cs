@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace ConDep.Console
+namespace ConDep.Dsl
 {
     public class ConDepAssemblyNotFoundException : Exception
     {

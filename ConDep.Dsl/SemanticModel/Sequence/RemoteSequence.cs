@@ -6,12 +6,12 @@ using ConDep.Dsl.Logging;
 using System.Linq;
 using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.Application.Deployment.PowerShellScript;
-using ConDep.Dsl.Operations.Application.Execution.PowerShell;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
+    //Todo: Could need some refactoring...
     public class RemoteSequence : IManageRemoteSequence
     {
         private readonly IManageInfrastructureSequence _infrastructureSequence;
@@ -33,22 +33,15 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         public IReportStatus Execute(IReportStatus status, ConDepOptions options)
         {
-            if (_servers.Count() == 1)
+            switch (_loadBalancer.Mode)
             {
-                return ExecuteOnServer(_servers.First(), status, options, _loadBalancer, true, true);
+                case LbMode.Sticky:
+                    return ExecuteWithSticky(options, status);
+                case LbMode.RoundRobin:
+                    return ExecuteWithRoundRobin(options, status);
+                default:
+                    throw new NotSupportedException(string.Format("Load Balancer mode [{0}] not supported.", _loadBalancer.Mode));
             }
-
-            if(_loadBalancer.Mode == LbMode.RoundRobin)
-            {
-                return ExecuteWithRoundRobin(options, status);
-            }
-            
-            if(_loadBalancer.Mode == LbMode.Sticky)
-            {
-                return ExecuteWithSticky(options, status);
-            }
-
-            throw new NotSupportedException(string.Format("Load Balancer mode [{0}] not supported.", _loadBalancer.Mode));
         }
 
         private IReportStatus ExecuteWithRoundRobin(ConDepOptions options, IReportStatus status)
@@ -72,6 +65,11 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 {
                     _loadBalancer.BringOnline(manuelTestServer.Name, manuelTestServer.LoadBalancerFarm, status);
                 }
+            }
+
+            if (servers.Count == 1)
+            {
+                return ExecuteOnServer(servers.First(), status, options, _loadBalancer, true, true);
             }
 
             for (int execCount = 0; execCount < servers.Count; execCount++)
@@ -135,14 +133,15 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         private IReportStatus ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepOptions options, ILoadBalance loadBalancer, bool bringServerOfflineBeforeExecution, bool bringServerOnlineAfterExecution)
         {
-            if(bringServerOfflineBeforeExecution)
-            {
-                loadBalancer.BringOffline(server.Name, server.LoadBalancerFarm, LoadBalancerSuspendMethod.Suspend, status);
-            }
-
             try
             {
                 Logger.LogSectionStart(server.Name);
+
+                if (bringServerOfflineBeforeExecution)
+                {
+                    Logger.Info(string.Format("Taking server [{0}] offline in load balancer.", server.Name));
+                    loadBalancer.BringOffline(server.Name, server.LoadBalancerFarm, LoadBalancerSuspendMethod.Suspend, status);
+                }
 
                 if (options.WebDeployExist)
                 {
@@ -162,6 +161,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 {
                     if (bringServerOnlineAfterExecution)
                     {
+                        Logger.Info(string.Format("Taking server [{0}] online in load balancer.", server.Name));
                         loadBalancer.BringOnline(server.Name, server.LoadBalancerFarm, status);
                     }
                 }

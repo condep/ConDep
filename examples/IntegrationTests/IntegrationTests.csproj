@@ -46,6 +46,10 @@
     <Compile Include="WebServerInfrastructure.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ConDep.Dsl.LoadBalancer.Ace\ConDep.Dsl.LoadBalancer.Ace.csproj">
+      <Project>{0653515e-ff25-482c-b316-eb5bb045bf1e}</Project>
+      <Name>ConDep.Dsl.LoadBalancer.Ace</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ConDep.Dsl.LoadBalancer.Arr\ConDep.Dsl.LoadBalancer.Arr.csproj">
       <Project>{9653f966-8b4c-4e13-b129-8ae29ce0d4a7}</Project>
       <Name>ConDep.Dsl.LoadBalancer.Arr</Name>

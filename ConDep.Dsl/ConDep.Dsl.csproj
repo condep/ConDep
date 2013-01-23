@@ -67,13 +67,15 @@
     </Compile>
     <Compile Include="ApplicationArtifact.cs" />
     <Compile Include="Builders\IExecuteSequence.cs" />
+    <Compile Include="ConDepAssemblyHandler.cs" />
+    <Compile Include="ConDepAssemblyNotFoundException.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebApp\IisWebAppOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebApp\IOfferIisWebAppOptions.cs" />
     <Compile Include="Builders\IOfferRemoteComposition.cs" />
     <Compile Include="Builders\RemoteCompositeBuilder.cs" />
     <Compile Include="Operations\Application\Deployment\Certificate\CertificateFromStoreOperation.cs" />
     <Compile Include="Operations\Application\Deployment\PowerShellScript\PowerShellScriptDeployOperation.cs" />
-    <Compile Include="Operations\Application\Execution\PowerShell\IRequireRemotePowerShellScript.cs" />
+    <Compile Include="SemanticModel\IRequireRemotePowerShellScript.cs" />
     <Compile Include="Builders\IOfferIisAppPoolOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\BindingOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\CertificateOptions.cs" />

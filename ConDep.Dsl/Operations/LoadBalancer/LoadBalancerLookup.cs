@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using ConDep.Dsl.Config;
-using ConDep.Dsl.Logging;
 
 namespace ConDep.Dsl.Operations.LoadBalancer
 {
@@ -26,17 +24,15 @@ namespace ConDep.Dsl.Operations.LoadBalancer
             {
                 if(!string.IsNullOrWhiteSpace(_loadBalancerSettings.Provider))
                 {
-                    var assembly = Assembly.LoadFrom(_loadBalancerSettings.Provider);
-                    //var assembly = Assembly.Load(_loadBalancerSettings.Provider);
+                    var assemblyHandler = new ConDepAssemblyHandler(_loadBalancerSettings.Provider);
+                    var assembly = assemblyHandler.GetAssembly();
 
                     var type = assembly.GetTypes().Where(t => typeof(ILoadBalance).IsAssignableFrom(t)).FirstOrDefault();
                     var loadBalancer = Activator.CreateInstance(type, _loadBalancerSettings) as ILoadBalance;
                     loadBalancer.Mode = _loadBalancerSettings.ModeAsEnum;
-                    Logger.Info(string.Format("Load balancer loaded: {0}", type.Name));
                     return loadBalancer;
                 }
             }
-            Logger.Info("Load balancer not defined.");
             return new DefaultLoadBalancer();
         }
         

@@ -5,9 +5,99 @@ using NUnit.Framework;
 
 namespace ConDep.Dsl.Tests
 {
+    //Todo: Needs to be refactored and tests should get better names
     [TestFixture]
     public class LoadBalancerTests
     {
+        [Test]
+        public void TestThatStickyLoadBlancingWithOneServerAndManuelTestWorks()
+        {
+            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var server1 = new ServerConfig { Name = "jat-web01" };
+
+            config.Servers = new[] { server1 };
+
+            var infrastructureSequence = new InfrastructureSequence();
+            var loadBalancer = new MockLoadBalancer { Mode = LbMode.Sticky };
+
+            var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
+
+            var status = new StatusReporter();
+            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, true, false));
+
+            Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
+
+            Assert.That(loadBalancer.OnlineOfflineSequence[0].Item1, Is.EqualTo("jat-web01"));
+            Assert.That(loadBalancer.OnlineOfflineSequence[0].Item2, Is.EqualTo("offline"));
+        }
+
+        [Test]
+        public void TestThatStickyLoadBlancingWithOneServerAndContinueWorks()
+        {
+            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var server1 = new ServerConfig { Name = "jat-web01" };
+
+            config.Servers = new[] { server1 };
+
+            var infrastructureSequence = new InfrastructureSequence();
+            var loadBalancer = new MockLoadBalancer { Mode = LbMode.Sticky };
+
+            var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
+
+            var status = new StatusReporter();
+            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, false, true));
+
+            Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
+
+            Assert.That(loadBalancer.OnlineOfflineSequence[0].Item1, Is.EqualTo("jat-web01"));
+            Assert.That(loadBalancer.OnlineOfflineSequence[0].Item2, Is.EqualTo("online"));
+        }
+
+        [Test]
+        public void TestThatRoundRobinLoadBlancingWithOneServerAndManuelTestWorks()
+        {
+            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var server1 = new ServerConfig { Name = "jat-web01" };
+
+            config.Servers = new[] { server1 };
+
+            var infrastructureSequence = new InfrastructureSequence();
+            var loadBalancer = new MockLoadBalancer { Mode = LbMode.RoundRobin };
+
+            var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
+
+            var status = new StatusReporter();
+            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, true, false));
+
+            Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
+
+            Assert.That(loadBalancer.OnlineOfflineSequence[0].Item1, Is.EqualTo("jat-web01"));
+            Assert.That(loadBalancer.OnlineOfflineSequence[0].Item2, Is.EqualTo("offline"));
+        }
+
+        [Test]
+        public void TestThatRoundRobinLoadBlancingWithOneServerAndContinueWorks()
+        {
+            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var server1 = new ServerConfig { Name = "jat-web01" };
+
+            config.Servers = new[] { server1 };
+
+            var infrastructureSequence = new InfrastructureSequence();
+            var loadBalancer = new MockLoadBalancer { Mode = LbMode.RoundRobin };
+
+            var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
+
+            var status = new StatusReporter();
+            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, false, true));
+
+            Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
+
+            Assert.That(loadBalancer.OnlineOfflineSequence[0].Item1, Is.EqualTo("jat-web01"));
+            Assert.That(loadBalancer.OnlineOfflineSequence[0].Item2, Is.EqualTo("online"));
+        }
+
+
         [Test]
         public void TestThatRoundRobinLoadBlancingWithOneServerWorks()
         {
@@ -24,7 +114,7 @@ namespace ConDep.Dsl.Tests
             var status = new StatusReporter();
             remoteSequence.Execute(status, new ConDepOptions("", false, false, true, false, false));
 
-            Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(config.Servers.Count * 2));
+            Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(2));
 
             Assert.That(loadBalancer.OnlineOfflineSequence[0].Item1, Is.EqualTo("jat-web01"));
             Assert.That(loadBalancer.OnlineOfflineSequence[0].Item2, Is.EqualTo("offline"));

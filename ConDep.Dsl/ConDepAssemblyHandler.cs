@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Reflection;
 
-namespace ConDep.Console
+namespace ConDep.Dsl
 {
-    internal class ConDepAssemblyHandler
+    public class ConDepAssemblyHandler
     {
         private readonly string _assemblyName;
 
@@ -12,7 +12,7 @@ namespace ConDep.Console
             _assemblyName = assemblyName;
         }
 
-        public Assembly GetConfigAssembly()
+        public Assembly GetAssembly()
         {
             Assembly assembly;
             if (!TryGetAssembly(_assemblyName, out assembly))

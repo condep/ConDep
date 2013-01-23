@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
+namespace ConDep.Dsl.SemanticModel
 {
     public interface IRequireRemotePowerShellScript
     {

@@ -4,7 +4,7 @@ using ConDep.Dsl.Config;
 
 namespace IntegrationTests
 {
-    public class MyWebApplication : ApplicationArtifact, IDependOnInfrastructure<WebServerInfrastructure>//, IDependOnApplication<RaadgivewerbLiv>
+    public class MyWebApplication : ApplicationArtifact//, IDependOnInfrastructure<WebServerInfrastructure>//, IDependOnApplication<RaadgivewerbLiv>
     {
         public override void Configure(IOfferLocalOperations onLocalMachine, ConDepConfig config)
         {
