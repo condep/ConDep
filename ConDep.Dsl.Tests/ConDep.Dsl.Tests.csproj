@@ -119,9 +119,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
     <EmbeddedResource Include="ResourceTestFile.txt" />
     <Content Include="testcert.con-dep.net.pfx">

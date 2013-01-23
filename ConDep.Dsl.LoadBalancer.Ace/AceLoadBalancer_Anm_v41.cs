@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.ServiceModel;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.LoadBalancer.Ace.Proxy;
 using ConDep.Dsl.Operations.LoadBalancer;
@@ -12,17 +13,18 @@ namespace ConDep.Dsl.LoadBalancer.Ace
     {
         private readonly string _username;
         private readonly string _password;
-        private readonly string _chassisIp;
         private IOperationManager _proxy;
         private bool _loggedIn;
 
         //"test_env_FARM"
-        public AceLoadBalancer_Anm_v41(string username, string password, string chassisIp = null)
+        public AceLoadBalancer_Anm_v41(LoadBalancerConfig lbConfig)
         {
-            _proxy = new OperationManagerClient("OperationManagerPort");
-            _username = username;
-            _password = password;
-            _chassisIp = chassisIp;
+            var binding = new BasicHttpBinding(BasicHttpSecurityMode.Transport);
+            var remoteAddress = new EndpointAddress(lbConfig.Name);
+
+            _proxy = new OperationManagerClient(binding, remoteAddress);
+            _username = lbConfig.UserName;
+            _password = lbConfig.Password;
 
             ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
         }
@@ -116,9 +118,8 @@ namespace ConDep.Dsl.LoadBalancer.Ace
                 deviceType = DeviceType.VIRTUAL_CONTEXT
             };
             var deviceIds = _proxy.listDeviceIds(new listDeviceIdsRequest { listDeviceIds = deviceIdsRequest});
-            return string.IsNullOrWhiteSpace(_chassisIp)
-                               ? deviceIds.listDeviceIdsResponse.DeviceIDs[0]
-                               : deviceIds.listDeviceIdsResponse.DeviceIDs.Single(x => x.chassisIPAddr == _chassisIp);
+            return deviceIds.listDeviceIdsResponse.DeviceIDs[0];
+
         }
 
         private SuspendState GetSuspendState(LoadBalancerSuspendMethod suspendMethod)
