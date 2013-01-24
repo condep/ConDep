@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Operations.Application.Local;
 using ConDep.Dsl.Operations.Application.Local.PreCompile;
 using ConDep.Dsl.Operations.Application.Local.TransformConfig;
 using ConDep.Dsl.Operations.Application.Local.WebRequest;
@@ -10,7 +11,7 @@ using TinyIoC;
 
 namespace ConDep.Dsl.Builders
 {
-    public class LocalOperationsBuilder : IOfferLocalOperations
+    public class LocalOperationsBuilder : IOfferLocalOperations, IConfigureLocalOperations
     {
         private readonly LocalSequence _localSequence;
         private readonly IManageInfrastructureSequence _infrastructureSequence;
@@ -29,9 +30,8 @@ namespace ConDep.Dsl.Builders
 
         public IOfferLocalOperations TransformConfigFile(string configDirPath, string configName, string transformName)
         {
-            var operation = new TransformConfigOperation(configDirPath, configName,
-                                                                                    transformName);
-            _localSequence.Add(operation);
+            var operation = new TransformConfigOperation(configDirPath, configName, transformName);
+            AddOperation(operation);
             return this;
         }
 
@@ -39,14 +39,14 @@ namespace ConDep.Dsl.Builders
         {
             var operation = new PreCompileOperation(webApplicationName, webApplicationPhysicalPath,
                                                                           preCompileOutputpath);
-            _localSequence.Add(operation);
+            AddOperation(operation);
             return this;
         }
 
         public IOfferLocalOperations ExecuteWebRequest(string method, string url)
         {
             var operation = new WebRequestOperation(url, method);
-            _localSequence.Add(operation);
+            AddOperation(operation);
             return this;
         }
 
@@ -57,9 +57,9 @@ namespace ConDep.Dsl.Builders
             return builder;
         }
 
-        //public void AddInfrastructure(InfrastructureArtifact infrastructure)
-        //{
-        //    _infrastructures.Add(infrastructure);    
-        //}
+        public void AddOperation(LocalOperation operation)
+        {
+            _localSequence.Add(operation);
+        }
     }
 }

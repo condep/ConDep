@@ -1,6 +1,7 @@
 ﻿using ConDep.Dsl;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Experimental;
 
 namespace IntegrationTests
 {
@@ -13,14 +14,7 @@ namespace IntegrationTests
                                                 x.ExecuteRemote.DosCommand("echo 'test'");
                                             }
                 );
-
-
-
-
-
-
-
-
+            onLocalMachine.WebRequestPut("ConDepQueue");
 
 
 

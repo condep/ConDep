@@ -66,6 +66,7 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="ApplicationArtifact.cs" />
+    <Compile Include="Builders\IConfigureLocalOperations.cs" />
     <Compile Include="Builders\IExecuteSequence.cs" />
     <Compile Include="ConDepAssemblyHandler.cs" />
     <Compile Include="ConDepAssemblyNotFoundException.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Builders\RemoteCompositeBuilder.cs" />
     <Compile Include="Operations\Application\Deployment\Certificate\CertificateFromStoreOperation.cs" />
     <Compile Include="Operations\Application\Deployment\PowerShellScript\PowerShellScriptDeployOperation.cs" />
+    <Compile Include="Configure.cs" />
     <Compile Include="SemanticModel\IRequireRemotePowerShellScript.cs" />
     <Compile Include="Builders\IOfferIisAppPoolOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\BindingOptions.cs" />

@@ -75,6 +75,7 @@ namespace ConDep.Dsl.SemanticModel
                 }
 
                 var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(application.GetType().Name), infrastructureSequence, envConfig.Servers, webDeploy);
+                Configure.LocalOperations = local;
 
                 if(!options.InfraOnly)
                 {
