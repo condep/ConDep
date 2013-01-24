@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.Application.Execution.PowerShell;
 using ConDep.Dsl.Operations.Application.Execution.RunCmd;
 using ConDep.Dsl.SemanticModel;
@@ -8,7 +9,7 @@ using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.Builders
 {
-    public class RemoteExecutionBuilder : IOfferRemoteExecution
+    public class RemoteExecutionBuilder : IOfferRemoteExecution, IConfigureRemoteExecution
     {
         private readonly IManageRemoteSequence _remoteSequence;
         private readonly IHandleWebDeploy _webDeploy;
@@ -22,7 +23,7 @@ namespace ConDep.Dsl.Builders
         public IOfferRemoteExecution DosCommand(string cmd)
         {
             var runCmdProvider = new RunCmdProvider(cmd);
-            _remoteSequence.Add(new RemoteWebDeployOperation(runCmdProvider, _webDeploy));
+            AddOperation(runCmdProvider);
             return this;
         }
 
@@ -30,21 +31,21 @@ namespace ConDep.Dsl.Builders
         {
             var runCmdProvider = new RunCmdProvider(cmd);
             runCmdOptions(new RunCmdOptions(runCmdProvider));
-            _remoteSequence.Add(new RemoteWebDeployOperation(runCmdProvider, _webDeploy));
+            AddOperation(runCmdProvider);
             return this;
         }
 
         public IOfferRemoteExecution PowerShell(string commandOrScript)
         {
             var psProvider = new PowerShellProvider(commandOrScript);
-            psProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence(psProvider), _webDeploy));
+            AddOperation(psProvider);
             return this;
         }
 
         public IOfferRemoteExecution PowerShell(FileInfo scriptFile)
         {
             var psProvider = new PowerShellProvider(scriptFile);
-            psProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence(psProvider), _webDeploy));
+            AddOperation(psProvider);
             return this;
         }
 
@@ -52,7 +53,7 @@ namespace ConDep.Dsl.Builders
         {
             var psProvider = new PowerShellProvider(commandOrScript);
             powerShellOptions(new PowerShellOptions(psProvider));
-            psProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence(psProvider), _webDeploy));
+            AddOperation(psProvider);
             return this;
         }
 
@@ -60,7 +61,7 @@ namespace ConDep.Dsl.Builders
         {
             var psProvider = new PowerShellProvider(scriptFile);
             powerShellOptions(new PowerShellOptions(psProvider));
-            psProvider.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence(psProvider), _webDeploy));
+            AddOperation(psProvider);
             return this;
         }
 
@@ -69,5 +70,14 @@ namespace ConDep.Dsl.Builders
         //{
         //    get { return _remoteSequence; }
         //}
+        public void AddOperation(RemoteCompositeOperation operation)
+        {
+            operation.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence(operation), _webDeploy));
+        }
+
+        public void AddOperation(WebDeployProviderBase provider)
+        {
+            _remoteSequence.Add(new RemoteWebDeployOperation(provider, _webDeploy));
+        }
     }
 }

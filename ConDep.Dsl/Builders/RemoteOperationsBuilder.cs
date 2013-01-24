@@ -7,12 +7,13 @@ namespace ConDep.Dsl.Builders
     {
         public RemoteOperationsBuilder(RemoteSequence remoteSequence, IHandleWebDeploy webDeploy)
         {
- 
-            Deploy = new RemoteDeploymentBuilder(remoteSequence, webDeploy);
-            ExecuteRemote = new RemoteExecutionBuilder(remoteSequence, webDeploy);
+
+            Configure.DeploymentOperations = new RemoteDeploymentBuilder(remoteSequence, webDeploy);
+            Configure.ExecutionOperations = new RemoteExecutionBuilder(remoteSequence, webDeploy);
+
         }
 
-        public IOfferRemoteDeployment Deploy { get; private set; }
-        public IOfferRemoteExecution ExecuteRemote { get; private set; }
+        public IOfferRemoteDeployment Deploy { get { return (RemoteDeploymentBuilder) Configure.DeploymentOperations; } }
+        public IOfferRemoteExecution ExecuteRemote { get { return (RemoteExecutionBuilder) Configure.ExecutionOperations; } }
     }
 }
