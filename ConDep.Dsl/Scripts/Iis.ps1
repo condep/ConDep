@@ -64,7 +64,7 @@ function New-ConDepWebApp {
 		[string] $AppPool
 	)
 	
-	$existingWebSite = Get-WebSite | where-object { $_.Name -eq $WebSite }
+	$existingWebSite = Get-WebSite | where-object { $_.Name -eq "$WebSite" }
 	
 	if(!$existingWebSite) {
 		throw "Web Site with name [$WebSite] not found!"
