@@ -64,7 +64,7 @@ function New-ConDepWebApp {
 		[string] $AppPool
 	)
 	
-	$existingWebSite = Get-WebSite | where-object { $_.Name -eq "$WebSite" }
+	$existingWebSite = Get-WebSite | where-object { $_.Name -eq $WebSite }
 	
 	if(!$existingWebSite) {
 		throw "Web Site with name [$WebSite] not found!"
@@ -186,7 +186,7 @@ function GetNewWebBindingCommand ([string] $WebSiteName, [string] $Port = "", [s
 }
 
 function RemoveWebSite($webSiteId) {
-	get-website | where-object { $_.ID -match $webSiteId } | Remove-Website
+	get-website | where-object { $_.ID -eq $webSiteId } | Remove-Website
 }
 
 function CreateWebSiteDir($dirPath) {
@@ -195,7 +195,7 @@ function CreateWebSiteDir($dirPath) {
 	}
 	
 	if(!(Test-Path -path $dirPath)) {
-		New-Item $dirPath -type Directory 
+		New-Item -Path $dirPath -Type Directory
 	}
 }
 
