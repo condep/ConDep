@@ -25,12 +25,25 @@ namespace ConDep.Dsl.Operations.Application.Deployment.CopyDir
             return new DeploymentProviderOptions(NAME) { Path = SourcePath };
         }
 
-	    public override DeploymentProviderOptions GetWebDeployDestinationProviderOptions()
-		{
-			return new DeploymentProviderOptions(Name) { Path = DestinationPath };
-		}
+        public override DeploymentProviderOptions GetWebDeployDestinationProviderOptions()
+        {
+            var destProviderOptions = new DeploymentProviderOptions(Name) { Path = DestinationPath };
 
-		public override bool IsValid(Notification notification)
+            DeploymentProviderSetting waitAttempts;
+            DeploymentProviderSetting waitInterval;
+
+            if (destProviderOptions.ProviderSettings.TryGetValue("waitAttempts", out waitAttempts))
+            {
+                waitAttempts.Value = 10;
+            }
+            if (destProviderOptions.ProviderSettings.TryGetValue("waitInterval", out waitInterval))
+            {
+                waitInterval.Value = 5000;
+            }
+            return destProviderOptions;
+        }
+
+        public override bool IsValid(Notification notification)
 		{
 			var valid = true;
 
