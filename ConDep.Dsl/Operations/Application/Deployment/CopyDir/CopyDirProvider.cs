@@ -22,7 +22,20 @@ namespace ConDep.Dsl.Operations.Application.Deployment.CopyDir
 
 	    public override DeploymentProviderOptions GetWebDeploySourceProviderOptions()
 	    {
-            return new DeploymentProviderOptions(NAME) { Path = SourcePath };
+            var destProviderOptions = new DeploymentProviderOptions(Name) { Path = SourcePath };
+
+            DeploymentProviderSetting waitAttempts;
+            DeploymentProviderSetting waitInterval;
+
+            if (destProviderOptions.ProviderSettings.TryGetValue("waitAttempts", out waitAttempts))
+            {
+                waitAttempts.Value = 10;
+            }
+            if (destProviderOptions.ProviderSettings.TryGetValue("waitInterval", out waitInterval))
+            {
+                waitInterval.Value = 5000;
+            }
+            return destProviderOptions;
         }
 
         public override DeploymentProviderOptions GetWebDeployDestinationProviderOptions()
