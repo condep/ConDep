@@ -24,40 +24,37 @@
 }
 
 function Remove-NSBService($serviceName) {
-	$result = 0
-	$managedService = Get-Service $serviceName -ErrorAction Stop
-	
+	$managedService = Get-Service $serviceName -ErrorAction SilentlyContinue
+
+	if(!$managedService) {
+		return
+	}
+
+	$processId = (get-wmiobject Win32_Service -filter "name='$serviceName'").ProcessID
+
 	if ($managedService.Status -eq [System.ServiceProcess.ServiceControllerStatus]::Running) 
 	{ 
-		Write-Host "Stopping: $($managedService.DisplayName)"
+		Write-Host "Stopping Windows Service [$($managedService.DisplayName)]."
 		$managedService.Stop()
 		$managedService.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Stopped)
-		Write-Host "Stopped: $($managedService.DisplayName)"
+		Write-Host "Current service status for [$($managedService.DisplayName)] is [$($managedService.Status)]."
 	} 
-
-	#$service = Get-Service $serviceName -ErrorAction Stop
-    #Stop-NSBService $serviceName $true
 	
 	$service = Get-WmiObject -Class Win32_Service -Filter "Name='$serviceName'"
-	Write-Host "Removing: $($service.DisplayName)"
+	Write-Host "Removing Windows Service [$($service.DisplayName)]."
 	$result = $service.Delete().ReturnValue
 	if($result -ne 0) {
 		throw 'Unable to delete service [$serviceName]. Return code [$result].'
 	}
+	Write-Host "Windows Service [$($service.DisplayName)] removed."
 
-	$managedService.Refresh()
+	$process = Get-Process -Id $processId -ErrorAction SilentlyContinue
 	
-	if($managedService.Status) {
-		while ($managedService.Status) {
-			Write-Host "Waiting for service to be deleted..."
-			Start-Sleep -s 2
-			$managedService.Refresh()
-		}
+	if($process -and !$process.HasExited) {
+		Write-Host "Waiting for process with id [$processId] to exit..."
+		$process.WaitForExit()
+		Write-Host "Process id [$processId] has now exited."
 	}
-
-	Write-Host "Removed: $($service.DisplayName)"
-	
-    #C:\\WINDOWS\\system32\\sc.exe delete $serviceName
 }
 
 function Start-NSBService($serviceName, $ignoreFailure) {
