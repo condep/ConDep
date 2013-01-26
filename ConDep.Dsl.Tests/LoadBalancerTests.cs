@@ -23,7 +23,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, true, false));
+            remoteSequence.Execute(status, new ConDepOptions(false, "", false, false, true, true, false));
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
 
@@ -45,7 +45,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, false, true));
+            remoteSequence.Execute(status, new ConDepOptions(false, "", false, false, true, false, true));
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
 
@@ -67,7 +67,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, true, false));
+            remoteSequence.Execute(status, new ConDepOptions(false, "", false, false, true, true, false));
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
 
@@ -89,7 +89,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, false, true));
+            remoteSequence.Execute(status, new ConDepOptions(false, "", false, false, true, false, true));
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
 
@@ -112,7 +112,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, false, false));
+            remoteSequence.Execute(status, new ConDepOptions(false, "", false, false, true, false, false));
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(2));
 
@@ -137,7 +137,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, false, false));
+            remoteSequence.Execute(status, new ConDepOptions(false, "", false, false, true, false, false));
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(config.Servers.Count * 2));
 
@@ -166,7 +166,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, false, false));
+            remoteSequence.Execute(status, new ConDepOptions(false, "", false, false, true, false, false));
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(config.Servers.Count * 2));
 
@@ -219,7 +219,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, false, false));
+            remoteSequence.Execute(status, new ConDepOptions(false, "", false, false, true, false, false));
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(config.Servers.Count * 2));
 
@@ -253,7 +253,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, true, false));
+            remoteSequence.Execute(status, new ConDepOptions(false, "", false, false, true, true, false));
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
 
@@ -279,7 +279,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, true, false));
+            remoteSequence.Execute(status, new ConDepOptions(false, "", false, false, true, true, false));
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
 
@@ -305,7 +305,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, false, true));
+            remoteSequence.Execute(status, new ConDepOptions(false, "", false, false, true, false, true));
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(((config.Servers.Count - 1) * 2) + 1));
 
@@ -342,7 +342,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, false, true));
+            remoteSequence.Execute(status, new ConDepOptions(false, "", false, false, true, false, true));
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(((config.Servers.Count - 1) * 2) + 1));
 
@@ -392,7 +392,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions("", false, false, true, false, true));
+            remoteSequence.Execute(status, new ConDepOptions(false, "", false, false, true, false, true));
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(((config.Servers.Count - 1) * 2) + 1));
 

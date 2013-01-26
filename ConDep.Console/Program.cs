@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using ConDep.Dsl;
 using ConDep.Dsl.Config;
@@ -17,16 +18,17 @@ namespace ConDep.Console
             try
             {
                 new LogConfigLoader().Load();
-                Logger.LogSectionStart("ConDep");
 
                 var optionHandler = new CommandLineOptionHandler(args);
+
                 var configAssemblyLoader = new ConDepAssemblyHandler(optionHandler.Params.AssemblyName);
                 var assembly = configAssemblyLoader.GetAssembly();
 
-                var conDepOptions = new ConDepOptions(optionHandler.Params.Context, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.WebDeployExist, optionHandler.Params.StopAfterMarkedServer, optionHandler.Params.ContinueAfterMarkedServer);
+                var conDepOptions = new ConDepOptions(optionHandler.Params.DeployAllApps, optionHandler.Params.Application, optionHandler.Params.DeployOnly, optionHandler.Params.InfraOnly, optionHandler.Params.WebDeployExist, optionHandler.Params.StopAfterMarkedServer, optionHandler.Params.ContinueAfterMarkedServer);
                 var envSettings = GetEnvConfig(optionHandler.Params, assembly);
 
                 var status = new WebDeploymentStatus();
+                Logger.LogSectionStart("ConDep");
                 ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions, status);
 
                 if(status.HasErrors)
@@ -61,12 +63,6 @@ namespace ConDep.Console
             var jsonConfigParser = new EnvConfigParser();
             var envConfig = jsonConfigParser.GetEnvConfig(envFilePath);
             envConfig.EnvironmentName = cmdParams.Environment;
-
-            //todo: add unit tests for these conditions
-            if (!string.IsNullOrWhiteSpace(cmdParams.Server))
-            {
-                envConfig.Servers.RemoveAllExcept(cmdParams.Server);
-            }
 
             if (cmdParams.BypassLB)
             {

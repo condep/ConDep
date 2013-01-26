@@ -46,6 +46,15 @@ namespace ConDep.Console
             CheckForAndShowHelp(optionSet);
             ValidateAssemblyName(optionSet);
             ValidateEnvironment(optionSet);
+            ValidateApplication(optionSet);
+        }
+
+        private void ValidateNumberOfParams(OptionSet optionSet)
+        {
+            if (_args.Length >= 3) return;
+
+            _helpWriter.PrintHelp(optionSet);
+            Environment.Exit(1);
         }
 
         private void ValidateEnvironment(OptionSet optionSet)
@@ -53,10 +62,7 @@ namespace ConDep.Console
             Params.Environment = _args[1];
             if (string.IsNullOrWhiteSpace(Params.Environment))
             {
-                System.Console.Error.WriteLine("No environment provided.");
-                System.Console.Error.WriteLine();
-                _helpWriter.PrintHelp(optionSet);
-                Environment.Exit(1);
+                ExitWithMessage(optionSet, "No environment provided.");
             }
         }
 
@@ -65,10 +71,23 @@ namespace ConDep.Console
             Params.AssemblyName = _args[0];
             if (string.IsNullOrWhiteSpace(Params.AssemblyName))
             {
-                System.Console.Error.WriteLine("No assembly provided.");
-                System.Console.Error.WriteLine();
-                _helpWriter.PrintHelp(optionSet);
-                Environment.Exit(1);
+                ExitWithMessage(optionSet, "No assembly provided.");
+            }
+        }
+
+        private void ValidateApplication(OptionSet optionSet)
+        {
+            var appParam = _args[2];
+
+            if (string.IsNullOrWhiteSpace(appParam))
+            {
+                ExitWithMessage(optionSet, "No application provided.");
+            }
+
+            Params.DeployAllApps = appParam.ToLower() == "--deployallapps";
+            if(!Params.DeployAllApps)
+            {
+                Params.Application = appParam;
             }
         }
 
@@ -80,10 +99,10 @@ namespace ConDep.Console
             Environment.Exit(0);
         }
 
-        private void ValidateNumberOfParams(OptionSet optionSet)
+        private void ExitWithMessage(OptionSet optionSet, string message)
         {
-            if (_args.Length >= 2) return;
-
+            System.Console.Error.WriteLine(message);
+            System.Console.Error.WriteLine();
             _helpWriter.PrintHelp(optionSet);
             Environment.Exit(1);
         }
@@ -94,15 +113,19 @@ namespace ConDep.Console
 
             var optionSet = new OptionSet()
                                 {
-                                    {"s=|server=", "Limit deployment to one specific server.", v => Params.Server = v},
-                                    {"a=|application=", "Application to deploy.", v => Params.Context = v},
-                                    {"t=|traceLevel=", "The level of verbosity on output. Valid values are Off, Info, Warning, Error, Verbose. Default is Info.", v => Logger.TraceLevel = ConvertStringToTraceLevel(v)},
-                                    {"webDeployExist", "Tells ConDep not to deploy WebDeploy, because it already exist on server.", v => Params.WebDeployExist = v != null },
-                                    {"infraOnly", "Deploy infrastructure only", v => Params.InfraOnly = v != null },
-                                    {"deployOnly", "Deploy all except infrastructure", v => Params.DeployOnly = v != null},
-                                    {"bypassLB", "Don't use configured load balancer during execution.", v => Params.BypassLB = v != null},
-                                    {"sams|stopAfterMarkedServer", "Will only deploy to server marked as StopServer in json config, or first server if no server is marked. After execution, run ConDep with the continueAfterMarkedServer switch to continue deployment to remaining servers.", v => Params.StopAfterMarkedServer = v != null},
-                                    {"cams|continueAfterMarkedServer", "Will continue deployment to remaining servers. Used after ConDep has previously executed with the stopAfterMarkedServer switch.", v => Params.ContinueAfterMarkedServer = v != null},
+                                    {"t=|traceLevel=", "The level of verbosity on output. Valid values are Off, Info, Warning, Error, Verbose. Default is Info.\n", v =>
+                                        {
+                                            var traceLevel = ConvertStringToTraceLevel(v);
+                                            Logger.TraceLevel = traceLevel;
+                                            Params.TraceLevel = traceLevel;
+                                        }},
+                                    {"w|webDeployExist", "Tells ConDep not to deploy WebDeploy, because it already exist on server.\n", v => Params.WebDeployExist = v != null },
+                                    {"q=|webQ=", "Will use ConDep's Web Queue to queue the deployment, preventing multiple deployments to execute at the same time. Useful when ConDep is triggered often from CI environments. Expects the url for the WebQ as its value.\n", v => Params.WebQAddress = v },
+                                    {"i|infraOnly", "Deploy infrastructure only\n", v => Params.InfraOnly = v != null },
+                                    {"d|deployOnly", "Deploy all except infrastructure\n", v => Params.DeployOnly = v != null},
+                                    {"b|bypassLB", "Don't use configured load balancer during execution.\n", v => Params.BypassLB = v != null},
+                                    {"s|sams|stopAfterMarkedServer", "Will only deploy to server marked as StopServer in json config, or first server if no server is marked. After execution, run ConDep with the continueAfterMarkedServer switch to continue deployment to remaining servers.\n", v => Params.StopAfterMarkedServer = v != null},
+                                    {"c|cams|continueAfterMarkedServer", "Will continue deployment to remaining servers. Used after ConDep has previously executed with the stopAfterMarkedServer switch.\n", v => Params.ContinueAfterMarkedServer = v != null},
                                     {"h|?|help",  "show this message and exit", v => Params.ShowHelp = v != null }
                                 };
             try

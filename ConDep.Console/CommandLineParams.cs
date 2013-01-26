@@ -7,9 +7,7 @@ namespace ConDep.Console
     {
         public string AssemblyName { get; set; }
 
-        public string Server { get; set; }
-
-        public string Context { get; set; }
+        public string Application { get; set; }
 
         public TraceLevel TraceLevel { get; set; }
 
@@ -28,5 +26,9 @@ namespace ConDep.Console
         public bool StopAfterMarkedServer { get; set; }
 
         public bool ContinueAfterMarkedServer { get; set; }
+
+        public bool DeployAllApps { get; set; }
+
+        public string WebQAddress { get; set; }
     }
 }
