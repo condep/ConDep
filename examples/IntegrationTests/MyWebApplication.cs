@@ -14,9 +14,6 @@ namespace IntegrationTests
                                                 x.ExecuteRemote.DosCommand("echo 'test'");
                                             }
                 );
-            onLocalMachine.WebRequestPut("ConDepQueue");
-
-
 
 
             //x.Deploy

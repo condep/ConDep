@@ -2,11 +2,14 @@
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Threading;
 using ConDep.Dsl;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.WebDeploy;
+using ConDep.WebQ.Client;
+using ConDep.WebQ.Data;
 
 namespace ConDep.Console
 {
@@ -15,12 +18,20 @@ namespace ConDep.Console
         static void Main(string[] args)
         {
             var exitCode = 0;
+            WebQHandler webQHandler = null;
             try
             {
                 new LogConfigLoader().Load();
 
                 var optionHandler = new CommandLineOptionHandler(args);
 
+                Logger.LogSectionStart("ConDep");
+                if (!string.IsNullOrWhiteSpace(optionHandler.Params.WebQAddress))
+                {
+                    webQHandler = new WebQHandler(optionHandler.Params.WebQAddress, optionHandler.Params.Environment);
+                    webQHandler.WaitInQueue();
+                }
+                
                 var configAssemblyLoader = new ConDepAssemblyHandler(optionHandler.Params.AssemblyName);
                 var assembly = configAssemblyLoader.GetAssembly();
 
@@ -28,7 +39,6 @@ namespace ConDep.Console
                 var envSettings = GetEnvConfig(optionHandler.Params, assembly);
 
                 var status = new WebDeploymentStatus();
-                Logger.LogSectionStart("ConDep");
                 ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions, status);
 
                 if(status.HasErrors)
@@ -50,6 +60,10 @@ namespace ConDep.Console
             }
             finally
             {
+                if(webQHandler != null)
+                {
+                    webQHandler.LeaveQueue();
+                }
                 Logger.LogSectionEnd("ConDep");
                 Environment.Exit(exitCode);
             }
@@ -69,6 +83,49 @@ namespace ConDep.Console
                 envConfig.LoadBalancer = null;
             }
             return envConfig;
+        }
+    }
+
+    internal class WebQHandler
+    {
+        private readonly string _environment;
+        private Proxy _proxy;
+        private WebQItem _item;
+
+        public WebQHandler(string webQAddress, string environment)
+        {
+            _proxy = new Proxy(new Uri(webQAddress));
+            _environment = environment;
+        }
+
+        public void WaitInQueue()
+        {
+            _item = _proxy.AddToQueue(_environment);
+            if (_item.Position == 0) return;
+
+            var timeout = 3*60;
+            var waitTime = 0;
+            do
+            {
+                Thread.Sleep(3000);
+                waitTime += 3;
+                _item = _proxy.Update(_item);
+
+                Logger.Info(string.Format("Waiting in deployment queue. There are {0} deployment(s) waiting to finish.", _item.Position));
+            } while (_item.Position != 0 || waitTime > timeout);
+
+            _item = _proxy.Alert(_item);
+
+            if(waitTime >= timeout)
+            {
+                _proxy.RemoveFromQueue(_item);
+                throw new TimeoutException("ConDep timed out waiting in queue.");
+            }
+        }
+
+        public void LeaveQueue()
+        {
+            _proxy.RemoveFromQueue(_item);
         }
     }
 }

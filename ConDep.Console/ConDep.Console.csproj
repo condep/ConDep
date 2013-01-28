@@ -73,6 +73,14 @@
       <Project>{70370a66-9199-4450-b12e-3ef3e176daf2}</Project>
       <Name>ConDep.Remote</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ConDep.WebQ.Client\ConDep.WebQ.Client.csproj">
+      <Project>{F552A5A9-3250-498D-98AE-2B5D6C63C9B8}</Project>
+      <Name>ConDep.WebQ.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConDep.WebQ.Data\ConDep.WebQ.Data.csproj">
+      <Project>{F94D1BBC-C4FB-4207-BFBE-B93BA96F55B3}</Project>
+      <Name>ConDep.WebQ.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
