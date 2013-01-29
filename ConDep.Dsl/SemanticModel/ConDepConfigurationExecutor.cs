@@ -62,6 +62,7 @@ namespace ConDep.Dsl.SemanticModel
                 if (!options.DeployOnly)
                 {
                     var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);
+                    Configure.InfrastructureOperations = infrastructureBuilder;
 
                     if (HasInfrastructureDefined(application))
                     {
