@@ -114,7 +114,11 @@ namespace ConDep.Console
         public void WaitInQueue()
         {
             _item = _client.Enqueue(_environment);
-            if (_item.Position == 0) return;
+            if (_item.Position == 0)
+            {
+                _client.SetAsStarted(_item);
+                return;
+            }
 
             var timeout = 3*60;
             var waitTime = 0;
