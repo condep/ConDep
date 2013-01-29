@@ -11,6 +11,8 @@ properties {
 	$condep_dsl_lb_arr = "ConDep.Dsl.LoadBalancer.Arr"
 	$condep_dsl_lb_ace = "ConDep.Dsl.LoadBalancer.Ace"
 	$condep_tests = "ConDep.Dsl.Tests"
+	$condep_web_q_server = "ConDep.WebQ.Server"
+	$condep_web_q_client = "ConDep.WebQ.Client"
 	$lib = "$pwd\lib"
 	$preString = "-rc"
 }
@@ -70,6 +72,8 @@ task Build-ConDep-Console -depends Clean-ConDep-Console, Init {
 		-files @(
 			@{ Path="$condep_console\$condep.exe"; Target="lib/net40"},
 			@{ Path="$condep_console\$condep_remote.dll"; Target="lib/net40"},
+			@{ Path="$condep_console\$condep_web_q_client.dll"; Target="lib/net40"},
+			@{ Path="$condep_console\ConDep.WebQ.Data.dll"; Target="lib/net40"},
 			@{ Path="$lib\SlowCheetah\v2.4\SlowCheetah.Tasks.dll"; Target="lib/net40"}
 		)
 }
