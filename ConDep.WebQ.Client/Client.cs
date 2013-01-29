@@ -5,17 +5,17 @@ using ConDep.WebQ.Data;
 
 namespace ConDep.WebQ.Client
 {
-    public class Proxy
+    public class Client
     {
         private readonly Uri _webQAddress;
         private bool? _waitingInQueue;
 
-        public Proxy(Uri webQAddress)
+        public Client(Uri webQAddress)
         {
             _webQAddress = webQAddress;
         }
 
-        public WebQItem AddToQueue(string environment)
+        public WebQItem Enqueue(string environment)
         {
             var request = WebRequest.Create(new Uri(_webQAddress, environment));
             request.Method = "PUT";
@@ -32,7 +32,7 @@ namespace ConDep.WebQ.Client
             return new WebQItem {Position = -1};
         }
 
-        public WebQItem Update(WebQItem item)
+        public WebQItem Peek(WebQItem item)
         {
             var request = WebRequest.Create(new Uri(_webQAddress, item.Environment + "/" + item.Id));
             request.Method = "GET";
@@ -48,7 +48,7 @@ namespace ConDep.WebQ.Client
             return item;
         }
 
-        public void RemoveFromQueue(WebQItem item)
+        public void Dequeue(WebQItem item)
         {
             if (!_waitingInQueue.HasValue) return;
             if (!_waitingInQueue.Value) return;
@@ -60,7 +60,7 @@ namespace ConDep.WebQ.Client
             _waitingInQueue = false;
         }
 
-        public WebQItem Alert(WebQItem item)
+        public WebQItem SetAsStarted(WebQItem item)
         {
             var request = WebRequest.Create(new Uri(_webQAddress, item.Environment + "/" + item.Id));
             request.Method = "POST";

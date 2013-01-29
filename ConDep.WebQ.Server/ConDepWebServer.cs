@@ -1,24 +1,25 @@
 using System;
 using System.Diagnostics;
 using System.Net;
-using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using System.Timers;
-using Timer = System.Timers.Timer;
 
 namespace ConDep.WebQ.Server
 {
-    internal class ConDepWebServer : IDisposable
+    internal sealed class ConDepWebServer : IDisposable
     {
+        private readonly int _port;
         private readonly EventLog _eventLog;
         private HttpListener _listener;
 
         private bool _disposed;
-        private const string _prefix = "http://+:80/ConDepWebQ/";
-        private HttpProcessHandler _processHandler;
+        private const string PREFIX = "http://+:{0}/ConDepWebQ/";
+        private readonly HttpProcessHandler _processHandler;
 
-        public ConDepWebServer(int timeout, EventLog eventLog)
+        public ConDepWebServer(int port, int timeout, EventLog eventLog)
         {
+            _port = port;
+            _eventLog = eventLog;
             _processHandler = new HttpProcessHandler(eventLog, timeout);
         }
 
@@ -31,10 +32,10 @@ namespace ConDep.WebQ.Server
             }
 
             _listener = new HttpListener();
-            _listener.Prefixes.Add(_prefix);
+            _listener.Prefixes.Add(string.Format(PREFIX, _port));
             _listener.Start();
 
-            var timer = new Timer(10000);
+            var timer = new Timer(60000);
             timer.Elapsed += _processHandler.RemoveTimedOutItems;
             timer.Start();
 
@@ -54,10 +55,34 @@ namespace ConDep.WebQ.Server
 
         private void HandleRequest(IAsyncResult result)
         {
-            var listener = (HttpListener) result.AsyncState;
-            var context = listener.EndGetContext(result);
-            Task.Factory.StartNew(() => _processHandler.ProcessRequest(context));
-            listener.BeginGetContext(HandleRequest, listener);
+            HttpListenerContext context = null;
+            try
+            {
+                var listener = (HttpListener) result.AsyncState;
+                context = listener.EndGetContext(result);
+                Task.Factory.StartNew(() =>
+                                          {
+                                              var statusCode = _processHandler.ProcessRequest(context);
+                                              context.Response.StatusCode = (int)statusCode;
+                                              context.Response.OutputStream.Close();
+                                          });
+                listener.BeginGetContext(HandleRequest, listener);
+            }
+            catch(Exception ex)
+            {
+                _eventLog.WriteEntry("An unhandled exception has occurred:\n\n" + ex, EventLogEntryType.Error);
+                if (context == null) return;
+                
+                if(context.Response.OutputStream != null)
+                {
+                    try
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        context.Response.OutputStream.Close();
+                    }
+                    catch { _eventLog.WriteEntry("Unable to return HTTP status after exception during request processing.", EventLogEntryType.Error); }
+                }
+            }
         }
 
         public void Dispose()
@@ -66,7 +91,7 @@ namespace ConDep.WebQ.Server
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!_disposed)
             {

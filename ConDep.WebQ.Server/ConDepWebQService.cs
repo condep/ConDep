@@ -4,11 +4,13 @@ namespace ConDep.WebQ.Server
 {
     partial class ConDepWebQService : ServiceBase
     {
+        private readonly int _port;
         private readonly int _timeout;
         private ConDepWebServer _webServer;
 
-        public ConDepWebQService(int timeout)
+        public ConDepWebQService(int timeout, int port)
         {
+            _port = port;
             _timeout = timeout;
 
             InitializeComponent();
@@ -31,9 +33,7 @@ namespace ConDep.WebQ.Server
                 _webServer.Dispose();
             }
 
-            _webServer = new ConDepWebServer(_timeout, EventLog);
-            //var timer = new Timer(5000);
-            //timer.Elapsed += _webServer.OnQueueCleanup;
+            _webServer = new ConDepWebServer(_port, _timeout, EventLog);
             _webServer.Start();
         }
 

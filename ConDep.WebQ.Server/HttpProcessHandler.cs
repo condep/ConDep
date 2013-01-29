@@ -6,6 +6,15 @@ using System.Timers;
 
 namespace ConDep.WebQ.Server
 {
+    public enum HttpStatusCode
+    {
+        OK = 200,
+        Created = 201,
+        NoContent = 204,
+        NotFound = 404,
+        InternalServerError = 500
+    }
+
     public class HttpProcessHandler
     {
         private readonly EventLog _eventLog;
@@ -19,180 +28,165 @@ namespace ConDep.WebQ.Server
             _queue = new WebQ(eventLog);
         }
 
-        public void ProcessRequest(HttpListenerContext context)
+        public HttpStatusCode ProcessRequest(HttpListenerContext context)
         {
-            try
+            lock (_queue.AsyncRoot)
             {
-                if (context.Request.Url.Segments.Length < 2 || context.Request.Url.Segments.Length > 4)
+                try
                 {
-                    ConDepReturnCodes.NotFound(context);
-                    return;
-                }
+                    if (context.Request.Url.Segments.Length < 2 || context.Request.Url.Segments.Length > 4)
+                    {
+                        return HttpStatusCode.NotFound;
+                    }
 
-                if (context.Request.Url.Segments.Length == 2)
+                    if (context.Request.Url.Segments.Length == 2)
+                    {
+                        return ProcessRoot(context);
+                    }
+
+                    var environment = context.Request.Url.Segments[2].TrimEnd('/');
+
+                    if (context.Request.Url.Segments.Length == 3)
+                    {
+                        return ProcessEnvironment(context, environment);
+                    }
+
+                    if (context.Request.Url.Segments.Length == 4)
+                    {
+                        return ProcessItemId(context, environment);
+                    }
+
+                    return HttpStatusCode.NotFound;
+                }
+                catch (Exception ex)
                 {
-                    if (context.Request.HttpMethod.ToUpper() == "GET")
-                    {
-                        GetQueue(context);
-                        return;
-                    }
-                    if (context.Request.HttpMethod.ToUpper() == "DELETE")
-                    {
-                        DeleteQueue(context);
-                        return;
-                    }
-
-                    ConDepReturnCodes.NotFound(context);
-                    return;
-
+                    _eventLog.WriteEntry(ex.Message);
+                    return HttpStatusCode.InternalServerError;
                 }
-
-                var environment = context.Request.Url.Segments[2].TrimEnd('/');
-
-                if (context.Request.Url.Segments.Length == 3)
-                {
-                    if (context.Request.HttpMethod.ToUpper() == "GET")
-                    {
-                        GetEnvironmentQueue(environment, context);
-                        return;
-                    }
-                    if (context.Request.HttpMethod.ToUpper() == "PUT")
-                    {
-                        AddToQueue(environment, context);
-                        return;
-                    }
-                    if (context.Request.HttpMethod.ToUpper() == "DELETE")
-                    {
-                        DeleteQueue(environment, context);
-                        return;
-                    }
-
-                    ConDepReturnCodes.NotFound(context);
-                    return;
-                }
-
-                if (context.Request.Url.Segments.Length == 4)
-                {
-                    var id = context.Request.Url.Segments[3].TrimEnd('/');
-
-                    switch (context.Request.HttpMethod.ToUpper())
-                    {
-                        case "POST":
-                            StartItem(environment, id, context);
-                            return;
-                        case "DELETE":
-                            RemoveFromQueue(environment, id, context);
-                            return;
-                        case "GET":
-                            GetItem(environment, id, context);
-                            return;
-                    }
-                    ConDepReturnCodes.NotFound(context);
-                    return;
-                }
-
-                ConDepReturnCodes.NotFound(context);
-            }
-            catch (Exception ex)
-            {
-                _eventLog.WriteEntry(ex.Message);
-                ConDepReturnCodes.InternalServerError(context);
             }
         }
 
-        private void DeleteQueue(HttpListenerContext context)
+        private HttpStatusCode ProcessRoot(HttpListenerContext context)
+        {
+            if (context.Request.HttpMethod.ToUpper() == "GET")
+            {
+                return GetQueue(context);
+            }
+            if (context.Request.HttpMethod.ToUpper() == "DELETE")
+            {
+                return ClearQueue();
+            }
+
+            return HttpStatusCode.NotFound;
+        }
+
+        private HttpStatusCode ProcessEnvironment(HttpListenerContext context, string environment)
+        {
+            if (context.Request.HttpMethod.ToUpper() == "GET")
+            {
+                return GetEnvironmentQueue(environment, context);
+            }
+            if (context.Request.HttpMethod.ToUpper() == "PUT")
+            {
+                return AddToQueue(environment, context);
+            }
+            if (context.Request.HttpMethod.ToUpper() == "DELETE")
+            {
+                return ClearQueue(environment, context);
+            }
+
+            return HttpStatusCode.NotFound;
+        }
+
+        private HttpStatusCode ProcessItemId(HttpListenerContext context, string environment)
+        {
+            var id = context.Request.Url.Segments[3].TrimEnd('/');
+
+            switch (context.Request.HttpMethod.ToUpper())
+            {
+                case "POST":
+                    return TagAsStarted(environment, id, context);
+                case "DELETE":
+                    return RemoveFromQueue(environment, id, context);
+                case "GET":
+                    return GetItem(environment, id, context);
+            }
+            return HttpStatusCode.NotFound;
+        }
+
+        private HttpStatusCode ClearQueue()
         {
             _queue.Clear();
-            ConDepReturnCodes.NoContent(context);
+            return HttpStatusCode.NoContent; 
         }
 
-        private void DeleteQueue(string environment, HttpListenerContext context)
+        private HttpStatusCode ClearQueue(string environment, HttpListenerContext context)
         {
-            if (_queue.TryRemove(environment))
+            if (_queue.TryDequeue(environment))
             {
-                ConDepReturnCodes.NoContent(context);
-                return;
+                return HttpStatusCode.NoContent;
             }
-            ConDepReturnCodes.NotFound(context);
+            return HttpStatusCode.NotFound;
         }
 
-        private void StartItem(string environment, string id, HttpListenerContext context)
+        private HttpStatusCode TagAsStarted(string environment, string id, HttpListenerContext context)
         {
-            var item = _queue.Get(environment, id);
+            var item = _queue.Poke(environment, id);
             if (item != null)
             {
-                item.StartTime = DateTime.Now;
-                ConDepReturnCodes.Created(context, item);
+                return ConDepReturnCodes.Created(context, item);
             }
-            else
-            {
-                ConDepReturnCodes.NotFound(context);
-            }
+            return HttpStatusCode.NotFound;
         }
 
-        private void GetItem(string environment, string id, HttpListenerContext context)
+        private HttpStatusCode GetItem(string environment, string id, HttpListenerContext context)
         {
-            var item = _queue.Get(environment, id);
+            var item = _queue.Peek(environment, id);
             if (item != null)
             {
-                ConDepReturnCodes.Found(context, item);
+                return ConDepReturnCodes.Found(context, item);
             }
-            else
-            {
-                ConDepReturnCodes.NotFound(context);
-            }
+            return HttpStatusCode.NotFound;
         }
 
-        private void GetEnvironmentQueue(string environment, HttpListenerContext context)
+        private HttpStatusCode GetEnvironmentQueue(string environment, HttpListenerContext context)
         {
-            var envQ = _queue.Get(environment);
+            var envQ = _queue.Peek(environment);
             if (envQ == null)
             {
-                ConDepReturnCodes.NotFound(context);
+                return HttpStatusCode.NotFound;
             }
-            else
-            {
-                var serializer = new DataContractJsonSerializer(envQ.GetType());
-                serializer.WriteObject(context.Response.OutputStream, envQ);
-                context.Response.OutputStream.Close();
-            }
+            return ConDepReturnCodes.Found(context, envQ);
         }
 
-        private void AddToQueue(string environment, HttpListenerContext context)
+        private HttpStatusCode AddToQueue(string environment, HttpListenerContext context)
         {
-            var item = _queue.Add(environment);
-            ConDepReturnCodes.Created(context, item);
+            var item = _queue.Enqueue(environment);
+            return ConDepReturnCodes.Created(context, item);
         }
 
-        private void GetQueue(HttpListenerContext context)
+        private HttpStatusCode GetQueue(HttpListenerContext context)
         {
-            var webQData = _queue.Get();
-            var serializer = new DataContractJsonSerializer(webQData.GetType());
-            serializer.WriteObject(context.Response.OutputStream, webQData);
-            context.Response.OutputStream.Close();
+            var webQData = _queue.Peek();
+            if(webQData != null)
+            {
+                return ConDepReturnCodes.Found(context, webQData);
+            }
+            return HttpStatusCode.NotFound;
         }
 
-        private void RemoveFromQueue(string environment, string id, HttpListenerContext context)
+        private HttpStatusCode RemoveFromQueue(string environment, string id, HttpListenerContext context)
         {
-            if (!_queue.Exist(environment, id))
+            if (_queue.TryDequeue(environment, id))
             {
-                ConDepReturnCodes.NotFound(context);
-                return;
+                return HttpStatusCode.NoContent;
             }
-
-            if (_queue.TryRemove(environment, id))
-            {
-                ConDepReturnCodes.NoContent(context);
-            }
-            else
-            {
-                ConDepReturnCodes.NotFound(context);
-            }
+            return HttpStatusCode.NotFound;
         }
 
         public void RemoveTimedOutItems(object sender, ElapsedEventArgs e)
         {
-            _queue.RemoveOldEntries(_queueItemTimeout);
+            _queue.DequeueTimedOut(_queueItemTimeout);
         }
  
     }

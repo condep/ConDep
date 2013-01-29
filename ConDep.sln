@@ -29,6 +29,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.WebQ.Data", "ConDep.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.WebQ.Tests", "ConDep.WebQ.Tests\ConDep.WebQ.Tests.csproj", "{D909E8F7-9E46-4603-B5EB-69FE1C7C7915}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{BA714BD1-11AE-43CE-95CA-72DFC7929E35}"
+	ProjectSection(SolutionItems) = preProject
+		default.ps1 = default.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

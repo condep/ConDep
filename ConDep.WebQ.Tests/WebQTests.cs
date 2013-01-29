@@ -11,8 +11,8 @@ namespace ConDep.WebQ.Tests
         [Ignore]
         public void TestThat()
         {
-            var proxy = new Proxy(new Uri("http://localhost/ConDepWebQ/"));
-            var item = proxy.AddToQueue("Test");
+            var proxy = new Client.Client(new Uri("http://localhost/ConDepWebQ/"));
+            var item = proxy.Enqueue("Test");
             Assert.That(item.Id, Is.Not.Null.Or.Empty);
             Assert.That(item.Position, Is.EqualTo(0));
         }

@@ -30,5 +30,9 @@ namespace ConDep.Console
         public bool DeployAllApps { get; set; }
 
         public string WebQAddress { get; set; }
+
+        public bool InstallWebQ { get; set; }
+
+        public string InstallWebQOnServer { get; set; }
     }
 }

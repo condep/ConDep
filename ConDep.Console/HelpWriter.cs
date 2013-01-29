@@ -25,6 +25,8 @@ Deploy files and infrastructure to remote servers and environments
 
 Usage: ConDep <assembly> <environment> <<application> | --deployAllApps> [-options]
 
+Usage: ConDep --installWebQ [server]
+
   <assembly>        Assembly containing deployment setup
                     If no path to assembly is specified, first current 
                     directory is searched and then executing directory. 
@@ -35,6 +37,9 @@ Usage: ConDep <assembly> <environment> <<application> | --deployAllApps> [-optio
   <application>     Application to deploy.
   or
   --deployAllApps   ...to deploy all applications.
+
+  --installWebQ     Installs ConDep's WebQ Services on local computer or
+                    on remote server [server]
 
 where options include:
 
@@ -77,6 +82,9 @@ Examples:
 
         ConDep.exe MyAssembly.dll Dev MyWebApp --stopAfterMarkedServer
         ConDep.exe MyAssembly.dll Dev MyWebApp --continueAfterMarkedServer
+
+    Install ConDep's WebQ Service on remote server:
+        ConDep.exe --installWebQ someServer
 
 ";
             writer.Write(help);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using ConDep.Dsl;
 using ConDep.Dsl.Logging;
 using NDesk.Options;
 
@@ -42,11 +41,37 @@ namespace ConDep.Console
 
         private void ValidateParams(OptionSet optionSet)
         {
+            if(WebQInstallParamExist()) return;
+
             ValidateNumberOfParams(optionSet);
             CheckForAndShowHelp(optionSet);
             ValidateAssemblyName(optionSet);
             ValidateEnvironment(optionSet);
             ValidateApplication(optionSet);
+        }
+
+        private bool WebQInstallParamExist()
+        {
+            if(!(_args.Length >= 1 && _args.Length <= 2))
+            {
+                return false;
+            }
+
+            var installWebQParam = _args[0].ToLower();
+            if (installWebQParam == "--installWebQ" || installWebQParam == "-installWebQ" || installWebQParam == "/installWebQ")
+            {
+                Params.InstallWebQ = true;
+            }
+            else
+            {
+                return false;
+            }
+
+            if(_args.Length == 2)
+            {
+                Params.InstallWebQOnServer = _args[1];
+            }
+            return Params.InstallWebQ;
         }
 
         private void ValidateNumberOfParams(OptionSet optionSet)

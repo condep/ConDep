@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Json;
-using System.Threading;
 using ConDep.WebQ.Data;
 
 namespace ConDep.WebQ.Server
@@ -12,8 +11,8 @@ namespace ConDep.WebQ.Server
     public class WebQ
     {
         private readonly EventLog _eventLog;
-        private ReaderWriterLockSlim _environmentLock = new ReaderWriterLockSlim();
-        private List<EnvironmentQ> _environments = new List<EnvironmentQ>();
+        private Dictionary<string, List<WebQItem>> _environments = new Dictionary<string, List<WebQItem>>();
+        private object _asyncRoot = new object();
 
         private const string DATA_FOLDER = @"ConDepWebQData\";
         private string _jsonFileName = Path.Combine(DATA_FOLDER, "condepwebq.json");
@@ -26,82 +25,41 @@ namespace ConDep.WebQ.Server
             Load();
         }
 
-        public WebQItem Add(string environment)
+        public object AsyncRoot { get { return _asyncRoot; } }
+
+        public WebQItem Enqueue(string environment)
         {
-            if(string.IsNullOrWhiteSpace(environment))
+            if (string.IsNullOrWhiteSpace(environment))
             {
                 _eventLog.WriteEntry("Environment argument is null or empty.", EventLogEntryType.Error);
                 return null;
             }
 
-            _environmentLock.EnterWriteLock();
-            try
-            {
-                EnvironmentQ env;
+            List<WebQItem> env;
 
-                if (EnvironmentExist(environment))
-                {
-                    env = GetEnvironment(environment);
-                }
-                else
-                {
-                    env = new EnvironmentQ { Environment = environment, Queue = new List<WebQItem>() };
-                    _environments.Add(env);
-                }
-
-                var item = new WebQItem { Id = Guid.NewGuid().ToString(), Environment = environment, CreatedTime = DateTime.Now };
-                env.Queue.Add(item);
-                item.Position = env.Queue.IndexOf(item);
-                Save();
-                return item;
-            }
-            finally
+            if (_environments.ContainsKey(environment.ToLower()))
             {
-                _environmentLock.ExitWriteLock();
+                env = _environments[environment.ToLower()];
             }
-        }
-
-        private bool EnvironmentExist(string environment)
-        {
-            _environmentLock.EnterReadLock();
-            try
+            else
             {
-                return _environments.Any(x => x.Environment.ToLower() == environment.ToLower());
-            }
-            finally
-            {
-                _environmentLock.ExitReadLock();
+                env = new List<WebQItem>(); 
+                _environments.Add(environment.ToLower(), env);
             }
 
-        }
-
-        private EnvironmentQ GetEnvironment(string environment)
-        {
-            _environmentLock.EnterReadLock();
-            try
-            {
-                return _environments.SingleOrDefault(x => x.Environment.ToLower() == environment.ToLower());
-            }
-            finally
-            {
-                _environmentLock.ExitReadLock();
-            }
+            var item = new WebQItem {Id = Guid.NewGuid().ToString(), Environment = environment, CreatedTime = DateTime.Now};
+            env.Add(item);
+            item.Position = env.IndexOf(item);
+            Save();
+            return item;
         }
 
         private void Save()
         {
             using (var stream = File.Open(_jsonFileName, FileMode.Create, FileAccess.Write, FileShare.None))
             {
-                _environmentLock.EnterReadLock();
-                try
-                {
-                    var serializer = new DataContractJsonSerializer(_environments.GetType());
-                    serializer.WriteObject(stream, _environments);
-                }
-                finally
-                {
-                    _environmentLock.ExitReadLock();
-                }
+                var serializer = new DataContractJsonSerializer(_environments.GetType());
+                serializer.WriteObject(stream, _environments);
             }
         }
 
@@ -113,60 +71,55 @@ namespace ConDep.WebQ.Server
                 {
                     if (stream.Length == 0) return;
 
-                    _environmentLock.EnterWriteLock();
-                    try
-                    {
-                        var serializer = new DataContractJsonSerializer(_environments.GetType());
-                        _environments = serializer.ReadObject(stream) as List<EnvironmentQ>;
-                    }
-                    finally
-                    {
-                        _environmentLock.ExitWriteLock();
-                    }
+                    var serializer = new DataContractJsonSerializer(_environments.GetType());
+                    _environments = serializer.ReadObject(stream) as Dictionary<string, List<WebQItem>>;
                 }
             }
         }
 
-        public WebQItem Get(string environment, string id)
+        public WebQItem Peek(string environment, string id)
         {
-            var env = Get(environment).ToList();
-            var item = env.SingleOrDefault(x => x.Id.ToLower() == id.ToLower());
-            if(item != null) item.Position = env.IndexOf(item);
-            return item;
+            if (_environments.ContainsKey(environment.ToLower()))
+            {
+                var env = _environments[environment.ToLower()];
+                var item = env.SingleOrDefault(x => x.Id.ToLower() == id.ToLower());
+                if(item != null)
+                {
+                    item.Position = env.IndexOf(item);
+                    return item;
+                }
+            }
+            return null;
         }
 
-        public IEnumerable<WebQItem> Get(string environment)
+        public IEnumerable<WebQItem> Peek(string environment)
         {
-            if(EnvironmentExist(environment))
+            if(_environments.ContainsKey(environment.ToLower()))
             {
-                var env = GetEnvironment(environment);
+                var env = _environments[environment.ToLower()];
                 var counter = 0;
-                env.Queue.ForEach(x => x.Position = counter++);
-                return env.Queue;
+                env.ForEach(x => x.Position = counter++);
+                return env;
             }
             return new List<WebQItem>();
         }
 
-        public IEnumerable<EnvironmentQ> Get()
+        public IEnumerable<IEnumerable<WebQItem>> Peek()
         {
-            return _environments.AsReadOnly();
+            return _environments.Values.ToList();
         }
 
-        public bool TryRemove(string environment, string id)
+        public bool TryDequeue(string environment, string id)
         {
             if(!Exist(environment, id)) return false;
-            bool success;
-            lock(_environments)
+            
+            var env = _environments[environment.ToLower()];
+            var item = env.Single(x => x.Id == id);
+            var success = env.Remove(item);
+
+            if (success && env.Count == 0)
             {
-                var env = _environments.Single(x => x.Environment.ToLower() == environment.ToLower());
-                var item = env.Queue.Single(x => x.Id == id);
-
-                success = env.Queue.Remove(item);
-
-                if (success && env.Queue.Count == 0)
-                {
-                    _environments.Remove(env);
-                }
+                _environments.Remove(environment.ToLower());
             }
             Save();
             return success;
@@ -174,57 +127,57 @@ namespace ConDep.WebQ.Server
 
         public bool Exist(string environment, string id)
         {
-            if(!EnvironmentExist(environment))
+            if(!_environments.ContainsKey(environment.ToLower()))
             {
                 return false;
             }
 
-            lock(_environments)
-            {
-                var env = _environments.Single(x => x.Environment.ToLower() == environment.ToLower());
-                return env.Queue.Any(x => x.Id == id);
-            }
+            var env = _environments[environment.ToLower()];
+            return env.Any(x => x.Id == id);
         }
 
-        public bool TryRemove(string environment)
+        public bool TryDequeue(string environment)
         {
-            if (!EnvironmentExist(environment)) return false;
+            if (!_environments.ContainsKey(environment.ToLower())) return false;
 
-            lock(_environments)
-            {
-                var env = _environments.Single(x => x.Environment.ToLower() == environment.ToLower());
-                _environments.Remove(env);
-            }
+            _environments.Remove(environment.ToLower());
+
             Save();
             return true;
         }
 
         public void Clear()
         {
-            lock(_environments)
-            {
-                _environments.Clear();
-            }
+            _environments.Clear();
             Save();
         }
 
-        public void RemoveOldEntries(int timeout)
+        public void DequeueTimedOut(int timeout)
         {
-            lock(_environments)
-            {
-                bool save = false;
-                foreach (var env in _environments)
-                {
-                    var itemsToRemove = env.Queue.Where(item => item.StartTime.HasValue && item.StartTime.Value.AddSeconds(timeout) > DateTime.Now).ToList();
-                    itemsToRemove.ForEach(x => TryRemove(x.Environment, x.Id));
-                    if (itemsToRemove.Count > 0) save = true;
-                }
+            bool save = false;
+            var allEnvQueuesToRemoveFrom = _environments.Select(env => env.Value.Where(item => item.StartTime.HasValue && DateTime.Now > item.StartTime.Value.AddMinutes(timeout)).ToList()).ToList();
 
-                if (save)
-                {
-                    Save();
-                }
+            foreach(var envQueue in allEnvQueuesToRemoveFrom)
+            {
+                envQueue.ForEach(x => TryDequeue(x.Environment, x.Id));
+                if (envQueue.Count > 0) save = true;
             }
+
+            if (save)
+            {
+                Save();
+            }
+        }
+
+        public WebQItem Poke(string environment, string id)
+        {
+            var item = Peek(environment, id);
+            if(item != null)
+            {
+                item.StartTime = DateTime.Now;
+            }
+            Save();
+            return item;
         }
     }
 }
