@@ -124,7 +124,7 @@ namespace ConDep.Console
             var waitTime = 0;
             do
             {
-                Thread.Sleep(3000);
+                Thread.Sleep(10000);
                 waitTime += 3;
                 _item = _client.Peek(_item);
 
