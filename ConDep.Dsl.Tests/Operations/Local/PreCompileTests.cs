@@ -30,7 +30,7 @@ namespace ConDep.Dsl.Tests.Operations.Local
             var operation = new PreCompileOperation("MyWebApp", @"C:\temp\MyWebApp", @"C:\temp\MyWebAppCompiled", _buildManager.Object);
             
             var status = new StatusReporter();
-            operation.Execute(status, new ConDepConfig(), new ConDepOptions(false, "", false, false, false, false, false));
+            operation.Execute(status, new ConDepConfig(), new ConDepOptions(false, "", false, false, false, false));
 
             Assert.That(status.HasErrors, Is.False);
             _buildManager.Verify(manager => manager.PrecompileApplication(It.IsAny<PreCompileCallback>()));

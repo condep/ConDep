@@ -5,17 +5,15 @@
         private readonly bool _deployAllApps;
         private readonly string _application;
         private readonly bool _deployOnly;
-        private readonly bool _infraOnly;
         private readonly bool _webDeployExist;
         private readonly bool _stopAfterMarkedServer;
         private readonly bool _continueAfterMarkedServer;
 
-        public ConDepOptions(bool deployAllApps, string application, bool deployOnly, bool infraOnly, bool webDeployExist, bool stopAfterMarkedServer, bool continueAfterMarkedServer)
+        public ConDepOptions(bool deployAllApps, string application, bool deployOnly, bool webDeployExist, bool stopAfterMarkedServer, bool continueAfterMarkedServer)
         {
             _deployAllApps = deployAllApps;
             _application = application;
             _deployOnly = deployOnly;
-            _infraOnly = infraOnly;
             _webDeployExist = webDeployExist;
             _stopAfterMarkedServer = stopAfterMarkedServer;
             _continueAfterMarkedServer = continueAfterMarkedServer;
@@ -26,11 +24,6 @@
         public bool DeployOnly
         {
             get { return _deployOnly; }
-        }
-
-        public bool InfraOnly
-        {
-            get { return _infraOnly; }
         }
 
         public bool WebDeployExist

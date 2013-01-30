@@ -146,7 +146,6 @@ namespace ConDep.Console
                                         }},
                                     {"w|webDeployExist", "Tells ConDep not to deploy WebDeploy, because it already exist on server.\n", v => Params.WebDeployExist = v != null },
                                     {"q=|webQ=", "Will use ConDep's Web Queue to queue the deployment, preventing multiple deployments to execute at the same time. Useful when ConDep is triggered often from CI environments. Expects the url for the WebQ as its value.\n", v => Params.WebQAddress = v },
-                                    {"i|infraOnly", "Deploy infrastructure only\n", v => Params.InfraOnly = v != null },
                                     {"d|deployOnly", "Deploy all except infrastructure\n", v => Params.DeployOnly = v != null},
                                     {"b|bypassLB", "Don't use configured load balancer during execution.\n", v => Params.BypassLB = v != null},
                                     {"s|sams|stopAfterMarkedServer", "Will only deploy to server marked as StopServer in json config, or first server if no server is marked. After execution, run ConDep with the continueAfterMarkedServer switch to continue deployment to remaining servers.\n", v => Params.StopAfterMarkedServer = v != null},

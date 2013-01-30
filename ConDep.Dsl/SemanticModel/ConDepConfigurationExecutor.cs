@@ -24,29 +24,7 @@ namespace ConDep.Dsl.SemanticModel
             if (options == null) { throw new ArgumentException("options"); }
             if (status == null) { throw new ArgumentException("status"); }
 
-            var applications = new List<ApplicationArtifact>();
-            if(options.HasApplicationDefined())
-            {
-                var type = assembly.GetTypes().Where(t => typeof(ApplicationArtifact).IsAssignableFrom(t) && t.Name == options.Application).Single();
-                if (type == null)
-                {
-                    throw new ConDepConfigurationTypeNotFoundException(string.Format("A class inheriting from [{0}] must be present in assembly [{1}] for ConDep to work.", typeof(ApplicationArtifact).FullName, assembly.FullName));
-                }
-
-                var application = assembly.CreateInstance(type.FullName) as ApplicationArtifact;
-                if (application == null) throw new NullReferenceException(string.Format("Instance of application class [{0}] in assembly [{1}] is not found.", type.FullName, assembly.FullName));
-                applications.Add(application);
-            } 
-            else
-            {
-                var types = assembly.GetTypes().Where(t => typeof(ApplicationArtifact).IsAssignableFrom(t));
-                foreach(var type in types)
-                {
-                    var application = assembly.CreateInstance(type.FullName) as ApplicationArtifact;
-                    if (application == null) throw new NullReferenceException(string.Format("Instance of application class [{0}] in assembly [{1}] is not found.", type.FullName, assembly.FullName));
-                    applications.Add(application);
-                }
-            }
+            var applications = CreateApplicationArtifacts(options, assembly);
 
             IoCBootstrapper.Bootstrap(envConfig);
 
@@ -78,10 +56,7 @@ namespace ConDep.Dsl.SemanticModel
                 var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(application.GetType().Name), infrastructureSequence, envConfig.Servers, webDeploy);
                 Configure.LocalOperations = local;
 
-                if(!options.InfraOnly)
-                {
-                    application.Configure(local, envConfig);
-                }
+                application.Configure(local, envConfig);
             }
 
             if (!sequenceManager.IsValid(notification))
@@ -90,6 +65,32 @@ namespace ConDep.Dsl.SemanticModel
             }
 
             sequenceManager.Execute(status, envConfig, options);
+        }
+
+        private IEnumerable<ApplicationArtifact> CreateApplicationArtifacts(ConDepOptions options, Assembly assembly)
+        {
+            if (options.HasApplicationDefined())
+            {
+                var type = assembly.GetTypes().Where(t => typeof (ApplicationArtifact).IsAssignableFrom(t) && t.Name == options.Application).Single();
+                if (type == null)
+                {
+                    throw new ConDepConfigurationTypeNotFoundException(string.Format("A class inheriting from [{0}] must be present in assembly [{1}] for ConDep to work.",typeof (ApplicationArtifact).FullName, assembly.FullName));
+                }
+                yield return CreateApplicationArtifact(assembly, type);
+            }
+
+            var types = assembly.GetTypes().Where(t => typeof(ApplicationArtifact).IsAssignableFrom(t));
+            foreach (var type in types)
+            {
+                yield return CreateApplicationArtifact(assembly, type);
+            }
+        }
+
+        private static ApplicationArtifact CreateApplicationArtifact(Assembly assembly, Type type)
+        {
+            var application = assembly.CreateInstance(type.FullName) as ApplicationArtifact;
+            if (application == null) throw new NullReferenceException(string.Format("Instance of application class [{0}] in assembly [{1}] is not found.", type.FullName,assembly.FullName));
+            return application;
         }
 
         private bool HasInfrastructureDefined(ApplicationArtifact application)

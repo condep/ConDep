@@ -7,7 +7,7 @@ namespace ConDep.Dsl.Operations.Application.Local
     public abstract class LocalOperation : IValidate
 	{
         public Action<string, IReportStatus> BeforeExecute;
-        public abstract IReportStatus Execute(IReportStatus webDeploymentStatus, ConDepConfig config, ConDepOptions options);
+        public abstract IReportStatus Execute(IReportStatus status, ConDepConfig config, ConDepOptions options);
         public Action<string, IReportStatus> AfterExecute;
         public abstract bool IsValid(Notification notification);
 	}

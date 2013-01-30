@@ -11,8 +11,6 @@ namespace ConDep.Console
 
         public TraceLevel TraceLevel { get; set; }
 
-        public bool InfraOnly { get; set; }
-
         public bool DeployOnly { get; set; }
 
         public string Environment { get; set; }

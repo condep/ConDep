@@ -44,7 +44,6 @@ namespace ConDep.Console
                     var conDepOptions = new ConDepOptions(optionHandler.Params.DeployAllApps,
                                                           optionHandler.Params.Application,
                                                           optionHandler.Params.DeployOnly,
-                                                          optionHandler.Params.InfraOnly,
                                                           optionHandler.Params.WebDeployExist,
                                                           optionHandler.Params.StopAfterMarkedServer,
                                                           optionHandler.Params.ContinueAfterMarkedServer);
