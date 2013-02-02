@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using log4net;
 
 namespace ConDep.Dsl.Logging
