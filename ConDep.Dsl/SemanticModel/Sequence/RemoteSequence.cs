@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
-using ConDep.Dsl.Impersonation;
 using ConDep.Dsl.Logging;
 using System.Linq;
 using ConDep.Dsl.Operations;
@@ -34,14 +33,24 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         public IReportStatus Execute(IReportStatus status, ConDepOptions options)
         {
-            switch (_loadBalancer.Mode)
+            try
             {
-                case LbMode.Sticky:
-                    return ExecuteWithSticky(options, status);
-                case LbMode.RoundRobin:
-                    return ExecuteWithRoundRobin(options, status);
-                default:
-                    throw new NotSupportedException(string.Format("Load Balancer mode [{0}] not supported.", _loadBalancer.Mode));
+                Logger.LogSectionStart("Remote Operations");
+
+                switch (_loadBalancer.Mode)
+                {
+                    case LbMode.Sticky:
+                        return ExecuteWithSticky(options, status);
+                    case LbMode.RoundRobin:
+                        return ExecuteWithRoundRobin(options, status);
+                    default:
+                        throw new NotSupportedException(string.Format("Load Balancer mode [{0}] not supported.",
+                                                                      _loadBalancer.Mode));
+                }
+            }
+            finally
+            {
+                Logger.LogSectionEnd("Remote Operations");
             }
         }
 
@@ -181,31 +190,39 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             if (status.HasErrors)
                 return status;
 
-            foreach (var element in _sequence)
+            try
             {
-                if (element.GetType().IsAssignableFrom(typeof(IRequireRemotePowerShellScript)))
+                Logger.LogSectionStart("Deployment");
+                foreach (var element in _sequence)
                 {
-                    var scriptPaths = ((IRequireRemotePowerShellScript)element).ScriptPaths;
-                    RemotePowerShellScripts.Add(scriptPaths);
-                }
+                    if (element.GetType().IsAssignableFrom(typeof (IRequireRemotePowerShellScript)))
+                    {
+                        var scriptPaths = ((IRequireRemotePowerShellScript) element).ScriptPaths;
+                        RemotePowerShellScripts.Add(scriptPaths);
+                    }
 
-                if (element is IOperateRemote)
-                {
-                    ((IOperateRemote)element).Execute(server, status, options);
+                    if (element is IOperateRemote)
+                    {
+                        ((IOperateRemote) element).Execute(server, status, options);
+                        if (status.HasErrors)
+                            return status;
+                    }
+                    else if (element is CompositeSequence)
+                    {
+                        ((CompositeSequence) element).Execute(server, status, options);
+                    }
+                    else
+                    {
+                        throw new NotSupportedException();
+                    }
+
                     if (status.HasErrors)
                         return status;
                 }
-                else if (element is CompositeSequence)
-                {
-                    ((CompositeSequence)element).Execute(server, status, options);
-                }
-                else
-                {
-                    throw new NotSupportedException();
-                }
-
-                if (status.HasErrors)
-                    return status;
+            }
+            finally
+            {
+                Logger.LogSectionEnd("Deployment");
             }
             return status;
         }
@@ -232,14 +249,6 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
             return isInfrastractureValid && isRemoteOpValid && isCompositeSeqValid;
 
-        }
-    }
-
-    public class MissingDotNetFrameworkException : Exception
-    {
-        public MissingDotNetFrameworkException(string message) : base(message)
-        {
-            
         }
     }
 }

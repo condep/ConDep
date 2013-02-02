@@ -12,6 +12,7 @@ namespace ConDep.Dsl.Logging
         protected LoggerBase(ILog log4netLog)
         {
             _log4netLog = log4netLog;
+            ((log4net.Repository.Hierarchy.Logger) _log4netLog.Logger).Level = Level.Info;
         }
 
         public virtual void Warn(string message, params object[] formatArgs)

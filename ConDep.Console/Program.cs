@@ -59,7 +59,7 @@ namespace ConDep.Console
                     else
                     {
                         status.EndTime = DateTime.Now;
-                        status.PrintSummery();
+                        status.PrintSummary();
                     }
                 }
             }

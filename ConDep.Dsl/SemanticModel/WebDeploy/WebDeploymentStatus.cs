@@ -59,7 +59,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         }
 
 
-        public void PrintSummery()
+        public void PrintSummary()
         {
             int objectsAdded = 0;
             int objectsDeleted = 0;
@@ -77,21 +77,16 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
                 }
             }
 
-            string message = string.Format(@"
-
-=======
-Summery
-=======
-Objects Added     : {0}
+            string message = string.Format(@"Objects Added     : {0}
 Objects Deleted   : {1}
 Objects Updated   : {2}
 Mega Bytes Copied : {3}
 Time taken        : {4}
 ", objectsAdded, objectsDeleted, objectsUpdated, mBytesCopied.ToString("N"), (EndTime - StartTime).ToString(@"hh\:mm\:ss"));
 
-            Logger.LogSectionStart("Summery");
+            Logger.LogSectionStart("Summary");
             Logger.Info(message);
-            Logger.LogSectionEnd("Summery");
+            Logger.LogSectionEnd("Summary");
         }
     }
 }

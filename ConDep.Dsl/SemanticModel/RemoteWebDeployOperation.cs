@@ -65,18 +65,33 @@ namespace ConDep.Dsl.SemanticModel
 
         private void OnWebDeployTraceMessage(object sender, DeploymentTraceEventArgs e)
         {
-            if (e.EventLevel == TraceLevel.Error)
+            if (e.Message.Contains("exited with code "))
             {
-                Logger.Error(e.Message);
-            }
-            else if (e.EventLevel == TraceLevel.Warning)
-            {
-                Logger.Warn(e.Message);
+                if (e.Message.Contains("exited with code '0x0'"))
+                {
+                    Logger.Verbose(e.Message);
+                }
+                else
+                {
+                    Logger.Error(e.Message);
+                }
             }
             else
             {
-                Logger.Log(e.Message, TraceLevel.Verbose);
+                Logger.Log(e.Message, e.EventLevel);
             }
+            //if (e.EventLevel == TraceLevel.Error)
+            //{
+            //    Logger.Error(e.Message);
+            //}
+            //else if (e.EventLevel == TraceLevel.Warning)
+            //{
+            //    Logger.Warn(e.Message);
+            //}
+            //else if(e.EventLevel == TraceLevel.Info)
+            //{
+            //    Logger.Info(e.Message);
+            //}
         }
     }
 }

@@ -50,7 +50,7 @@ namespace ConDep.Dsl.Logging
 
         private IEnumerable<string> SplitMessagesByWindowSize(string message, string prefix)
         {
-            var chunkSize = Console.BufferWidth - 18 - prefix.Length;
+            var chunkSize = Console.BufferWidth - 16 - prefix.Length;
             if(message.Length <= chunkSize)
             {
                 return new [] {message};
