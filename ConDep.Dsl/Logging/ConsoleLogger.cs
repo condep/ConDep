@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using log4net;
 
 namespace ConDep.Dsl.Logging
@@ -10,7 +9,7 @@ namespace ConDep.Dsl.Logging
     public class ConsoleLogger : LoggerBase
     {
         private int _indentLevel;
-        private bool _isConsole;
+        private readonly bool _isConsole;
 
         public ConsoleLogger(ILog log) : base(log)
         {
@@ -28,18 +27,16 @@ namespace ConDep.Dsl.Logging
         public override void LogSectionEnd(string name)
         {
             _indentLevel--;
-            //Log("}", TraceLevel.Info);
         }
 
         public override void Log(string message, TraceLevel traceLevel, params object[] formatArgs)
         {
-            //var prefix = GetSectionPrefix();
             Log(message, null, traceLevel, formatArgs);
         }
 
         public override void Log(string message, Exception ex, TraceLevel traceLevel, params object[] formatArgs)
         {
-            string[] lines = message.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+            var lines = message.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
             var prefix = GetSectionPrefix();
             foreach (var inlineMessage in lines)
             {
