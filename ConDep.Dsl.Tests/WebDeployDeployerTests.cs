@@ -1,4 +1,5 @@
 ﻿using ConDep.Dsl.Config;
+using ConDep.Dsl.Remote;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 using NUnit.Framework;
 
