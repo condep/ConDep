@@ -292,7 +292,7 @@ namespace ConDep.Dsl.Tests
         {
             foreach (var server in _config.Servers)
             {
-                Assert.That(server.DeploymentUserRemote, Is.SameAs(_config.DeploymentUser));
+                Assert.That(server.DeploymentUser, Is.SameAs(_config.DeploymentUser));
             }
         }
     }
