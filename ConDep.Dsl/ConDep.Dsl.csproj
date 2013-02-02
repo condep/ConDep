@@ -70,6 +70,15 @@
     <Compile Include="Builders\IExecuteSequence.cs" />
     <Compile Include="ConDepAssemblyHandler.cs" />
     <Compile Include="ConDepAssemblyNotFoundException.cs" />
+    <Compile Include="Remote\Registry\RegistryBinaryValue.cs" />
+    <Compile Include="Remote\Registry\RegistryDWordValue.cs" />
+    <Compile Include="Remote\Registry\RegistryExpandedStringValue.cs" />
+    <Compile Include="Remote\Registry\RegistryMultiStringValue.cs" />
+    <Compile Include="Remote\Registry\RegistryStringValue.cs" />
+    <Compile Include="Remote\Registry\RegistryValue.cs" />
+    <Compile Include="Impersonation\RemoteServerValidator.cs" />
+    <Compile Include="Remote\RemoteExecutor.cs" />
+    <Compile Include="Remote\RemoteRegistry.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebApp\IisWebAppOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebApp\IOfferIisWebAppOptions.cs" />
     <Compile Include="Builders\IOfferRemoteComposition.cs" />
@@ -218,7 +227,9 @@
     <EmbeddedResource Include="Scripts\ConDep.psm1" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Scripts\Iis.ps1" />
+    <EmbeddedResource Include="Scripts\WinService.ps1" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Impersonation;
+using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
@@ -27,6 +29,13 @@ namespace ConDep.Dsl.SemanticModel
             var applications = CreateApplicationArtifacts(options, assembly);
 
             IoCBootstrapper.Bootstrap(envConfig);
+
+            var serverValidator = new RemoteServerValidator(envConfig.Servers);
+            if (!serverValidator.IsValid())
+            {
+                Logger.Error("Not all servers fulfill ConDep's requirements. Aborting execution.");
+                return;
+            }
 
             var webDeploy = new WebDeployHandler();
             var lbLookup = new LoadBalancerLookup(envConfig.LoadBalancer);
@@ -78,11 +87,13 @@ namespace ConDep.Dsl.SemanticModel
                 }
                 yield return CreateApplicationArtifact(assembly, type);
             }
-
-            var types = assembly.GetTypes().Where(t => typeof(ApplicationArtifact).IsAssignableFrom(t));
-            foreach (var type in types)
+            else
             {
-                yield return CreateApplicationArtifact(assembly, type);
+                var types = assembly.GetTypes().Where(t => typeof(ApplicationArtifact).IsAssignableFrom(t));
+                foreach (var type in types)
+                {
+                    yield return CreateApplicationArtifact(assembly, type);
+                }
             }
         }
 

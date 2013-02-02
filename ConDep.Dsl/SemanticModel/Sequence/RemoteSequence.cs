@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Impersonation;
 using ConDep.Dsl.Logging;
 using System.Linq;
 using ConDep.Dsl.Operations;
@@ -140,7 +141,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 if (bringServerOfflineBeforeExecution)
                 {
                     Logger.Info(string.Format("Taking server [{0}] offline in load balancer.", server.Name));
-                    loadBalancer.BringOffline(server.Name, server.LoadBalancerFarm, LoadBalancerSuspendMethod.Suspend, status);
+                    loadBalancer.BringOffline(server.Name, server.LoadBalancerFarm,
+                                                LoadBalancerSuspendMethod.Suspend, status);
                 }
 
                 if (options.WebDeployExist)
@@ -159,7 +161,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             {
                 try
                 {
-                    if (bringServerOnlineAfterExecution)
+                    if (bringServerOnlineAfterExecution && !status.HasErrors)
                     {
                         Logger.Info(string.Format("Taking server [{0}] online in load balancer.", server.Name));
                         loadBalancer.BringOnline(server.Name, server.LoadBalancerFarm, status);
@@ -230,6 +232,14 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
             return isInfrastractureValid && isRemoteOpValid && isCompositeSeqValid;
 
+        }
+    }
+
+    public class MissingDotNetFrameworkException : Exception
+    {
+        public MissingDotNetFrameworkException(string message) : base(message)
+        {
+            
         }
     }
 }

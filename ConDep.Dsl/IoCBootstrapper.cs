@@ -45,7 +45,7 @@ namespace ConDep.Dsl
             //container.Register<IOfferServerRemoting, RemoteServerOffer>().AsMultiInstance();
 
             container.Register<IHandleWebDeploy, WebDeployHandler>();
-            container.Register(new Logger().Resolve());
+            //container.Register(new Logger().Resolve());
         }
 
         //private IOfferRemoteOperations CreateRemoteServers(TinyIoCContainer container, NamedParameterOverloads overloads)
