@@ -102,7 +102,13 @@ namespace ConDep.Dsl.Logging
         {
             var level = GetLog4NetLevel(traceLevel);
             var formattedMessage = (formatArgs != null && formatArgs.Length > 0) ? string.Format(message, formatArgs) : message;
-            _log4netLog.Logger.Log(typeof(Logger), level, formattedMessage, ex);
+
+            string[] lines = formattedMessage.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+            foreach (var inlineMessage in lines)
+            {
+                _log4netLog.Logger.Log(typeof(Logger), level, inlineMessage, ex);
+            }
+
         }
 
         private static Level GetLog4NetLevel(TraceLevel traceLevel)

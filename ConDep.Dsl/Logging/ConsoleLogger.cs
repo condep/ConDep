@@ -16,27 +16,36 @@ namespace ConDep.Dsl.Logging
 
         public override void LogSectionStart(string name)
         {
-            var sectionName = _indentLevel == 0 ? name : "-- " + name;
-            var prefix = GetSectionPrefix();
-            base.Log(prefix + sectionName, TraceLevel.Info);
+            var sectionName = _indentLevel == 0 ? name : "" + name + ":";
+            base.Log(sectionName, TraceLevel.Info);
             _indentLevel++;
         }
 
         public override void LogSectionEnd(string name)
         {
             _indentLevel--;
-            var prefix = GetSectionPrefix();
-            base.Log(prefix, TraceLevel.Info);
+            //Log("}", TraceLevel.Info);
         }
 
         public override void Log(string message, TraceLevel traceLevel, params object[] formatArgs)
         {
+            //var prefix = GetSectionPrefix();
+            Log(message, null, traceLevel, formatArgs);
+        }
+
+        public override void Log(string message, Exception ex, TraceLevel traceLevel, params object[] formatArgs)
+        {
+            string[] lines = message.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             var prefix = GetSectionPrefix();
-            //var messages = SplitMessagesByWindowSize(message, prefix);
-            //foreach (var messageChunk in messages)
-            //{
-                base.Log(prefix + " " + message, traceLevel, formatArgs);
-            //}
+            foreach (var inlineMessage in lines)
+            {
+                var splitMessages = SplitMessagesByWindowSize(inlineMessage, prefix);
+                foreach(var splitMessage in splitMessages)
+                {
+                    base.Log(prefix + splitMessage, ex, traceLevel, formatArgs);
+                }
+            }
+
         }
 
         private IEnumerable<string> SplitMessagesByWindowSize(string message, string prefix)
@@ -47,13 +56,28 @@ namespace ConDep.Dsl.Logging
                 return new [] {message};
             }
 
-            return Enumerable.Range(0, message.Length / chunkSize)
-                        .Select(i => message.Substring(i * chunkSize, chunkSize));
+            return Chunk(message, chunkSize);
+            //return Enumerable.Range(0, message.Length / chunkSize).Select(i => message.Substring(i * chunkSize, chunkSize));
+        }
+
+        static IEnumerable<string> Chunk(string str, int chunkSize)
+        {
+            for (int i = 0; i < str.Length; i += chunkSize)
+            {
+                if(i+chunkSize > str.Length)
+                {
+                    yield return str.Substring(i);
+                }
+                else
+                {
+                    yield return str.Substring(i, chunkSize);
+                }
+            }
         }
 
         private string GetSectionPrefix()
         {
-            const string levelIndicator = "| ";
+            const string levelIndicator = "   ";
             var prefix = "";
             for (var i = 0; i < _indentLevel; i++)
             {
