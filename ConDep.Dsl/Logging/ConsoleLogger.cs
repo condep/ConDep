@@ -13,7 +13,15 @@ namespace ConDep.Dsl.Logging
 
         public ConsoleLogger(ILog log) : base(log)
         {
-            _isConsole = Console.OpenStandardInput(1) != Stream.Null;
+            try
+            {
+                var bw = Console.BufferWidth;
+                _isConsole = true;
+            }
+            catch
+            {
+                _isConsole = false;
+            }
 
         }
 
