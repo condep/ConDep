@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using log4net;
 
@@ -9,9 +10,12 @@ namespace ConDep.Dsl.Logging
     public class ConsoleLogger : LoggerBase
     {
         private int _indentLevel;
+        private bool _isConsole;
 
         public ConsoleLogger(ILog log) : base(log)
         {
+            _isConsole = Console.OpenStandardInput(1) != Stream.Null;
+
         }
 
         public override void LogSectionStart(string name)
@@ -50,6 +54,8 @@ namespace ConDep.Dsl.Logging
 
         private IEnumerable<string> SplitMessagesByWindowSize(string message, string prefix)
         {
+            if (!_isConsole) return new[]{ message };
+
             var chunkSize = Console.BufferWidth - 16 - prefix.Length;
             if(message.Length <= chunkSize)
             {
@@ -57,7 +63,6 @@ namespace ConDep.Dsl.Logging
             }
 
             return Chunk(message, chunkSize);
-            //return Enumerable.Range(0, message.Length / chunkSize).Select(i => message.Substring(i * chunkSize, chunkSize));
         }
 
         static IEnumerable<string> Chunk(string str, int chunkSize)
