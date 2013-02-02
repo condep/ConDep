@@ -19,7 +19,7 @@ namespace ConDep.Dsl.LoadBalancer.Arr
         {
             _settings = settings;
             _user = new DeploymentUserConfig { UserName = settings.UserName, Password = settings.Password };
-            _server = new ServerConfig { DeploymentUserRemote = _user, Name = _settings.Name };
+            _server = new ServerConfig { DeploymentUser = _user, Name = _settings.Name };
         }
 
         public void BringOnline(string serverName, string farm, IReportStatus status)

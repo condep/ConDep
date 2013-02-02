@@ -50,7 +50,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         private void Init()
         {
             Logger.Info(string.Format("Deploying Microsoft WebDeploy 2.0 to remote server [{0}]. Make sure you comply with the Web Deploy license on that server.", _server.Name));
-            using (new Impersonation.Impersonator(_server.DeploymentUserRemote.UserName, _server.DeploymentUserRemote.Password))
+            using (new Impersonation.Impersonator(_server.DeploymentUser.UserName, _server.DeploymentUser.Password))
             {
                 CreateRemoteDirectories();
                 InstallWebDeployFilesOnRemoteServer();
@@ -214,7 +214,7 @@ Copyright (c) Microsoft Corporation. All rights reserved.
                 throw new DeploymentException(ex, "BadURI", new object[] { _server.WebDeployAgentUrl });
             }
             request.Proxy = null;
-            request.Credentials = new NetworkCredential(_server.DeploymentUserRemote.UserNameWithoutDomain, _server.DeploymentUserRemote.Password, _server.DeploymentUserRemote.Domain);
+            request.Credentials = new NetworkCredential(_server.DeploymentUser.UserNameWithoutDomain, _server.DeploymentUser.Password, _server.DeploymentUser.Domain);
             request.UnsafeAuthenticatedConnectionSharing = true;
             request.PreAuthenticate = true;
             request.AllowWriteStreamBuffering = false;
@@ -291,10 +291,10 @@ Copyright (c) Microsoft Corporation. All rights reserved.
                                   Impersonation = ImpersonationLevel.Impersonate,
                                   EnablePrivileges = true
                               };
-            if ((server.DeploymentUserRemote != null))
+            if ((server.DeploymentUser != null))
             {
-                options.Username = server.DeploymentUserRemote.UserName;
-                options.Password = server.DeploymentUserRemote.Password;
+                options.Username = server.DeploymentUser.UserName;
+                options.Password = server.DeploymentUser.Password;
             }
             return options;
         }
@@ -441,7 +441,7 @@ Copyright (c) Microsoft Corporation. All rights reserved.
             }
             if (_remoteNeedsCleanup)
             {
-                using (new Impersonation.Impersonator(_server.DeploymentUserRemote.UserName, _server.DeploymentUserRemote.Password))
+                using (new Impersonation.Impersonator(_server.DeploymentUser.UserName, _server.DeploymentUser.Password))
                 {
                     var retryAttempt = 0;
                     do

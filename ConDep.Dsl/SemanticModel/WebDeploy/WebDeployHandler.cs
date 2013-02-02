@@ -27,8 +27,8 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
                 destBaseOptions.TraceLevel = TraceLevel.Verbose;
 
                 destBaseOptions.ComputerName = server.WebDeployAgentUrl;
-                destBaseOptions.UserName = server.DeploymentUserRemote.UserName;
-                destBaseOptions.Password = server.DeploymentUserRemote.Password;
+                destBaseOptions.UserName = server.DeploymentUser.UserName;
+                destBaseOptions.Password = server.DeploymentUser.Password;
 
 
                 var defaultWaitInterval = destBaseOptions.RetryInterval;
