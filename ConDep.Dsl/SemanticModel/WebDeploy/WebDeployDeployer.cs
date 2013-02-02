@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
+using ConDep.Dsl.Remote;
 using Microsoft.Web.Deployment;
 using Microsoft.Win32;
 
@@ -17,9 +18,9 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
     public class WebDeployDeployer : IDisposable
     {
         private readonly ServerConfig _server;
+        private RemoteExecutor _executor;
         private bool _remoteNeedsCleanup;
         private string _remoteServerGuid;
-        private ManagementObject _processObject;
         private bool _disposed;
         private string _webDeployInstallPath;
 
@@ -123,48 +124,11 @@ Copyright (c) Microsoft Corporation. All rights reserved.
 
         private void StartWebDeployServiceOnRemoteServer()
         {
-            var options = new ObjectGetOptions();
-
-            using (var managementClass = new ManagementClass(GetManagementScope(_server), new ManagementPath("Win32_Process"), options))// GetManagementClass(this.ManagementScope, "Win32_Process"))
-            {
-                using (ManagementBaseObject managementBaseObject = managementClass.GetMethodParameters("Create"))
-                {
-                    string remoteProcessId;
-                    string port = "80";
-                    string listenUrl = "http://+:" + port + "/" + RemoteServerGuid + "/";
-                    
-                    _server.WebDeployAgentUrl = "http://" + _server.Name + ":" + port + "/" + RemoteServerGuid;
-                    
-                    string remoteExePath = Path.Combine(RemotePath, "MsDepSvc.exe") + " -listenUrl:" + listenUrl;
-                    managementBaseObject["CommandLine"] = remoteExePath;
-
-                    using (ManagementBaseObject management = managementClass.InvokeMethod("Create", managementBaseObject, null))
-                    {
-                        remoteProcessId = management["ProcessId"].ToString();
-                    }
-
-                    var query = new ObjectQuery("SELECT * FROM Win32_Process WHERE ProcessId = " + remoteProcessId);
-
-                    bool processStarted = false;
-                    using (var searcher = new ManagementObjectSearcher(GetManagementScope(_server), query))
-                    {
-                        using (ManagementObjectCollection objects = searcher.Get())
-                        {
-                            foreach (ManagementObject managementObject in objects)
-                            {
-                                _processObject = managementObject;
-                                processStarted = true;
-                            }
-                        }
-                    }
-
-                    if(!processStarted)
-                    {
-                        throw new ConDepWebDeployProviderException("Unable to start Microsoft Web Deploy on remote server. Make sure .NET Framework 4.0 is installed.");
-                    }
-
-                }
-            }
+            string port = "80";
+            string listenUrl = "http://+:" + port + "/" + RemoteServerGuid + "/";
+            _server.WebDeployAgentUrl = "http://" + _server.Name + ":" + port + "/" + RemoteServerGuid;
+            _executor = new RemoteExecutor(_server.Name, _server.DeploymentUser.UserName, _server.DeploymentUser.Password);
+            _executor.StartProcess(Path.Combine(RemotePath, "MsDepSvc.exe"), "-listenUrl:" + listenUrl);
         }
 
         private void MakeSureWebDeployEndpointIsRunning()
@@ -423,21 +387,9 @@ Copyright (c) Microsoft Corporation. All rights reserved.
 
         private void RemoveWebDeployServiceFromServer()
         {
-            if (_processObject != null)
+            if(_executor != null)
             {
-                try
-                {
-                    _processObject.InvokeMethod("Terminate", new object[] {0});
-                }
-                catch
-                {
-                    Logger.Warn("Unable to terminate WebDeploy on remote server [{0}].", _server.Name);
-                }
-                finally
-                {
-                    _processObject.Dispose();
-                    _processObject = null;
-                }
+                _executor.Dispose();
             }
             if (_remoteNeedsCleanup)
             {

@@ -3,13 +3,17 @@ using System.Globalization;
 using System.IO;
 using System.Management;
 using System.Threading;
+using System.Linq;
+using ConDep.Dsl.Logging;
 
 namespace ConDep.Dsl.Remote
 {
-    public class RemoteExecutor
+    public class RemoteExecutor : IDisposable
     {
         private string _server;
         private ConnectionOptions _wmiConnectionOptions;
+        private bool _disposed;
+        private ManagementObject _process;
 
         public RemoteExecutor(string server, string username, string password)
         {
@@ -23,13 +27,22 @@ namespace ConDep.Dsl.Remote
             };
         }
 
-        public void Execute(string filePath, string fileParams, bool waitForExit, TimeSpan timeout)
+        public void StartProcess(string filePath, string fileParams)
+        {
+            StartProcess(filePath,fileParams, false, TimeSpan.Zero);                        
+        }
+
+        public void StartProcess(string filePath, string fileParams, TimeSpan timeout)
+        {
+            StartProcess(filePath, fileParams, true, timeout);                        
+        }
+
+        private void StartProcess(string filePath, string fileParams, bool waitForExit, TimeSpan timeout)
         {
             var options = new ObjectGetOptions();
             var scope = GetScope(_server, _wmiConnectionOptions);
             int processId = 0;
             int result = -1;
-            ManagementObject processObject = null;
 
             using (var managementClass = new ManagementClass(scope, new ManagementPath("Win32_Process"), options))
             {
@@ -57,42 +70,62 @@ namespace ConDep.Dsl.Remote
 
                         processId = Convert.ToInt32(management["ProcessId"]);
 
+                        var query = new ObjectQuery("SELECT * FROM Win32_Process WHERE ProcessId = " + processId);
+
+                        using (var searcher = new ManagementObjectSearcher(scope, query))
+                        {
+                            using (ManagementObjectCollection objects = searcher.Get())
+                            {
+                                foreach (ManagementObject managementObject in objects)
+                                {
+                                    _process = managementObject;
+                                }
+                            }
+                        }
+
+                        if(_process == null)
+                        {
+                            throw new Exception("Unable to start remote process.");
+                        }
+
                         if(waitForExit)
                         {
                             WaitForExit(processId, scope, timeout);
                         }
                     }
-
-                    
                 }
+            }
+        }
+
+        private bool IsProcessRunning(int processId, ManagementScope scope)
+        {
+            if (_process == null) return false;
+
+            var query = new ObjectQuery("SELECT ProcessId FROM Win32_Process WHERE ProcessId = " + processId);
+
+            using (var searcher = new ManagementObjectSearcher(scope, query))
+            {
+                using (ManagementObjectCollection result = searcher.Get())
+                {
+                    if (result.Count == 0)
+                    {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
 
         private void WaitForExit(int processId, ManagementScope scope, TimeSpan timeout)
         {
-            var query = new ObjectQuery("SELECT ProcessId FROM Win32_Process WHERE ProcessId = " + processId);
-
-            using (var searcher = new ManagementObjectSearcher(scope, query))
+            var startTime = DateTime.Now;
+            while(IsProcessRunning(processId, scope))
             {
-                var isRunning = true;
-
-                var startTime = DateTime.Now;
-                while(isRunning)
+                if ((DateTime.Now - startTime) > timeout)
                 {
-                    using (ManagementObjectCollection result = searcher.Get())
-                    {
-                        if (result.Count == 0)
-                        {
-                            isRunning = false;
-                        }
-                    }
-
-                    if ((DateTime.Now - startTime) > timeout)
-                    {
-                        return;
-                    }
-                    Thread.Sleep(1000);
+                    return;
                 }
+                Thread.Sleep(1000);
             }
         }
 
@@ -101,6 +134,43 @@ namespace ConDep.Dsl.Remote
             var scope = new ManagementScope(string.Format(CultureInfo.InvariantCulture, @"\\{0}\ROOT\CIMV2", server), options);
             scope.Connect();
             return scope;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+
+            if (disposing)
+            {
+                if(_process != null)
+                {
+                    try
+                    {
+                        _process.InvokeMethod("Terminate", new object[] { 0 });
+                    }
+                    catch
+                    {
+                        Logger.Warn("Unable to terminate remote process on [{0}].", _server);
+                    }
+                    finally
+                    {
+                        _process.Dispose();
+                        _process = null;
+                    }
+                }
+            }
+            _disposed = true;
+        }
+
+        ~RemoteExecutor()
+        {
+            Dispose(false);
         }
 
     }
