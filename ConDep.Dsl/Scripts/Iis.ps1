@@ -29,10 +29,8 @@ function New-ConDepAppPool {
 		[Parameter(Mandatory=$true)] [string] $AppPool, 
 		[hashtable] $AppPoolOptions
 	)
-	try {
-		Remove-WebAppPool $AppPool 
-	}
-	catch {}
+
+	Remove-WebAppPool $AppPool -ErrorAction SilentlyContinue
 
 	$newAppPool = New-WebAppPool $AppPool -Force
 	write-host "$($newAppPool.GetType())"
