@@ -61,16 +61,16 @@ namespace ConDep.Dsl.Operations.Application.Deployment.NServiceBus
             }
 
             var remove = string.Format(". $env:temp\\NServiceBus.ps1; remove-nsbservice {0}", ServiceName);
-            server.ExecuteRemote.PowerShell(remove, o => o.ContinueOnError(IgnoreFailureOnServiceStartStop).WaitIntervalInSeconds(10).RetryAttempts(10));
+            server.ExecuteRemote.PowerShell(remove, o => o.ContinueOnError(IgnoreFailureOnServiceStartStop).WaitIntervalInSeconds(60));
             server.Deploy.Directory(SourcePath, DestinationPath);
 
             //Allow continue on error??
-            server.ExecuteRemote.DosCommand(install, opt => opt.WaitIntervalInSeconds(10));
+            server.ExecuteRemote.DosCommand(install, opt => opt.WaitIntervalInSeconds(60));
             if (!string.IsNullOrWhiteSpace(serviceFailureCommand)) server.ExecuteRemote.DosCommand(serviceFailureCommand);
             if (!string.IsNullOrWhiteSpace(serviceConfigCommand)) server.ExecuteRemote.DosCommand(serviceConfigCommand);
 
             var start = string.Format(". $env:temp\\NServiceBus.ps1; start-nsbservice {0}", ServiceName);
-            server.ExecuteRemote.PowerShell(start, o => o.WaitIntervalInSeconds(30).RetryAttempts(3).ContinueOnError(IgnoreFailureOnServiceStartStop));
+            server.ExecuteRemote.PowerShell(start, o => o.WaitIntervalInSeconds(60).ContinueOnError(IgnoreFailureOnServiceStartStop));
         }
 
         public override string Name
