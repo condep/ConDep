@@ -48,12 +48,14 @@ function Remove-NSBService($serviceName) {
 	}
 	Write-Host "Windows Service [$($service.DisplayName)] removed."
 
-	$process = Get-Process -Id $processId -ErrorAction SilentlyContinue
-	
-	if($process -and !$process.HasExited) {
-		Write-Host "Waiting for process with id [$processId] to exit..."
-		$process.WaitForExit()
-		Write-Host "Process id [$processId] has now exited."
+	if($processId) {
+		$process = Get-Process -Id $processId -ErrorAction SilentlyContinue
+		
+		if($process -and !$process.HasExited) {
+			Write-Host "Waiting for process with id [$processId] to exit..."
+			$process.WaitForExit()
+			Write-Host "Process id [$processId] has now exited."
+		}
 	}
 }
 
