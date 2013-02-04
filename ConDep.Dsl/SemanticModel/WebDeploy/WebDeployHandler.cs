@@ -37,11 +37,13 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
                 if (provider.WaitIntervalInSeconds > 0)
                 {
                     destBaseOptions.RetryInterval = provider.WaitIntervalInSeconds * 1000;
+                    sourceBaseOptions.RetryInterval = provider.WaitIntervalInSeconds * 1000;
                 }
 
                 if (provider.RetryAttempts > 0)
                 {
                     destBaseOptions.RetryAttempts = provider.RetryAttempts;
+                    sourceBaseOptions.RetryAttempts = provider.RetryAttempts;
                 }
 
                 destBaseOptions.Trace += CheckForUntrappedExitCodes;
