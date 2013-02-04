@@ -47,7 +47,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                     }
                     else if (element is RemoteSequence)
                     {
-                        return ((RemoteSequence)element).Execute(status, options);
+                        ((RemoteSequence)element).Execute(status, options);
                     }
                     else
                     {
