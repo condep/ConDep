@@ -126,7 +126,7 @@ namespace ConDep.Console
                     return;
                 }
 
-                var timeout = 30000/10000;
+                var timeout = 6*30;
                 var waitTime = 0;
                 bool exit = false;
                 do
