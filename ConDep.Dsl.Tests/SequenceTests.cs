@@ -1,5 +1,6 @@
 ﻿using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
@@ -32,12 +33,13 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server };
 
             var infrastructureSequence = new InfrastructureSequence();
+            var preOpsSequence = new PreOpsSequence();
 
             var webDeploy = new WebDeployHandlerMock();
             var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);
             _infra.Configure(infrastructureBuilder, config);
 
-            var local = new LocalOperationsBuilder(_sequenceManager.NewLocalSequence("Test"), infrastructureSequence, config.Servers, webDeploy);
+            var local = new LocalOperationsBuilder(_sequenceManager.NewLocalSequence("Test"), infrastructureSequence, preOpsSequence, config.Servers, webDeploy);
             _app.Configure(local, config);
 
             var notification = new Notification();

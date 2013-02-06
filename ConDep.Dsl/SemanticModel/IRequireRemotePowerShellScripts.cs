@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace ConDep.Dsl.SemanticModel
 {
-    public interface IRequireRemotePowerShellScript
+    public interface IRequireRemotePowerShellScripts
     {
         IEnumerable<string> ScriptPaths { get; }
     }

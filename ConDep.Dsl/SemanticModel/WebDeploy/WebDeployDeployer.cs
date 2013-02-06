@@ -126,10 +126,13 @@ Copyright (c) Microsoft Corporation. All rights reserved.
         {
             string port = "80";
             string listenUrl = "http://+:" + port + "/" + RemoteServerGuid + "/";
-            _server.WebDeployAgentUrl = "http://" + _server.Name + ":" + port + "/" + RemoteServerGuid;
+            AgentUrl = "http://" + _server.Name + ":" + port + "/" + RemoteServerGuid;
+            _server.WebDeployAgentUrl = AgentUrl;
             _executor = new RemoteExecutor(_server.Name, _server.DeploymentUser.UserName, _server.DeploymentUser.Password);
             _executor.StartProcess(Path.Combine(RemotePath, "MsDepSvc.exe"), "-listenUrl:" + listenUrl);
         }
+
+        protected string AgentUrl { get; set; }
 
         private void MakeSureWebDeployEndpointIsRunning()
         {
@@ -387,7 +390,8 @@ Copyright (c) Microsoft Corporation. All rights reserved.
 
         private void RemoveWebDeployServiceFromServer()
         {
-            if(_executor != null)
+            Logger.Info(string.Format("Removing WebDeploy from server [{0}]", _server.Name));
+            if (_executor != null)
             {
                 _executor.Dispose();
             }
@@ -405,7 +409,7 @@ Copyright (c) Microsoft Corporation. All rights reserved.
                                 Directory.Delete(RemotePath, true);
                             }
                             _remoteNeedsCleanup = false;
-                            Logger.Info(string.Format("Successfully cleaned up WebDeploy files on remote server [{0}]", _server.Name));
+                            Logger.Info(string.Format("Successfully removed WebDeploy from server [{0}]", _server.Name));
                         }
                         catch (UnauthorizedAccessException)
                         {
@@ -417,6 +421,12 @@ Copyright (c) Microsoft Corporation. All rights reserved.
                             var retryMessage = retryAttempt < RetryAttempts ? "Will retry." : "Retries failed and will abort.";
                             Logger.Verbose(string.Format("Unable to delete Web Deploy files on remote server [{0}]. {1}", _server.Name, retryMessage));
                         }
+                        catch(Exception ex)
+                        {
+                            var retryMessage = retryAttempt < RetryAttempts ? "Will retry." : "Retries failed and will abort.";
+                            Logger.Verbose(string.Format("Unhandled exception occoured while removing Web Deploy on remote server [{0}]. {1}", _server.Name, retryMessage), ex);
+                        }
+
                         if (_remoteNeedsCleanup)
                         {
                             if (++retryAttempt > RetryAttempts)
@@ -442,6 +452,28 @@ Copyright (c) Microsoft Corporation. All rights reserved.
         protected int RetryAttempts
         {
             get { return 3; }
+        }
+
+        private static readonly Dictionary<string, WebDeployDeployer> _deployers = new Dictionary<string, WebDeployDeployer>();
+        public static void DeployTo(ServerConfig server)
+        {
+            if(!_deployers.ContainsKey(server.Name))
+            {
+                _deployers.Add(server.Name, new WebDeployDeployer(server));
+            }
+            else
+            {
+                var deployer = _deployers[server.Name];
+                server.WebDeployAgentUrl = deployer.AgentUrl;
+            }
+        }
+
+        public static void DisposeAll()
+        {
+            foreach (var deployer in _deployers)
+            {
+                deployer.Value.Dispose();
+            }
         }
     }
 }

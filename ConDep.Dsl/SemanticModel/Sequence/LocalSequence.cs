@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
+using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.Application.Local;
 using ConDep.Dsl.Operations.LoadBalancer;
 
@@ -20,14 +21,21 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             _loadBalancer = loadBalancer;
         }
 
-        public void Add(LocalOperation operation)
+        public void Add(LocalOperation operation, bool addFirst = false)
         {
-            _sequence.Add(operation);
+            if(addFirst)
+            {
+                _sequence.Insert(0, operation);
+            }
+            else
+            {
+                _sequence.Add(operation);
+            }
         }
 
-        public RemoteSequence NewRemoteSequence(IManageInfrastructureSequence infrastructureSequence, IEnumerable<ServerConfig> servers)
+        public RemoteSequence NewRemoteSequence(IManageInfrastructureSequence infrastructureSequence, PreOpsSequence preOpsSequence, IEnumerable<ServerConfig> servers)
         {
-            var sequence = new RemoteSequence(infrastructureSequence, servers, _loadBalancer);
+            var sequence = new RemoteSequence(infrastructureSequence, preOpsSequence, servers, _loadBalancer);
             _sequence.Add(sequence);
             return sequence;
         }

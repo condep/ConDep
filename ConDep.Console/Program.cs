@@ -6,6 +6,7 @@ using System.Threading;
 using ConDep.Dsl;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
+using ConDep.Dsl.Operations;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 using ConDep.WebQ.Client;
@@ -76,6 +77,7 @@ namespace ConDep.Console
                 {
                     webQHandler.LeaveQueue();
                 }
+
                 Logger.LogSectionEnd("ConDep");
                 Environment.Exit(exitCode);
             }

@@ -4,12 +4,11 @@ using System.Security.Cryptography.X509Certificates;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Resources;
-using ConDep.Dsl.Scripts;
 using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 {
-    public class IisWebSiteOperation : RemoteCompositeInfrastructureOperation, IRequireCustomConfiguration, IRequireRemotePowerShellScript
+    public class IisWebSiteOperation : RemoteCompositeInfrastructureOperation, IRequireCustomConfiguration
     {
         private readonly string _webSiteName;
         private readonly int _id;
@@ -65,19 +64,6 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
             foreach(var webApp in _options.Values.WebApps)
             {
                 require.IISWebApp(webApp.Item1, _webSiteName, webApp.Item2);
-            }
-        }
-
-        public IEnumerable<string> ScriptPaths
-        {
-            get
-            {
-                if(_scriptPaths.Count == 0)
-                {
-                    _scriptPaths.Add(ConDepResourceFiles.GetFilePath(typeof(ScriptNamespaceMarker).Namespace, "Iis.ps1", true));
-                    _scriptPaths.Add(ConDepResourceFiles.GetFilePath(typeof(ScriptNamespaceMarker).Namespace, "ConDep.psm1", true));
-                }
-                return _scriptPaths;
             }
         }
     }

@@ -5,7 +5,6 @@ using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.Application.Deployment.PowerShellScript;
-using ConDep.Dsl.Operations.Application.Execution.PowerShell;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
@@ -20,14 +19,16 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             _compositeName = compositeName;
         }
 
-        public string CompositeName
+        public void Add(IOperateRemote operation, bool addFirst = false)
         {
-            get { return _compositeName; }
-        }
-
-        public void Add(IOperateRemote operation)
-        {
-            _sequence.Add(operation);
+            if (addFirst)
+            {
+                _sequence.Insert(0, operation);
+            }
+            else
+            {
+                _sequence.Add(operation);
+            }
         }
 
         public IReportStatus Execute(ServerConfig server, IReportStatus status, ConDepOptions options)
@@ -62,9 +63,9 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             var opName = operation.Name;
             var sequence = new CompositeSequence(opName);
 
-            if (operation is IRequireRemotePowerShellScript)
+            if (operation is IRequireRemotePowerShellScripts)
             {
-                var scriptOp = new PowerShellScriptDeployOperation(((IRequireRemotePowerShellScript) operation).ScriptPaths);
+                var scriptOp = new PowerShellScriptDeployOperation(((IRequireRemotePowerShellScripts) operation).ScriptPaths);
                 scriptOp.Configure(new RemoteCompositeBuilder(sequence, new WebDeployHandler()));
             }
 

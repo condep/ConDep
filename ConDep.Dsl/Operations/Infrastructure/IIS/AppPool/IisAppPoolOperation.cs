@@ -3,12 +3,11 @@ using System.Globalization;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Operations.Application.Execution.PowerShell;
 using ConDep.Dsl.Resources;
-using ConDep.Dsl.Scripts;
 using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
 {
-    public class IisAppPoolOperation : RemoteCompositeInfrastructureOperation, IRequireRemotePowerShellScript
+    public class IisAppPoolOperation : RemoteCompositeInfrastructureOperation
     {
         private readonly string _appPoolName;
         private readonly IisAppPoolOptions.IisAppPoolOptionsValues _appPoolOptions;
@@ -70,7 +69,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
             {
                 appPoolOptions = "$appPoolOptions = $null;";
             }
-            server.ExecuteRemote.PowerShell(string.Format(@"Import-Module $env:temp\ConDepPowerShellScripts\ConDep; {0} New-ConDepAppPool '{1}' $appPoolOptions;", appPoolOptions, _appPoolName), psOptions => psOptions.WaitIntervalInSeconds(30));
+            server.ExecuteRemote.PowerShell(string.Format(@"{0} New-ConDepAppPool '{1}' $appPoolOptions;", appPoolOptions, _appPoolName), psOptions => psOptions.WaitIntervalInSeconds(30));
         }
 
         private string ExtractNetFrameworkVersion()
@@ -91,19 +90,6 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
                     throw new ConDepUnknowNetFrameworkException("Framework version unknown to ConDep.");
             }
 
-        }
-
-        public IEnumerable<string> ScriptPaths
-        {
-            get
-            {
-                if (_scriptPaths.Count == 0)
-                {
-                    _scriptPaths.Add(ConDepResourceFiles.GetFilePath(typeof(ScriptNamespaceMarker).Namespace, "Iis.ps1", true));
-                    _scriptPaths.Add(ConDepResourceFiles.GetFilePath(typeof(ScriptNamespaceMarker).Namespace, "ConDep.psm1", true));
-                }
-                return _scriptPaths;
-            }
         }
     }
 }

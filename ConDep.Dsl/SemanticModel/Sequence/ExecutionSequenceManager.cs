@@ -15,11 +15,6 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             _loadBalancer = loadBalancer;
         }
 
-        public void Add(LocalSequence localOperation)
-        {
-            _sequence.Add(localOperation);
-        }
-
         public LocalSequence NewLocalSequence(string name)
         {
             var sequence = new LocalSequence(name, _loadBalancer);

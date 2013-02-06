@@ -4,6 +4,7 @@ using ConDep.Dsl.Operations.Application.Deployment.CopyDir;
 using ConDep.Dsl.Operations.Application.Deployment.CopyFile;
 using ConDep.Dsl.Operations.Application.Deployment.NServiceBus;
 using ConDep.Dsl.Operations.Application.Deployment.WebApp;
+using ConDep.Dsl.Operations.Application.Deployment.WindowsService;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
@@ -42,9 +43,21 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
-        public IOfferRemoteDeployment WindowsService()
+        public IOfferRemoteDeployment WindowsService(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName)
         {
-            throw new System.NotImplementedException();
+            var winServiceOperation = new WindowsServiceOperation(serviceName, sourceDir, destDir, relativeExePath, displayName);
+            AddOperation(winServiceOperation);
+            return this;
+        }
+
+        public IOfferRemoteDeployment WindowsService(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, Action<IOfferWindowsServiceOptions> options)
+        {
+            var winServiceOptions = new WindowsServiceOptions();
+            options(winServiceOptions);
+
+            var winServiceOperation = new WindowsServiceOperation(serviceName, sourceDir, destDir, relativeExePath, displayName, winServiceOptions.Values);
+            AddOperation(winServiceOperation);
+            return this;
         }
 
         public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, Action<NServiceBusOptions> nServiceBusOptions = null)

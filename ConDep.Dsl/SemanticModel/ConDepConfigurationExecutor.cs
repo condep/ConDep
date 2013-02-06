@@ -6,6 +6,7 @@ using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Impersonation;
 using ConDep.Dsl.Logging;
+using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
@@ -30,11 +31,14 @@ namespace ConDep.Dsl.SemanticModel
 
             IoCBootstrapper.Bootstrap(envConfig);
 
-            var serverValidator = new RemoteServerValidator(envConfig.Servers);
-            if (!serverValidator.IsValid())
+            if(!options.WebDeployExist)
             {
-                Logger.Error("Not all servers fulfill ConDep's requirements. Aborting execution.");
-                return;
+                var serverValidator = new RemoteServerValidator(envConfig.Servers);
+                if (!serverValidator.IsValid())
+                {
+                    Logger.Error("Not all servers fulfill ConDep's requirements. Aborting execution.");
+                    return;
+                }
             }
 
             var webDeploy = new WebDeployHandler();
@@ -43,9 +47,12 @@ namespace ConDep.Dsl.SemanticModel
             var sequenceManager = new ExecutionSequenceManager(lbLookup.GetLoadBalancer());
 
             var notification = new Notification();
+            var postOpSeq = new PostOpsSequence();
+
             foreach (var application in applications)
             {
                 var infrastructureSequence = new InfrastructureSequence();
+                var preOpsSequence = new PreOpsSequence();
                 if (!options.DeployOnly)
                 {
                     var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);
@@ -54,7 +61,7 @@ namespace ConDep.Dsl.SemanticModel
                     if (HasInfrastructureDefined(application))
                     {
                         var infrastructureInstance = GetInfrastructureArtifactForApplication(assembly, application);
-                        if (!infrastructureSequence.IsvValid(notification))
+                        if (!infrastructureSequence.IsValid(notification))
                         {
                             notification.Throw();
                         }
@@ -62,7 +69,7 @@ namespace ConDep.Dsl.SemanticModel
                     }
                 }
 
-                var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(application.GetType().Name), infrastructureSequence, envConfig.Servers, webDeploy);
+                var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(application.GetType().Name), infrastructureSequence, preOpsSequence, envConfig.Servers, webDeploy);
                 Configure.LocalOperations = local;
 
                 application.Configure(local, envConfig);
@@ -74,6 +81,7 @@ namespace ConDep.Dsl.SemanticModel
             }
 
             sequenceManager.Execute(status, envConfig, options);
+            postOpSeq.Execute(status, options);
         }
 
         private IEnumerable<ApplicationArtifact> CreateApplicationArtifacts(ConDepOptions options, Assembly assembly)

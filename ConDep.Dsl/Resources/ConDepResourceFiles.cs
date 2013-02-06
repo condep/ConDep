@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace ConDep.Dsl.Resources
 {
@@ -36,6 +37,14 @@ namespace ConDep.Dsl.Resources
 
         internal static string GetFilePath(string resourceNamespace, string resourceName, bool keepOriginalFileName = false)
         {
+            return GetFilePath(Assembly.GetExecutingAssembly(), resourceNamespace, resourceName, keepOriginalFileName);
+        }
+
+        internal static string GetFilePath(string fullResourceName, bool keepOriginalFileName = false)
+        {
+            var regex = new Regex(@".+\.(.+\.(ps1|psm1))");
+            var resourceName = regex.Match(fullResourceName).Groups[1].Value;
+            var resourceNamespace = fullResourceName.Replace("." + resourceName, "");
             return GetFilePath(Assembly.GetExecutingAssembly(), resourceNamespace, resourceName, keepOriginalFileName);
         }
     }

@@ -2,12 +2,11 @@ using System.Collections.Generic;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Operations.Application.Execution.PowerShell;
 using ConDep.Dsl.Resources;
-using ConDep.Dsl.Scripts;
 using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebApp
 {
-    public class IisWebAppOperation : RemoteCompositeInfrastructureOperation, IRequireRemotePowerShellScript
+    public class IisWebAppOperation : RemoteCompositeInfrastructureOperation
     {
         private readonly string _webAppName;
         private readonly string _webSiteName;
@@ -46,19 +45,6 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebApp
         {
             return !string.IsNullOrWhiteSpace(_webAppName) 
                 && !string.IsNullOrWhiteSpace(_webSiteName);
-        }
-
-        public IEnumerable<string> ScriptPaths
-        {
-            get
-            {
-                if (_scriptPaths.Count == 0)
-                {
-                    _scriptPaths.Add(ConDepResourceFiles.GetFilePath(typeof(ScriptNamespaceMarker).Namespace, "Iis.ps1", true));
-                    _scriptPaths.Add(ConDepResourceFiles.GetFilePath(typeof(ScriptNamespaceMarker).Namespace, "ConDep.psm1", true));
-                }
-                return _scriptPaths;
-            }
         }
     }
 }

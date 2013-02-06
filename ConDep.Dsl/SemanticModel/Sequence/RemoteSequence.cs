@@ -15,20 +15,29 @@ namespace ConDep.Dsl.SemanticModel.Sequence
     public class RemoteSequence : IManageRemoteSequence
     {
         private readonly IManageInfrastructureSequence _infrastructureSequence;
+        private readonly PreOpsSequence _preOpsSequence;
         private readonly IEnumerable<ServerConfig> _servers;
         private readonly ILoadBalance _loadBalancer;
         private readonly List<object> _sequence = new List<object>();
 
-        public RemoteSequence(IManageInfrastructureSequence infrastructureSequence, IEnumerable<ServerConfig> servers, ILoadBalance loadBalancer)
+        public RemoteSequence(IManageInfrastructureSequence infrastructureSequence, PreOpsSequence preOpsSequence, IEnumerable<ServerConfig> servers, ILoadBalance loadBalancer)
         {
             _infrastructureSequence = infrastructureSequence;
+            _preOpsSequence = preOpsSequence;
             _servers = servers;
             _loadBalancer = loadBalancer;
         }
 
-        public void Add(IOperateRemote operation)
+        public void Add(IOperateRemote operation, bool addFirst = false)
         {
-            _sequence.Add(operation);
+            if (addFirst)
+            {
+                _sequence.Insert(0, operation);
+            }
+            else
+            {
+                _sequence.Add(operation);
+            }
         }
 
         public IReportStatus Execute(IReportStatus status, ConDepOptions options)
@@ -91,6 +100,9 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
                 bool bringOnline = !(roundRobinMaxOfflineServers - (manuelTestServer == null ? 0 : 1) > execCount);
                 ExecuteOnServer(servers[execCount], status, options, _loadBalancer, !bringOnline, bringOnline);
+
+                if (status.HasErrors)
+                    return status;
             }
 
             return status;
@@ -117,6 +129,10 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             foreach (var server in servers)
             {
                 ExecuteOnServer(server, status, options, _loadBalancer, true, true);
+
+                if (status.HasErrors)
+                    return status;
+
             }
             return status;
         }
@@ -154,17 +170,18 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                                                 LoadBalancerSuspendMethod.Suspend, status);
                 }
 
-                if (options.WebDeployExist)
-                {
-                    return ExecuteOnServer(server, status, options);
-                }
-                else
-                {
-                    using (new WebDeployDeployer(server))
-                    {
-                        return ExecuteOnServer(server, status, options);
-                    }
-                }
+                ExecuteOnServer(server, status, options);
+                //PostRemoteOps.Execute(server, status, options);
+                return status;
+                //if (options.WebDeployExist)
+                //{
+                //    return ExecuteOnServer(server, status, options);
+                //}
+                //else
+                //{
+                //    WebDeployDeployer.DeployTo(server);
+                //    return ExecuteOnServer(server, status, options);
+                //}
             }
             finally
             {
@@ -185,6 +202,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         private IReportStatus ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepOptions options)
         {
+            _preOpsSequence.Execute(server, status, options);
             _infrastructureSequence.Execute(server, status, options);
 
             if (status.HasErrors)
@@ -195,12 +213,6 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 Logger.LogSectionStart("Deployment");
                 foreach (var element in _sequence)
                 {
-                    if (element.GetType().IsAssignableFrom(typeof (IRequireRemotePowerShellScript)))
-                    {
-                        var scriptPaths = ((IRequireRemotePowerShellScript) element).ScriptPaths;
-                        RemotePowerShellScripts.Add(scriptPaths);
-                    }
-
                     if (element is IOperateRemote)
                     {
                         ((IOperateRemote) element).Execute(server, status, options);
@@ -231,9 +243,9 @@ namespace ConDep.Dsl.SemanticModel.Sequence
         {
             var sequence = new CompositeSequence(operation.Name);
 
-            if (operation is IRequireRemotePowerShellScript)
+            if (operation is IRequireRemotePowerShellScripts)
             {
-                var scriptOp = new PowerShellScriptDeployOperation(((IRequireRemotePowerShellScript)operation).ScriptPaths);
+                var scriptOp = new PowerShellScriptDeployOperation(((IRequireRemotePowerShellScripts)operation).ScriptPaths);
                 scriptOp.Configure(new RemoteCompositeBuilder(sequence, new WebDeployHandler()));
             }
 
@@ -243,7 +255,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         public bool IsValid(Notification notification)
         {
-            var isInfrastractureValid = _infrastructureSequence.IsvValid(notification);
+            var isInfrastractureValid = _infrastructureSequence.IsValid(notification);
             var isRemoteOpValid = _sequence.OfType<IOperateRemote>().All(x => x.IsValid(notification));
             var isCompositeSeqValid = _sequence.OfType<CompositeSequence>().All(x => x.IsValid(notification));
 

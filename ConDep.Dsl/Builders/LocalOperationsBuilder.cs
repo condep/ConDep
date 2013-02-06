@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.Application.Local;
 using ConDep.Dsl.Operations.Application.Local.PreCompile;
 using ConDep.Dsl.Operations.Application.Local.TransformConfig;
@@ -15,13 +16,15 @@ namespace ConDep.Dsl.Builders
     {
         private readonly LocalSequence _localSequence;
         private readonly IManageInfrastructureSequence _infrastructureSequence;
+        private readonly PreOpsSequence _preOpsSequence;
         private readonly IEnumerable<ServerConfig> _servers;
         private readonly IHandleWebDeploy _webDeploy;
 
-        public LocalOperationsBuilder(LocalSequence localSequence, IManageInfrastructureSequence infrastructureSequence, IEnumerable<ServerConfig> servers, IHandleWebDeploy webDeploy)
+        public LocalOperationsBuilder(LocalSequence localSequence, IManageInfrastructureSequence infrastructureSequence, PreOpsSequence preOpsSequence, IEnumerable<ServerConfig> servers, IHandleWebDeploy webDeploy)
         {
             _localSequence = localSequence;
             _infrastructureSequence = infrastructureSequence;
+            _preOpsSequence = preOpsSequence;
             _servers = servers;
             _webDeploy = webDeploy;
         }
@@ -52,7 +55,7 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteOperations ToEachServer(Action<IOfferRemoteOperations> action)
         {
-            var builder = new RemoteOperationsBuilder(_localSequence.NewRemoteSequence(_infrastructureSequence, _servers), _webDeploy);
+            var builder = new RemoteOperationsBuilder(_localSequence.NewRemoteSequence(_infrastructureSequence, _preOpsSequence, _servers), _webDeploy);
             action(builder);
             return builder;
         }

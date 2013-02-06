@@ -66,10 +66,19 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="ApplicationArtifact.cs" />
+    <Compile Include="Builders\ConDepPowerShellScripts.cs" />
     <Compile Include="Builders\IConfigureLocalOperations.cs" />
     <Compile Include="Builders\IExecuteSequence.cs" />
+    <Compile Include="Builders\IOfferWindowsServiceOptions.cs" />
+    <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOptions.cs" />
     <Compile Include="ConDepAssemblyHandler.cs" />
     <Compile Include="ConDepAssemblyNotFoundException.cs" />
+    <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOperation.cs" />
+    <Compile Include="ConDepGlobals.cs" />
+    <Compile Include="Operations\PostRemoteOps.cs" />
+    <Compile Include="SemanticModel\Sequence\PostOpsSequence.cs" />
+    <Compile Include="SemanticModel\Sequence\PreOpsSequence.cs" />
+    <Compile Include="Operations\PreRemoteOps.cs" />
     <Compile Include="Remote\Registry\RegistryBinaryValue.cs" />
     <Compile Include="Remote\Registry\RegistryDWordValue.cs" />
     <Compile Include="Remote\Registry\RegistryExpandedStringValue.cs" />
@@ -86,7 +95,6 @@
     <Compile Include="Operations\Application\Deployment\Certificate\CertificateFromStoreOperation.cs" />
     <Compile Include="Operations\Application\Deployment\PowerShellScript\PowerShellScriptDeployOperation.cs" />
     <Compile Include="Configure.cs" />
-    <Compile Include="SemanticModel\IRequireRemotePowerShellScript.cs" />
     <Compile Include="Builders\IOfferIisAppPoolOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\BindingOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\CertificateOptions.cs" />
@@ -94,8 +102,8 @@
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IOfferCertificateOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IOfferHttpBindingOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IOfferIisWebSiteOptions.cs" />
-    <Compile Include="Scripts\ScriptNamespaceMarker.cs" />
-    <Compile Include="SemanticModel\RemotePowerShellScripts.cs" />
+    <Compile Include="PSScripts\PowerShellResources.cs" />
+    <Compile Include="SemanticModel\IRequireRemotePowerShellScripts.cs" />
     <Compile Include="Impersonation\Impersonator.cs" />
     <Compile Include="Operations\Infrastructure\IIS\IisInfrastructureIncludeOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\IisInfrastructureOptions.cs" />
@@ -224,10 +232,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Operations\Application\Deployment\NServiceBus\NServiceBus.ps1" />
-    <EmbeddedResource Include="Scripts\ConDep.psm1" />
+    <EmbeddedResource Include="PSScripts\ConDep.psm1" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Scripts\Iis.ps1" />
-    <EmbeddedResource Include="Scripts\WinService.ps1" />
+    <EmbeddedResource Include="PSScripts\Iis.ps1" />
+    <EmbeddedResource Include="PSScripts\WinService.ps1" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

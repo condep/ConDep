@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using ConDep.Dsl.Builders;
+using ConDep.Dsl.PSScripts;
 using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
 {
-    public class PowerShellProvider : RemoteCompositeOperation
+    public class PowerShellProvider : RemoteCompositeOperation//, IRequireRemotePowerShellScripts
     {
         private int _waitInterval = 30;
 
@@ -56,7 +58,7 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
                 libImport = "Add-Type -Path \"" + @"%temp%\ConDep.Remote.dll" + "\";";
             }
             //elseif($Error.Count -gt 0) {{ Write-Error $Error[0]; exit 1; }} 
-            server.ExecuteRemote.DosCommand(string.Format(@"powershell.exe -noprofile -InputFormat none -Command ""& {{ $ErrorActionPreference='stop'; set-executionpolicy remotesigned -force; {0}{1}; if(!$?) {{ exit 1; }} else {{ exit $LASTEXITCODE; }} }}""", libImport, DestinationPath), o => o.ContinueOnError(ContinueOnError).WaitIntervalInSeconds(WaitIntervalInSeconds).RetryAttempts(RetryAttempts));
+            server.ExecuteRemote.DosCommand(string.Format(@"powershell.exe -noprofile -InputFormat none -Command ""& {{ Import-Module $env:temp\ConDep\{0}\PSScripts\ConDep; $ErrorActionPreference='stop'; set-executionpolicy remotesigned -force; {1}{2}; if(!$?) {{ exit 1; }} else {{ exit $LASTEXITCODE; }} }}""", ConDepGlobals.ExecId, libImport, DestinationPath), o => o.ContinueOnError(ContinueOnError).WaitIntervalInSeconds(WaitIntervalInSeconds).RetryAttempts(RetryAttempts));
         }
 
         //private string AddExitCodeHandlingToScript(string script)
@@ -101,5 +103,17 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
             }
             return string.IsNullOrWhiteSpace(SourcePath) && !string.IsNullOrWhiteSpace(DestinationPath) && remoteLibExist;
         }
+
+        //public IEnumerable<string> ScriptPaths
+        //{
+        //    get
+        //    {
+        //        var resources = PowerShellResources.PowerShellScriptResources;
+        //        foreach(var resource in resources)
+        //        {
+        //            yield return Resources.ConDepResourceFiles.GetFilePath(resource, true);
+        //        }
+        //    }
+        //}
     }
 }
