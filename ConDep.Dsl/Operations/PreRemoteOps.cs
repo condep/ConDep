@@ -39,15 +39,22 @@ namespace ConDep.Dsl.Operations
 
         private void ConfigureCopyResource(Assembly assembly, IEnumerable<string> resources)
         {
-            foreach (var resource in resources)
+            if(resources != null)
             {
-                var path = Resources.ConDepResourceFiles.GetFilePath(assembly, resource, true);
-                var copyOp =
-                    new RemoteWebDeployOperation(
-                        new CopyFileProvider(path,
-                                             string.Format(@"%temp%\ConDep\{0}\PSScripts\ConDep\{1}", ConDepGlobals.ExecId,
-                                                           Path.GetFileName(path))), _webDeploy);
-                _sequence.Add(copyOp, true);
+                var resourceArray = resources.ToArray();
+                if (resourceArray.Any())
+                {
+                    foreach (var resource in resourceArray)
+                    {
+                        var path = Resources.ConDepResourceFiles.GetFilePath(assembly, resource, true);
+                        var copyOp =
+                            new RemoteWebDeployOperation(
+                                new CopyFileProvider(path,
+                                                     string.Format(@"%temp%\ConDep\{0}\PSScripts\ConDep\{1}", ConDepGlobals.ExecId,
+                                                                   Path.GetFileName(path))), _webDeploy);
+                        _sequence.Add(copyOp, true);
+                    }
+                }
             }
         }
 
