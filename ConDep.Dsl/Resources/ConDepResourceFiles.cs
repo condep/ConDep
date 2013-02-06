@@ -55,7 +55,7 @@ namespace ConDep.Dsl.Resources
             if(match.Success)
             {
                 var resourceName = match.Groups[1].Value;
-                if(string.IsNullOrWhiteSpace(resourceName))
+                if(!string.IsNullOrWhiteSpace(resourceName))
                 {
                     var resourceNamespace = fullResourceName.Replace("." + resourceName, "");
                     return GetFilePath(assembly, resourceNamespace, resourceName, keepOriginalFileName);
