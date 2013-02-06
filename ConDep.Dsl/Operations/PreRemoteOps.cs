@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Operations.Application.Deployment.CopyFile;
 using ConDep.Dsl.PSScripts;
@@ -27,20 +28,20 @@ namespace ConDep.Dsl.Operations
 
         public void Configure()
         {
-            ConfigureCopyResource(PowerShellResources.PowerShellScriptResources);
+            ConfigureCopyResource(Assembly.GetExecutingAssembly(), PowerShellResources.PowerShellScriptResources);
 
             if(_options.Assembly != null)
             {
                 var assemblyResources = _options.Assembly.GetManifestResourceNames().Select(assResource => Resources.ConDepResourceFiles.GetFilePath(_options.Assembly, assResource, true));
-                ConfigureCopyResource(assemblyResources);
+                ConfigureCopyResource(_options.Assembly, assemblyResources);
             }
         }
 
-        private void ConfigureCopyResource(IEnumerable<string> resources)
+        private void ConfigureCopyResource(Assembly assembly, IEnumerable<string> resources)
         {
             foreach (var resource in resources)
             {
-                var path = Resources.ConDepResourceFiles.GetFilePath(resource, true);
+                var path = Resources.ConDepResourceFiles.GetFilePath(assembly, resource, true);
                 var copyOp =
                     new RemoteWebDeployOperation(
                         new CopyFileProvider(path,
