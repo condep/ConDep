@@ -1,4 +1,7 @@
-﻿namespace ConDep.Dsl.SemanticModel
+﻿using System.Collections.Generic;
+using System.Reflection;
+
+namespace ConDep.Dsl.SemanticModel
 {
     public class ConDepOptions
     {
@@ -8,8 +11,9 @@
         private readonly bool _webDeployExist;
         private readonly bool _stopAfterMarkedServer;
         private readonly bool _continueAfterMarkedServer;
+        private readonly Assembly _assembly;
 
-        public ConDepOptions(bool deployAllApps, string application, bool deployOnly, bool webDeployExist, bool stopAfterMarkedServer, bool continueAfterMarkedServer)
+        public ConDepOptions(bool deployAllApps, string application, bool deployOnly, bool webDeployExist, bool stopAfterMarkedServer, bool continueAfterMarkedServer, Assembly assembly)
         {
             _deployAllApps = deployAllApps;
             _application = application;
@@ -17,6 +21,7 @@
             _webDeployExist = webDeployExist;
             _stopAfterMarkedServer = stopAfterMarkedServer;
             _continueAfterMarkedServer = continueAfterMarkedServer;
+            _assembly = assembly;
         }
 
         public string Application { get { return string.IsNullOrWhiteSpace(_application) ? "Default" : _application; } }
@@ -44,6 +49,11 @@
         public bool DeployAllApps
         {
             get { return _deployAllApps; }
+        }
+
+        public Assembly Assembly
+        {
+            get { return _assembly; }
         }
 
         public bool HasApplicationDefined()

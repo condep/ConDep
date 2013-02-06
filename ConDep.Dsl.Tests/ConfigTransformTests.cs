@@ -52,7 +52,7 @@ namespace ConDep.Dsl.Tests
 
             var trans = new TransformConfigOperation(Path.GetDirectoryName(source), Path.GetFileName(source), Path.GetFileName(transform));
             var webDepStatus = new WebDeploymentStatus();
-            trans.Execute(webDepStatus, new ConDepConfig(), new ConDepOptions(false, "", false, false, false, false));
+            trans.Execute(webDepStatus, new ConDepConfig(), new ConDepOptions(false, "", false, false, false, false, null));
 
             Assert.That(webDepStatus.HasErrors, Is.False);
 

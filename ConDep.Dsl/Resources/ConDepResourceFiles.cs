@@ -47,5 +47,13 @@ namespace ConDep.Dsl.Resources
             var resourceNamespace = fullResourceName.Replace("." + resourceName, "");
             return GetFilePath(Assembly.GetExecutingAssembly(), resourceNamespace, resourceName, keepOriginalFileName);
         }
+
+        public static string GetFilePath(Assembly assembly, string fullResourceName, bool keepOriginalFileName = false)
+        {
+            var regex = new Regex(@".+\.(.+\.(ps1|psm1))");
+            var resourceName = regex.Match(fullResourceName).Groups[1].Value;
+            var resourceNamespace = fullResourceName.Replace("." + resourceName, "");
+            return GetFilePath(assembly, resourceNamespace, resourceName, keepOriginalFileName);
+        }
     }
 }

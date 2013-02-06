@@ -47,7 +47,8 @@ namespace ConDep.Console
                                                           optionHandler.Params.DeployOnly,
                                                           optionHandler.Params.WebDeployExist,
                                                           optionHandler.Params.StopAfterMarkedServer,
-                                                          optionHandler.Params.ContinueAfterMarkedServer);
+                                                          optionHandler.Params.ContinueAfterMarkedServer,
+                                                          assembly);
                     var envSettings = GetEnvConfig(optionHandler.Params, assembly);
 
                     var status = new WebDeploymentStatus();
