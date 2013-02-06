@@ -115,7 +115,7 @@ namespace ConDep.Console
 
         public void WaitInQueue()
         {
-            Logger.LogSectionStart("Waiting in queue");
+            Logger.LogSectionStart("WaitingInDeploymentQueue");
             try
             {
                 _item = _client.Enqueue(_environment);
@@ -153,7 +153,7 @@ namespace ConDep.Console
             }
             finally
             {
-                Logger.LogSectionEnd("Waiting in queue");
+                Logger.LogSectionEnd("WaitingInDeploymentQueue");
             }
         }
 
