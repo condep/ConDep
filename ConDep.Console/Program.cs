@@ -115,30 +115,45 @@ namespace ConDep.Console
 
         public void WaitInQueue()
         {
-            _item = _client.Enqueue(_environment);
-            if (_item.Position == 0)
+            Logger.LogSectionStart("Waiting in queue");
+            try
             {
-                _client.SetAsStarted(_item);
-                return;
+                _item = _client.Enqueue(_environment);
+                var currentPosition = _item.Position;
+                if (currentPosition == 0)
+                {
+                    _client.SetAsStarted(_item);
+                    return;
+                }
+
+                var timeout = 3*60;
+                var waitTime = 0;
+                do
+                {
+                    Thread.Sleep(10000);
+                    waitTime += 3;
+                    _item = _client.Peek(_item);
+
+                    if(currentPosition != _item.Position)
+                    {
+                        Logger.Info(
+                            string.Format("Waiting in deployment queue. There are {0} deployment(s) waiting to finish...",
+                                          _item.Position));
+                        currentPosition = _item.Position;
+                    }
+                } while (_item.Position != 0 || waitTime > timeout);
+
+                _item = _client.SetAsStarted(_item);
+
+                if (waitTime >= timeout)
+                {
+                    _client.Dequeue(_item);
+                    throw new TimeoutException("ConDep timed out waiting in queue.");
+                }
             }
-
-            var timeout = 3*60;
-            var waitTime = 0;
-            do
+            finally
             {
-                Thread.Sleep(10000);
-                waitTime += 3;
-                _item = _client.Peek(_item);
-
-                Logger.Info(string.Format("Waiting in deployment queue. There are {0} deployment(s) waiting to finish.", _item.Position));
-            } while (_item.Position != 0 || waitTime > timeout);
-
-            _item = _client.SetAsStarted(_item);
-
-            if(waitTime >= timeout)
-            {
-                _client.Dequeue(_item);
-                throw new TimeoutException("ConDep timed out waiting in queue.");
+                Logger.LogSectionEnd("Waiting in queue");
             }
         }
 
