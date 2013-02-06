@@ -126,12 +126,13 @@ namespace ConDep.Console
                     return;
                 }
 
-                var timeout = 3*60;
+                var timeout = 30000/10000;
                 var waitTime = 0;
+                bool exit = false;
                 do
                 {
                     Thread.Sleep(10000);
-                    waitTime += 3;
+                    waitTime++;
                     _item = _client.Peek(_item);
 
                     if(currentPosition != _item.Position)
@@ -141,7 +142,8 @@ namespace ConDep.Console
                                           _item.Position));
                         currentPosition = _item.Position;
                     }
-                } while (_item.Position != 0 || waitTime > timeout);
+                    exit = _item.Position == 0 || waitTime > timeout;
+                } while (!exit);
 
                 _item = _client.SetAsStarted(_item);
 
