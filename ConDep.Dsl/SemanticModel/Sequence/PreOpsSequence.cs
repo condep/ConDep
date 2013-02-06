@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations;
+using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
     public class PreOpsSequence : IManageRemoteSequence
     {
+        private readonly IHandleWebDeploy _webDeploy;
         private readonly List<object> _sequence = new List<object>();
+
+        public PreOpsSequence(IHandleWebDeploy webDeploy)
+        {
+            _webDeploy = webDeploy;
+        }
 
         public void Add(IOperateRemote operation, bool addFirst = false)
         {
@@ -46,7 +53,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 Logger.LogSectionStart("Pre-Operations");
                 sectionAdded = true;
 
-                var remotePreOps = new PreRemoteOps(server, this, options);
+                var remotePreOps = new PreRemoteOps(server, this, options, _webDeploy);
                 remotePreOps.Configure();
                 remotePreOps.Execute(status);
                 

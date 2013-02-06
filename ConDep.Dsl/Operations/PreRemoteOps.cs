@@ -13,12 +13,14 @@ namespace ConDep.Dsl.Operations
         private readonly ServerConfig _server;
         private readonly PreOpsSequence _sequence;
         private readonly ConDepOptions _options;
+        private IHandleWebDeploy _webDeploy;
 
-        public PreRemoteOps(ServerConfig server, PreOpsSequence sequence, ConDepOptions options)
+        public PreRemoteOps(ServerConfig server, PreOpsSequence sequence, ConDepOptions options, IHandleWebDeploy webDeploy)
         {
             _server = server;
             _sequence = sequence;
             _options = options;
+            _webDeploy = webDeploy;
         }
 
         public void Configure()
@@ -27,7 +29,7 @@ namespace ConDep.Dsl.Operations
             foreach (var resource in resources)
             {
                 var path = Resources.ConDepResourceFiles.GetFilePath(resource, true);
-                var copyOp = new RemoteWebDeployOperation(new CopyFileProvider(path, string.Format(@"%temp%\ConDep\{0}\PSScripts\ConDep\{1}", ConDepGlobals.ExecId, Path.GetFileName(path))), new WebDeployHandler());
+                var copyOp = new RemoteWebDeployOperation(new CopyFileProvider(path, string.Format(@"%temp%\ConDep\{0}\PSScripts\ConDep\{1}", ConDepGlobals.ExecId, Path.GetFileName(path))), _webDeploy);
                 _sequence.Add(copyOp, true);
             }
         }

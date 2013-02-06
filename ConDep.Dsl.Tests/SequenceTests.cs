@@ -33,7 +33,7 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server };
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence();
+            var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
 
             var webDeploy = new WebDeployHandlerMock();
             var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);

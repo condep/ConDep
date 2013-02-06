@@ -52,7 +52,7 @@ namespace ConDep.Dsl.SemanticModel
             foreach (var application in applications)
             {
                 var infrastructureSequence = new InfrastructureSequence();
-                var preOpsSequence = new PreOpsSequence();
+                var preOpsSequence = new PreOpsSequence(webDeploy);
                 if (!options.DeployOnly)
                 {
                     var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);
