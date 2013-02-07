@@ -10,7 +10,8 @@ properties {
 	$condep_remote = "ConDep.Remote"
 	$condep_dsl_lb_arr = "ConDep.Dsl.LoadBalancer.Arr"
 	$condep_dsl_lb_ace = "ConDep.Dsl.LoadBalancer.Ace"
-	$condep_tests = "ConDep.Dsl.Tests"
+	$condep_dsl_tests = "ConDep.Dsl.Tests"
+	$condep_webq_tests = "ConDep.WebQ.Tests"
 	$condep_web_q_server = "ConDep.WebQ.Server"
 	$condep_web_q_client = "ConDep.WebQ.Client"
 	$lib = "$pwd\lib"
@@ -122,7 +123,8 @@ task Build-ConDep-Dsl-LB-ACE -depends Clean-ConDep-Dsl-LB-ACE, Init {
 }
 
 task Build-Tests -depends Clean-Tests, Init {
-	Exec { msbuild "$pwd\$condep_tests\$condep_tests.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_tests\ }
+	Exec { msbuild "$pwd\$condep_dsl_tests\$condep_dsl_tests.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_dsl_tests\ }
+	Exec { msbuild "$pwd\$condep_webq_tests\$condep_webq_tests.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_webq_tests\ }
 }
 
 task Init {
