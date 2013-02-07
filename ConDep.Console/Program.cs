@@ -1,16 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Reflection;
-using System.Threading;
 using ConDep.Dsl;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
-using ConDep.Dsl.Operations;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 using ConDep.WebQ.Client;
-using ConDep.WebQ.Data;
 
 namespace ConDep.Console
 {
@@ -36,7 +32,8 @@ namespace ConDep.Console
                     if (!string.IsNullOrWhiteSpace(optionHandler.Params.WebQAddress))
                     {
                         webQ = new WebQueue(optionHandler.Params.WebQAddress, optionHandler.Params.Environment);
-                        webQ.WebQueueInfo += (sender, eventArgs) => Logger.Info(eventArgs.Message);
+                        webQ.WebQueuePositionUpdate += (sender, eventArgs) => Logger.Info(eventArgs.Message);
+                        webQ.WebQueueTimeoutUpdate += (sender, eventArgs) => Logger.Info(eventArgs.Message);
                         Logger.LogSectionStart("Waiting in Deployment Queue");
                         try
                         {

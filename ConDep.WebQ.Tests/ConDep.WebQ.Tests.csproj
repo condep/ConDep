@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebQMockClient.cs" />
     <Compile Include="WebQTests.cs" />
   </ItemGroup>
   <ItemGroup>

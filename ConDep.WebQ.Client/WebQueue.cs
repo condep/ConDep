@@ -8,22 +8,40 @@ namespace ConDep.WebQ.Client
     public class WebQueue
     {
         private readonly string _environment;
-        private Client _client;
+        private readonly TimeSpan _refreshInterval;
+        private readonly IClient _client;
         private WebQItem _item;
 
-        public event EventHandler<WebQueueEventArgs> WebQueueInfo;
+        public event EventHandler<WebQueueEventArgs> WebQueuePositionUpdate;
+        public event EventHandler<WebQueueEventArgs> WebQueueTimeoutUpdate;
 
         public WebQueue(string webQAddress, string environment)
         {
             _client = new Client(new Uri(webQAddress));
             _environment = environment;
+            _refreshInterval = TimeSpan.FromSeconds(10);
         }
 
-        protected virtual void OnWebQueueInfo(object sender, WebQueueEventArgs args)
+        public WebQueue(IClient client, string environment, TimeSpan refreshInterval)
         {
-            if(WebQueueInfo != null)
+            _client = client;
+            _environment = environment;
+            _refreshInterval = refreshInterval;
+        }
+
+        protected virtual void OnWebQueuePositionUpdate(object sender, WebQueueEventArgs args)
+        {
+            if(WebQueuePositionUpdate != null)
             {
-                WebQueueInfo(sender, args);
+                WebQueuePositionUpdate(sender, args);
+            }
+        }
+
+        protected virtual void OnWebQueueTimeoutUpdate(object sender, WebQueueEventArgs args)
+        {
+            if (WebQueueTimeoutUpdate != null)
+            {
+                WebQueueTimeoutUpdate(sender, args);
             }
         }
 
@@ -33,7 +51,7 @@ namespace ConDep.WebQ.Client
             var timeForTimeout = DateTime.Now + timeout;
 
             _item = _client.Enqueue(_environment);
-            OnWebQueueInfo(this, new WebQueueEventArgs(string.Format(positionMessage, _item.Position)));
+            OnWebQueuePositionUpdate(this, new WebQueueEventArgs(string.Format(positionMessage, _item.Position), _item));
 
             if (_item.Position == 0)
             {
@@ -44,14 +62,14 @@ namespace ConDep.WebQ.Client
             var currentPosition = _item.Position;
             do
             {
-                Thread.Sleep(10000);
+                Thread.Sleep(_refreshInterval);
                 _item = _client.Peek(_item);
 
                 if(currentPosition != _item.Position)
                 {
                     currentPosition = _item.Position;
                     if (currentPosition == 0) break;
-                    OnWebQueueInfo(this, new WebQueueEventArgs(string.Format(positionMessage, currentPosition)));
+                    OnWebQueuePositionUpdate(this, new WebQueueEventArgs(string.Format(positionMessage, currentPosition), _item));
                 }
 
                 if (DateTime.Now > timeForTimeout)
@@ -67,7 +85,7 @@ namespace ConDep.WebQ.Client
                     throw new TimeoutException("ConDep timed out waiting in queue.");
                 }
 
-                OnWebQueueInfo(this, new WebQueueEventArgs(string.Format("Will wait in queue for {0} minutes before timing out.", (timeForTimeout - DateTime.Now).ToString("c", CultureInfo.CurrentCulture))));
+                OnWebQueueTimeoutUpdate(this, new WebQueueEventArgs(string.Format("Will wait in queue for {0} minutes before timing out.", (timeForTimeout - DateTime.Now).ToString("c", CultureInfo.CurrentCulture)), _item));
             } while (true);
 
             _item = _client.SetAsStarted(_item);

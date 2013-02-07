@@ -70,6 +70,7 @@
     <Compile Include="Builders\IConfigureLocalOperations.cs" />
     <Compile Include="Builders\IExecuteSequence.cs" />
     <Compile Include="Builders\IOfferWindowsServiceOptions.cs" />
+    <Compile Include="Logging\TeamCityMessageStatus.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOptions.cs" />
     <Compile Include="ConDepAssemblyHandler.cs" />
     <Compile Include="ConDepAssemblyNotFoundException.cs" />
@@ -85,7 +86,7 @@
     <Compile Include="Remote\Registry\RegistryMultiStringValue.cs" />
     <Compile Include="Remote\Registry\RegistryStringValue.cs" />
     <Compile Include="Remote\Registry\RegistryValue.cs" />
-    <Compile Include="Impersonation\RemoteServerValidator.cs" />
+    <Compile Include="Remote\RemoteServerValidator.cs" />
     <Compile Include="Remote\RemoteExecutor.cs" />
     <Compile Include="Remote\RemoteRegistry.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebApp\IisWebAppOptions.cs" />

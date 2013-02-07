@@ -8,6 +8,7 @@ using ConDep.Dsl.Impersonation;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.LoadBalancer;
+using ConDep.Dsl.Remote;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 

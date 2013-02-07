@@ -5,7 +5,15 @@ using ConDep.WebQ.Data;
 
 namespace ConDep.WebQ.Client
 {
-    public class Client
+    public interface IClient
+    {
+        WebQItem Enqueue(string environment);
+        WebQItem Peek(WebQItem item);
+        void Dequeue(WebQItem item);
+        WebQItem SetAsStarted(WebQItem item);
+    }
+
+    public class Client : IClient
     {
         private readonly Uri _webQAddress;
         private bool? _waitingInQueue;

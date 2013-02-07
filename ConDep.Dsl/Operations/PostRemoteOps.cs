@@ -5,9 +5,9 @@ using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.Operations
 {
-    public static class PostRemoteOps
+    internal class PostRemoteOps
     {
-        public static void Configure(PostOpsSequence sequence)
+        public void Configure(PostOpsSequence sequence)
         {
             var op = new PowerShellProvider(string.Format("Remove-Item -force -recurse {0}{1}", @"$env:temp\ConDep\", ConDepGlobals.ExecId));
             var compSeq = sequence.NewCompositeSequence(op);

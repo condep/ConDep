@@ -1,18 +1,11 @@
 using System;
+using System.Diagnostics;
 using System.Text;
 using log4net;
 using log4net.Core;
 
 namespace ConDep.Dsl.Logging
 {
-    public enum TeamCityMessageStatus
-    {
-        NORMAL,
-        WARNING,
-        FAILURE,
-        ERROR
-    }
-
     public class TeamCityLogger : LoggerBase
     {
         private readonly ILog _serviceMessageLogger;
@@ -24,22 +17,56 @@ namespace ConDep.Dsl.Logging
 
         public override void Warn(string message, params object[] formatArgs)
         {
-            TeamCityMessage(message, null, TeamCityMessageStatus.WARNING, formatArgs);
+            Warn(message, null, formatArgs);
         }
 
         public override void Warn(string message, Exception ex, params object[] formatArgs)
         {
-            TeamCityMessage(message, null, TeamCityMessageStatus.WARNING, formatArgs);
+            Log(message, ex, TraceLevel.Warning, formatArgs);
         }
 
         public override void Error(string message, params object[] formatArgs)
         {
-            TeamCityMessage(message, null, TeamCityMessageStatus.ERROR, formatArgs);
+            Error(message, null, formatArgs);
         }
 
         public override void Error(string message, Exception ex, params object[] formatArgs)
         {
-            TeamCityMessage(message, ex, TeamCityMessageStatus.ERROR, formatArgs);
+            Log(message, ex, TraceLevel.Error, formatArgs);
+        }
+
+        public override void Info(string message, params object[] formatArgs)
+        {
+            Info(message, null, formatArgs);
+        }
+
+        public override void Info(string message, Exception ex, params object[] formatArgs)
+        {
+            Log(message, ex, TraceLevel.Info, formatArgs);
+        }
+
+        public override void Log(string message, TraceLevel traceLevel, params object[] formatArgs)
+        {
+            Log(message, null, traceLevel, formatArgs);
+        }
+
+        public override void Log(string message, Exception ex, TraceLevel traceLevel, params object[] formatArgs)
+        {
+            var tcStatus = TranslateTraceLevelToTCStatus(traceLevel);
+            TeamCityMessage(message, ex, tcStatus, formatArgs);
+        }
+
+        private TeamCityMessageStatus TranslateTraceLevelToTCStatus(TraceLevel traceLevel)
+        {
+            switch (traceLevel)
+            {
+                case TraceLevel.Warning:
+                    return TeamCityMessageStatus.WARNING;
+                case TraceLevel.Error:
+                    return TeamCityMessageStatus.ERROR;
+                default:
+                    return TeamCityMessageStatus.NORMAL;
+            }
         }
 
         public override void LogSectionStart(string name)

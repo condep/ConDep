@@ -40,7 +40,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             {
                 Logger.LogSectionStart("Post-Operations");
 
-                PostRemoteOps.Configure(this);
+                var postRemoteOp = new PostRemoteOps();
+                postRemoteOp.Configure(this);
 
                 foreach (var server in ConDepGlobals.ServersWithPreOps.Values)
                 {
@@ -72,7 +73,11 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 {
                     WebDeployDeployer.DisposeAll();
                 }
-                catch{}
+                catch(Exception ex)
+                {
+                    Logger.Warn("Unable to remove Web Deploy from server(s).", ex);
+
+                }
                 Logger.LogSectionEnd("Post-Operations");
             }
 
