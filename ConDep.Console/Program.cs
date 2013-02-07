@@ -19,7 +19,7 @@ namespace ConDep.Console
         static void Main(string[] args)
         {
             var exitCode = 0;
-            WebQHandler webQHandler = null;
+            WebQueue webQ = null;
             try
             {
                 new LogConfigLoader().Load();
@@ -35,8 +35,17 @@ namespace ConDep.Console
                     Logger.LogSectionStart("ConDep");
                     if (!string.IsNullOrWhiteSpace(optionHandler.Params.WebQAddress))
                     {
-                        webQHandler = new WebQHandler(optionHandler.Params.WebQAddress, optionHandler.Params.Environment);
-                        webQHandler.WaitInQueue();
+                        webQ = new WebQueue(optionHandler.Params.WebQAddress, optionHandler.Params.Environment);
+                        webQ.WebQueueInfo += (sender, eventArgs) => Logger.Info(eventArgs.Message);
+                        Logger.LogSectionStart("Waiting in Deployment Queue");
+                        try
+                        {
+                            webQ.WaitInQueue(TimeSpan.FromMinutes(30));
+                        }
+                        finally
+                        {
+                            Logger.LogSectionEnd("Waiting in Deployment Queue");
+                        }
                     }
 
                     var configAssemblyLoader = new ConDepAssemblyHandler(optionHandler.Params.AssemblyName);
@@ -74,9 +83,9 @@ namespace ConDep.Console
             }
             finally
             {
-                if(webQHandler != null)
+                if(webQ != null)
                 {
-                    webQHandler.LeaveQueue();
+                    webQ.LeaveQueue();
                 }
 
                 Logger.LogSectionEnd("ConDep");
@@ -98,70 +107,6 @@ namespace ConDep.Console
                 envConfig.LoadBalancer = null;
             }
             return envConfig;
-        }
-    }
-
-    internal class WebQHandler
-    {
-        private readonly string _environment;
-        private Client _client;
-        private WebQItem _item;
-
-        public WebQHandler(string webQAddress, string environment)
-        {
-            _client = new Client(new Uri(webQAddress));
-            _environment = environment;
-        }
-
-        public void WaitInQueue()
-        {
-            Logger.LogSectionStart("WaitingInDeploymentQueue");
-            try
-            {
-                _item = _client.Enqueue(_environment);
-                var currentPosition = _item.Position;
-                if (currentPosition == 0)
-                {
-                    _client.SetAsStarted(_item);
-                    return;
-                }
-
-                var timeout = 6*30;
-                var waitTime = 0;
-                bool exit = false;
-                do
-                {
-                    Thread.Sleep(10000);
-                    waitTime++;
-                    _item = _client.Peek(_item);
-
-                    if(currentPosition != _item.Position)
-                    {
-                        Logger.Info(
-                            string.Format("Waiting in deployment queue. There are {0} deployment(s) waiting to finish...",
-                                          _item.Position));
-                        currentPosition = _item.Position;
-                    }
-                    exit = _item.Position == 0 || waitTime > timeout;
-                } while (!exit);
-
-                _item = _client.SetAsStarted(_item);
-
-                if (waitTime >= timeout)
-                {
-                    _client.Dequeue(_item);
-                    throw new TimeoutException("ConDep timed out waiting in queue.");
-                }
-            }
-            finally
-            {
-                Logger.LogSectionEnd("WaitingInDeploymentQueue");
-            }
-        }
-
-        public void LeaveQueue()
-        {
-            _client.Dequeue(_item);
         }
     }
 }

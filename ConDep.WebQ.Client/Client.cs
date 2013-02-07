@@ -20,32 +20,57 @@ namespace ConDep.WebQ.Client
             var request = WebRequest.Create(new Uri(_webQAddress, environment));
             request.Method = "PUT";
             request.ContentLength = 0;
-            var response = request.GetResponse();
 
-            var serializer = new DataContractJsonSerializer(typeof(WebQItem));
-            var stream = response.GetResponseStream();
-            if (stream != null)
+            using (var response = request.GetResponse())
             {
-                _waitingInQueue = true;
-                return serializer.ReadObject(stream) as WebQItem;
+                var serializer = new DataContractJsonSerializer(typeof (WebQItem));
+                using (var stream = response.GetResponseStream())
+                {
+                    if (stream != null)
+                    {
+                        _waitingInQueue = true;
+                        return serializer.ReadObject(stream) as WebQItem;
+                    }
+                    return new WebQItem {Position = -1};
+                }
             }
-            return new WebQItem {Position = -1};
         }
 
         public WebQItem Peek(WebQItem item)
         {
-            var request = WebRequest.Create(new Uri(_webQAddress, item.Environment + "/" + item.Id));
-            request.Method = "GET";
-            request.ContentLength = 0;
-            var response = request.GetResponse();
-
-            var serializer = new DataContractJsonSerializer(typeof(WebQItem));
-            var stream = response.GetResponseStream();
-            if (stream != null)
+            try
             {
-                return serializer.ReadObject(stream) as WebQItem;
+                var request = WebRequest.Create(new Uri(_webQAddress, item.Environment + "/" + item.Id));
+                request.Method = "GET";
+                request.ContentLength = 0;
+                
+                using(var response = request.GetResponse())
+                {
+                    var serializer = new DataContractJsonSerializer(typeof(WebQItem));
+
+                    using(var stream = response.GetResponseStream())
+                    {
+                        if (stream != null)
+                        {
+                            return serializer.ReadObject(stream) as WebQItem;
+                        }
+                        return item;
+                    }
+                }
+
             }
-            return item;
+            catch (WebException webEx)
+            {
+                if (webEx.Status == WebExceptionStatus.ProtocolError && webEx.Response != null)
+                {
+                    var exResponse = (HttpWebResponse)webEx.Response;
+                    if (exResponse.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        throw new WebQItemNoLongerInQueueException();
+                    }
+                }
+                throw;
+            }
         }
 
         public void Dequeue(WebQItem item)
@@ -56,7 +81,8 @@ namespace ConDep.WebQ.Client
             var request = WebRequest.Create(new Uri(_webQAddress, item.Environment + "/" + item.Id));
             request.Method = "DELETE";
             request.ContentLength = 0;
-            request.GetResponse();
+
+            using(request.GetResponse())
             _waitingInQueue = false;
         }
 
@@ -65,15 +91,20 @@ namespace ConDep.WebQ.Client
             var request = WebRequest.Create(new Uri(_webQAddress, item.Environment + "/" + item.Id));
             request.Method = "POST";
             request.ContentLength = 0;
-            var response = request.GetResponse();
 
-            var serializer = new DataContractJsonSerializer(typeof(WebQItem));
-            var stream = response.GetResponseStream();
-            if (stream != null)
+            using(var response = request.GetResponse())
             {
-                return serializer.ReadObject(stream) as WebQItem;
+                var serializer = new DataContractJsonSerializer(typeof(WebQItem));
+                using(var stream = response.GetResponseStream())
+                {
+                    if (stream != null)
+                    {
+                        return serializer.ReadObject(stream) as WebQItem;
+                    }
+                    return item;
+                }
             }
-            return item;
+
         }
     }
 }
