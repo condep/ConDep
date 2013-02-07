@@ -32,7 +32,7 @@ namespace ConDep.Dsl.Operations
 
             if(_options.Assembly != null)
             {
-                var assemblyResources = _options.Assembly.GetManifestResourceNames().Select(assResource => Resources.ConDepResourceFiles.GetFilePath(_options.Assembly, assResource, true));
+                var assemblyResources = _options.Assembly.GetManifestResourceNames();
                 ConfigureCopyResource(_options.Assembly, assemblyResources);
             }
         }
