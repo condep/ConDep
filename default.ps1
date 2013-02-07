@@ -165,5 +165,6 @@ task Clean-ConDep-Dsl-LB-ACE {
 
 task Clean-Tests {
 	Write-Host "Cleaning Build output"  -ForegroundColor Green
-	Remove-Item $build_directory\$condep_tests -Force -Recurse -ErrorAction SilentlyContinue
+	Remove-Item $build_directory\$condep_dsl_tests -Force -Recurse -ErrorAction SilentlyContinue
+	Remove-Item $build_directory\$condep_webq_tests -Force -Recurse -ErrorAction SilentlyContinue
 }
