@@ -97,7 +97,7 @@ namespace ConDep.Dsl.Remote
                     return false;
                 }
                 
-                Logger.Error(string.Format("Microsoft .NET Framework version 4.0 is installed on server [{0}].", server.Name));
+                Logger.Info(string.Format("Microsoft .NET Framework version 4.0 is installed on server [{0}].", server.Name));
                 return true;
             }
             catch(Exception ex)
