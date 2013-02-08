@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using ConDep.Dsl;
@@ -21,13 +22,13 @@ namespace ConDep.Console
                 new LogConfigLoader().Load();
 
                 var optionHandler = new CommandLineOptionHandler(args);
-
                 if (optionHandler.Params.InstallWebQ)
                 {
                     throw new NotImplementedException();
                 }
                 else
                 {
+                    PrintCopyrightMessage();
                     Logger.LogSectionStart("ConDep");
                     if (!string.IsNullOrWhiteSpace(optionHandler.Params.WebQAddress))
                     {
@@ -88,6 +89,15 @@ namespace ConDep.Console
                 Logger.LogSectionEnd("ConDep");
                 Environment.Exit(exitCode);
             }
+        }
+
+        private static void PrintCopyrightMessage()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+
+            Logger.Info(string.Format("ConDep version {0}", versionInfo.ProductVersion));
+            Logger.Info("Copyright (c) Jon Arild Torresdal\n");
         }
 
         private static ConDepConfig GetEnvConfig(CommandLineParams cmdParams, Assembly assembly)

@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using ConDep.Dsl.Logging;
 using NDesk.Options;
 
 namespace ConDep.Console
@@ -14,8 +17,18 @@ namespace ConDep.Console
 
         public void PrintHelp(OptionSet optionSet)
         {
+            PrintCopyrightMessage(_writer);
             PrintHelpUsage(optionSet, _writer);
             PrintHelpExamples(_writer);
+        }
+
+        private static void PrintCopyrightMessage(TextWriter writer)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+
+            writer.WriteLine("ConDep version {0}", versionInfo.ProductVersion);
+            writer.WriteLine("Copyright (c) Jon Arild Torresdal");
         }
 
         private static void PrintHelpUsage(OptionSet optionSet, TextWriter writer)
