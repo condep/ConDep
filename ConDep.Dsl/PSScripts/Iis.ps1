@@ -34,7 +34,7 @@ function New-ConDepAppPool {
 
 	$newAppPool = New-WebAppPool $AppPool -Force
 	write-host "$($newAppPool.GetType())"
-	#$newAppPool
+
 	if($AppPoolOptions) {
 		if($AppPoolOptions.Enable32Bit) { $newAppPool.enable32BitAppOnWin64 = $AppPoolOptions.Enable32Bit }
 		if($AppPoolOptions.IdentityUsername) { 
@@ -46,7 +46,7 @@ function New-ConDepAppPool {
 		if($AppPoolOptions.IdleTimeoutInMinutes) { $newAppPool.processModel.idleTimeout = [TimeSpan]::FromMinutes($AppPoolOptions.IdleTimeoutInMinutes) }
 		if($AppPoolOptions.LoadUserProfile) { $newAppPool.processModel.loadUserProfile =  $AppPoolOptions.LoadUserProfile }
 		if($AppPoolOptions.ManagedPipeline) { $newAppPool.managedPipelineMode = $AppPoolOptions.ManagedPipeline }
-		if($AppPoolOptions.NetFrameworkVersion) { $newAppPool.managedRuntimeVersion = $AppPoolOptions.NetFrameworkVersion }
+		if($AppPoolOptions.NetFrameworkVersion -eq "" -or $AppPoolOptions.NetFrameworkVersion) { $newAppPool.managedRuntimeVersion = $AppPoolOptions.NetFrameworkVersion }
 		if($AppPoolOptions.RecycleTimeInMinutes -ne $null) { if($AppPoolOptions.RecycleTimeInMinutes -eq 0) { $newAppPool.recycling.periodicrestart.time = [TimeSpan]::Zero } else { $newAppPool.recycling.periodicrestart.time = [TimeSpan]::FromMinutes($AppPoolOptions.RecycleTimeInMinutes)} }
 		
 		$newAppPool | set-item

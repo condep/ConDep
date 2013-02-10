@@ -8,9 +8,14 @@ namespace ConDep.Dsl.Builders
         /// <param name="parameters"></param>
         /// <returns></returns>
         WindowsServiceOptions UseServiceInstaller(string parameters);
+
+        /// <summary>
+        /// Name of the user which the Windows Service should run as
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         WindowsServiceOptions UserName(string username);
         WindowsServiceOptions Password(string password);
-        WindowsServiceOptions DisplayName(string displayName);
         WindowsServiceOptions Description(string description);
         WindowsServiceOptions ServiceGroup(string group);
 
@@ -33,6 +38,11 @@ namespace ConDep.Dsl.Builders
         /// <returns></returns>
         WindowsServiceOptions ServiceRestartDelay(int delay);
 
+        /// <summary>
+        /// If true, will ignore errors during start or stop of the Windows Service.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         WindowsServiceOptions IgnoreFailureOnServiceStartStop(bool value);
     }
 }

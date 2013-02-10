@@ -60,10 +60,15 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
-        public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, Action<NServiceBusOptions> nServiceBusOptions = null)
+        public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName)
+        {
+            return NServiceBusEndpoint(sourceDir, destDir, serviceName, null);
+        }
+
+        public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, Action<NServiceBusOptions> nServiceBusOptions)
         {
             var nServiceBusProvider = new NServiceBusOperation(sourceDir, destDir, serviceName);
-            if(nServiceBusOptions != null)
+            if (nServiceBusOptions != null)
             {
                 nServiceBusOptions(new NServiceBusOptions(nServiceBusProvider));
             }

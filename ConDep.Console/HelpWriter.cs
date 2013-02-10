@@ -27,7 +27,7 @@ namespace ConDep.Console
             var assembly = Assembly.GetExecutingAssembly();
             var versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
 
-            writer.WriteLine("ConDep version {0}", versionInfo.ProductVersion);
+            writer.WriteLine("ConDep Version {0}", versionInfo.ProductVersion.Substring(0, versionInfo.ProductVersion.LastIndexOf(".")));
             writer.WriteLine("Copyright (c) Jon Arild Torresdal");
         }
 

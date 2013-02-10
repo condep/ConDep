@@ -1,37 +1,26 @@
 using System;
-using System.Security.Cryptography.X509Certificates;
-using ConDep.Dsl.Operations.Application.Deployment.Certificate;
 using ConDep.Dsl.Operations.Infrastructure;
-using ConDep.Dsl.Operations.Infrastructure.IIS;
 using ConDep.Dsl.Operations.Infrastructure.IIS.WebSite;
-using ConDep.Dsl.SemanticModel.Sequence;
-using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.Builders
 {
     public interface IOfferInfrastructure
     {
         /// <summary>
-        /// 
+        /// Installs and configures IIS with provided options
         /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
         IOfferInfrastructure IIS(Action<IisInfrastructureOptions> options);
 
         /// <summary>
-        /// 
+        /// Installs IIS
         /// </summary>
         /// <returns></returns>
         IOfferInfrastructure IIS();
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        IOfferInfrastructure MSMQ();
-        
-        /// <summary>
-        /// 
+        /// Creates a new Web Site in IIS if not exist. If exist, will delete and then create new.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
@@ -39,7 +28,7 @@ namespace ConDep.Dsl.Builders
         IOfferInfrastructure IISWebSite(string name, int id);
 
         /// <summary>
-        /// 
+        /// Creates a new Web Site in IIS if not exist. If exist, will delete and then create new with provided options.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
@@ -48,82 +37,40 @@ namespace ConDep.Dsl.Builders
         IOfferInfrastructure IISWebSite(string name, int id, Action<IOfferIisWebSiteOptions> options);
 
         /// <summary>
-        /// 
+        /// Will create a new Application Pool in IIS.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         IOfferInfrastructure IISAppPool(string name);
 
         /// <summary>
-        /// 
+        /// Will create a new Application Pool in IIS with provided options.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="options"></param>
         /// <returns></returns>
         IOfferInfrastructure IISAppPool(string name, Action<IOfferIisAppPoolOptions> options);
 
+        /// <summary>
+        /// Will create a new Web Application in IIS under the given Web Site.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="webSite"></param>
+        /// <returns></returns>
         IOfferInfrastructure IISWebApp(string name, string webSite);
-        
+
+        /// <summary>
+        /// Will create a new Web Application in IIS under the given Web Site, with the provided options.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="webSite"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         IOfferInfrastructure IISWebApp(string name, string webSite, Action<IOfferIisWebAppOptions> options);
 
+        /// <summary>
+        /// Provide operations for installing SSL certificates.
+        /// </summary>
         IOfferSslInfrastructure SslCertificate { get; }
-    }
-
-    public interface IOfferSslInfrastructure
-    {
-        IOfferInfrastructure FromStore(X509FindType findType, string findValue, Action<IOfferCertificateOptions> options = null);
-        IOfferInfrastructure FromFile(string path, string password, Action<IOfferCertificateOptions> options = null);
-    }
-
-    public class SslInfrastructureBuilder : IOfferSslInfrastructure
-    {
-        private readonly IManageInfrastructureSequence _infrastructureSequence;
-        private readonly IHandleWebDeploy _webDeploy;
-        private readonly InfrastructureBuilder _infrastructureBuilder;
-
-        public SslInfrastructureBuilder(IManageInfrastructureSequence infrastructureSequence, IHandleWebDeploy webDeploy, InfrastructureBuilder infrastructureBuilder)
-        {
-            _infrastructureSequence = infrastructureSequence;
-            _webDeploy = webDeploy;
-            _infrastructureBuilder = infrastructureBuilder;
-        }
-
-        public IOfferInfrastructure FromStore(X509FindType findType, string findValue)
-        {
-            var certOp = new CertificateFromStoreOperation(findType, findValue);
-            var compositeSequence = _infrastructureSequence.NewCompositeSequence(certOp);
-            certOp.Configure(new RemoteCompositeBuilder(compositeSequence, _webDeploy));
-            return _infrastructureBuilder;
-        }
-
-        public IOfferInfrastructure FromStore(X509FindType findType, string findValue, Action<IOfferCertificateOptions> options)
-        {
-            var certOpt = new CertificateOptions();
-            options(certOpt);
-
-            var certOp = new CertificateFromStoreOperation(findType, findValue, certOpt);
-            var compositeSequence = _infrastructureSequence.NewCompositeSequence(certOp);
-            certOp.Configure(new RemoteCompositeBuilder(compositeSequence, _webDeploy));
-            return _infrastructureBuilder;
-        }
-
-        public IOfferInfrastructure FromFile(string path, string password)
-        {
-            var certOp = new CertificateFromFileOperation(path, password);
-            var compositeSequence = _infrastructureSequence.NewCompositeSequence(certOp);
-            certOp.Configure(new RemoteCompositeBuilder(compositeSequence, _webDeploy));
-            return _infrastructureBuilder;
-        }
-
-        public IOfferInfrastructure FromFile(string path, string password, Action<IOfferCertificateOptions> options)
-        {
-            var certOpt = new CertificateOptions();
-            options(certOpt);
-
-            var certOp = new CertificateFromFileOperation(path, password, certOpt);
-            var compositeSequence = _infrastructureSequence.NewCompositeSequence(certOp);
-            certOp.Configure(new RemoteCompositeBuilder(compositeSequence, _webDeploy));
-            return _infrastructureBuilder;
-        }
     }
 }

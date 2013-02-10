@@ -10,12 +10,14 @@ namespace ConDep.Dsl.Operations.Application.Deployment.NServiceBus
     {
         internal const string SERVICE_CONTROLLER_EXE = @"C:\WINDOWS\system32\sc.exe";
         private string _serviceInstallerName = "NServiceBus.Host.exe";
+        private string _sourcePath;
+        private string _destPath;
 
         public NServiceBusOperation(string path, string destDir, string serviceName)
         {
-            SourcePath = Path.GetFullPath(path);
+            _sourcePath = Path.GetFullPath(path);
             ServiceName = serviceName;
-            DestinationPath = destDir;
+            _destPath = destDir;
         }
 
         public string ServicePassword { get; set; }
@@ -38,7 +40,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.NServiceBus
         {
             CopyPowerShellScriptsToTarget(server.Deploy);
 
-            var install = string.Format("{0} /install /serviceName:\"{1}\" /displayName:\"{1}\" {2}", Path.Combine(DestinationPath, ServiceInstallerName), ServiceName, Profile);
+            var install = string.Format("{0} /install /serviceName:\"{1}\" /displayName:\"{1}\" {2}", Path.Combine(_destPath, ServiceInstallerName), ServiceName, Profile);
 
             var serviceFailureCommand = "";
             var serviceConfigCommand = "";
@@ -62,7 +64,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.NServiceBus
 
             var remove = string.Format(". $env:temp\\NServiceBus.ps1; remove-nsbservice {0}", ServiceName);
             server.ExecuteRemote.PowerShell(remove, o => o.ContinueOnError(IgnoreFailureOnServiceStartStop).WaitIntervalInSeconds(60));
-            server.Deploy.Directory(SourcePath, DestinationPath);
+            server.Deploy.Directory(_sourcePath, _destPath);
 
             //Allow continue on error??
             server.ExecuteRemote.DosCommand(install, opt => opt.WaitIntervalInSeconds(60));

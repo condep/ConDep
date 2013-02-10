@@ -69,13 +69,17 @@
     <Compile Include="Builders\ConDepPowerShellScripts.cs" />
     <Compile Include="Builders\IConfigureLocalOperations.cs" />
     <Compile Include="Builders\IExecuteSequence.cs" />
+    <Compile Include="Builders\IOfferSslInfrastructure.cs" />
     <Compile Include="Builders\IOfferWindowsServiceOptions.cs" />
+    <Compile Include="Builders\SslInfrastructureBuilder.cs" />
+    <Compile Include="Config\TiersConfig.cs" />
     <Compile Include="Logging\TeamCityMessageStatus.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOptions.cs" />
     <Compile Include="ConDepAssemblyHandler.cs" />
     <Compile Include="ConDepAssemblyNotFoundException.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOperation.cs" />
     <Compile Include="ConDepGlobals.cs" />
+    <Compile Include="Builders\IOfferIisInfrastructureOptions.cs" />
     <Compile Include="Operations\PostRemoteOps.cs" />
     <Compile Include="SemanticModel\Sequence\PostOpsSequence.cs" />
     <Compile Include="SemanticModel\Sequence\PreOpsSequence.cs" />
@@ -110,9 +114,6 @@
     <Compile Include="Operations\Infrastructure\IIS\IisInfrastructureOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\IisInfrastructureOperation.cs" />
     <Compile Include="Builders\InfrastructureBuilder.cs" />
-    <Compile Include="Builders\IOfferIisInfrastructure.cs" />
-    <Compile Include="Builders\IOfferIisInfrastructureRoleServices.cs" />
-    <Compile Include="Builders\IOfferIisWebSite.cs" />
     <Compile Include="Operations\Application\Deployment\Certificate\CertificateFromFileOperation.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IisWebSiteOptions.cs" />
     <Compile Include="Operations\LoadBalancer\LoadBalancerSuspendMethod.cs" />
@@ -177,7 +178,7 @@
     <Compile Include="Operations\Application\Local\TransformConfig\CondepWebConfigTransformException.cs" />
     <Compile Include="Operations\Application\Local\TransformConfig\TransformConfigBuildEngine.cs" />
     <Compile Include="Operations\Application\Local\TransformConfig\TransformConfigOperation.cs" />
-    <Compile Include="Operations\Application\Local\WebRequest\WebRequestOperation.cs" />
+    <Compile Include="Operations\Application\Local\WebRequest\HttpGetOperation.cs" />
     <Compile Include="InfrastructureArtifact.cs" />
     <Compile Include="Logging\TeamCityLogger.cs" />
     <Compile Include="Operations\Application\Deployment\Certificate\CertficiateDeploymentProvider.cs" />

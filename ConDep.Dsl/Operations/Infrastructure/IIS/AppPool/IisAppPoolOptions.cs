@@ -8,6 +8,12 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
 
         IOfferIisAppPoolOptions IOfferIisAppPoolOptions.NetFrameworkVersion(NetFrameworkVersion version)
         {
+            _values.NetFrameworkVersion = ExtractNetFrameworkVersion(version);
+            return this;
+        }
+
+        IOfferIisAppPoolOptions IOfferIisAppPoolOptions.NetFrameworkVersion(string version)
+        {
             _values.NetFrameworkVersion = version;
             return this;
         }
@@ -54,11 +60,33 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
             return this;
         }
 
+        private string ExtractNetFrameworkVersion(NetFrameworkVersion version)
+        {
+            switch (version)
+            {
+                case NetFrameworkVersion.NoManagedCode:
+                    return "";
+                case IIS.NetFrameworkVersion.Net1_0:
+                    return "v1.0";
+                case IIS.NetFrameworkVersion.Net1_1:
+                    return "v1.1";
+                case IIS.NetFrameworkVersion.Net2_0:
+                    return "v2.0";
+                case IIS.NetFrameworkVersion.Net4_0:
+                    return "v4.0";
+                case IIS.NetFrameworkVersion.Net5_0:
+                    return "v5.0";
+                default:
+                    throw new ConDepUnknowNetFrameworkException("Framework version unknown to ConDep.");
+            }
+        }
+
+
         public IisAppPoolOptionsValues Values { get { return _values; } }
 
         public class IisAppPoolOptionsValues
         {
-            public NetFrameworkVersion? NetFrameworkVersion { get; set; }
+            public string NetFrameworkVersion { get; set; }
 
             public ManagedPipeline? ManagedPipeline { get; set; }
 

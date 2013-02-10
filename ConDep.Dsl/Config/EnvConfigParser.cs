@@ -23,11 +23,27 @@ namespace ConDep.Dsl.Config
             var serializer = new DataContractJsonSerializer(typeof (ConDepConfig));
             var config = (ConDepConfig) serializer.ReadObject(stream);
 
-            foreach (var server in config.Servers)
+            if(config.Tiers == null)
             {
-                if (!server.DeploymentUser.IsDefined)
+                foreach (var server in config.Servers)
                 {
-                    server.DeploymentUser = config.DeploymentUser;
+                    if (!server.DeploymentUser.IsDefined)
+                    {
+                        server.DeploymentUser = config.DeploymentUser;
+                    }
+                }
+            }
+            else
+            {
+                foreach(var tier in config.Tiers)
+                {
+                    foreach (var server in tier.Servers)
+                    {
+                        if (!server.DeploymentUser.IsDefined)
+                        {
+                            server.DeploymentUser = config.DeploymentUser;
+                        }
+                    }
                 }
             }
             return config;

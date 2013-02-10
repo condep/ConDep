@@ -5,6 +5,6 @@ namespace ConDep.Dsl
 {
     public abstract class ApplicationArtifact
     {
-        public abstract void Configure(IOfferLocalOperations local, ConDepConfig config);
+        public abstract void Configure(IOfferLocalOperations onLocalMachine, ConDepConfig config);
     }
 }

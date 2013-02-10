@@ -46,9 +46,9 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
-        public IOfferLocalOperations ExecuteWebRequest(string method, string url)
+        public IOfferLocalOperations HttpGet(string url)
         {
-            var operation = new WebRequestOperation(url, method);
+            var operation = new HttpGetOperation(url);
             AddOperation(operation);
             return this;
         }

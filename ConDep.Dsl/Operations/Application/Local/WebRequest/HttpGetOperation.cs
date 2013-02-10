@@ -6,26 +6,24 @@ using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Application.Local.WebRequest
 {
-    public class WebRequestOperation : LocalOperation
+    public class HttpGetOperation : LocalOperation
     {
         private readonly string _url;
-        private readonly string _method;
 
-        public WebRequestOperation(string url, string method)
+        public HttpGetOperation(string url)
         {
             _url = url;
-            _method = method;
         }
 
         public override bool IsValid(Notification notification)
         {
-            return !string.IsNullOrWhiteSpace(_url) && Uri.IsWellFormedUriString(_url, UriKind.Absolute) && !string.IsNullOrWhiteSpace(_method);
+            return !string.IsNullOrWhiteSpace(_url) && Uri.IsWellFormedUriString(_url, UriKind.Absolute);
         }
 
         public override IReportStatus Execute(IReportStatus status, ConDepConfig config, ConDepOptions options)
         {
             var webRequest = System.Net.WebRequest.Create(_url);
-            webRequest.Method = _method;
+            webRequest.Method = "GET";
             webRequest.ContentLength = 0;
             webRequest.ContentType = "application/x-www-form-urlencoded";
 
@@ -35,11 +33,11 @@ namespace ConDep.Dsl.Operations.Application.Local.WebRequest
 
             if (statusCode == HttpStatusCode.OK)
             {
-                Logger.Info("HTTP {0} Succeeded: {1}", _method.ToUpper(), _url);
+                Logger.Info("HTTP {0} Succeeded: {1}", "GET", _url);
             }
             else
             {
-                Logger.Error("HTTP {0} Failed with Status {1}: {2}", _method.ToUpper(), statusCode, _url);
+                throw new WebException(string.Format("GET request did not return with 200 (OK), but {0} ({1})", (int)statusCode, statusCode));
             }
 
             return status;

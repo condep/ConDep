@@ -51,9 +51,9 @@ namespace ConDep.Dsl.Tests
     {
         public override void Configure(IOfferLocalOperations local, ConDepConfig config)
         {
-            local.ExecuteWebRequest("GET", "http://www.con-dep.net");
+            local.HttpGet("http://www.con-dep.net");
             local.ToEachServer(server => server.ExecuteRemote.PowerShell("ipconfig"));
-            local.ExecuteWebRequest("GET", "http://blog.torresdal.net");
+            local.HttpGet("http://blog.torresdal.net");
         }
     }
 

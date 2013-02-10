@@ -35,9 +35,9 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
-        public IOfferRemoteExecution PowerShell(string commandOrScript)
+        public IOfferRemoteExecution PowerShell(string command)
         {
-            var psProvider = new PowerShellProvider(commandOrScript);
+            var psProvider = new PowerShellProvider(command);
             AddOperation(psProvider);
             return this;
         }
@@ -49,9 +49,9 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
-        public IOfferRemoteExecution PowerShell(string commandOrScript, Action<PowerShellOptions> powerShellOptions)
+        public IOfferRemoteExecution PowerShell(string command, Action<PowerShellOptions> powerShellOptions)
         {
-            var psProvider = new PowerShellProvider(commandOrScript);
+            var psProvider = new PowerShellProvider(command);
             powerShellOptions(new PowerShellOptions(psProvider));
             AddOperation(psProvider);
             return this;

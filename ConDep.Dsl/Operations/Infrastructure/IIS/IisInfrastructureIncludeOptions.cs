@@ -1,8 +1,9 @@
 using System;
+using ConDep.Dsl.Builders;
 
 namespace ConDep.Dsl.Operations.Infrastructure
 {
-    public class IisInfrastructureIncludeOptions
+    public class IisInfrastructureIncludeOptions : IOfferIisInfrastructureOptions
     {
         private readonly IisInfrastructureOperation _iisOperation;
 
@@ -11,121 +12,121 @@ namespace ConDep.Dsl.Operations.Infrastructure
             _iisOperation = iisOperation;
         }
 
-        public IisInfrastructureIncludeOptions HttpRedirect()
+        public IOfferIisInfrastructureOptions HttpRedirect()
         {
             _iisOperation.AddRoleService("Web-Http-Redirect");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions DAVPublishing()
+        public IOfferIisInfrastructureOptions DavPublishing()
         {
             _iisOperation.AddRoleService("Web-DAV-Publishing");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions AspNet()
+        public IOfferIisInfrastructureOptions AspNet()
         {
             _iisOperation.AddRoleService("Web-Asp-Net");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions ASP()
+        public IOfferIisInfrastructureOptions Asp()
         {
             _iisOperation.AddRoleService("Web-ASP");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions CGI()
+        public IOfferIisInfrastructureOptions Cgi()
         {
             _iisOperation.AddRoleService("Web-CGI");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions ServerSideIncludes()
+        public IOfferIisInfrastructureOptions ServerSideIncludes()
         {
             _iisOperation.AddRoleService("Web-Includes");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions LogLibraries()
+        public IOfferIisInfrastructureOptions LoggingTools()
         {
             _iisOperation.AddRoleService("Web-Log-Libraries");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions HttpTracing()
+        public IOfferIisInfrastructureOptions Tracing()
         {
             _iisOperation.AddRoleService("Web-Http-Tracing");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions CustomLogging()
+        public IOfferIisInfrastructureOptions CustomLogging()
         {
             _iisOperation.AddRoleService("Web-Custom-Logging");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions ODBCLogging()
+        public IOfferIisInfrastructureOptions OdbcLogging()
         {
             _iisOperation.AddRoleService("Web-ODBC-Logging");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions BasicAuth()
+        public IOfferIisInfrastructureOptions BasicAuth()
         {
             _iisOperation.AddRoleService("Web-Basic-Auth");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions WindowsAuth()
+        public IOfferIisInfrastructureOptions WindowsAuth()
         {
             _iisOperation.AddRoleService("Web-Windows-Auth");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions DigestAuth()
+        public IOfferIisInfrastructureOptions DigestAuth()
         {
             _iisOperation.AddRoleService("Web-Digest-Auth");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions ClientAuth()
+        public IOfferIisInfrastructureOptions ActiveDirectoryClientCertMappingAuth()
         {
             _iisOperation.AddRoleService("Web-Client-Auth");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions CertAuth()
+        public IOfferIisInfrastructureOptions IisClientCertMappingAuth()
         {
             _iisOperation.AddRoleService("Web-Cert-Auth");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions UrlAuth()
+        public IOfferIisInfrastructureOptions UrlAuth()
         {
             _iisOperation.AddRoleService("Web-Url-Auth");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions IPSecurity()
+        public IOfferIisInfrastructureOptions IpSecurity()
         {
             _iisOperation.AddRoleService("Web-IP-Security");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions DynamicCompression()
+        public IOfferIisInfrastructureOptions DynamicContentCompression()
         {
             _iisOperation.AddRoleService("Web-Dyn-Compression");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions ScriptingTools()
+        public IOfferIisInfrastructureOptions MngmntScriptsAndTools()
         {
             _iisOperation.AddRoleService("Web-Scripting-Tools");
             return this;
         }
 
-        public IisInfrastructureIncludeOptions MgmtService()
+        public IOfferIisInfrastructureOptions MgmtService()
         {
             _iisOperation.AddRoleService("Web-Mgmt-Service");
             return this;

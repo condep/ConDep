@@ -2,7 +2,6 @@ using System;
 using System.Security.Cryptography.X509Certificates;
 using ConDep.Dsl.Operations.Application.Deployment.Certificate;
 using ConDep.Dsl.Operations.Infrastructure.IIS.WebSite;
-using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 
@@ -21,7 +20,12 @@ namespace ConDep.Dsl.Builders
             _remoteDeploymentBuilder = remoteDeploymentBuilder;
         }
 
-        public IOfferRemoteDeployment FromStore(X509FindType findType, string findValue, Action<IOfferCertificateOptions> options = null)
+        public IOfferRemoteDeployment FromStore(X509FindType findType, string findValue)
+        {
+            return FromStore(findType, findValue, null);
+        }
+
+        public IOfferRemoteDeployment FromStore(X509FindType findType, string findValue, Action<IOfferCertificateOptions> options)
         {
             var certOptions = new CertificateOptions();
             if (options != null)
@@ -37,16 +41,16 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteDeployment FromFile(string path, string password)
         {
-            var certOp = new CertificateFromFileOperation(path, password);
-            var compositeSequence = _remoteSequence.NewCompositeSequence(certOp);
-            certOp.Configure(new RemoteCompositeBuilder(compositeSequence, _webDeploy));
-            return _remoteDeploymentBuilder;
+            return FromFile(path, password, null);
         }
 
         public IOfferRemoteDeployment FromFile(string path, string password, Action<IOfferCertificateOptions> options)
         {
             var certOptions = new CertificateOptions();
-            options(certOptions);
+            if (options != null)
+            {
+                options(certOptions);
+            }
 
             var certOp = new CertificateFromFileOperation(path, password, certOptions);
             var compositeSequence = _remoteSequence.NewCompositeSequence(certOp);

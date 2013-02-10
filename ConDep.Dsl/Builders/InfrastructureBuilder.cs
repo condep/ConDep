@@ -35,11 +35,6 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
-        public IOfferInfrastructure MSMQ()
-        {
-            throw new NotImplementedException();
-        }
-
         public IOfferInfrastructure IISWebSite(string name, int id)
         {
             var webSiteOperation = new IisWebSiteOperation(name, id);

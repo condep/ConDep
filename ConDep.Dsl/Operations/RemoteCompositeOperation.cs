@@ -24,8 +24,8 @@ namespace ConDep.Dsl.Operations
             }
         }
 
-        protected string SourcePath { get; set; }
-        protected virtual string DestinationPath { get; set; }
+        //protected string SourcePath { get; set; }
+        //protected virtual string DestinationPath { get; set; }
 
         public abstract string Name { get; }
         public abstract bool IsValid(Notification notification);

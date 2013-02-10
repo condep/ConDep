@@ -9,6 +9,81 @@ namespace ConDep.Dsl.Tests
     [TestFixture]
     public class JsonParsingTests
     {
+        private string _tiersJson =
+            @"{
+	""Tiers"" :
+	[
+        {
+            ""Name"" : ""Web"",
+			""Servers"" :
+			[
+				{
+					""Name"" : ""jat-web01""
+				},
+				{
+					""Name"" : ""jat-web02""
+				}
+			],
+            ""LoadBalancer"": 
+            {
+                ""Name"": ""jat-nlb01"",
+                ""Provider"": ""ConDep.Dsl.LoadBalancer.Ace.dll"",
+                ""UserName"": ""torresdal\\nlbUser"",
+                ""Password"": ""verySecureP@ssw0rd"",
+                ""Mode"": ""Sticky""
+            }
+        },
+        {
+            ""Name"" : ""Application"",
+			""Servers"" :
+			[
+				{
+					""Name"" : ""jat-app01""
+				},
+				{
+					""Name"" : ""jat-app02""
+				}
+			]
+        },
+        {
+            ""Name"" : ""Database"",
+			""Servers"" :
+			[
+				{
+					""Name"" : ""jat-db01""
+				},
+				{
+					""Name"" : ""jat-db02""
+				}
+			]
+        }
+	],
+    ""DeploymentUser"": 
+    {
+        ""UserName"": ""torresdal\\condepuser"",
+        ""Password"": ""verySecureP@ssw0rd""
+    },
+    ""CustomProviderConfig"":
+    [
+        {
+            ""ProviderName"" : ""NServiceBusProvider"",
+            ""ProviderConfig"": 
+            {
+                ""ServiceUserName"": ""torresdal\\nservicebususer"",
+                ""ServicePassword"": ""verySecureP@ssw0rd""
+            }
+        },
+        {
+            ""ProviderName"" : ""SomeOtherProvider"",
+            ""ProviderConfig"":
+            {
+                ""SomeOtherSetting1"": ""asdfasdf"",
+                ""SomeOtherSetting2"": ""34tsdfg""
+            }
+        }
+    ]
+}";
+
         private string _json =
             @"{
     ""LoadBalancer"": 
@@ -112,13 +187,17 @@ namespace ConDep.Dsl.Tests
 }";
 
         private ConDepConfig _config;
+        private ConDepConfig _tiersConfig;
 
         [SetUp]
         public void Setup()
         {
             var memStream = new MemoryStream(Encoding.UTF8.GetBytes(_json));
+            var tiersMemStream = new MemoryStream(Encoding.UTF8.GetBytes(_tiersJson));
+
             var parser = new EnvConfigParser();
             _config = parser.GetEnvConfig(memStream);
+            _tiersConfig = parser.GetEnvConfig(tiersMemStream);
         }
 
         [Test]

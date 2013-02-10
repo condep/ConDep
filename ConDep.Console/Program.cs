@@ -96,7 +96,7 @@ namespace ConDep.Console
             var assembly = Assembly.GetExecutingAssembly();
             var versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
 
-            Logger.Info(string.Format("ConDep version {0}", versionInfo.ProductVersion));
+            Logger.Info(string.Format("ConDep Version {0}", versionInfo.ProductVersion.Substring(0, versionInfo.ProductVersion.LastIndexOf("."))));
             Logger.Info("Copyright (c) Jon Arild Torresdal");
         }
 
