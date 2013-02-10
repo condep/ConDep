@@ -1,6 +1,5 @@
 ﻿using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
-using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
@@ -22,7 +21,6 @@ namespace ConDep.Dsl.Tests
             _app = new SequenceTestApp();
             _infra = new SequenceTestInfrastructure();
 
-            TinyIoC.TinyIoCContainer.Current.Register<ILoadBalance, DefaultLoadBalancer>();
         }
 
         [Test]

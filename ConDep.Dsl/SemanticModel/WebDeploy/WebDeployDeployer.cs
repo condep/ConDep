@@ -51,7 +51,7 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
         private void Init()
         {
             Logger.Info(string.Format("Deploying Microsoft WebDeploy 2.0 to remote server [{0}]. Make sure you comply with the Web Deploy license on that server.", _server.Name));
-            using (new Impersonation.Impersonator(_server.DeploymentUser.UserName, _server.DeploymentUser.Password))
+            using (new Impersonator(_server.DeploymentUser.UserName, _server.DeploymentUser.Password))
             {
                 CreateRemoteDirectories();
                 InstallWebDeployFilesOnRemoteServer();
@@ -397,7 +397,7 @@ Copyright (c) Microsoft Corporation. All rights reserved.
             }
             if (_remoteNeedsCleanup)
             {
-                using (new Impersonation.Impersonator(_server.DeploymentUser.UserName, _server.DeploymentUser.Password))
+                using (new Impersonator(_server.DeploymentUser.UserName, _server.DeploymentUser.Password))
                 {
                     var retryAttempt = 0;
                     do

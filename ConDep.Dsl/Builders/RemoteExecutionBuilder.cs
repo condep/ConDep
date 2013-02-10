@@ -27,7 +27,7 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
-        public IOfferRemoteExecution DosCommand(string cmd, Action<RunCmdOptions> runCmdOptions)
+        public IOfferRemoteExecution DosCommand(string cmd, Action<IOfferRunCmdOptions> runCmdOptions)
         {
             var runCmdProvider = new RunCmdProvider(cmd);
             runCmdOptions(new RunCmdOptions(runCmdProvider));
@@ -49,7 +49,7 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
-        public IOfferRemoteExecution PowerShell(string command, Action<PowerShellOptions> powerShellOptions)
+        public IOfferRemoteExecution PowerShell(string command, Action<IOfferPowerShellOptions> powerShellOptions)
         {
             var psProvider = new PowerShellProvider(command);
             powerShellOptions(new PowerShellOptions(psProvider));
@@ -57,7 +57,7 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
-        public IOfferRemoteExecution PowerShell(FileInfo scriptFile, Action<PowerShellOptions> powerShellOptions)
+        public IOfferRemoteExecution PowerShell(FileInfo scriptFile, Action<IOfferPowerShellOptions> powerShellOptions)
         {
             var psProvider = new PowerShellProvider(scriptFile);
             powerShellOptions(new PowerShellOptions(psProvider));
@@ -65,11 +65,6 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
-
-        //public IManageRemoteSequence Sequence
-        //{
-        //    get { return _remoteSequence; }
-        //}
         public void AddOperation(RemoteCompositeOperation operation)
         {
             operation.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence(operation), _webDeploy));

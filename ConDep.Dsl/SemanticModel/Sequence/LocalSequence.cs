@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
-using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.Application.Local;
-using ConDep.Dsl.Operations.LoadBalancer;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {

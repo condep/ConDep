@@ -1,5 +1,5 @@
 using System.IO;
-using ConDep.Dsl.Builders;
+using ConDep.Dsl;
 using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel;

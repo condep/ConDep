@@ -1,7 +1,3 @@
-using ConDep.Dsl.Builders;
-using ConDep.Dsl.Operations;
-using ConDep.Dsl.SemanticModel.WebDeploy;
-
 namespace ConDep.Dsl
 {
     public static class Configure
@@ -13,22 +9,5 @@ namespace ConDep.Dsl
         public static IConfigureRemoteExecution ExecutionOperations { get; internal set; }
 
         public static IConfigureInfrastructure InfrastructureOperations { get; internal set; }
-    }
-
-    public interface IConfigureInfrastructure
-    {
-        void AddOperation(RemoteCompositeInfrastructureOperation operation);
-    }
-
-    public interface IConfigureRemoteExecution
-    {
-        void AddOperation(RemoteCompositeOperation operation);
-        void AddOperation(WebDeployProviderBase provider);
-    }
-
-    public interface IConfigureRemoteDeployment
-    {
-        void AddOperation(RemoteCompositeOperation operation);
-        void AddOperation(WebDeployProviderBase provider);
     }
 }

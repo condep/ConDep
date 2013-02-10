@@ -1,4 +1,4 @@
-﻿using ConDep.Dsl.Impersonation;
+﻿using ConDep.Dsl.Remote;
 using NUnit.Framework;
 
 namespace ConDep.Dsl.Tests

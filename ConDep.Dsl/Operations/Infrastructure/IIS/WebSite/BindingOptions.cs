@@ -1,15 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 {
-    public enum CertLocation
-    {
-        Store,
-        File
-    }
-
     public class BindingOptions : IOfferBindingOptions
     {
         private readonly BindingOptionsValues _values = new BindingOptionsValues();

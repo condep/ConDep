@@ -1,7 +1,7 @@
 namespace ConDep.Dsl.Operations.Application.Execution.RunCmd
 {
-	public class RunCmdOptions
-	{
+    public class RunCmdOptions : IOfferRunCmdOptions
+    {
 		private readonly RunCmdProvider _provider;
 
 		public RunCmdOptions(RunCmdProvider provider)
@@ -9,19 +9,19 @@ namespace ConDep.Dsl.Operations.Application.Execution.RunCmd
 			_provider = provider;
 		}
 
-		public RunCmdOptions WaitIntervalInSeconds(int waitInterval)
+        public IOfferRunCmdOptions WaitIntervalInSeconds(int waitInterval)
 		{
 			_provider.WaitIntervalInSeconds = waitInterval;
 			return this;
 		}
 
-	    public RunCmdOptions RetryAttempts(int retryAttempts)
+        public IOfferRunCmdOptions RetryAttempts(int retryAttempts)
 	    {
             _provider.RetryAttempts = retryAttempts;
             return this;
         }
 
-        public RunCmdOptions ContinueOnError(bool continueOnError)
+        public IOfferRunCmdOptions ContinueOnError(bool continueOnError)
         {
             _provider.ContinueOnError = continueOnError;
             return this;

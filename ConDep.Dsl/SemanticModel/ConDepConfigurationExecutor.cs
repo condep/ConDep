@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
-using ConDep.Dsl.Impersonation;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.LoadBalancer;
@@ -29,8 +28,6 @@ namespace ConDep.Dsl.SemanticModel
             if (status == null) { throw new ArgumentException("status"); }
 
             var applications = CreateApplicationArtifacts(options, assembly);
-
-            IoCBootstrapper.Bootstrap(envConfig);
 
             if(!options.WebDeployExist)
             {

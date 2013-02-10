@@ -4,7 +4,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 {
     public class CertificateOptions : IOfferCertificateOptions
     {
-        private CertificateOptionsValues _values = new CertificateOptionsValues();
+        private readonly CertificateOptionsValues _values = new CertificateOptionsValues();
 
         public IOfferCertificateOptions AddPrivateKeyPermission(string user)
         {

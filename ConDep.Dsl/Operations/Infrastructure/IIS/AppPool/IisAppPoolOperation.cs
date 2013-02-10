@@ -1,5 +1,4 @@
 using System.Globalization;
-using ConDep.Dsl.Builders;
 using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
@@ -43,7 +42,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
                     , _appPoolOptions.IdleTimeoutInMinutes.HasValue ? _appPoolOptions.IdleTimeoutInMinutes.Value.ToString(CultureInfo.InvariantCulture.NumberFormat) : "$null"
                     , _appPoolOptions.LoadUserProfile.HasValue ? _appPoolOptions.LoadUserProfile.Value.ToString() : "false"
                     , _appPoolOptions.ManagedPipeline.HasValue ? "'" + _appPoolOptions.ManagedPipeline.Value + "'" : "$null"
-                    , _appPoolOptions.NetFrameworkVersion ?? "$null"
+                    , _appPoolOptions.NetFrameworkVersion == null ? "$null" : ("'" + _appPoolOptions.NetFrameworkVersion +"'")
                     , _appPoolOptions.RecycleTimeInMinutes.HasValue ? _appPoolOptions.RecycleTimeInMinutes.Value.ToString(CultureInfo.InvariantCulture.NumberFormat) : "$null"
                     );
             }

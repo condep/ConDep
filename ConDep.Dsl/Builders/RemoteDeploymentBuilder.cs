@@ -65,7 +65,7 @@ namespace ConDep.Dsl.Builders
             return NServiceBusEndpoint(sourceDir, destDir, serviceName, null);
         }
 
-        public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, Action<NServiceBusOptions> nServiceBusOptions)
+        public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, Action<IOfferNServiceBusOptions> nServiceBusOptions)
         {
             var nServiceBusProvider = new NServiceBusOperation(sourceDir, destDir, serviceName);
             if (nServiceBusOptions != null)

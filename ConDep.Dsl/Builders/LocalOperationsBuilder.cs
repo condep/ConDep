@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using ConDep.Dsl.Config;
-using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.Application.Local;
 using ConDep.Dsl.Operations.Application.Local.PreCompile;
 using ConDep.Dsl.Operations.Application.Local.TransformConfig;
 using ConDep.Dsl.Operations.Application.Local.WebRequest;
+using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
-using TinyIoC;
 
 namespace ConDep.Dsl.Builders
 {

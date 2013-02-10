@@ -1,6 +1,6 @@
 ﻿namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
 {
-    public class PowerShellOptions
+    public class PowerShellOptions : IOfferPowerShellOptions
     {
         private readonly PowerShellProvider _powerShellProvider;
 
@@ -9,25 +9,25 @@
             _powerShellProvider = powerShellProvider;
         }
 
-        public PowerShellOptions RequireRemoteLib()
+        public IOfferPowerShellOptions RequireRemoteLib()
         {
             _powerShellProvider.RequireRemoteLib = true;
             return this;
         }
 
-        public PowerShellOptions ContinueOnError(bool value)
+        public IOfferPowerShellOptions ContinueOnError(bool value)
         {
             _powerShellProvider.ContinueOnError = value;
             return this;
         }
 
-        public PowerShellOptions WaitIntervalInSeconds(int seconds)
+        public IOfferPowerShellOptions WaitIntervalInSeconds(int seconds)
         {
             _powerShellProvider.WaitIntervalInSeconds = seconds;
             return this;
         }
 
-        public PowerShellOptions RetryAttempts(int attempts)
+        public IOfferPowerShellOptions RetryAttempts(int attempts)
         {
             _powerShellProvider.RetryAttempts = attempts;
             return this;
