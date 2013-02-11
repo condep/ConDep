@@ -1,5 +1,4 @@
 using System;
-using ConDep.Dsl.Operations.Application.Deployment.NServiceBus;
 
 namespace ConDep.Dsl
 {
@@ -39,7 +38,7 @@ namespace ConDep.Dsl
         /// <param name="relativeExePath"></param>
         /// <param name="displayName"></param>
         /// <returns></returns>
-        IOfferRemoteDeployment WindowsService(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName);
+        IOfferRemoteDeployment WindowsService(string serviceName, string displayName, string sourceDir, string destDir, string relativeExePath);
 
         /// <summary>
         /// Will deploy and start provided Windows Service to remote server with provided options.
@@ -51,7 +50,11 @@ namespace ConDep.Dsl
         /// <param name="displayName"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        IOfferRemoteDeployment WindowsService(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, Action<IOfferWindowsServiceOptions> options);
+        IOfferRemoteDeployment WindowsService(string serviceName, string displayName, string sourceDir, string destDir, string relativeExePath, Action<IOfferWindowsServiceOptions> options);
+
+        IOfferRemoteDeployment WindowsServiceWithInstaller(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, string installerParams);
+
+        IOfferRemoteDeployment WindowsServiceWithInstaller(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, string installerParams, Action<IOfferWindowsServiceOptions> options);
 
         /// <summary>
         /// Exactly the same as the WindowsService operation, only tailored for NServiceBus.
@@ -59,8 +62,9 @@ namespace ConDep.Dsl
         /// <param name="sourceDir"></param>
         /// <param name="destDir"></param>
         /// <param name="serviceName"></param>
+        /// <param name="profile"> </param>
         /// <returns></returns>
-        IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName);
+        IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, string profile);
 
         /// <summary>
         /// Exactly the same as the WindowsService operation, only tailored for NServiceBus.
@@ -68,9 +72,10 @@ namespace ConDep.Dsl
         /// <param name="sourceDir"></param>
         /// <param name="destDir"></param>
         /// <param name="serviceName"></param>
-        /// <param name="nServiceBusOptions"></param>
+        /// <param name="profile"> </param>
+        /// <param name="options"></param>
         /// <returns></returns>
-        IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, Action<IOfferNServiceBusOptions> nServiceBusOptions);
+        IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, string profile, Action<IOfferWindowsServiceOptions> options);
 
         /// <summary>
         /// Provide operations for deploying SSL certificates to remote server.

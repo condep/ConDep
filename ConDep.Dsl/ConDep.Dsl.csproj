@@ -66,17 +66,20 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="ApplicationArtifact.cs" />
+    <Compile Include="IOfferWindowsServiceFailureOptions.cs" />
+    <Compile Include="IOfferWindowsServiceFailureActions.cs" />
+    <Compile Include="IOfferWindowsServiceOptions.cs" />
+    <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOperationBase.cs" />
+    <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceWithInstallerOperation.cs" />
     <Compile Include="Config\LbMode.cs" />
     <Compile Include="IConfigureLocalOperations.cs" />
     <Compile Include="IOfferSslInfrastructure.cs" />
-    <Compile Include="IOfferWindowsServiceOptions.cs" />
     <Compile Include="Builders\SslInfrastructureBuilder.cs" />
     <Compile Include="Config\TiersConfig.cs" />
     <Compile Include="IConfigureInfrastructure.cs" />
     <Compile Include="IConfigureRemoteDeployment.cs" />
     <Compile Include="IConfigureRemoteExecution.cs" />
     <Compile Include="Logging\TeamCityMessageStatus.cs" />
-    <Compile Include="IOfferNServiceBusOptions.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOptions.cs" />
     <Compile Include="Config\ConDepAssemblyHandler.cs" />
     <Compile Include="Config\ConDepAssemblyNotFoundException.cs" />
@@ -196,7 +199,6 @@
     <Compile Include="Operations\Application\Deployment\CopyFile\CopyFileProvider.cs" />
     <Compile Include="Operations\Application\Deployment\WebApp\WebAppDeploymentProvider.cs" />
     <Compile Include="Resources\ConDepResourceFiles.cs" />
-    <Compile Include="Operations\Application\Deployment\NServiceBus\NServiceBusOptions.cs" />
     <Compile Include="Operations\Application\Execution\PowerShell\PowerShellOptions.cs" />
     <Compile Include="Operations\Application\Execution\PowerShell\PowerShellProvider.cs" />
     <Compile Include="Operations\Application\Execution\RunCmd\RunCmdOptions.cs" />
@@ -232,6 +234,7 @@
     <Compile Include="SemanticModel\WebDeploy\WebDeploymentStatus.cs" />
     <Compile Include="SemanticModel\WebDeploy\WebDeployOptions.cs" />
     <Compile Include="SemanticModel\WebDeploy\WebDeployProviderBase.cs" />
+    <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceFailureOptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Operations\Application\Deployment\NServiceBus\NServiceBus.ps1" />

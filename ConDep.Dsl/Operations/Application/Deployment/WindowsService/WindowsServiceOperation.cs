@@ -1,29 +1,12 @@
-﻿using ConDep.Dsl.Builders;
+﻿using System.IO;
 using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
 {
-    public class WindowsServiceOperation : RemoteCompositeOperation
+    public class WindowsServiceOperation : WindowsServiceOperationBase
     {
-        private readonly string _serviceName;
-        private readonly string _sourceDir;
-        private readonly string _destDir;
-        private readonly string _relativeExePath;
-        private readonly string _displayName;
-        private readonly WindowsServiceOptions.WindowsServiceOptionValues _values;
-
-        public WindowsServiceOperation(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName) : this(serviceName, sourceDir, destDir, relativeExePath, displayName, null)
+        public WindowsServiceOperation(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, WindowsServiceOptions.WindowsServiceOptionValues values) : base(serviceName, sourceDir, destDir, relativeExePath, displayName, values)
         {
-        }
-
-        public WindowsServiceOperation(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, WindowsServiceOptions.WindowsServiceOptionValues winServiceOptionValues)
-        {
-            _serviceName = serviceName;
-            _sourceDir = sourceDir;
-            _destDir = destDir;
-            _relativeExePath = relativeExePath;
-            _displayName = displayName;
-            _values = winServiceOptionValues;
         }
 
         public override string Name
@@ -36,10 +19,25 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
             return true;
         }
 
-        public override void Configure(IOfferRemoteComposition server)
+        protected override void ConfigureInstallService(IOfferRemoteComposition server)
         {
-            server.Deploy.Directory(_sourceDir, _destDir);
-            server.ExecuteRemote.PowerShell("");
+            var installCmd = string.Format("New-ConDepWinService '{0}' '{1}' {2} {3} {4} {5} {6}",
+                                           _serviceName,
+                                           Path.Combine(_destDir, _relativeExePath) + " " + _values.ExeParams,
+                                           string.IsNullOrWhiteSpace(_displayName) ? "$null" : ("'" + _displayName + "'"),
+                                           string.IsNullOrWhiteSpace(_values.Description)
+                                               ? "$null"
+                                               : ("'" + _values.Description + "'"),
+                                           string.IsNullOrWhiteSpace(_values.UserName)
+                                               ? "$null"
+                                               : ("'" + _values.UserName + "'"),
+                                           string.IsNullOrWhiteSpace(_values.Password)
+                                               ? "$null"
+                                               : ("'" + _values.UserName + "'"),
+                                           _values.StartupType.HasValue ? "'" + _values.StartupType + "'" : "$null"
+                );
+
+            server.ExecuteRemote.PowerShell(installCmd, opt => opt.WaitIntervalInSeconds(60));
         }
     }
 }

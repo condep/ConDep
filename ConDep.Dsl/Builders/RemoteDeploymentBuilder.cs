@@ -6,7 +6,6 @@ using ConDep.Dsl.Operations.Application.Deployment.NServiceBus;
 using ConDep.Dsl.Operations.Application.Deployment.WebApp;
 using ConDep.Dsl.Operations.Application.Deployment.WindowsService;
 using ConDep.Dsl.SemanticModel;
-using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.Builders
@@ -43,35 +42,50 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
-        public IOfferRemoteDeployment WindowsService(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName)
+        public IOfferRemoteDeployment WindowsService(string serviceName, string displayName, string sourceDir, string destDir, string relativeExePath)
         {
-            var winServiceOperation = new WindowsServiceOperation(serviceName, sourceDir, destDir, relativeExePath, displayName);
-            AddOperation(winServiceOperation);
-            return this;
+            return WindowsService(serviceName, displayName, sourceDir, destDir, relativeExePath, null);
         }
 
         public IOfferRemoteDeployment WindowsService(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, Action<IOfferWindowsServiceOptions> options)
         {
             var winServiceOptions = new WindowsServiceOptions();
-            options(winServiceOptions);
+            if (options != null)
+            {
+                options(winServiceOptions);
+            }
 
             var winServiceOperation = new WindowsServiceOperation(serviceName, sourceDir, destDir, relativeExePath, displayName, winServiceOptions.Values);
             AddOperation(winServiceOperation);
             return this;
         }
 
-        public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName)
+        public IOfferRemoteDeployment WindowsServiceWithInstaller(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, string installerParams)
         {
-            return NServiceBusEndpoint(sourceDir, destDir, serviceName, null);
+            return WindowsServiceWithInstaller(serviceName, sourceDir, destDir, relativeExePath, displayName, installerParams, null);
         }
 
-        public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, Action<IOfferNServiceBusOptions> nServiceBusOptions)
+        public IOfferRemoteDeployment WindowsServiceWithInstaller(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, string installerParams, Action<IOfferWindowsServiceOptions> options)
         {
-            var nServiceBusProvider = new NServiceBusOperation(sourceDir, destDir, serviceName);
-            if (nServiceBusOptions != null)
+            var winServiceOptions = new WindowsServiceOptions();
+            if (options != null)
             {
-                nServiceBusOptions(new NServiceBusOptions(nServiceBusProvider));
+                options(winServiceOptions);
             }
+
+            var winServiceOperation = new WindowsServiceWithInstallerOperation(serviceName, sourceDir, destDir, relativeExePath, displayName, installerParams, winServiceOptions.Values);
+            AddOperation(winServiceOperation);
+            return this;
+        }
+
+        public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, string profile)
+        {
+            return NServiceBusEndpoint(sourceDir, destDir, serviceName, profile, null);
+        }
+
+        public IOfferRemoteDeployment NServiceBusEndpoint(string sourceDir, string destDir, string serviceName, string profile, Action<IOfferWindowsServiceOptions> options)
+        {
+            var nServiceBusProvider = new NServiceBusOperation(sourceDir, destDir, serviceName, profile, options);
             AddOperation(nServiceBusProvider);
             return this;
         }

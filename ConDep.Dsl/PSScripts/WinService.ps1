@@ -1,4 +1,6 @@
-﻿function Remove-ConDepWinService {
+﻿add-type -AssemblyName System.ServiceProcess
+
+function Remove-ConDepWinService {
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory=$true)] [string] $serviceName,
