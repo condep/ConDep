@@ -1,4 +1,4 @@
-namespace ConDep.Dsl.Builders
+namespace ConDep.Dsl
 {
     public interface IOfferIisWebAppOptions
     {

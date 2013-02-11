@@ -4,11 +4,6 @@ using ConDep.Dsl.Config;
 
 namespace ConDep.Dsl.Operations.LoadBalancer
 {
-    public interface ILookupLoadBalancer
-    {
-        ILoadBalance GetLoadBalancer();
-    }
-
     internal class LoadBalancerLookup : ILookupLoadBalancer
     {
         private readonly LoadBalancerConfig _loadBalancerSettings;

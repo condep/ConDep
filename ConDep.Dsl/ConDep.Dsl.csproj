@@ -66,6 +66,7 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="ApplicationArtifact.cs" />
+    <Compile Include="Config\LbMode.cs" />
     <Compile Include="IConfigureLocalOperations.cs" />
     <Compile Include="IOfferSslInfrastructure.cs" />
     <Compile Include="IOfferWindowsServiceOptions.cs" />
@@ -84,9 +85,12 @@
     <Compile Include="IOfferIisInfrastructureRoleOptions.cs" />
     <Compile Include="IOfferPowerShellOptions.cs" />
     <Compile Include="IOfferRunCmdOptions.cs" />
+    <Compile Include="Operations\Application\Local\PreCompile\ClientBuildManagerWrapper.cs" />
+    <Compile Include="Operations\Application\Local\PreCompile\IWrapClientBuildManager.cs" />
     <Compile Include="Operations\Infrastructure\IIS\IisInfrastructureExcludeOptions.cs" />
     <Compile Include="IOfferIisInfrastructureOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\CertLocation.cs" />
+    <Compile Include="Operations\LoadBalancer\ILookupLoadBalancer.cs" />
     <Compile Include="Operations\PostRemoteOps.cs" />
     <Compile Include="Operations\RemoteCompositeInfrastructureOperation.cs" />
     <Compile Include="Operations\RemoteCompositeOperationBase.cs" />
@@ -103,7 +107,7 @@
     <Compile Include="Remote\RemoteExecutor.cs" />
     <Compile Include="Remote\RemoteRegistry.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebApp\IisWebAppOptions.cs" />
-    <Compile Include="Operations\Infrastructure\IIS\WebApp\IOfferIisWebAppOptions.cs" />
+    <Compile Include="IOfferIisWebAppOptions.cs" />
     <Compile Include="IOfferRemoteComposition.cs" />
     <Compile Include="Builders\RemoteCompositeBuilder.cs" />
     <Compile Include="Operations\Application\Deployment\Certificate\CertificateFromStoreOperation.cs" />

@@ -1,4 +1,4 @@
-namespace ConDep.Dsl.Builders
+namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
 {
     public class WindowsServiceOptions : IOfferWindowsServiceOptions
     {
