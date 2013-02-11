@@ -10,8 +10,6 @@ namespace ConDep.Dsl
         IOfferWindowsServiceOptions Description(string description);
         IOfferWindowsServiceOptions ServiceGroup(string group);
         IOfferWindowsServiceOptions ExeParams(string parameters);
-        IOfferWindowsServiceOptions ServiceFailureResetInterval(int interval);
-        IOfferWindowsServiceOptions ServiceRestartDelay(int delay);
         IOfferWindowsServiceOptions IgnoreFailureOnServiceStartStop(bool value);
         IOfferWindowsServiceOptions StartupType(ServiceStartMode type);
         IOfferWindowsServiceOptions DoNotStartAfterInstall();

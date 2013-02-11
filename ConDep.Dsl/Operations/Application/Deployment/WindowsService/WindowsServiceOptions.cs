@@ -43,18 +43,6 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
             return this;
         }
 
-        public IOfferWindowsServiceOptions ServiceFailureResetInterval(int interval)
-        {
-            _values.ServiceFailureResetInterval = interval;
-            return this;
-        }
-
-        public IOfferWindowsServiceOptions ServiceRestartDelay(int delay)
-        {
-            _values.ServiceRestartDelay = delay;
-            return this;
-        }
-
         public IOfferWindowsServiceOptions IgnoreFailureOnServiceStartStop(bool value)
         {
             _values.IgnoreFailureOnServiceStartStop = value;
@@ -90,15 +78,12 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
 
             public string UserName { get; set; }
             public string Password { get; set; }
-            //public string DisplayName { get; set; }
             public string Description { get; set; }
             public string ServiceGroup { get; set; }
             public string ExeParams { get; set; }
             public int? ServiceFailureResetInterval { get; set; }
-            public int? ServiceRestartDelay { get; set; }
             public bool IgnoreFailureOnServiceStartStop { get; set; }
             public ServiceStartMode? StartupType { get; set; }
-            //public bool HasServiceFailureOptions { get { return ServiceFailureResetInterval.HasValue || ServiceRestartDelay.HasValue; } }
             public bool DoNotStart { get; set; }
 
             public bool HasServiceGroup
