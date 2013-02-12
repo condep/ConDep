@@ -130,9 +130,11 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
                 var serviceConfigCommand = "";
                 if (HasServiceGroup)
                 {
+                    var userNameOption = !string.IsNullOrWhiteSpace(UserName) ? "obj= \"" + UserName + "\"" : "";
+                    var passwordOption = !string.IsNullOrWhiteSpace(Password) ? "password= \"" + Password + "\"" : "";
                     var groupOption = "group= \"" + ServiceGroup + "\"";
 
-                    serviceConfigCommand = string.Format("{0} config \"{1}\" {2}", SERVICE_CONTROLLER_EXE, serviceName, groupOption);
+                    serviceConfigCommand = string.Format("{0} config \"{1}\" {2} {3} {4}", SERVICE_CONTROLLER_EXE, serviceName, groupOption, userNameOption, passwordOption);
                 }
                 return serviceConfigCommand;
             }
