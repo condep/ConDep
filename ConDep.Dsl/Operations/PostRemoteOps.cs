@@ -1,5 +1,6 @@
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Operations.Application.Execution.PowerShell;
+using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 

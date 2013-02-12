@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using ConDep.Dsl.Config;
 
-namespace ConDep.Dsl
+namespace ConDep.Dsl.SemanticModel
 {
     public static class ConDepGlobals
     {
