@@ -26,8 +26,8 @@ namespace ConDep.Dsl.Operations.Application.Deployment.NServiceBus
         public override void Configure(IOfferRemoteComposition server)
         {
             var installParams = string.Format("/install /serviceName:\"{0}\" /displayName:\"{0}\" {1}", _serviceName, Profile);
-            server.Deploy.WindowsServiceWithInstaller(_serviceName, _sourcePath, _destPath, _serviceInstallerName,
-                                                      _serviceName, installParams, _options);
+            server.Deploy.WindowsServiceWithInstaller(_serviceName, _serviceName, _sourcePath, _destPath, _serviceInstallerName,
+                                                      installParams, _options);
         }
 
         public override string Name
