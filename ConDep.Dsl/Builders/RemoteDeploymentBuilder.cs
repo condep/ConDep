@@ -60,12 +60,12 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
-        public IOfferRemoteDeployment WindowsServiceWithInstaller(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, string installerParams)
+        public IOfferRemoteDeployment WindowsServiceWithInstaller(string serviceName, string displayName, string sourceDir, string destDir, string relativeExePath, string installerParams)
         {
-            return WindowsServiceWithInstaller(serviceName, sourceDir, destDir, relativeExePath, displayName, installerParams, null);
+            return WindowsServiceWithInstaller(serviceName, displayName, sourceDir, destDir, relativeExePath, installerParams, null);
         }
 
-        public IOfferRemoteDeployment WindowsServiceWithInstaller(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, string installerParams, Action<IOfferWindowsServiceOptions> options)
+        public IOfferRemoteDeployment WindowsServiceWithInstaller(string serviceName, string displayName, string sourceDir, string destDir, string relativeExePath, string installerParams, Action<IOfferWindowsServiceOptions> options)
         {
             var winServiceOptions = new WindowsServiceOptions();
             if (options != null)

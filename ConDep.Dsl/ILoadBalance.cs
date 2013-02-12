@@ -4,6 +4,9 @@ using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl
 {
+    /// <summary>
+    /// Used to implement a custom load balancer
+    /// </summary>
     public interface ILoadBalance
     {
         void BringOffline(string serverName, string farm, LoadBalancerSuspendMethod suspendMethod, IReportStatus status);

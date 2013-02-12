@@ -52,9 +52,30 @@ namespace ConDep.Dsl
         /// <returns></returns>
         IOfferRemoteDeployment WindowsService(string serviceName, string displayName, string sourceDir, string destDir, string relativeExePath, Action<IOfferWindowsServiceOptions> options);
 
-        IOfferRemoteDeployment WindowsServiceWithInstaller(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, string installerParams);
+        /// <summary>
+        /// Will deploy and start provided Windows Service using the built-in installer.
+        /// </summary>
+        /// <param name="serviceName"></param>
+        /// <param name="sourceDir"></param>
+        /// <param name="destDir"></param>
+        /// <param name="relativeExePath"></param>
+        /// <param name="displayName"></param>
+        /// <param name="installerParams"></param>
+        /// <returns></returns>
+        IOfferRemoteDeployment WindowsServiceWithInstaller(string serviceName, string displayName, string sourceDir, string destDir, string relativeExePath, string installerParams);
 
-        IOfferRemoteDeployment WindowsServiceWithInstaller(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, string installerParams, Action<IOfferWindowsServiceOptions> options);
+        /// <summary>
+        /// Will deploy and start provided Windows Service with provided options using the built-in installer.
+        /// </summary>
+        /// <param name="serviceName"></param>
+        /// <param name="sourceDir"></param>
+        /// <param name="destDir"></param>
+        /// <param name="relativeExePath"></param>
+        /// <param name="displayName"></param>
+        /// <param name="installerParams"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        IOfferRemoteDeployment WindowsServiceWithInstaller(string serviceName, string displayName, string sourceDir, string destDir, string relativeExePath, string installerParams, Action<IOfferWindowsServiceOptions> options);
 
         /// <summary>
         /// Exactly the same as the WindowsService operation, only tailored for NServiceBus.
