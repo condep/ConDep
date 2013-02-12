@@ -115,8 +115,6 @@ function New-ConDepWinService {
 		[Parameter(Mandatory=$true)] [string] $pathAndParamsForExecutable,
 		[string] $displayName = "",
 		[string] $description = "",
-		[string] $user = "",
-		[string] $password = "",
 		[System.ServiceProcess.ServiceStartMode] $startupType = [System.ServiceProcess.ServiceStartMode]::Automatic,
 		[string[]] $dependsOn = $()) 
 
@@ -128,15 +126,5 @@ function New-ConDepWinService {
 	if($startupType) {$serviceParams.StartupType = $startupType}
 	if($dependsOn) {$serviceParams.DependsOn = $dependsOn}
 	
-	if($user) {
-		if($password) {
-			$secpasswd = ConvertTo-SecureString $password -AsPlainText -Force
-		}
-		else {
-			throw "When giving credentials you need to provide password too."
-		}
-		
-		$serviceParams.Credential = New-Object System.Management.Automation.PSCredential ($user, $secpasswd)
-	}
 	New-Service @serviceParams
 }

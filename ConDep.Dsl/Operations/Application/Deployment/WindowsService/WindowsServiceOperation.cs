@@ -21,19 +21,13 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
 
         protected override void ConfigureInstallService(IOfferRemoteComposition server)
         {
-            var installCmd = string.Format("New-ConDepWinService '{0}' '{1}' {2} {3} {4} {5} {6}",
+            var installCmd = string.Format("New-ConDepWinService '{0}' '{1}' {2} {3} {4}",
                                            _serviceName,
                                            Path.Combine(_destDir, _relativeExePath) + " " + _values.ExeParams,
                                            string.IsNullOrWhiteSpace(_displayName) ? "$null" : ("'" + _displayName + "'"),
                                            string.IsNullOrWhiteSpace(_values.Description)
                                                ? "$null"
                                                : ("'" + _values.Description + "'"),
-                                           string.IsNullOrWhiteSpace(_values.UserName)
-                                               ? "$null"
-                                               : ("'" + _values.UserName + "'"),
-                                           string.IsNullOrWhiteSpace(_values.Password)
-                                               ? "$null"
-                                               : ("'" + _values.UserName + "'"),
                                            _values.StartupType.HasValue ? "'" + _values.StartupType + "'" : "$null"
                 );
 
