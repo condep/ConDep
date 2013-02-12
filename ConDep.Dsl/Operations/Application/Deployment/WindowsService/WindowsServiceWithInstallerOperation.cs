@@ -25,7 +25,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
         protected override void ConfigureInstallService(IOfferRemoteComposition server)
         {
             var installCmd = string.Format("{0} {1}", Path.Combine(_destDir, _relativeExePath), _installerParams);
-            server.ExecuteRemote.PowerShell(installCmd, opt => opt.WaitIntervalInSeconds(60));
+            server.ExecuteRemote.DosCommand(installCmd, opt => opt.WaitIntervalInSeconds(60));
         }
     }
 }

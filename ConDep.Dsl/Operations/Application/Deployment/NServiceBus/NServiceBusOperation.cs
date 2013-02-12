@@ -11,6 +11,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.NServiceBus
         private string _sourcePath;
         private string _destPath;
         private readonly string _serviceName;
+        private readonly string _profile;
         private readonly Action<IOfferWindowsServiceOptions> _options;
 
         public NServiceBusOperation(string path, string destDir, string serviceName, string profile, Action<IOfferWindowsServiceOptions> options)
@@ -18,14 +19,13 @@ namespace ConDep.Dsl.Operations.Application.Deployment.NServiceBus
             _sourcePath = Path.GetFullPath(path);
             _destPath = destDir;
             _serviceName = serviceName;
+            _profile = profile;
             _options = options;
         }
 
-        internal string Profile { get; set; }
-
         public override void Configure(IOfferRemoteComposition server)
         {
-            var installParams = string.Format("/install /serviceName:\"{0}\" /displayName:\"{0}\" {1}", _serviceName, Profile);
+            var installParams = string.Format("/install /serviceName:\"{0}\" /displayName:\"{0}\" {1}", _serviceName, _profile);
             server.Deploy.WindowsServiceWithInstaller(_serviceName, _serviceName, _sourcePath, _destPath, _serviceInstallerName,
                                                       installParams, _options);
         }
