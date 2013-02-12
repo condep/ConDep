@@ -5,7 +5,7 @@ using ConDep.Dsl.SemanticModel;
 namespace ConDep.Dsl
 {
     /// <summary>
-    /// Used to implement a custom load balancer
+    /// Use this interface to implement a custom load balancer
     /// </summary>
     public interface ILoadBalance
     {

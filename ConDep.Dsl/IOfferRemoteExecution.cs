@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using ConDep.Dsl.Operations.Application.Execution.PowerShell;
-using ConDep.Dsl.Operations.Application.Execution.RunCmd;
 
 namespace ConDep.Dsl
 {
