@@ -1,8 +1,9 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.ServiceModel;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.LoadBalancer.Ace.Proxy;
+using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel;
 using System.Linq;
@@ -35,8 +36,9 @@ namespace ConDep.Dsl.LoadBalancer.Ace
             try
             {
                 token = LogIn();
-                var deviceId = GetDeviceId(token);
-                var server = GetServer(serverName, farm, token, deviceId);
+                var deviceIds = GetDeviceIds(token);
+                DeviceID deviceId;
+                var server = GetServer(serverName, farm, token, deviceIds, out deviceId);
 
                 var suspend = new suspendServerfarmRserver
                 {
@@ -70,8 +72,9 @@ namespace ConDep.Dsl.LoadBalancer.Ace
             try
             {
                 token = LogIn();
-                var deviceId = GetDeviceId(token);
-                var server = GetServer(serverName, farm, token, deviceId);
+                var deviceIds = GetDeviceIds(token);
+                DeviceID deviceId;
+                var server = GetServer(serverName, farm, token, deviceIds, out deviceId);
 
                 var activate = new activateServerfarmRserver
                                    {
@@ -101,16 +104,33 @@ namespace ConDep.Dsl.LoadBalancer.Ace
             return loginResponse.loginResponse.SessionToken;
         }
 
-        private SfRserver GetServer(string serverName, string farm, SessionToken token, DeviceID deviceId)
+        private SfRserver GetServer(string serverName, string farm, SessionToken token, IEnumerable<DeviceID> deviceIds, out DeviceID deviceId)
         {
-            var rServerRequest = new listServerfarmRservers
-                                     {deviceID = deviceId, serverfarmname = farm, sessionToken = token};
-            var rServers = _proxy.listServerfarmRservers(new listServerfarmRserversRequest { listServerfarmRservers = rServerRequest});
-            var sfRServer = rServers.listServerfarmRserversResponse.SfRservers.Single(x => x.realserverName.ToLower() == serverName.ToLower());
+            deviceId = null;
+            SfRserver sfRServer = null;
+            foreach (var currentDeviceId in deviceIds)
+            {
+                try
+                {
+                    var rServerRequest = new listServerfarmRservers { deviceID = currentDeviceId, serverfarmname = farm, sessionToken = token };
+                    var rServers = _proxy.listServerfarmRservers(new listServerfarmRserversRequest { listServerfarmRservers = rServerRequest });
+                    sfRServer = rServers.listServerfarmRserversResponse.SfRservers.Single(x => x.realserverName.ToLower() == serverName.ToLower());
+                    deviceId = currentDeviceId;
+                }
+                catch(FaultException<WSException> aceEx)
+                {
+                    Logger.Verbose("Web Service Fault: {0}", aceEx.Message);
+                    Logger.Verbose("Since this device [{0}] faulted, ConDep will try next device.", currentDeviceId.name);
+                }
+            }
+            if(sfRServer == null)
+            {
+                throw new ConDepLoadBalancerException("Unable to get real server from load balancer. Use verbose logging for more details.");
+            }
             return sfRServer;
         }
 
-        private DeviceID GetDeviceId(SessionToken token)
+        private IEnumerable<DeviceID> GetDeviceIds(SessionToken token)
         {
             var deviceIdsRequest = new listDeviceIds
             {
@@ -118,7 +138,7 @@ namespace ConDep.Dsl.LoadBalancer.Ace
                 deviceType = DeviceType.VIRTUAL_CONTEXT
             };
             var deviceIds = _proxy.listDeviceIds(new listDeviceIdsRequest { listDeviceIds = deviceIdsRequest});
-            return deviceIds.listDeviceIdsResponse.DeviceIDs[0];
+            return deviceIds.listDeviceIdsResponse.DeviceIDs;
 
         }
 
@@ -133,7 +153,7 @@ namespace ConDep.Dsl.LoadBalancer.Ace
                 case LoadBalancerSuspendMethod.SuspendClearConnections:
                     return SuspendState.Suspend_Clear_Connections;
                 default:
-                    throw new Exception("Suspend method not supported");
+                    throw new ConDepLoadBalancerException("Suspend method not supported");
             }
         }
     }
