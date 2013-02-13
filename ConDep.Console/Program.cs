@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using ConDep.Dsl;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.SemanticModel;
@@ -20,6 +19,7 @@ namespace ConDep.Console
             try
             {
                 new LogConfigLoader().Load();
+                Logger.TraceLevel = TraceLevel.Info;
 
                 var optionHandler = new CommandLineOptionHandler(args);
                 if (optionHandler.Params.InstallWebQ)
