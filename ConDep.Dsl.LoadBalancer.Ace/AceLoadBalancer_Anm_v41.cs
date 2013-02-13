@@ -107,15 +107,15 @@ namespace ConDep.Dsl.LoadBalancer.Ace
         private SfRserver GetServer(string serverName, string farm, SessionToken token, IEnumerable<DeviceID> deviceIds, out DeviceID deviceId)
         {
             deviceId = null;
-            SfRserver sfRServer = null;
             foreach (var currentDeviceId in deviceIds)
             {
                 try
                 {
                     var rServerRequest = new listServerfarmRservers { deviceID = currentDeviceId, serverfarmname = farm, sessionToken = token };
                     var rServers = _proxy.listServerfarmRservers(new listServerfarmRserversRequest { listServerfarmRservers = rServerRequest });
-                    sfRServer = rServers.listServerfarmRserversResponse.SfRservers.Single(x => x.realserverName.ToLower() == serverName.ToLower());
+                    var sfRServer = rServers.listServerfarmRserversResponse.SfRservers.Single(x => x.realserverName.ToLower() == serverName.ToLower());
                     deviceId = currentDeviceId;
+                    return sfRServer;
                 }
                 catch(FaultException<WSException> aceEx)
                 {
@@ -123,11 +123,7 @@ namespace ConDep.Dsl.LoadBalancer.Ace
                     Logger.Verbose("Since this device [{0}] faulted, ConDep will try next device.", currentDeviceId.name);
                 }
             }
-            if(sfRServer == null)
-            {
-                throw new ConDepLoadBalancerException("Unable to get real server from load balancer. Use verbose logging for more details.");
-            }
-            return sfRServer;
+            throw new ConDepLoadBalancerException("Unable to get real server from load balancer. Use verbose logging for more details.");
         }
 
         private IEnumerable<DeviceID> GetDeviceIds(SessionToken token)
