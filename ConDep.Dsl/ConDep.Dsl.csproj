@@ -84,6 +84,7 @@
     <Compile Include="Config\ConDepAssemblyHandler.cs" />
     <Compile Include="Config\ConDepAssemblyNotFoundException.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOperation.cs" />
+    <Compile Include="Operations\LoadBalancer\ConDepLoadBalancerException.cs" />
     <Compile Include="SemanticModel\ConDepGlobals.cs" />
     <Compile Include="IOfferIisInfrastructureRoleOptions.cs" />
     <Compile Include="IOfferPowerShellOptions.cs" />
