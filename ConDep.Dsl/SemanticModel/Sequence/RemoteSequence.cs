@@ -53,7 +53,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                     case LbMode.RoundRobin:
                         return ExecuteWithRoundRobin(options, status);
                     default:
-                        throw new NotSupportedException(string.Format("Load Balancer mode [{0}] not supported.",
+                        throw new ConDepLoadBalancerException(string.Format("Load Balancer mode [{0}] not supported.",
                                                                       _loadBalancer.Mode));
                 }
             }
@@ -159,6 +159,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         private IReportStatus ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepOptions options, ILoadBalance loadBalancer, bool bringServerOfflineBeforeExecution, bool bringServerOnlineAfterExecution)
         {
+            var errorDuringLoadBalancing = false;
             try
             {
                 Logger.LogSectionStart(server.Name);
@@ -171,23 +172,18 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 }
 
                 ExecuteOnServer(server, status, options);
-                //PostRemoteOps.Execute(server, status, options);
                 return status;
-                //if (options.WebDeployExist)
-                //{
-                //    return ExecuteOnServer(server, status, options);
-                //}
-                //else
-                //{
-                //    WebDeployDeployer.DeployTo(server);
-                //    return ExecuteOnServer(server, status, options);
-                //}
+            }
+            catch
+            {
+                errorDuringLoadBalancing = true;
+                throw;
             }
             finally
             {
                 try
                 {
-                    if (bringServerOnlineAfterExecution && !status.HasErrors)
+                    if (bringServerOnlineAfterExecution && !status.HasErrors && !errorDuringLoadBalancing)
                     {
                         Logger.Info(string.Format("Taking server [{0}] online in load balancer.", server.Name));
                         loadBalancer.BringOnline(server.Name, server.LoadBalancerFarm, status);
