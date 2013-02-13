@@ -215,7 +215,7 @@
     <Compile Include="Operations\Infrastructure\IIS\BindingType.cs" />
     <Compile Include="Operations\Infrastructure\IIS\IisBinding.cs" />
     <Compile Include="Operations\Infrastructure\IIS\ManagedPipeline.cs" />
-    <Compile Include="Operations\Infrastructure\IIS\NetFrameworkVersion.cs" />
+    <Compile Include="NetFrameworkVersion.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebApp\IisWebAppOperation.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IisWebSiteOperation.cs" />
     <Compile Include="SemanticModel\WebDeploy\ConDepUnsupportedOutcomeException.cs" />

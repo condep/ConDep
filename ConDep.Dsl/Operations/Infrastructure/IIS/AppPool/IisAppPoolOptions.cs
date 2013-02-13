@@ -64,15 +64,15 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
             {
                 case NetFrameworkVersion.NoManagedCode:
                     return "";
-                case IIS.NetFrameworkVersion.Net1_0:
+                case NetFrameworkVersion.Net1_0:
                     return "v1.0";
-                case IIS.NetFrameworkVersion.Net1_1:
+                case NetFrameworkVersion.Net1_1:
                     return "v1.1";
-                case IIS.NetFrameworkVersion.Net2_0:
+                case NetFrameworkVersion.Net2_0:
                     return "v2.0";
-                case IIS.NetFrameworkVersion.Net4_0:
+                case NetFrameworkVersion.Net4_0:
                     return "v4.0";
-                case IIS.NetFrameworkVersion.Net5_0:
+                case NetFrameworkVersion.Net5_0:
                     return "v5.0";
                 default:
                     throw new ConDepUnknowNetFrameworkException("Framework version unknown to ConDep.");
