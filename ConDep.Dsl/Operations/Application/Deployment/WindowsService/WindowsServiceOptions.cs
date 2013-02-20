@@ -127,18 +127,28 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
 
             public string GetServiceConfigCommand(string serviceName)
             {
-                var serviceConfigCommand = "";
+                var userNameOption = "";
+                var passwordOption = "";
+                var groupOption = "";
+
+                if(HasCredentials)
+                {
+                    userNameOption = "obj= \"" + UserName + "\"";
+                    passwordOption = "password= \"" + Password + "\"";
+                }
+
                 if (HasServiceGroup)
                 {
-                    var userNameOption = !string.IsNullOrWhiteSpace(UserName) ? "obj= \"" + UserName + "\"" : "";
-                    var passwordOption = !string.IsNullOrWhiteSpace(Password) ? "password= \"" + Password + "\"" : "";
-                    var groupOption = "group= \"" + ServiceGroup + "\"";
-
-                    serviceConfigCommand = string.Format("{0} config \"{1}\" {2} {3} {4}", SERVICE_CONTROLLER_EXE, serviceName, groupOption, userNameOption, passwordOption);
+                    groupOption = "group= \"" + ServiceGroup + "\"";
                 }
-                return serviceConfigCommand;
+
+                return HasCredentials || HasServiceGroup ? string.Format("{0} config \"{1}\" {2} {3} {4}", SERVICE_CONTROLLER_EXE, serviceName, groupOption, userNameOption, passwordOption) : "";
             }
 
+            private bool HasCredentials
+            {
+                get { return !string.IsNullOrWhiteSpace(UserName); }
+            }
         }
     }
 }
