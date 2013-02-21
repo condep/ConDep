@@ -47,7 +47,7 @@ namespace ConDep.Dsl.Builders
             return WindowsService(serviceName, displayName, sourceDir, destDir, relativeExePath, null);
         }
 
-        public IOfferRemoteDeployment WindowsService(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, Action<IOfferWindowsServiceOptions> options)
+        public IOfferRemoteDeployment WindowsService(string serviceName, string displayName, string sourceDir, string destDir, string relativeExePath, Action<IOfferWindowsServiceOptions> options)
         {
             var winServiceOptions = new WindowsServiceOptions();
             if (options != null)
@@ -55,7 +55,7 @@ namespace ConDep.Dsl.Builders
                 options(winServiceOptions);
             }
 
-            var winServiceOperation = new WindowsServiceOperation(serviceName, sourceDir, destDir, relativeExePath, displayName, winServiceOptions.Values);
+            var winServiceOperation = new WindowsServiceOperation(serviceName, displayName, sourceDir, destDir, relativeExePath, winServiceOptions.Values);
             AddOperation(winServiceOperation);
             return this;
         }
@@ -73,7 +73,7 @@ namespace ConDep.Dsl.Builders
                 options(winServiceOptions);
             }
 
-            var winServiceOperation = new WindowsServiceWithInstallerOperation(serviceName, sourceDir, destDir, relativeExePath, displayName, installerParams, winServiceOptions.Values);
+            var winServiceOperation = new WindowsServiceWithInstallerOperation(serviceName, displayName, sourceDir, destDir, relativeExePath, installerParams, winServiceOptions.Values);
             AddOperation(winServiceOperation);
             return this;
         }
