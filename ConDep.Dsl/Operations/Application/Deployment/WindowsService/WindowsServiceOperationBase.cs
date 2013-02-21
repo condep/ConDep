@@ -9,7 +9,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
         protected readonly string _displayName;
         protected readonly WindowsServiceOptions.WindowsServiceOptionValues _values;
 
-        protected WindowsServiceOperationBase(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, WindowsServiceOptions.WindowsServiceOptionValues values)
+        protected WindowsServiceOperationBase(string serviceName, string displayName, string sourceDir, string destDir, string relativeExePath, WindowsServiceOptions.WindowsServiceOptionValues values)
         {
             _serviceName = serviceName;
             _sourceDir = sourceDir;
