@@ -5,7 +5,8 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
 {
     public class WindowsServiceOperation : WindowsServiceOperationBase
     {
-        public WindowsServiceOperation(string serviceName, string sourceDir, string destDir, string relativeExePath, string displayName, WindowsServiceOptions.WindowsServiceOptionValues values) : base(serviceName, sourceDir, destDir, relativeExePath, displayName, values)
+        public WindowsServiceOperation(string serviceName, string displayName, string sourceDir, string destDir, string relativeExePath, WindowsServiceOptions.WindowsServiceOptionValues values)
+            : base(serviceName, displayName, sourceDir, destDir, relativeExePath, values)
         {
         }
 

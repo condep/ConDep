@@ -8,7 +8,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
         private readonly string _installerParams;
 
         public WindowsServiceWithInstallerOperation(string serviceName, string displayName, string sourceDir, string destDir, string relativeExePath, string installerParams, WindowsServiceOptions.WindowsServiceOptionValues options)
-            : base(serviceName, sourceDir, destDir, relativeExePath, displayName, options)
+            : base(serviceName, displayName, sourceDir, destDir, relativeExePath, options)
         {
             _installerParams = installerParams;
         }
