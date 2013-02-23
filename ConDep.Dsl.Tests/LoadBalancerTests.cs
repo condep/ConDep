@@ -1,5 +1,4 @@
 ﻿using ConDep.Dsl.Config;
-using ConDep.Dsl.Operations;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
 using NUnit.Framework;
