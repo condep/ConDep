@@ -9,3 +9,4 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("9c96458c-b257-4105-8def-5785c229b4c6")]
+[assembly: InternalsVisibleTo("ConDep.Dsl.Tests")]

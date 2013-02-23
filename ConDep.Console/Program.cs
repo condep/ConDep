@@ -56,7 +56,7 @@ namespace ConDep.Console
                                                           optionHandler.Params.StopAfterMarkedServer,
                                                           optionHandler.Params.ContinueAfterMarkedServer,
                                                           assembly);
-                    var envSettings = GetEnvConfig(optionHandler.Params, assembly);
+                    var envSettings = ConfigHandler.GetEnvConfig(optionHandler.Params.Environment, optionHandler.Params.BypassLB, assembly);
 
                     var status = new WebDeploymentStatus();
                     ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions, status);
@@ -98,22 +98,6 @@ namespace ConDep.Console
 
             Logger.Info(string.Format("ConDep Version {0}", versionInfo.ProductVersion.Substring(0, versionInfo.ProductVersion.LastIndexOf("."))));
             Logger.Info("Copyright (c) Jon Arild Torresdal");
-        }
-
-        private static ConDepConfig GetEnvConfig(CommandLineParams cmdParams, Assembly assembly)
-        {
-            var envFileName = string.Format("{0}.Env.json", cmdParams.Environment);
-            var envFilePath = Path.Combine(Path.GetDirectoryName(assembly.Location), envFileName);
-
-            var jsonConfigParser = new EnvConfigParser();
-            var envConfig = jsonConfigParser.GetEnvConfig(envFilePath);
-            envConfig.EnvironmentName = cmdParams.Environment;
-
-            if (cmdParams.BypassLB)
-            {
-                envConfig.LoadBalancer = null;
-            }
-            return envConfig;
         }
     }
 }
