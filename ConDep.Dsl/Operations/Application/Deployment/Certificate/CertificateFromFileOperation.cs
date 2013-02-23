@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using ConDep.Dsl.Builders;
 using ConDep.Dsl.Operations.Infrastructure.IIS.WebSite;
 using ConDep.Dsl.SemanticModel;
 
@@ -24,14 +23,17 @@ namespace ConDep.Dsl.Operations.Application.Deployment.Certificate
         public override void Configure(IOfferRemoteComposition server)
         {
             var path = Path.GetFullPath(_path);
-
             var cert = string.IsNullOrWhiteSpace(_password) ? new X509Certificate2(path) : new X509Certificate2(path, _password);
 
             if(cert.HasPrivateKey)
             {
-                var formattedUserArray = _certOptions.Values.PrivateKeyPermissions.Select(user => "'" + user + "'").ToList();
-                var users = string.Join(",", formattedUserArray);
-                var psUserArray = string.Format("@({0})", users);
+                string psUserArray = "@()";
+                if(_certOptions != null && _certOptions.Values.PrivateKeyPermissions.Count > 0)
+                {
+                    var formattedUserArray = _certOptions.Values.PrivateKeyPermissions.Select(user => "'" + user + "'").ToList();
+                    var users = string.Join(",", formattedUserArray);
+                    psUserArray = string.Format("@({0})", users);
+                }
 
                 var destPath = string.Format(@"%temp%\{0}.pfx", Guid.NewGuid());
                 server.Deploy.File(path, destPath);
