@@ -44,7 +44,10 @@ task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init {
 		-dependencies @(
 			@{ Name="log4net"; Version="2.0.0"}
 		) `
-		-files @(@{ Path="$condep_dsl\$condep_dsl.dll"; Target="lib/net40"} ) `
+		-files @(
+			@{ Path="$condep_dsl\$condep_dsl.dll"; Target="lib/net40"}, 
+			@{ Path="$condep_dsl\$condep_dsl.xml"; Target="lib/net40"} 
+		) `
 		-frameworkAssemblies @(
 			@{ Name="Microsoft.Web.Deployment"; Target="net40"}, 
 			@{ Name="Microsoft.Web.Delegation"; Target="net40"} 
