@@ -47,7 +47,7 @@
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
-    <Reference Include="Microsoft.Web.Deployment, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Web.Deployment, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files\IIS\Microsoft Web Deploy V2\Microsoft.Web.Deployment.dll</HintPath>
       <HintPath>..\Build\WebDeploy\x64\IIS\Microsoft Web Deploy V2\Microsoft.Web.Deployment.dll</HintPath>
