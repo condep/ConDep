@@ -51,13 +51,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files\IIS\Microsoft Web Deploy V2\Microsoft.Web.Delegation.dll</HintPath>
       <HintPath>..\Build\WebDeploy\x64\IIS\Microsoft Web Deploy V2\Microsoft.Web.Delegation.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Deployment, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files\IIS\Microsoft Web Deploy V2\Microsoft.Web.Deployment.dll</HintPath>
       <HintPath>..\Build\WebDeploy\x64\IIS\Microsoft Web Deploy V2\Microsoft.Web.Deployment.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
