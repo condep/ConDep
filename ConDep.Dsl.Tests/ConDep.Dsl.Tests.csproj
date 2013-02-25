@@ -49,7 +49,9 @@
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Microsoft.Web.Deployment, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Microsoft.Web.Deployment.dll</HintPath>
+      <HintPath>..\..\..\Program Files\IIS\Microsoft Web Deploy V2\Microsoft.Web.Deployment.dll</HintPath>
+      <HintPath>..\Build\WebDeploy\x64\IIS\Microsoft Web Deploy V2\Microsoft.Web.Deployment.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
