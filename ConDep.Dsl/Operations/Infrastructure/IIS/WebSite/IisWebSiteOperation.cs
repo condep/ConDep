@@ -53,7 +53,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
                 bindings.Add(string.Format("@{{protocol='https';bindingInformation='{0}:{1}:{2}';findType=[{3}]::{4};findValue='{5}'}}", httpsBinding.BindingOptions.Ip, httpsBinding.BindingOptions.Port, httpsBinding.BindingOptions.HostName, type.FullName, httpsBinding.FindType, httpsBinding.FindName));
             }
 
-            server.ExecuteRemote.PowerShell(string.Format(@"Import-Module $env:temp\ConDepPowerShellScripts\ConDep; New-ConDepIisWebSite '{0}' {1} {2} {3} '{4}';"
+            server.ExecuteRemote.PowerShell(string.Format(@"New-ConDepIisWebSite '{0}' {1} {2} {3} '{4}';"
                 , _webSiteName
                 , _id
                 , "@(" + string.Join(",", bindings) + ")"

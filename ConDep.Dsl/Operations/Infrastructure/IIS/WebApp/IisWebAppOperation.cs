@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using ConDep.Dsl.Builders;
-using ConDep.Dsl.Operations.Application.Execution.PowerShell;
-using ConDep.Dsl.Resources;
 using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebApp
@@ -28,7 +25,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebApp
 
         public override void Configure(IOfferRemoteComposition server, IOfferInfrastructure require)
         {
-            server.ExecuteRemote.PowerShell(string.Format(@"Import-Module $env:temp\ConDepPowerShellScripts\ConDep; New-ConDepWebApp '{0}' '{1}' {2} {3};"
+            server.ExecuteRemote.PowerShell(string.Format(@"New-ConDepWebApp '{0}' '{1}' {2} {3};"
                 , _webAppName
                 , _webSiteName
                 , (_options == null || string.IsNullOrWhiteSpace(_options.PhysicalPath)) ? "$null" : "'" + _options.PhysicalPath + "'"
