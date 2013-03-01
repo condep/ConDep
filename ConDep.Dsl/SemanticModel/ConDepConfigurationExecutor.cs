@@ -86,10 +86,10 @@ namespace ConDep.Dsl.SemanticModel
         {
             if (options.HasApplicationDefined())
             {
-                var type = assembly.GetTypes().Where(t => typeof (ApplicationArtifact).IsAssignableFrom(t) && t.Name == options.Application).Single();
+                var type = assembly.GetTypes().SingleOrDefault(t => typeof (ApplicationArtifact).IsAssignableFrom(t) && t.Name == options.Application);
                 if (type == null)
                 {
-                    throw new ConDepConfigurationTypeNotFoundException(string.Format("A class inheriting from [{0}] must be present in assembly [{1}] for ConDep to work.",typeof (ApplicationArtifact).FullName, assembly.FullName));
+                    throw new ConDepConfigurationTypeNotFoundException(string.Format("A class inheriting from [{0}] must be present in assembly [{1}] for ConDep to work. No calss with name [{2}] found in assembly. ",typeof (ApplicationArtifact).FullName, assembly.FullName, options.Application));
                 }
                 yield return CreateApplicationArtifact(assembly, type);
             }
