@@ -61,5 +61,10 @@ namespace ConDep.Dsl.Tests
         {
             require.IIS();
         }
+
+        public override void Execute(ServerConfig server)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
