@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
@@ -77,7 +76,7 @@ namespace ConDep.Console
                 exitCode = 1;
                 Logger.Error("ConDep reported a fatal error:");
                 Logger.Error("Message: " + ex.Message);
-                Logger.Error("Stack trace:\n" + ex.StackTrace);
+                Logger.Verbose("Stack trace:\n" + ex.StackTrace);
             }
             finally
             {
