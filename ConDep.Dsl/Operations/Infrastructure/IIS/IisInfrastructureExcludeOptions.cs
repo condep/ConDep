@@ -1,3 +1,5 @@
+using ConDep.Dsl.Operations.Infrastructure.IIS;
+
 namespace ConDep.Dsl.Operations.Infrastructure
 {
     public class IisInfrastructureExcludeOptions : IOfferIisInfrastructureRoleOptions

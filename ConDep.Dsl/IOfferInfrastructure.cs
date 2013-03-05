@@ -71,5 +71,7 @@ namespace ConDep.Dsl
         /// Provide operations for installing SSL certificates.
         /// </summary>
         IOfferSslInfrastructure SslCertificate { get; }
+
+        IOfferRemoteExecution RemoteExecution { get; }
     }
 }

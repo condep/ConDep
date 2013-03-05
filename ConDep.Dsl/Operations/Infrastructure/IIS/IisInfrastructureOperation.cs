@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using ConDep.Dsl.Builders;
 using ConDep.Dsl.SemanticModel;
 
-namespace ConDep.Dsl.Operations.Infrastructure
+namespace ConDep.Dsl.Operations.Infrastructure.IIS
 {
     public class IisInfrastructureOperation : RemoteCompositeInfrastructureOperation
     {

@@ -16,7 +16,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
         public IisAppPoolOperation(string appPoolName, IisAppPoolOptions.IisAppPoolOptionsValues appPoolOptions) 
         {
             _appPoolName = appPoolName;
-            _appPoolOptions = appPoolOptions;
+            _appPoolOptions = appPoolOptions;   
         }
 
         public override string Name

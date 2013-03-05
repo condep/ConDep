@@ -1,11 +1,11 @@
 using System;
 using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.Infrastructure;
+using ConDep.Dsl.Operations.Infrastructure.IIS;
 using ConDep.Dsl.Operations.Infrastructure.IIS.AppPool;
 using ConDep.Dsl.Operations.Infrastructure.IIS.WebApp;
 using ConDep.Dsl.Operations.Infrastructure.IIS.WebSite;
 using ConDep.Dsl.SemanticModel;
-using ConDep.Dsl.SemanticModel.Sequence;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.Builders
@@ -91,6 +91,8 @@ namespace ConDep.Dsl.Builders
         {
             get { return new SslInfrastructureBuilder(_infrastructureSequence, _webDeploy, this); }
         }
+
+        public IOfferRemoteExecution RemoteExecution { get{ return new RemoteExecutionBuilder(_infrastructureSequence, _webDeploy);} }
 
         public void AddOperation(RemoteCompositeInfrastructureOperation operation)
         {
