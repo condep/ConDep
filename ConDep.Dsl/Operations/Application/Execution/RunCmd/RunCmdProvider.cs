@@ -11,6 +11,7 @@ namespace ConDep.Dsl.Operations.Application.Execution.RunCmd
 		public RunCmdProvider(string command)
 		{
 		    DestinationPath = command;
+		    WaitIntervalInSeconds = 60;
 		}
 
         public override DeploymentProviderOptions GetWebDeploySourceProviderOptions()
