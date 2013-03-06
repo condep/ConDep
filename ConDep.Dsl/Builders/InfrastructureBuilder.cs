@@ -92,7 +92,13 @@ namespace ConDep.Dsl.Builders
             get { return new SslInfrastructureBuilder(_infrastructureSequence, _webDeploy, this); }
         }
 
-        public IOfferRemoteExecution RemoteExecution { get{ return new RemoteExecutionBuilder(_infrastructureSequence, _webDeploy);} }
+        public IOfferInfrastructure RemoteExecution(Action<IOfferRemoteExecution> remoteExecution)
+        {
+            remoteExecution(new RemoteExecutionBuilder(_infrastructureSequence, _webDeploy));
+            return this;
+        }
+
+        //public IOfferRemoteExecution RemoteExecution { get{ return new RemoteExecutionBuilder(_infrastructureSequence, _webDeploy);} }
 
         public void AddOperation(RemoteCompositeInfrastructureOperation operation)
         {

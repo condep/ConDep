@@ -72,6 +72,6 @@ namespace ConDep.Dsl
         /// </summary>
         IOfferSslInfrastructure SslCertificate { get; }
 
-        IOfferRemoteExecution RemoteExecution { get; }
+        IOfferInfrastructure RemoteExecution(Action<IOfferRemoteExecution> remoteExecution);
     }
 }
