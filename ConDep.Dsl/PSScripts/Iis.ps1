@@ -1,4 +1,5 @@
-﻿Import-Module WebAdministration; 
+﻿$webAdmModule = get-module -name "WebAdministration"
+if($webAdmModule) { $webAdmModule | import-module }
 
 function New-ConDepIisWebSite {
 	[CmdletBinding()]
