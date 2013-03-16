@@ -28,8 +28,6 @@ namespace ConDep.Dsl.Builders
             _webDeploy = webDeploy;
         }
 
-        //public IManageGeneralSequence Sequence { get { return _localSequence; } }
-
         public IOfferLocalOperations TransformConfigFile(string configDirPath, string configName, string transformName)
         {
             var operation = new TransformConfigOperation(configDirPath, configName, transformName);
