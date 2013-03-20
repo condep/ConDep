@@ -20,8 +20,10 @@ namespace ConDep.Console
                 new LogConfigLoader().Load();
                 Logger.TraceLevel = TraceLevel.Info;
 
-                var optionHandler = new CommandLineOptionHandler(args);
-                if (optionHandler.Params.InstallWebQ)
+                var conDepSettings = new ConDepSettings();
+                CommandLineOptionHandler.ParseArgs(args, conDepSettings.Options);
+
+                if (conDepSettings.Options.InstallWebQ)
                 {
                     throw new NotImplementedException();
                 }
@@ -29,9 +31,9 @@ namespace ConDep.Console
                 {
                     PrintCopyrightMessage();
                     Logger.LogSectionStart("ConDep");
-                    if (!string.IsNullOrWhiteSpace(optionHandler.Params.WebQAddress))
+                    if (!string.IsNullOrWhiteSpace(conDepSettings.Options.WebQAddress))
                     {
-                        webQ = new WebQueue(optionHandler.Params.WebQAddress, optionHandler.Params.Environment);
+                        webQ = new WebQueue(conDepSettings.Options.WebQAddress, conDepSettings.Options.Environment);
                         webQ.WebQueuePositionUpdate += (sender, eventArgs) => Logger.Info(eventArgs.Message);
                         webQ.WebQueueTimeoutUpdate += (sender, eventArgs) => Logger.Info(eventArgs.Message);
                         Logger.LogSectionStart("Waiting in Deployment Queue");
@@ -45,20 +47,13 @@ namespace ConDep.Console
                         }
                     }
 
-                    var configAssemblyLoader = new ConDepAssemblyHandler(optionHandler.Params.AssemblyName);
-                    var assembly = configAssemblyLoader.GetAssembly();
+                    var configAssemblyLoader = new ConDepAssemblyHandler(conDepSettings.Options.AssemblyName);
+                    conDepSettings.Options.Assembly = configAssemblyLoader.GetAssembly();
 
-                    var conDepOptions = new ConDepOptions(optionHandler.Params.DeployAllApps,
-                                                          optionHandler.Params.Application,
-                                                          optionHandler.Params.DeployOnly,
-                                                          optionHandler.Params.WebDeployExist,
-                                                          optionHandler.Params.StopAfterMarkedServer,
-                                                          optionHandler.Params.ContinueAfterMarkedServer,
-                                                          assembly);
-                    var envSettings = ConfigHandler.GetEnvConfig(optionHandler.Params.Environment, optionHandler.Params.BypassLB, assembly);
+                    conDepSettings.Config = ConfigHandler.GetEnvConfig(conDepSettings);
 
                     var status = new WebDeploymentStatus();
-                    ConDepConfigurationExecutor.ExecuteFromAssembly(assembly, envSettings, conDepOptions, status);
+                    ConDepConfigurationExecutor.ExecuteFromAssembly(conDepSettings, status);
 
                     if (status.HasErrors)
                     {

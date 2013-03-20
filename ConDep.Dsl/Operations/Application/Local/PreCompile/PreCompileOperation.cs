@@ -30,7 +30,7 @@ namespace ConDep.Dsl.Operations.Application.Local.PreCompile
             _buildManager = buildManager;
         }
 
-        public override IReportStatus Execute(IReportStatus status, ConDepConfig config, ConDepOptions options)
+        public override void Execute(IReportStatus status, ConDepSettings settings)
 		{
 			try
 			{
@@ -44,7 +44,6 @@ namespace ConDep.Dsl.Operations.Application.Local.PreCompile
                 Logger.Error(ex.Message);
 				throw;
 			}
-			return status;
 		}
 
         public override bool IsValid(Notification notification)

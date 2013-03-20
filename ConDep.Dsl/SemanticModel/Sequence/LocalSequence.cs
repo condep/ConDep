@@ -7,11 +7,11 @@ using ConDep.Dsl.Operations.Application.Local;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
-    public class LocalSequence : IManageSequence<LocalOperation>
+    public class LocalSequence : IManageSequence<LocalOperation>, IExecute
     {
         private readonly string _name;
         private readonly ILoadBalance _loadBalancer;
-        private readonly List<object> _sequence = new List<object>();
+        private readonly List<IExecute> _sequence = new List<IExecute>();
 
         public LocalSequence(string name, ILoadBalance loadBalancer)
         {
@@ -38,33 +38,32 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return sequence;
         }
 
-        public IReportStatus Execute(IReportStatus status, ConDepConfig config, ConDepOptions options)
+        public void Execute(IReportStatus status, ConDepSettings settings)
         {
             try
             {
                 Logger.LogSectionStart(_name);
                 foreach (var element in _sequence)
                 {
-                    if (element is LocalOperation)
-                    {
-                        Logger.LogSectionStart(element.GetType().Name);
-                        ((LocalOperation)element).Execute(status, config, options);
-                        Logger.LogSectionEnd(element.GetType().Name);
-                    }
-                    else if (element is RemoteSequence)
-                    {
-                        ((RemoteSequence)element).Execute(status, options);
-                    }
-                    else
-                    {
-                        throw new NotSupportedException();
-                    }
+                    element.Execute(status, settings);
+                    //if (element is LocalOperation)
+                    //{
+                    //    Logger.LogSectionStart(element.GetType().Name);
+                    //    ((LocalOperation)element).Execute(status, config, options);
+                    //    Logger.LogSectionEnd(element.GetType().Name);
+                    //}
+                    //else if (element is RemoteSequence)
+                    //{
+                    //    ((RemoteSequence)element).Execute(status, options);
+                    //}
+                    //else
+                    //{
+                    //    throw new NotSupportedException();
+                    //}
 
                     if (status.HasErrors)
-                        return status;
+                        return;
                 }
-                return status;
-                
             }
             finally
             {

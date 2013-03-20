@@ -1,4 +1,5 @@
-﻿using ConDep.Dsl.Config;
+﻿using System;
+using ConDep.Dsl.Config;
 
 namespace ConDep.Dsl
 {
@@ -7,6 +8,6 @@ namespace ConDep.Dsl
     /// </summary>
     public abstract class InfrastructureArtifact
     {
-        public abstract void Configure(IOfferInfrastructure require, ConDepConfig config);
+        public abstract void Configure(IOfferInfrastructure require, ConDepSettings settings);
     }
 }

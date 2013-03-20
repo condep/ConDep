@@ -12,7 +12,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 {
     public class InfrastructureSequence : IManageInfrastructureSequence
     {
-        private readonly List<object> _sequence = new List<object>();
+        private readonly List<IExecuteOnServer> _sequence = new List<IExecuteOnServer>();
  
         public CompositeSequence NewCompositeSequence(RemoteCompositeInfrastructureOperation operation)
         {
@@ -48,38 +48,22 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return isRemoteOpValid && isCompositeSeqValid;
         }
 
-        public IReportStatus Execute(ServerConfig server, IReportStatus status, ConDepOptions options)
+        public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
             try
             {
                 Logger.LogSectionStart("Infrastructure");
                 foreach (var element in _sequence)
                 {
-                    if (element is IOperateRemote)
-                    {
-                        ((IOperateRemote)element).Execute(server, status, options);
-                        if (status.HasErrors)
-                            return status;
-                    }
-                    else if (element is CompositeSequence)
-                    {
-                        ((CompositeSequence)element).Execute(server, status, options);
-                    }
-                    else
-                    {
-                        throw new NotSupportedException();
-                    }
-
+                    element.Execute(server, status, settings);
                     if (status.HasErrors)
-                        return status;
+                        return;
                 }
             }
             finally
             {
                 Logger.LogSectionEnd("Infrastructure");
             }
-
-            return status;
         }
 
         public void Add(IOperateRemote operation, bool addFirst = false)

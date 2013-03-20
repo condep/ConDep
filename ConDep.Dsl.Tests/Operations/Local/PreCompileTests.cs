@@ -2,6 +2,7 @@
 using System.IO;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Operations.Application.Local.PreCompile;
+using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel;
 using Moq;
 using NUnit.Framework;
@@ -14,6 +15,7 @@ namespace ConDep.Dsl.Tests.Operations.Local
         private Mock<IWrapClientBuildManager> _buildManager;
         private string _validWebAppPath;
         private string _validOutputPath;
+        private ConDepSettings _settingsDefault;
 
         [SetUp]
         public void Setup()
@@ -22,6 +24,14 @@ namespace ConDep.Dsl.Tests.Operations.Local
             _buildManager.Setup(x => x.PrecompileApplication(It.IsAny<PreCompileCallback>()));
             _validWebAppPath = Path.GetTempPath();
             _validOutputPath = Environment.CurrentDirectory;
+            _settingsDefault = new ConDepSettings
+            {
+                Options =
+                {
+                    WebDeployExist = true,
+                    SuspendMode = LoadBalancerSuspendMethod.Graceful
+                }
+            };
         }
 
         [Test]
@@ -30,7 +40,7 @@ namespace ConDep.Dsl.Tests.Operations.Local
             var operation = new PreCompileOperation("MyWebApp", @"C:\temp\MyWebApp", @"C:\temp\MyWebAppCompiled", _buildManager.Object);
             
             var status = new StatusReporter();
-            operation.Execute(status, new ConDepConfig(), new ConDepOptions(false, "", false, false, false, false, null));
+            operation.Execute(status, _settingsDefault);
 
             Assert.That(status.HasErrors, Is.False);
             _buildManager.Verify(manager => manager.PrecompileApplication(It.IsAny<PreCompileCallback>()));

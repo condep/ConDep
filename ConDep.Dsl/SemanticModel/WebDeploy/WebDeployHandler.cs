@@ -10,16 +10,16 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
     {
         private ConDepUntrappedExitCodeException _untrappedExitCodeException;
 
-        public IReportStatus Sync(IProvide provider, ServerConfig server, bool continueOnError, IReportStatus status, EventHandler<DeploymentTraceEventArgs> onTraceMessage)
+        public void Sync(IProvide provider, ServerConfig server, bool continueOnError, IReportStatus status, EventHandler<DeploymentTraceEventArgs> onTraceMessage)
         {
             _untrappedExitCodeException = null;
             var destBaseOptions = provider.GetWebDeployDestBaseOptions();
+            var sourceBaseOptions = provider.GetWebDeploySourceBaseOptions();
 
             try
             {
                 var syncOptions = new DeploymentSyncOptions();
 
-                var sourceBaseOptions = provider.GetWebDeploySourceBaseOptions();
                 sourceBaseOptions.Trace += onTraceMessage;
                 sourceBaseOptions.TraceLevel = TraceLevel.Verbose;
 
@@ -79,13 +79,14 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             finally
             {
                 destBaseOptions.Trace -= CheckForUntrappedExitCodes;
+                sourceBaseOptions.Trace -= onTraceMessage;
+                destBaseOptions.Trace -= onTraceMessage;
 
                 if (_untrappedExitCodeException != null && !continueOnError)
                 {
                     throw _untrappedExitCodeException;
                 }
             }
-            return status;
         }
 
         void CheckForUntrappedExitCodes(object sender, DeploymentTraceEventArgs e)

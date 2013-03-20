@@ -20,7 +20,7 @@ namespace ConDep.Dsl.Operations.Application.Local.WebRequest
             return !string.IsNullOrWhiteSpace(_url) && Uri.IsWellFormedUriString(_url, UriKind.Absolute);
         }
 
-        public override IReportStatus Execute(IReportStatus status, ConDepConfig config, ConDepOptions options)
+        public override void Execute(IReportStatus status, ConDepSettings settings)
         {
             var webRequest = System.Net.WebRequest.Create(_url);
             webRequest.Method = "GET";
@@ -39,8 +39,6 @@ namespace ConDep.Dsl.Operations.Application.Local.WebRequest
             {
                 throw new WebException(string.Format("GET request did not return with 200 (OK), but {0} ({1})", (int)statusCode, statusCode));
             }
-
-            return status;
         }
     }
 }

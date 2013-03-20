@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ConDep.Dsl.Config;
-using ConDep.Dsl.Operations.LoadBalancer;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
@@ -22,15 +21,14 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return sequence;
         }
 
-        public IReportStatus Execute(IReportStatus status, ConDepConfig config, ConDepOptions options)
+        public void Execute(IReportStatus status, ConDepSettings settings)
         {
             foreach (var localSequence in _sequence)
             {
-                localSequence.Execute(status, config, options);
+                localSequence.Execute(status, settings);
                 if (status.HasErrors)
-                    return status;
+                    return;
             }
-            return status;
         }
 
         public bool IsValid(Notification notification)

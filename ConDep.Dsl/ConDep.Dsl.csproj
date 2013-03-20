@@ -71,6 +71,7 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="ApplicationArtifact.cs" />
+    <Compile Include="Config\ConDepSettings.cs" />
     <Compile Include="Config\ConfigHandler.cs" />
     <Compile Include="IOfferWindowsServiceFailureOptions.cs" />
     <Compile Include="IOfferWindowsServiceFailureActions.cs" />
@@ -104,6 +105,8 @@
     <Compile Include="Operations\PostRemoteOps.cs" />
     <Compile Include="Operations\RemoteCompositeInfrastructureOperation.cs" />
     <Compile Include="Operations\RemoteCompositeOperationBase.cs" />
+    <Compile Include="SemanticModel\IExecute.cs" />
+    <Compile Include="SemanticModel\IExecuteOnServer.cs" />
     <Compile Include="SemanticModel\Sequence\PostOpsSequence.cs" />
     <Compile Include="SemanticModel\Sequence\PreOpsSequence.cs" />
     <Compile Include="Operations\PreRemoteOps.cs" />
@@ -157,7 +160,7 @@
     <Compile Include="IOfferInfrastructure.cs" />
     <Compile Include="IDependOnInfrastructure.cs" />
     <Compile Include="Config\ConDepConfigurationTypeNotFoundException.cs" />
-    <Compile Include="SemanticModel\ConDepOptions.cs" />
+    <Compile Include="Config\ConDepOptions.cs" />
     <Compile Include="Resources\ConDepResourceNotFoundException.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Config\EnvConfigParser.cs" />
@@ -183,7 +186,7 @@
     <Compile Include="Operations\LoadBalancer\LoadBalanceState.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LoggerBase.cs" />
-    <Compile Include="Config\ConDepConfig.cs" />
+    <Compile Include="Config\ConDepEnvConfig.cs" />
     <Compile Include="Config\CustomJsonConfigDictionary.cs" />
     <Compile Include="Config\CustomProviderConfig.cs" />
     <Compile Include="Config\DeploymentUserConfig.cs" />

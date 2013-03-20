@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Operations.Application.Local.TransformConfig;
-using ConDep.Dsl.SemanticModel;
+using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 using NUnit.Framework;
 
@@ -12,10 +12,20 @@ namespace ConDep.Dsl.Tests
     [TestFixture]
     public class ConfigTransformTests
     {
+        private ConDepSettings _settingsDefault;
+
         [SetUp]
         public void Setup()
         {
             FilesToDeleteAfterTest = new List<string>();
+            _settingsDefault = new ConDepSettings
+            {
+                Options =
+                {
+                    WebDeployExist = true,
+                    SuspendMode = LoadBalancerSuspendMethod.Graceful
+                }
+            };
         }
         
         [TearDown]
@@ -52,7 +62,7 @@ namespace ConDep.Dsl.Tests
 
             var trans = new TransformConfigOperation(Path.GetDirectoryName(source), Path.GetFileName(source), Path.GetFileName(transform));
             var webDepStatus = new WebDeploymentStatus();
-            trans.Execute(webDepStatus, new ConDepConfig(), new ConDepOptions(false, "", false, false, false, false, null));
+            trans.Execute(webDepStatus, _settingsDefault);
 
             Assert.That(webDepStatus.HasErrors, Is.False);
 

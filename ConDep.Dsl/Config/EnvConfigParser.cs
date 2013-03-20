@@ -5,7 +5,7 @@ namespace ConDep.Dsl.Config
 {
     public class EnvConfigParser
     {
-        public ConDepConfig GetEnvConfig(string filePath)
+        public ConDepEnvConfig GetEnvConfig(string filePath)
         {
             if (!File.Exists(filePath))
             {
@@ -18,13 +18,13 @@ namespace ConDep.Dsl.Config
             }
         }
 
-        public ConDepConfig GetEnvConfig(Stream stream)
+        public ConDepEnvConfig GetEnvConfig(Stream stream)
         {
-            ConDepConfig config;
+            ConDepEnvConfig config;
             using(var memStream = GetMemoryStreamWithCorrectEncoding(stream))
             {
-                var serializer = new DataContractJsonSerializer(typeof(ConDepConfig));
-                config = (ConDepConfig)serializer.ReadObject(memStream);
+                var serializer = new DataContractJsonSerializer(typeof(ConDepEnvConfig));
+                config = (ConDepEnvConfig)serializer.ReadObject(memStream);
             }
 
             if(config.Tiers == null)

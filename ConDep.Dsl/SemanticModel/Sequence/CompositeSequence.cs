@@ -9,10 +9,10 @@ using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
-    public class CompositeSequence : IManageRemoteSequence
+    public class CompositeSequence : IManageRemoteSequence, IExecuteOnServer
     {
         private readonly string _compositeName;
-        private readonly List<object> _sequence = new List<object>();
+        private readonly List<IExecuteOnServer> _sequence = new List<IExecuteOnServer>();
 
         public CompositeSequence(string compositeName)
         {
@@ -31,31 +31,22 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             }
         }
 
-        public IReportStatus Execute(ServerConfig server, IReportStatus status, ConDepOptions options)
+        public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
             try
             {
                 Logger.LogSectionStart(_compositeName);
                 foreach (var element in _sequence)
                 {
-                    if (element is CompositeSequence)
-                    {
-                        ((CompositeSequence)element).Execute(server, status, options);
-                    }
-                    else if (element is IOperateRemote)
-                    {
-                        ((IOperateRemote)element).Execute(server, status, options);
-                    }
-
+                    element.Execute(server, status, settings);
                     if (status.HasErrors)
-                        return status;
+                        return;
                 }
             }
             finally
             {
                 Logger.LogSectionEnd(_compositeName);
             }
-            return status;
         }
 
         public CompositeSequence NewCompositeSequence(RemoteCompositeOperation operation)

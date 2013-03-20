@@ -1,20 +1,19 @@
 ﻿using System.IO;
-using System.Reflection;
 
 namespace ConDep.Dsl.Config
 {
-    public class ConfigHandler
+    public static class ConfigHandler
     {
-        public static ConDepConfig GetEnvConfig(string environment, bool bypassLb, Assembly assembly)
+        public static ConDepEnvConfig GetEnvConfig(ConDepSettings settings)
         {
-            var envFileName = string.Format("{0}.Env.json", environment);
-            var envFilePath = Path.Combine(Path.GetDirectoryName(assembly.Location), envFileName);
+            var envFileName = string.Format("{0}.Env.json", settings.Options.Environment);
+            var envFilePath = Path.Combine(Path.GetDirectoryName(settings.Options.Assembly.Location), envFileName);
 
             var jsonConfigParser = new EnvConfigParser();
             var envConfig = jsonConfigParser.GetEnvConfig(envFilePath);
-            envConfig.EnvironmentName = environment;
+            envConfig.EnvironmentName = settings.Options.Environment;
 
-            if (bypassLb)
+            if (settings.Options.BypassLB)
             {
                 envConfig.LoadBalancer = null;
             }

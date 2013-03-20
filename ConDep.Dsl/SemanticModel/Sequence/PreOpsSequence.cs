@@ -7,10 +7,10 @@ using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
-    public class PreOpsSequence : IManageRemoteSequence
+    public class PreOpsSequence : IManageRemoteSequence, IExecuteOnServer
     {
         private readonly IHandleWebDeploy _webDeploy;
-        private readonly List<object> _sequence = new List<object>();
+        private readonly List<IExecuteOnServer> _sequence = new List<IExecuteOnServer>();
 
         public PreOpsSequence(IHandleWebDeploy webDeploy)
         {
@@ -41,44 +41,43 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return sequence;
         }
 
-        public IReportStatus Execute(ServerConfig server, IReportStatus status, ConDepOptions options)
+        public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
             bool sectionAdded = false;
             try
             {
                 if (ConDepGlobals.ServersWithPreOps.ContainsKey(server.Name))
-                    return status;
+                    return;
 
                 ConDepGlobals.ServersWithPreOps.Add(server.Name, server);
                 Logger.LogSectionStart("Pre-Operations");
                 sectionAdded = true;
 
-                var remotePreOps = new PreRemoteOps(server, this, options, _webDeploy);
+                var remotePreOps = new PreRemoteOps(server, this, settings, _webDeploy);
                 remotePreOps.Configure();
                 remotePreOps.Execute(status);
                 
                 foreach (var element in _sequence)
                 {
-                    if (element is IOperateRemote)
-                    {
-                        ((IOperateRemote)element).Execute(server, status, options);
-                        if (status.HasErrors)
-                            return status;
-                    }
-                    else if (element is CompositeSequence)
-                    {
-                        ((CompositeSequence)element).Execute(server, status, options);
-                    }
-                    else
-                    {
-                        throw new NotSupportedException();
-                    }
+                    element.Execute(server, status, settings);
+                    //if (element is IOperateRemote)
+                    //{
+                    //    ((IOperateRemote)element).Execute(server, status, options);
+                    //    if (status.HasErrors)
+                    //        return status;
+                    //}
+                    //else if (element is CompositeSequence)
+                    //{
+                    //    ((CompositeSequence)element).Execute(server, status, options);
+                    //}
+                    //else
+                    //{
+                    //    throw new NotSupportedException();
+                    //}
 
                     if (status.HasErrors)
-                        return status;
+                        return;
                 }
-
-                return status;
             }
             finally
             {

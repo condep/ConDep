@@ -26,19 +26,22 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThatExecutionSequenceIsValid()
         {
-            var config = new ConDepConfig {EnvironmentName = "bogusEnv"};
+            var config = new ConDepEnvConfig {EnvironmentName = "bogusEnv"};
             var server = new ServerConfig { Name = "jat-web03" };
             config.Servers = new[] { server };
+
+            var settings = new ConDepSettings();
+            settings.Config = config;
 
             var infrastructureSequence = new InfrastructureSequence();
             var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
 
             var webDeploy = new WebDeployHandlerMock();
             var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);
-            _infra.Configure(infrastructureBuilder, config);
+            _infra.Configure(infrastructureBuilder, settings);
 
             var local = new LocalOperationsBuilder(_sequenceManager.NewLocalSequence("Test"), infrastructureSequence, preOpsSequence, config.Servers, webDeploy);
-            _app.Configure(local, config);
+            _app.Configure(local, settings);
 
             var notification = new Notification();
             Assert.That(_sequenceManager.IsValid(notification));
@@ -47,7 +50,7 @@ namespace ConDep.Dsl.Tests
 
     public class SequenceTestApp : ApplicationArtifact, IDependOnInfrastructure<SequenceTestInfrastructure>
     {
-        public override void Configure(IOfferLocalOperations local, ConDepConfig config)
+        public override void Configure(IOfferLocalOperations local, ConDepSettings settings)
         {
             local.HttpGet("http://www.con-dep.net");
             local.ToEachServer(server => server.ExecuteRemote.PowerShell("ipconfig"));
@@ -57,7 +60,7 @@ namespace ConDep.Dsl.Tests
 
     public class SequenceTestInfrastructure : InfrastructureArtifact
     {
-        public override void Configure(IOfferInfrastructure require, ConDepConfig config)
+        public override void Configure(IOfferInfrastructure require, ConDepSettings settings)
         {
             require.IIS();
         }

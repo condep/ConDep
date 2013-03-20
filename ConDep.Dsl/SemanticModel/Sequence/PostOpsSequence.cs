@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
+using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
-    public class PostOpsSequence : IManageRemoteSequence
+    public class PostOpsSequence : IManageRemoteSequence, IExecute
     {
-        private readonly List<object> _sequence = new List<object>();
+        private readonly List<IExecuteOnServer> _sequence = new List<IExecuteOnServer>();
 
         public void Add(IOperateRemote operation, bool addFirst = false)
         {
@@ -34,7 +35,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return sequence;
         }
 
-        public IReportStatus Execute(IReportStatus status, ConDepOptions options)
+        public void Execute(IReportStatus status, ConDepSettings settings)
         {
             try
             {
@@ -47,23 +48,24 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 {
                     foreach (var element in _sequence)
                     {
-                        if (element is IOperateRemote)
-                        {
-                            ((IOperateRemote) element).Execute(server, status, options);
-                            if (status.HasErrors)
-                                return status;
-                        }
-                        else if (element is CompositeSequence)
-                        {
-                            ((CompositeSequence) element).Execute(server, status, options);
-                        }
-                        else
-                        {
-                            throw new NotSupportedException();
-                        }
+                        element.Execute(server, status, settings);
+                        //if (element is IOperateRemote)
+                        //{
+                        //    ((IOperateRemote) element).Execute(server, status, options);
+                        //    if (status.HasErrors)
+                        //        return ;
+                        //}
+                        //else if (element is CompositeSequence)
+                        //{
+                        //    ((CompositeSequence) element).Execute(server, status, options);
+                        //}
+                        //else
+                        //{
+                        //    throw new NotSupportedException();
+                        //}
 
                         if (status.HasErrors)
-                            return status;
+                            return;
                     }
                 }
             }
@@ -80,8 +82,6 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 }
                 Logger.LogSectionEnd("Post-Operations");
             }
-
-            return status;
         }
 
     }

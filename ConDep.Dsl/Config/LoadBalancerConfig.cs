@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using ConDep.Dsl.Operations.LoadBalancer;
 
 namespace ConDep.Dsl.Config
 {
@@ -8,6 +10,7 @@ namespace ConDep.Dsl.Config
         public string Provider { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
+        public string SuspendMode { get; set; }
         public string Mode { get; set; }
         public LbMode ModeAsEnum
         {
@@ -24,5 +27,30 @@ namespace ConDep.Dsl.Config
                 }
             }
         }
+        public LoadBalancerSuspendMethod SuspendModeAsEnum
+        { 
+            get
+            {
+                switch (SuspendMode.ToLower())
+                {
+                    case "graceful":
+                        return LoadBalancerSuspendMethod.Graceful;
+                    case "suspendclearconnections":
+                        return LoadBalancerSuspendMethod.SuspendClearConnections;
+                    case "suspend":
+                        return LoadBalancerSuspendMethod.Suspend;
+                    default:
+                        throw new NotSupportedException(string.Format("Load Balancer Suspend Mode [{0}] is not supported.", SuspendMode));
+                }
+            }
+        }
+
+        public List<CustomValue> CustomValues { get; set; } 
+    }
+
+    public class CustomValue
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
     }
 }

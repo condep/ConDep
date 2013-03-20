@@ -12,13 +12,13 @@ using ConDep.Dsl.SemanticModel.WebDeploy;
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
     //Todo: Could need some refactoring...
-    public class RemoteSequence : IManageRemoteSequence
+    public class RemoteSequence : IManageRemoteSequence, IExecute
     {
         private readonly IManageInfrastructureSequence _infrastructureSequence;
         private readonly PreOpsSequence _preOpsSequence;
         private readonly IEnumerable<ServerConfig> _servers;
         private readonly ILoadBalance _loadBalancer;
-        private readonly List<object> _sequence = new List<object>();
+        private readonly List<IExecuteOnServer> _sequence = new List<IExecuteOnServer>();
 
         public RemoteSequence(IManageInfrastructureSequence infrastructureSequence, PreOpsSequence preOpsSequence, IEnumerable<ServerConfig> servers, ILoadBalance loadBalancer)
         {
@@ -40,7 +40,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             }
         }
 
-        public IReportStatus Execute(IReportStatus status, ConDepOptions options)
+        public void Execute(IReportStatus status, ConDepSettings settings)
         {
             try
             {
@@ -49,9 +49,11 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 switch (_loadBalancer.Mode)
                 {
                     case LbMode.Sticky:
-                        return ExecuteWithSticky(options, status);
+                        ExecuteWithSticky(settings, status);
+                        return;
                     case LbMode.RoundRobin:
-                        return ExecuteWithRoundRobin(options, status);
+                        ExecuteWithRoundRobin(settings, status);
+                        return;
                     default:
                         throw new ConDepLoadBalancerException(string.Format("Load Balancer mode [{0}] not supported.",
                                                                       _loadBalancer.Mode));
@@ -63,19 +65,20 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             }
         }
 
-        private IReportStatus ExecuteWithRoundRobin(ConDepOptions options, IReportStatus status)
+        private void ExecuteWithRoundRobin(ConDepSettings settings, IReportStatus status)
         {
             var servers = _servers.ToList();
             var roundRobinMaxOfflineServers = (int)Math.Ceiling(((double)servers.Count) / 2);
             ServerConfig manuelTestServer = null;
 
-            if (options.StopAfterMarkedServer)
+            if (settings.Options.StopAfterMarkedServer)
             {
                 manuelTestServer = servers.SingleOrDefault(x => x.StopServer) ?? servers.First();
-                return ExecuteOnServer(manuelTestServer, status, options, _loadBalancer, true, false);
+                ExecuteOnServer(manuelTestServer, status, settings, _loadBalancer, true, false);
+                return;
             }
 
-            if (options.ContinueAfterMarkedServer)
+            if (settings.Options.ContinueAfterMarkedServer)
             {
                 manuelTestServer = servers.SingleOrDefault(x => x.StopServer) ?? servers.First();
                 servers.Remove(manuelTestServer);
@@ -88,7 +91,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
             if (servers.Count == 1)
             {
-                return ExecuteOnServer(servers.First(), status, options, _loadBalancer, true, true);
+                ExecuteOnServer(servers.First(), status, settings, _loadBalancer, true, true);
+                return;
             }
 
             for (int execCount = 0; execCount < servers.Count; execCount++)
@@ -99,27 +103,26 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 }
 
                 bool bringOnline = !(roundRobinMaxOfflineServers - (manuelTestServer == null ? 0 : 1) > execCount);
-                ExecuteOnServer(servers[execCount], status, options, _loadBalancer, !bringOnline, bringOnline);
+                ExecuteOnServer(servers[execCount], status, settings, _loadBalancer, !bringOnline, bringOnline);
 
                 if (status.HasErrors)
-                    return status;
+                    return;
             }
-
-            return status;
         }
 
-        private IReportStatus ExecuteWithSticky(ConDepOptions options, IReportStatus status)
+        private void ExecuteWithSticky(ConDepSettings settings, IReportStatus status)
         {
             var servers = _servers.ToList();
             ServerConfig manuelTestServer;
 
-            if (options.StopAfterMarkedServer)
+            if (settings.Options.StopAfterMarkedServer)
             {
                 manuelTestServer = servers.SingleOrDefault(x => x.StopServer) ?? servers.First();
-                return ExecuteOnServer(manuelTestServer, status, options, _loadBalancer, true, false);
+                ExecuteOnServer(manuelTestServer, status, settings, _loadBalancer, true, false);
+                return;
             }
 
-            if (options.ContinueAfterMarkedServer)
+            if (settings.Options.ContinueAfterMarkedServer)
             {
                 manuelTestServer = servers.SingleOrDefault(x => x.StopServer) ?? servers.First();
                 _loadBalancer.BringOnline(manuelTestServer.Name, manuelTestServer.LoadBalancerFarm, status);
@@ -128,13 +131,12 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
             foreach (var server in servers)
             {
-                ExecuteOnServer(server, status, options, _loadBalancer, true, true);
+                ExecuteOnServer(server, status, settings, _loadBalancer, true, true);
 
                 if (status.HasErrors)
-                    return status;
+                    return;
 
             }
-            return status;
         }
 
         private void TurnRoundRobinServersAround(ILoadBalance loadBalancer, IEnumerable<ServerConfig> servers, int roundRobinMaxOfflineServers, ServerConfig testServer, IReportStatus status)
@@ -157,7 +159,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             }
         }
 
-        private IReportStatus ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepOptions options, ILoadBalance loadBalancer, bool bringServerOfflineBeforeExecution, bool bringServerOnlineAfterExecution)
+        private void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings, ILoadBalance loadBalancer, bool bringServerOfflineBeforeExecution, bool bringServerOnlineAfterExecution)
         {
             var errorDuringLoadBalancing = false;
             try
@@ -171,8 +173,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                                                 LoadBalancerSuspendMethod.Graceful, status);
                 }
 
-                ExecuteOnServer(server, status, options);
-                return status;
+                ExecuteOnServer(server, status, settings);
+                return;
             }
             catch
             {
@@ -196,43 +198,31 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             }
         }
 
-        private IReportStatus ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepOptions options)
+        private void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
-            _preOpsSequence.Execute(server, status, options);
-            _infrastructureSequence.Execute(server, status, options);
-
+            _preOpsSequence.Execute(server, status, settings);
             if (status.HasErrors)
-                return status;
+                return;
+
+            _infrastructureSequence.Execute(server, status, settings);
+            if (status.HasErrors)
+                return;
 
             try
             {
                 Logger.LogSectionStart("Deployment");
                 foreach (var element in _sequence)
                 {
-                    if (element is IOperateRemote)
-                    {
-                        ((IOperateRemote) element).Execute(server, status, options);
-                        if (status.HasErrors)
-                            return status;
-                    }
-                    else if (element is CompositeSequence)
-                    {
-                        ((CompositeSequence) element).Execute(server, status, options);
-                    }
-                    else
-                    {
-                        throw new NotSupportedException();
-                    }
+                    element.Execute(server, status, settings);
 
                     if (status.HasErrors)
-                        return status;
+                        return;
                 }
             }
             finally
             {
                 Logger.LogSectionEnd("Deployment");
             }
-            return status;
         }
 
         public CompositeSequence NewCompositeSequence(RemoteCompositeOperation operation)

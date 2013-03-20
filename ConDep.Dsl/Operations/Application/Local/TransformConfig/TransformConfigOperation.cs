@@ -19,7 +19,7 @@ namespace ConDep.Dsl.Operations.Application.Local.TransformConfig
 			_transformName = transformName;
 		}
 
-        public override IReportStatus Execute(IReportStatus status, ConDepConfig config, ConDepOptions options)
+        public override void Execute(IReportStatus status, ConDepSettings settings)
         {
 			var configFilePath = Path.Combine(_configDirPath, _configName);
 			var transformFilePath = Path.Combine(_configDirPath, _transformName);
@@ -47,8 +47,6 @@ namespace ConDep.Dsl.Operations.Application.Local.TransformConfig
             var success = trans.Execute();
 			if(!success)
 				throw new CondepWebConfigTransformException(string.Format("Failed to transform [{0}] file.", _configName));
-
-			return status;
 		}
 
 	    private bool ConDepConfigBackupExist(string dir, string name)

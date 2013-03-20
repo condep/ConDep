@@ -23,9 +23,8 @@ namespace ConDep.Dsl.Operations
             return _provider.IsValid(notification);
         }
 
-        public IReportStatus Execute(ServerConfig server, IReportStatus status, ConDepOptions conDepOptions)
+        public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
-            WebDeployOptions options = null;
             try
             {
                 Logger.LogSectionStart(_provider.GetType().Name);
@@ -38,11 +37,7 @@ namespace ConDep.Dsl.Operations
             finally
             {
                 Logger.LogSectionEnd(_provider.GetType().Name);
-                if (options != null && options.DestBaseOptions != null) options.DestBaseOptions.Trace -= OnWebDeployTraceMessage;
-                if (options != null && options.SourceBaseOptions != null) options.SourceBaseOptions.Trace -= OnWebDeployTraceMessage;
             }
-
-            return status;
         }
 
         private void HandleSyncException(IReportStatus status, Exception ex)
@@ -80,18 +75,6 @@ namespace ConDep.Dsl.Operations
             {
                 Logger.Log(e.Message, e.EventLevel);
             }
-            //if (e.EventLevel == TraceLevel.Error)
-            //{
-            //    Logger.Error(e.Message);
-            //}
-            //else if (e.EventLevel == TraceLevel.Warning)
-            //{
-            //    Logger.Warn(e.Message);
-            //}
-            //else if(e.EventLevel == TraceLevel.Info)
-            //{
-            //    Logger.Info(e.Message);
-            //}
         }
     }
 }

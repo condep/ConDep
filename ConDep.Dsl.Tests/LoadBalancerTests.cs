@@ -1,4 +1,5 @@
 ﻿using ConDep.Dsl.Config;
+using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
 using NUnit.Framework;
@@ -9,10 +10,47 @@ namespace ConDep.Dsl.Tests
     [TestFixture]
     public class LoadBalancerTests
     {
+        private ConDepSettings _settingsStopAfterMarkedServer;
+        private ConDepSettings _settingsContinueAfterMarkedServer;
+        private ConDepSettings _settingsDefault;
+
+        [SetUp]
+        public void Setup()
+        {
+            _settingsStopAfterMarkedServer = new ConDepSettings
+            {
+                Options =
+                    {
+                        WebDeployExist = true,
+                        StopAfterMarkedServer = true,
+                        SuspendMode = LoadBalancerSuspendMethod.Graceful
+                    }
+            };
+
+            _settingsContinueAfterMarkedServer = new ConDepSettings
+            {
+                Options =
+                {
+                    WebDeployExist = true,
+                    ContinueAfterMarkedServer = true,
+                    SuspendMode = LoadBalancerSuspendMethod.Graceful
+                }
+            };
+
+            _settingsDefault = new ConDepSettings
+            {
+                Options =
+                {
+                    WebDeployExist = true,
+                    SuspendMode = LoadBalancerSuspendMethod.Graceful
+                }
+            };
+        }
+
         [Test]
         public void TestThatStickyLoadBlancingWithOneServerAndManuelTestWorks()
         {
-            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var config = new ConDepEnvConfig { EnvironmentName = "bogusEnv" };
             var server1 = new ServerConfig { Name = "jat-web01" };
 
             config.Servers = new[] { server1 };
@@ -24,7 +62,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions(false, "", false, true, true, false, null));
+            remoteSequence.Execute(status, _settingsStopAfterMarkedServer);
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
 
@@ -35,7 +73,7 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThatStickyLoadBlancingWithOneServerAndContinueWorks()
         {
-            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var config = new ConDepEnvConfig { EnvironmentName = "bogusEnv" };
             var server1 = new ServerConfig { Name = "jat-web01" };
 
             config.Servers = new[] { server1 };
@@ -48,7 +86,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions(false, "", false, true, false, true, null));
+            remoteSequence.Execute(status, _settingsContinueAfterMarkedServer);
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
 
@@ -59,7 +97,7 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThatRoundRobinLoadBlancingWithOneServerAndManuelTestWorks()
         {
-            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var config = new ConDepEnvConfig { EnvironmentName = "bogusEnv" };
             var server1 = new ServerConfig { Name = "jat-web01" };
 
             config.Servers = new[] { server1 };
@@ -71,7 +109,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions(false, "", false, true, true, false, null));
+            remoteSequence.Execute(status, _settingsStopAfterMarkedServer);
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
 
@@ -82,7 +120,7 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThatRoundRobinLoadBlancingWithOneServerAndContinueWorks()
         {
-            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var config = new ConDepEnvConfig { EnvironmentName = "bogusEnv" };
             var server1 = new ServerConfig { Name = "jat-web01" };
 
             config.Servers = new[] { server1 };
@@ -94,7 +132,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions(false, "", false, true, false, true, null));
+            remoteSequence.Execute(status, _settingsContinueAfterMarkedServer);
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
 
@@ -106,7 +144,7 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThatRoundRobinLoadBlancingWithOneServerWorks()
         {
-            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var config = new ConDepEnvConfig { EnvironmentName = "bogusEnv" };
             var server1 = new ServerConfig { Name = "jat-web01" };
 
             config.Servers = new[] { server1 };
@@ -118,7 +156,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions(false, "", false, true, false, false, null));
+            remoteSequence.Execute(status, _settingsDefault);
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(2));
 
@@ -132,7 +170,7 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThatStickyLoadBlancingWithOneServerWorks()
         {
-            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var config = new ConDepEnvConfig { EnvironmentName = "bogusEnv" };
             var server1 = new ServerConfig { Name = "jat-web01" };
 
             config.Servers = new[] { server1 };
@@ -144,7 +182,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions(false, "", false, true, false, false, null));
+            remoteSequence.Execute(status, _settingsDefault);
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(config.Servers.Count * 2));
 
@@ -158,7 +196,7 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThatRoundRobinLoadBalancingGoesOnlineOfflineInCorrectOrder()
         {
-            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var config = new ConDepEnvConfig { EnvironmentName = "bogusEnv" };
             var server1 = new ServerConfig { Name = "jat-web01" };
             var server2 = new ServerConfig { Name = "jat-web02" };
             var server3 = new ServerConfig { Name = "jat-web03" };
@@ -174,7 +212,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions(false, "", false, true, false, false, null));
+            remoteSequence.Execute(status, _settingsDefault);
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(config.Servers.Count * 2));
 
@@ -212,7 +250,7 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThatStickyLoadBalancingGoesOnlineOfflineInCorrectOrder()
         {
-            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var config = new ConDepEnvConfig { EnvironmentName = "bogusEnv" };
             var server1 = new ServerConfig { Name = "jat-web01" };
             var server2 = new ServerConfig { Name = "jat-web02" };
             var server3 = new ServerConfig { Name = "jat-web03" };
@@ -228,7 +266,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions(false, "", false, true, false, false, null));
+            remoteSequence.Execute(status, _settingsDefault);
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(config.Servers.Count * 2));
 
@@ -247,7 +285,7 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThatRoundRobinWithManualTestStopsAfterFirstServer()
         {
-            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var config = new ConDepEnvConfig { EnvironmentName = "bogusEnv" };
             var server1 = new ServerConfig { Name = "jat-web01" };
             var server2 = new ServerConfig { Name = "jat-web02" };
             var server3 = new ServerConfig { Name = "jat-web03" };
@@ -263,7 +301,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions(false, "", false, true, true, false, null));
+            remoteSequence.Execute(status, _settingsStopAfterMarkedServer);
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
 
@@ -274,7 +312,7 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThatRoundRobinWithContinueAfterManuelTestOnSpecificServerExecuteCorrectServers()
         {
-            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var config = new ConDepEnvConfig { EnvironmentName = "bogusEnv" };
             var server1 = new ServerConfig { Name = "jat-web01" };
             var server2 = new ServerConfig { Name = "jat-web02" };
             var server3 = new ServerConfig { Name = "jat-web03", StopServer = true };
@@ -290,7 +328,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions(false, "", false, true, true, false, null));
+            remoteSequence.Execute(status, _settingsStopAfterMarkedServer);
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(1));
 
@@ -301,7 +339,7 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThatStickyWithContinueAfterManualTestExecutesOnCorrectServers()
         {
-            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var config = new ConDepEnvConfig { EnvironmentName = "bogusEnv" };
             var server1 = new ServerConfig { Name = "jat-web01" };
             var server2 = new ServerConfig { Name = "jat-web02" };
             var server3 = new ServerConfig { Name = "jat-web03" };
@@ -317,7 +355,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions(false, "", false, true, false, true, null));
+            remoteSequence.Execute(status, _settingsContinueAfterMarkedServer);
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(((config.Servers.Count - 1) * 2) + 1));
 
@@ -339,7 +377,7 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThatStickyWithContinueAfterManualTestOnSpecificServerExecutesOnCorrectServers()
         {
-            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var config = new ConDepEnvConfig { EnvironmentName = "bogusEnv" };
             var server1 = new ServerConfig { Name = "jat-web01" };
             var server2 = new ServerConfig { Name = "jat-web02" };
             var server3 = new ServerConfig { Name = "jat-web03", StopServer = true };
@@ -355,7 +393,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions(false, "", false, true, false, true, null));
+            remoteSequence.Execute(status, _settingsContinueAfterMarkedServer);
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(((config.Servers.Count - 1) * 2) + 1));
 
@@ -390,7 +428,7 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThatRoundRobinWithContinueAfterManualTestOnSpecificServerExecutesOnCorrectServers()
         {
-            var config = new ConDepConfig { EnvironmentName = "bogusEnv" };
+            var config = new ConDepEnvConfig { EnvironmentName = "bogusEnv" };
             var server1 = new ServerConfig { Name = "jat-web01" };
             var server2 = new ServerConfig { Name = "jat-web02" };
             var server3 = new ServerConfig { Name = "jat-web03", StopServer = true };
@@ -406,7 +444,7 @@ namespace ConDep.Dsl.Tests
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
 
             var status = new StatusReporter();
-            remoteSequence.Execute(status, new ConDepOptions(false, "", false, true, false, true, null));
+            remoteSequence.Execute(status, _settingsContinueAfterMarkedServer);
 
             Assert.That(loadBalancer.OnlineOfflineSequence.Count, Is.EqualTo(((config.Servers.Count - 1) * 2) + 1));
 

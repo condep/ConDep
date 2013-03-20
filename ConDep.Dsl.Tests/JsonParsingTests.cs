@@ -92,7 +92,19 @@ namespace ConDep.Dsl.Tests
         ""Provider"": ""ConDep.Dsl.LoadBalancer.Ace.dll"",
         ""UserName"": ""torresdal\\nlbUser"",
         ""Password"": ""verySecureP@ssw0rd"",
-        ""Mode"": ""Sticky""
+        ""Mode"": ""Sticky"",
+		""SuspendMode"" : ""Graceful"",
+        ""CustomValues"" :
+        [
+            {
+                ""Key"" : ""AwsSuspendWaitTime"",
+                ""Value"" : ""30""
+            },
+            {
+                ""Key"" : ""AwsActivateWaitTime"",
+                ""Value"" : ""40""
+            }
+        ]
     },
 	""Servers"":
     [
@@ -186,8 +198,8 @@ namespace ConDep.Dsl.Tests
     ]
 }";
 
-        private ConDepConfig _config;
-        private ConDepConfig _tiersConfig;
+        private ConDepEnvConfig _config;
+        private ConDepEnvConfig _tiersConfig;
 
         [SetUp]
         public void Setup()
@@ -215,6 +227,8 @@ namespace ConDep.Dsl.Tests
             Assert.That(_config.LoadBalancer.UserName, Is.Not.Null.Or.Empty);
             Assert.That(_config.LoadBalancer.Mode, Is.Not.Null.Or.Empty);
             Assert.That(_config.LoadBalancer.ModeAsEnum, Is.Not.Null.Or.Empty);
+            Assert.That(_config.LoadBalancer.SuspendMode, Is.Not.Null.Or.Empty);
+            Assert.That(_config.LoadBalancer.SuspendModeAsEnum, Is.Not.Null.Or.Empty);
         }
 
         [Test]

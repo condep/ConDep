@@ -2,7 +2,7 @@
 
 namespace ConDep.Dsl.Config
 {
-    public class ConDepConfig
+    public class ConDepEnvConfig
     {
         public string EnvironmentName { get; set; }
         public LoadBalancerConfig LoadBalancer { get; set; }

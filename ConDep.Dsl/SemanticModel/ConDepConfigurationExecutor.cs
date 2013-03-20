@@ -5,7 +5,6 @@ using System.Reflection;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
-using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.Remote;
 using ConDep.Dsl.SemanticModel.Sequence;
@@ -15,23 +14,24 @@ namespace ConDep.Dsl.SemanticModel
 {
     public class ConDepConfigurationExecutor
     {
-        public static void ExecuteFromAssembly(Assembly assembly, ConDepConfig envSettings, ConDepOptions options, IReportStatus status)
+        public static void ExecuteFromAssembly(ConDepSettings conDepSettings, IReportStatus status)
         {
-            new ConDepConfigurationExecutor().Execute(assembly, envSettings, options, status);
+            new ConDepConfigurationExecutor().Execute(conDepSettings, status);
         }
 
-        private void Execute(Assembly assembly, ConDepConfig envConfig, ConDepOptions options, IReportStatus status)
+        private void Execute(ConDepSettings conDepSettings, IReportStatus status)
         {
-            if (assembly == null) { throw new ArgumentException("assembly"); }
-            if (envConfig == null) { throw new ArgumentException("envSettings"); }
-            if (options == null) { throw new ArgumentException("options"); }
+            if (conDepSettings == null) { throw new ArgumentException("conDepSettings"); }
+            if (conDepSettings.Options.Assembly == null) { throw new ArgumentException("assembly"); }
+            if (conDepSettings.Config == null) { throw new ArgumentException("conDepSettings.Config"); }
+            if (conDepSettings.Options == null) { throw new ArgumentException("conDepSettings.Options"); }
             if (status == null) { throw new ArgumentException("status"); }
 
-            var applications = CreateApplicationArtifacts(options, assembly);
+            var applications = CreateApplicationArtifacts(conDepSettings);
 
-            if(!options.WebDeployExist)
+            if(!conDepSettings.Options.WebDeployExist)
             {
-                var serverValidator = new RemoteServerValidator(envConfig.Servers);
+                var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers);
                 if (!serverValidator.IsValid())
                 {
                     Logger.Error("Not all servers fulfill ConDep's requirements. Aborting execution.");
@@ -40,7 +40,7 @@ namespace ConDep.Dsl.SemanticModel
             }
 
             var webDeploy = new WebDeployHandler();
-            var lbLookup = new LoadBalancerLookup(envConfig.LoadBalancer);
+            var lbLookup = new LoadBalancerLookup(conDepSettings.Config.LoadBalancer);
 
             var sequenceManager = new ExecutionSequenceManager(lbLookup.GetLoadBalancer());
 
@@ -51,26 +51,26 @@ namespace ConDep.Dsl.SemanticModel
             {
                 var infrastructureSequence = new InfrastructureSequence();
                 var preOpsSequence = new PreOpsSequence(webDeploy);
-                if (!options.DeployOnly)
+                if (!conDepSettings.Options.DeployOnly)
                 {
                     var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);
                     Configure.InfrastructureOperations = infrastructureBuilder;
 
                     if (HasInfrastructureDefined(application))
                     {
-                        var infrastructureInstance = GetInfrastructureArtifactForApplication(assembly, application);
+                        var infrastructureInstance = GetInfrastructureArtifactForApplication(conDepSettings, application);
                         if (!infrastructureSequence.IsValid(notification))
                         {
                             notification.Throw();
                         }
-                        infrastructureInstance.Configure(infrastructureBuilder, envConfig);
+                        infrastructureInstance.Configure(infrastructureBuilder, conDepSettings);
                     }
                 }
 
-                var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(application.GetType().Name), infrastructureSequence, preOpsSequence, envConfig.Servers, webDeploy);
+                var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(application.GetType().Name), infrastructureSequence, preOpsSequence, conDepSettings.Config.Servers, webDeploy);
                 Configure.LocalOperations = local;
 
-                application.Configure(local, envConfig);
+                application.Configure(local, conDepSettings);
             }
 
             if (!sequenceManager.IsValid(notification))
@@ -78,18 +78,19 @@ namespace ConDep.Dsl.SemanticModel
                 notification.Throw();
             }
 
-            sequenceManager.Execute(status, envConfig, options);
-            postOpSeq.Execute(status, options);
+            sequenceManager.Execute(status, conDepSettings);
+            postOpSeq.Execute(status, conDepSettings);
         }
 
-        private IEnumerable<ApplicationArtifact> CreateApplicationArtifacts(ConDepOptions options, Assembly assembly)
+        private IEnumerable<ApplicationArtifact> CreateApplicationArtifacts(ConDepSettings settings)
         {
-            if (options.HasApplicationDefined())
+            var assembly = settings.Options.Assembly;
+            if (settings.Options.HasApplicationDefined())
             {
-                var type = assembly.GetTypes().SingleOrDefault(t => typeof (ApplicationArtifact).IsAssignableFrom(t) && t.Name == options.Application);
+                var type = assembly.GetTypes().SingleOrDefault(t => typeof (ApplicationArtifact).IsAssignableFrom(t) && t.Name == settings.Options.Application);
                 if (type == null)
                 {
-                    throw new ConDepConfigurationTypeNotFoundException(string.Format("A class inheriting from [{0}] must be present in assembly [{1}] for ConDep to work. No calss with name [{2}] found in assembly. ",typeof (ApplicationArtifact).FullName, assembly.FullName, options.Application));
+                    throw new ConDepConfigurationTypeNotFoundException(string.Format("A class inheriting from [{0}] must be present in assembly [{1}] for ConDep to work. No calss with name [{2}] found in assembly. ",typeof (ApplicationArtifact).FullName, assembly.FullName, settings.Options.Application));
                 }
                 yield return CreateApplicationArtifact(assembly, type);
             }
@@ -116,14 +117,13 @@ namespace ConDep.Dsl.SemanticModel
             return application.GetType().GetInterface(typeName) != null;
         }
 
-        private InfrastructureArtifact GetInfrastructureArtifactForApplication(Assembly assembly,
-                                                                                      ApplicationArtifact application)
+        private InfrastructureArtifact GetInfrastructureArtifactForApplication(ConDepSettings settings, ApplicationArtifact application)
         {
             var typeName = typeof (IDependOnInfrastructure<>).Name;
             var typeInterface = application.GetType().GetInterface(typeName);
             var infrastructureType = typeInterface.GetGenericArguments().Single();
 
-            var infrastructureInstance = assembly.CreateInstance(infrastructureType.FullName) as InfrastructureArtifact;
+            var infrastructureInstance = settings.Options.Assembly.CreateInstance(infrastructureType.FullName) as InfrastructureArtifact;
             return infrastructureInstance;
         }
     }

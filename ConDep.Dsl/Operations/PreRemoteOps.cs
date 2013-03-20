@@ -18,14 +18,14 @@ namespace ConDep.Dsl.Operations
     {
         private readonly ServerConfig _server;
         private readonly PreOpsSequence _sequence;
-        private readonly ConDepOptions _options;
+        private readonly ConDepSettings _settings;
         private IHandleWebDeploy _webDeploy;
 
-        public PreRemoteOps(ServerConfig server, PreOpsSequence sequence, ConDepOptions options, IHandleWebDeploy webDeploy)
+        public PreRemoteOps(ServerConfig server, PreOpsSequence sequence, ConDepSettings settings, IHandleWebDeploy webDeploy)
         {
             _server = server;
             _sequence = sequence;
-            _options = options;
+            _settings = settings;
             _webDeploy = webDeploy;
         }
 
@@ -33,10 +33,10 @@ namespace ConDep.Dsl.Operations
         {
             ConfigureCopyResource(Assembly.GetExecutingAssembly(), PowerShellResources.PowerShellScriptResources);
 
-            if(_options.Assembly != null)
+            if(_settings.Options.Assembly != null)
             {
-                var assemblyResources = _options.Assembly.GetManifestResourceNames();
-                ConfigureCopyResource(_options.Assembly, assemblyResources);
+                var assemblyResources = _settings.Options.Assembly.GetManifestResourceNames();
+                ConfigureCopyResource(_settings.Options.Assembly, assemblyResources);
             }
         }
 
@@ -81,7 +81,7 @@ namespace ConDep.Dsl.Operations
 
         private void TempInstallWebDeploy(IReportStatus status)
         {
-            if(!_options.WebDeployExist)
+            if(!_settings.Options.WebDeployExist)
             {
                 Logger.LogSectionStart("Deploying Web Deploy");
                 try
