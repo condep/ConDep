@@ -49,6 +49,8 @@ namespace ConDep.Dsl.Operations.Application.Local.TransformConfig
 				throw new CondepWebConfigTransformException(string.Format("Failed to transform [{0}] file.", _configName));
 		}
 
+        public override string Name { get { return "Transform Config"; } }
+
 	    private bool ConDepConfigBackupExist(string dir, string name)
 	    {
 	        return File.Exists(Path.Combine(dir, name + CONDEP_CONFIG_EXTENSION));

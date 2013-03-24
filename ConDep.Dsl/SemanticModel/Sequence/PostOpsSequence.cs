@@ -39,8 +39,6 @@ namespace ConDep.Dsl.SemanticModel.Sequence
         {
             try
             {
-                Logger.LogSectionStart("Post-Operations");
-
                 var postRemoteOp = new PostRemoteOps();
                 postRemoteOp.Configure(this);
 
@@ -49,20 +47,6 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                     foreach (var element in _sequence)
                     {
                         element.Execute(server, status, settings);
-                        //if (element is IOperateRemote)
-                        //{
-                        //    ((IOperateRemote) element).Execute(server, status, options);
-                        //    if (status.HasErrors)
-                        //        return ;
-                        //}
-                        //else if (element is CompositeSequence)
-                        //{
-                        //    ((CompositeSequence) element).Execute(server, status, options);
-                        //}
-                        //else
-                        //{
-                        //    throw new NotSupportedException();
-                        //}
 
                         if (status.HasErrors)
                             return;
@@ -80,9 +64,9 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                     Logger.Warn("Unable to remove Web Deploy from server(s).", ex);
 
                 }
-                Logger.LogSectionEnd("Post-Operations");
             }
         }
 
+        public string Name { get { return "Post-Operations"; } }
     }
 }

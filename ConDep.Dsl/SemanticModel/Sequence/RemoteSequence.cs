@@ -42,28 +42,21 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         public void Execute(IReportStatus status, ConDepSettings settings)
         {
-            try
+            switch (_loadBalancer.Mode)
             {
-                Logger.LogSectionStart("Remote Operations");
-
-                switch (_loadBalancer.Mode)
-                {
-                    case LbMode.Sticky:
-                        ExecuteWithSticky(settings, status);
-                        return;
-                    case LbMode.RoundRobin:
-                        ExecuteWithRoundRobin(settings, status);
-                        return;
-                    default:
-                        throw new ConDepLoadBalancerException(string.Format("Load Balancer mode [{0}] not supported.",
-                                                                      _loadBalancer.Mode));
-                }
-            }
-            finally
-            {
-                Logger.LogSectionEnd("Remote Operations");
+                case LbMode.Sticky:
+                    ExecuteWithSticky(settings, status);
+                    return;
+                case LbMode.RoundRobin:
+                    ExecuteWithRoundRobin(settings, status);
+                    return;
+                default:
+                    throw new ConDepLoadBalancerException(string.Format("Load Balancer mode [{0}] not supported.",
+                                                                    _loadBalancer.Mode));
             }
         }
+
+        public string Name { get { return "Remote Operations"; } }
 
         private void ExecuteWithRoundRobin(ConDepSettings settings, IReportStatus status)
         {

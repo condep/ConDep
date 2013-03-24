@@ -46,6 +46,11 @@ namespace ConDep.Dsl.Operations.Application.Local.PreCompile
 			}
 		}
 
+        public override string Name
+        {
+            get { return "Pre Compile"; }
+        }
+
         public override bool IsValid(Notification notification)
         {
             return !string.IsNullOrWhiteSpace(_webApplicationName);

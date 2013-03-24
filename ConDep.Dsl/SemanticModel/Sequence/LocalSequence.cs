@@ -40,36 +40,24 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         public void Execute(IReportStatus status, ConDepSettings settings)
         {
-            try
+            foreach (var element in _sequence)
             {
-                Logger.LogSectionStart(_name);
-                foreach (var element in _sequence)
+                try
                 {
+                    Logger.LogSectionStart(element.Name);
                     element.Execute(status, settings);
-                    //if (element is LocalOperation)
-                    //{
-                    //    Logger.LogSectionStart(element.GetType().Name);
-                    //    ((LocalOperation)element).Execute(status, config, options);
-                    //    Logger.LogSectionEnd(element.GetType().Name);
-                    //}
-                    //else if (element is RemoteSequence)
-                    //{
-                    //    ((RemoteSequence)element).Execute(status, options);
-                    //}
-                    //else
-                    //{
-                    //    throw new NotSupportedException();
-                    //}
-
-                    if (status.HasErrors)
-                        return;
                 }
-            }
-            finally
-            {
-                Logger.LogSectionEnd(_name);
+                finally
+                {
+                    Logger.LogSectionEnd(element.Name);
+                }
+
+                if (status.HasErrors)
+                    return;
             }
         }
+
+        public string Name { get { return _name; } }
 
         public bool IsValid(Notification notification)
         {

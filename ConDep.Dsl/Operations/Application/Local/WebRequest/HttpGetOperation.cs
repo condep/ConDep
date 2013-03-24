@@ -40,5 +40,10 @@ namespace ConDep.Dsl.Operations.Application.Local.WebRequest
                 throw new WebException(string.Format("GET request did not return with 200 (OK), but {0} ({1})", (int)statusCode, statusCode));
             }
         }
+
+        public override string Name
+        {
+            get { return "Http Get"; }
+        }
     }
 }
