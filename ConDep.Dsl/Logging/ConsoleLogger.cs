@@ -9,6 +9,7 @@ namespace ConDep.Dsl.Logging
     {
         private int _indentLevel;
         private readonly bool _isConsole;
+        private const string LEVEL_INDICATOR = " ";
 
         public ConsoleLogger(ILog log) : base(log)
         {
@@ -86,11 +87,10 @@ namespace ConDep.Dsl.Logging
 
         private string GetSectionPrefix()
         {
-            const string levelIndicator = "   ";
             var prefix = "";
             for (var i = 0; i < _indentLevel; i++)
             {
-                prefix += levelIndicator;
+                prefix += LEVEL_INDICATOR;
             }
             return prefix;
         }
