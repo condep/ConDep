@@ -10,8 +10,9 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS
 
         public override void Configure(IOfferRemoteComposition server, IOfferInfrastructure require)
         {
-            var removeFeatures = _roleServicesToRemove.Count > 0 ? "$featureRemoved = Remove-WindowsFeature " + string.Join(",", _roleServicesToRemove) : "";
-            server.ExecuteRemote.PowerShell("Import-Module Servermanager; $feature = Add-WindowsFeature Web-Server,Web-WebServer" + (_roleServicesToAdd.Count > 0 ? "," : "") + string.Join(",", _roleServicesToAdd) + "; $feature; $feature.FeatureResult; " + removeFeatures, opt => opt.WaitIntervalInSeconds(640).RetryAttempts(3));
+            var removeFeatures = _roleServicesToRemove.Count > 0 ? string.Join(",", _roleServicesToRemove) : "$null";
+            var addFeatures = "Web-Server,Web-WebServer" + (_roleServicesToAdd.Count > 0 ? "," : "") + string.Join(",", _roleServicesToAdd);
+            server.ExecuteRemote.PowerShell(string.Format("Set-ConDepWindowsFeatures {0} {1}", addFeatures, removeFeatures), opt => opt.WaitIntervalInSeconds(640).RetryAttempts(3));
         }
 
         public override string Name
