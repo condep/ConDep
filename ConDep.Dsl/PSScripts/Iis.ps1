@@ -1,4 +1,4 @@
-﻿$webAdmModule = get-module -name "WebAdministration"
+﻿$webAdmModule = get-module -name "WebAdministration" -ListAvailable
 if($webAdmModule) { $webAdmModule | import-module }
 
 function New-ConDepIisWebSite {
