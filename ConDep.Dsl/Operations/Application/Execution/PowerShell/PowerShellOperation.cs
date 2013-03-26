@@ -1,23 +1,20 @@
-using System;
 using System.IO;
-using System.Text;
-using ConDep.Dsl.Builders;
 using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
 {
-    public class PowerShellProvider : RemoteCompositeOperation
+    public class PowerShellOperation : RemoteCompositeOperation
     {
         private readonly FileInfo _scriptFile;
         private readonly string _command;
         private int _waitInterval = 30;
 
-        public PowerShellProvider(string command)
+        public PowerShellOperation(string command)
         {
             _command = command;
         }
 
-        public PowerShellProvider(FileInfo scriptFile)
+        public PowerShellOperation(FileInfo scriptFile)
         {
             _scriptFile = scriptFile;
         }

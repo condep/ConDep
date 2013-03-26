@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Security;
 
 namespace ConDep.Dsl.Config
 {
@@ -29,6 +31,16 @@ namespace ConDep.Dsl.Config
 
                 var split = UserName.Split(new[] { '\\' });
                 return split.Length == 1 ? string.Empty : split[0];
+            }
+        }
+
+        public SecureString PasswordAsSecString
+        {
+            get
+            {
+                var secureString = new SecureString();
+                Password.ToCharArray().ToList().ForEach(secureString.AppendChar);
+                return secureString;
             }
         }
     }

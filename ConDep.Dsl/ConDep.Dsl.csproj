@@ -61,6 +61,10 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Windows\assembly\GAC_MSIL\System.Management.Automation\1.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web" />
@@ -91,6 +95,7 @@
     <Compile Include="Config\ConDepAssemblyHandler.cs" />
     <Compile Include="Config\ConDepAssemblyNotFoundException.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOperation.cs" />
+    <Compile Include="Operations\Application\Execution\PowerShell\RemotePowerShellHostOperation.cs" />
     <Compile Include="Operations\LoadBalancer\ConDepLoadBalancerException.cs" />
     <EmbeddedResource Include="PSScripts\Windows.ps1" />
     <Compile Include="SemanticModel\ConDepGlobals.cs" />
@@ -211,7 +216,7 @@
     <Compile Include="Operations\Application\Deployment\WebApp\WebAppDeploymentProvider.cs" />
     <Compile Include="Resources\ConDepResourceFiles.cs" />
     <Compile Include="Operations\Application\Execution\PowerShell\PowerShellOptions.cs" />
-    <Compile Include="Operations\Application\Execution\PowerShell\PowerShellProvider.cs" />
+    <Compile Include="Operations\Application\Execution\PowerShell\PowerShellOperation.cs" />
     <Compile Include="Operations\Application\Execution\RunCmd\RunCmdOptions.cs" />
     <Compile Include="Operations\Application\Execution\RunCmd\RunCmdProvider.cs" />
     <Compile Include="Operations\Application\Execution\RunCmd\ConDepUntrappedExitCodeException.cs" />

@@ -37,21 +37,21 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteExecution PowerShell(string command)
         {
-            var psProvider = new PowerShellProvider(command);
+            var psProvider = new PowerShellOperation(command);
             AddOperation(psProvider);
             return this;
         }
 
         public IOfferRemoteExecution PowerShell(FileInfo scriptFile)
         {
-            var psProvider = new PowerShellProvider(scriptFile);
+            var psProvider = new PowerShellOperation(scriptFile);
             AddOperation(psProvider);
             return this;
         }
 
         public IOfferRemoteExecution PowerShell(string command, Action<IOfferPowerShellOptions> powerShellOptions)
         {
-            var psProvider = new PowerShellProvider(command);
+            var psProvider = new PowerShellOperation(command);
             powerShellOptions(new PowerShellOptions(psProvider));
             AddOperation(psProvider);
             return this;
@@ -59,7 +59,7 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteExecution PowerShell(FileInfo scriptFile, Action<IOfferPowerShellOptions> powerShellOptions)
         {
-            var psProvider = new PowerShellProvider(scriptFile);
+            var psProvider = new PowerShellOperation(scriptFile);
             powerShellOptions(new PowerShellOptions(psProvider));
             AddOperation(psProvider);
             return this;

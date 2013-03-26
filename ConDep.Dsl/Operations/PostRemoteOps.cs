@@ -10,7 +10,7 @@ namespace ConDep.Dsl.Operations
     {
         public void Configure(PostOpsSequence sequence)
         {
-            var op = new PowerShellProvider(string.Format("Remove-Item -force -recurse {0}{1}", @"$env:temp\ConDep\", ConDepGlobals.ExecId));
+            var op = new PowerShellOperation(string.Format("Remove-Item -force -recurse {0}{1}", @"$env:temp\ConDep\", ConDepGlobals.ExecId));
             var compSeq = sequence.NewCompositeSequence(op);
             op.Configure(new RemoteCompositeBuilder(compSeq, new WebDeployHandler()));
         }

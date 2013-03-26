@@ -103,6 +103,7 @@
     </Compile>
     <Compile Include="CompositeProviders\PowerShell.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PSRemotingTests.cs" />
     <Compile Include="SequenceTests.cs" />
     <Compile Include="TeamCityLoggerTests.cs" />
     <Compile Include="UnitTestLogger.cs" />
