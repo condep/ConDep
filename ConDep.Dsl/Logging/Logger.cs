@@ -95,6 +95,9 @@ namespace ConDep.Dsl.Logging
             set { _log.TraceLevel = value; }
         }
 
+        public static ConsoleColor BackgroundColor { get; set; }
+        public static ConsoleColor ForegroundColor { get; set; }
+
         public static void LogSectionStart(string name)
         {
             _log.LogSectionStart(name);

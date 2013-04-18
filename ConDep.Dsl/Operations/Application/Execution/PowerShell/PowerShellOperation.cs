@@ -40,7 +40,7 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
                 libImport = "Add-Type -Path \"" + @"%temp%\ConDep.Remote.dll" + "\";";
             }
             //elseif($Error.Count -gt 0) {{ Write-Error $Error[0]; exit 1; }} 
-            server.ExecuteRemote.DosCommand(string.Format(@"powershell.exe -noprofile -InputFormat none -Command ""& {{ set-executionpolicy remotesigned -force; $ErrorActionPreference='stop'; Import-Module $env:temp\ConDep\{0}\PSScripts\ConDep; {1}{2}; if(!$?) {{ exit 1; }} else {{ exit $LASTEXITCODE; }} }}""", ConDepGlobals.ExecId, libImport, _command), o => o.ContinueOnError(ContinueOnError).WaitIntervalInSeconds(WaitIntervalInSeconds).RetryAttempts(RetryAttempts));
+            server.ExecuteRemote.DosCommand(string.Format(@"powershell.exe -noprofile -InputFormat none -Command ""& {{ set-executionpolicy remotesigned -force; $ErrorActionPreference='stop'; Import-Module $env:windir\temp\ConDep\{0}\PSScripts\ConDep; {1}{2}; if(!$?) {{ exit 1; }} else {{ exit $LASTEXITCODE; }} }}""", ConDepGlobals.ExecId, libImport, _command), o => o.ContinueOnError(ContinueOnError).WaitIntervalInSeconds(WaitIntervalInSeconds).RetryAttempts(RetryAttempts));
         }
 
         //private string AddExitCodeHandlingToScript(string script)

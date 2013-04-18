@@ -22,22 +22,27 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteExecution DosCommand(string cmd)
         {
-            var runCmdProvider = new RunCmdProvider(cmd);
-            AddOperation(runCmdProvider);
+            //var runCmdProvider = new RunCmdProvider(cmd);
+            //AddOperation(runCmdProvider);
+            var runCmdOperation = new RunCmdPsOperation(cmd);
+            AddOperation(runCmdOperation);
             return this;
         }
 
         public IOfferRemoteExecution DosCommand(string cmd, Action<IOfferRunCmdOptions> runCmdOptions)
         {
-            var runCmdProvider = new RunCmdProvider(cmd);
-            runCmdOptions(new RunCmdOptions(runCmdProvider));
-            AddOperation(runCmdProvider);
+            //var runCmdProvider = new RunCmdProvider(cmd);
+            //runCmdOptions(new RunCmdOptions(runCmdProvider));
+            //AddOperation(runCmdProvider);
+            var runCmdOperation = new RunCmdPsOperation(cmd);
+            AddOperation(runCmdOperation);
             return this;
         }
 
         public IOfferRemoteExecution PowerShell(string command)
         {
-            var psProvider = new PowerShellOperation(command);
+            //var psProvider = new PowerShellOperation(command);
+            var psProvider = new RemotePowerShellHostOperation(command);
             AddOperation(psProvider);
             return this;
         }
@@ -51,8 +56,9 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteExecution PowerShell(string command, Action<IOfferPowerShellOptions> powerShellOptions)
         {
-            var psProvider = new PowerShellOperation(command);
-            powerShellOptions(new PowerShellOptions(psProvider));
+            //var psProvider = new PowerShellOperation(command);
+            var psProvider = new RemotePowerShellHostOperation(command);
+            //powerShellOptions(new PowerShellOptions(psProvider));
             AddOperation(psProvider);
             return this;
         }
@@ -65,6 +71,10 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
+        public void AddOperation(IOperateRemote operation)
+        {
+            _remoteSequence.Add(operation);
+        }
         public void AddOperation(RemoteCompositeOperation operation)
         {
             operation.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence(operation), _webDeploy));
