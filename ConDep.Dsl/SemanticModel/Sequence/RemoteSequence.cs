@@ -153,7 +153,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             var serversToBringOffline = servers.Skip(numberOfServers);
             foreach (var server in serversToBringOffline)
             {
-                loadBalancer.BringOffline(server.Name, server.LoadBalancerFarm, LoadBalancerSuspendMethod.Suspend, status);
+                loadBalancer.BringOffline(server.Name, server.LoadBalancerFarm, LoadBalancerSuspendMethod.Graceful, status);
             }
         }
 
@@ -168,7 +168,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 {
                     Logger.Info(string.Format("Taking server [{0}] offline in load balancer.", server.Name));
                     loadBalancer.BringOffline(server.Name, server.LoadBalancerFarm,
-                                                LoadBalancerSuspendMethod.Suspend, status);
+                                                LoadBalancerSuspendMethod.Graceful, status);
                 }
 
                 ExecuteOnServer(server, status, options);
