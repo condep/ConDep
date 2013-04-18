@@ -90,8 +90,19 @@ namespace ConDep.Console
             var assembly = Assembly.GetExecutingAssembly();
             var versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
 
-            Logger.Info(string.Format("ConDep Version {0}", versionInfo.ProductVersion.Substring(0, versionInfo.ProductVersion.LastIndexOf("."))));
+            const int versionAreaLength = 29;
+            var version = versionInfo.ProductVersion.Substring(0, versionInfo.ProductVersion.LastIndexOf("."));
+            var versionText = string.Format("Version {0}", version);
+            var versionWhitespace = string.Join(" ", new string[versionAreaLength - (versionText.Length - 1)]);
+
+            //Logger.Info(string.Format("ConDep Version {0}", version));
             Logger.Info("Copyright (c) Jon Arild Torresdal");
+            Logger.Info(@"   ____            ____             
+  / ___|___  _ __ |  _ \  ___ _ __  
+ | |   / _ \| '_ \| | | |/ _ \ '_ \ 
+ | |__| (_) | | | | |_| |  __/ |_) |
+  \____\___/|_| |_|____/ \___| .__/ 
+" + versionWhitespace + versionText + "|_| ");
         }
     }
 }
