@@ -33,8 +33,10 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteDeployment File(string sourceFile, string destFile)
         {
-            var copyFileProvider = new CopyFileProvider(sourceFile, destFile);
-            AddOperation(copyFileProvider);
+            //var copyFileProvider = new CopyFileProvider(sourceFile, destFile);
+            //AddOperation(copyFileProvider);
+            var copyFileOperation = new CopyFileOperation(sourceFile, destFile);
+            AddOperation(copyFileOperation);
             return this;
         }
 

@@ -84,6 +84,7 @@
     <Compile Include="IOfferWindowsServiceFailureActions.cs" />
     <Compile Include="IOfferWindowsServiceOptions.cs" />
     <Compile Include="Operations\Application\Deployment\CopyDir\CopyDirOperation.cs" />
+    <Compile Include="Operations\Application\Deployment\CopyFile\CopyFileOperation.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOperationBase.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceWithInstallerOperation.cs" />
     <Compile Include="Config\LbMode.cs" />
