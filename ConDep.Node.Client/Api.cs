@@ -68,7 +68,7 @@ namespace ConDep.Node.Client
                 return new SyncResult();
             }
 
-            var fileStream = new FileStream(clientFile.FullName, FileMode.Open);
+            var fileStream = new FileStream(clientFile.FullName, FileMode.Open, FileAccess.Read, FileShare.Read);
             var content = new StreamContent(fileStream);
 
             var link = nodeFile.Links.GetByRel("http://www.con-dep.net/rels/sync/file");
