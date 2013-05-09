@@ -1,22 +1,35 @@
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using ConDep.Node.Model;
 
-namespace ConDep.Client
+namespace ConDep.Node
 {
     public class SyncDirHandler
     {
-        public SyncDirDirectory GetSubDirInfo(string dirUrl, string fileUrl, DirectoryInfo dirInfo)
+        private string MakePathRelative(string rootPath, string path)
         {
-            var dir = new SyncDirDirectory() { Path = dirInfo.FullName, Attributes = dirInfo.Attributes.ToString(), Link = new JsonLink() { Rel = "self", Href = string.Format("{0}?path={1}", dirUrl, dirInfo.FullName) } };
+            if (!rootPath.EndsWith("\\"))
+                rootPath += "\\";
+
+            return path.Replace(rootPath, "");
+        }
+
+        public SyncDirDirectory GetSubDirInfo(string rootPath, string dirUrl, string fileUrl, DirectoryInfo dirInfo)
+        {
+            var dir = new SyncDirDirectory() { FullPath = dirInfo.FullName, RelativePath = MakePathRelative(rootPath, dirInfo.FullName), Attributes = dirInfo.Attributes.ToString() };
+            var link = string.Format(dirUrl, dirInfo.FullName);
+
             if (!dirInfo.Exists)
             {
+                dir.Links.Add(new Link() { Rel = "http://www.con-dep.net/rels/sync/directory", Method = "POST", Href = string.Format("{0}", link) });
                 return dir;
             }
 
+            dir.Links.Add(new Link() { Rel = "self", Href = string.Format("{0}", link), Method = "GET" });
+            dir.Links.Add(new Link() { Rel = "http://www.con-dep.net/rels/sync/directory", Method = "PUT", Href = string.Format("{0}", link) });
+
             foreach (var childDir in dirInfo.EnumerateDirectories())
             {
-                dir.Directories.Add(GetSubDirInfo(dirUrl, fileUrl, childDir));
+                dir.Directories.Add(GetSubDirInfo(rootPath, dirUrl, fileUrl, childDir));
             }
 
             foreach (var childFile in dirInfo.EnumerateFiles())
@@ -24,95 +37,45 @@ namespace ConDep.Client
                 //var secDescriptor = childFile.GetAccessControl().GetSecurityDescriptorSddlForm(AccessControlSections.);
                 var file = new SyncDirFile()
                                {
-                                   Path = childFile.FullName,
+                                   FullPath = childFile.FullName,
+                                   RelativePath = MakePathRelative(rootPath, childFile.FullName),
                                    Attributes = childFile.Attributes.ToString(),
                                    LastWriteTimeUtc = childFile.LastWriteTimeUtc,
                                    Size = childFile.Length,
-                                   Link = new JsonLink { Href = string.Format("{0}?path={1}", fileUrl, childFile.FullName), Rel = "self" }
                                };
+                var fileLink = string.Format(fileUrl, childFile.FullName);
+                file.Links.Add(new Link { Href = string.Format("{0}", fileLink), Rel = "self", Method = "GET" });
+                file.Links.Add(new Link { Href = string.Format("{0}", fileLink), Rel = "http://www.con-dep.net/rels/sync/file", Method = "PUT" });
+                file.Links.Add(new Link { Href = string.Format("{0}", link), Rel = "http://www.con-dep.net/rels/sync/directory", Method = "PUT" });
                 dir.Files.Add(file);
             }
             return dir;
         }
 
-        public SyncDirContainer GetDiffs(SyncDirDirectory clientDir, SyncDirDirectory serverDir)
+        public SyncDirFile GetFileInfo(string rootPath, string fileUrl, string dirUrl, FileInfo fileInfo)
         {
-            var clientRoot = clientDir.Path;
-            var serverRoot = serverDir.Path;
+            var link = string.Format(fileUrl, fileInfo.FullName);
+            var file = new SyncDirFile()
+                           {
+                               FullPath = fileInfo.FullName, 
+                               RelativePath = fileInfo.Name, 
+                               Attributes = fileInfo.Attributes.ToString()
+                           };
 
-            var clientFiles = new List<string>();
-            EnumerateFilePaths(clientRoot, clientFiles, clientDir);
-
-            var serverFiles = new List<string>();
-            EnumerateFilePaths(serverRoot, serverFiles, serverDir);
-
-            var missingOnServer = GetMissingFilesOnServer(clientFiles, serverFiles).ToList();
-            var missingOnClient = GetMissingFilesOnClient(clientFiles, serverFiles).ToList();
-
-            var commonOnBoth = serverFiles.Except(missingOnServer);
-
-            var fileDiffs = GetDiffsOnFiles(commonOnBoth, clientDir, serverDir);
-
-            var container = new SyncDirContainer();
-            container.FilesToCopy.AddRange(missingOnServer);
-            container.FilesToDelete.AddRange(missingOnClient);
-            container.FilesToUpdate.AddRange(fileDiffs);
-            return container;
-        }
-
-        private IEnumerable<string> GetDiffsOnFiles(IEnumerable<string> commonOnBoth, SyncDirDirectory clientDir, SyncDirDirectory serverDir)
-        {
-            var clientRoot = clientDir.Path;
-            var onBoth = commonOnBoth as string[] ?? commonOnBoth.ToArray();
-
-            var listOfDiffs = new List<SyncDirFile>();
-
-            return RecurseDiffFiles(clientDir, serverDir, clientRoot, onBoth).ToList();
-        }
-
-        private static IEnumerable<string> RecurseDiffFiles(SyncDirDirectory clientDir, SyncDirDirectory serverDir, string clientRoot,
-                                             string[] onBoth)
-        {
-            foreach (var file in clientDir.Files)
+            if (!fileInfo.Exists)
             {
-                var relativePath = file.Path.Replace(clientRoot, "");
-                if (onBoth.Contains(relativePath))
-                {
-                    var serverFile = serverDir.GetByRelativePath(relativePath);
-                    if (file.LastWriteTimeUtc != serverFile.LastWriteTimeUtc || file.Size != serverFile.Size ||
-                        file.Attributes != serverFile.Attributes)
-                    {
-                        yield return file.Path;
-                    }
-                }
+                file.Links.Add(new Link() { Rel = "http://www.con-dep.net/rels/sync/file", Method = "POST", Href = string.Format("{0}{1}", link, "&lastWriteTimeUtc={0}&fileAttributes={1}") });
+                return file;
             }
 
-            foreach (var dir in clientDir.Directories)
-            {
-                foreach(var file in RecurseDiffFiles(dir, serverDir, clientRoot, onBoth))
-                {
-                    yield return file;
-                }
-            }
-        }
+            var dirLink = string.Format(dirUrl, fileInfo.Directory.FullName);
+            file.LastWriteTimeUtc = fileInfo.LastWriteTimeUtc;
+            file.Size = fileInfo.Length;
 
-        private IEnumerable<string> GetMissingFilesOnServer(IEnumerable<string> clientFiles, IEnumerable<string> serverFiles)
-        {
-            return clientFiles.Where(filePath => !serverFiles.Contains(filePath)).ToList();
-        }
-
-        private IEnumerable<string> GetMissingFilesOnClient(IEnumerable<string> clientFiles, IEnumerable<string> serverFiles)
-        {
-            return serverFiles.Where(filePath => !clientFiles.Contains(filePath)).ToList();
-        }
-
-        private void EnumerateFilePaths(string root, List<string> files, SyncDirDirectory dir)
-        {
-            files.AddRange(dir.Files.Select(file => file.Path.Replace(root, "")));
-            foreach (var subdir in dir.Directories)
-            {
-                EnumerateFilePaths(root, files, subdir);
-            }
+            file.Links.Add(new Link() { Rel = "self", Href = string.Format("{0}", link), Method = "GET" });
+            file.Links.Add(new Link() { Rel = "http://www.con-dep.net/rels/sync/file", Method = "PUT", Href = string.Format("{0}{1}", link, "&lastWriteTimeUtc={0}&fileAttributes={1}") });
+            file.Links.Add(new Link() { Rel = "http://www.con-dep.net/rels/sync/directory", Method = "PUT", Href = string.Format("{0}", dirLink) });
+            return file;
         }
     }
 }

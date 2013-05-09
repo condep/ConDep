@@ -37,7 +37,6 @@ function New-ConDepAppPool {
 	catch { }
 
 	$newAppPool = New-WebAppPool $AppPool -Force
-	write-host "$($newAppPool.GetType())"
 
 	if($AppPoolOptions) {
 		if($AppPoolOptions.Enable32Bit) { $newAppPool.enable32BitAppOnWin64 = $AppPoolOptions.Enable32Bit }
@@ -55,7 +54,6 @@ function New-ConDepAppPool {
 		
 		$newAppPool | set-item
 	}
-	$newAppPool
 }
 
 function New-ConDepWebApp {

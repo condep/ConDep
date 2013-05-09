@@ -5,6 +5,7 @@ using ConDep.Dsl.Operations.Application.Deployment.CopyFile;
 using ConDep.Dsl.Operations.Application.Deployment.NServiceBus;
 using ConDep.Dsl.Operations.Application.Deployment.WebApp;
 using ConDep.Dsl.Operations.Application.Deployment.WindowsService;
+using ConDep.Dsl.Operations.Application.Local;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 
@@ -23,8 +24,10 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteDeployment Directory(string sourceDir, string destDir)
         {
-            var copyDirProvider = new CopyDirProvider(sourceDir, destDir);
-            AddOperation(copyDirProvider);
+            //var copyDirProvider = new CopyDirProvider(sourceDir, destDir);
+            //AddOperation(copyDirProvider);
+            var copyDirOperation = new CopyDirOperation(sourceDir, destDir);
+            AddOperation(copyDirOperation);
             return this;
         }
 
@@ -91,6 +94,11 @@ namespace ConDep.Dsl.Builders
         }
 
         public IOfferRemoteCertDeployment SslCertificate { get { return new RemoteCertDeploymentBuilder(_remoteSequence, _webDeploy, this); } }
+
+        public void AddOperation(IOperateRemote operation)
+        {
+            _remoteSequence.Add(operation);    
+        }
 
         public void AddOperation(RemoteCompositeOperation operation)
         {

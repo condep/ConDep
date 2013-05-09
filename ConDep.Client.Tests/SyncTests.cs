@@ -1,5 +1,9 @@
 ﻿using System.IO;
+using System.Linq;
+using ConDep.Node;
+using ConDep.Node.Client.Model;
 using NUnit.Framework;
+using Newtonsoft.Json;
 
 namespace ConDep.Client.Tests
 {
@@ -8,6 +12,7 @@ namespace ConDep.Client.Tests
     {
         private DirectoryInfo _clientFilesRoot;
         private DirectoryInfo _serverFilesRoot;
+        private readonly SyncDirHandler _dirHandler = new SyncDirHandler();
 
         [SetUp]
         public void Setup()
@@ -28,40 +33,32 @@ namespace ConDep.Client.Tests
         public void TestThatAllFilesWillBeCopiedWhenDestinationDirDoesNotExist()
         {
             Directory.Delete(_serverFilesRoot.FullName, true);
-            var handler = new SyncDirHandler();
 
-            var clientDir = handler.GetSubDirInfo("", "", _clientFilesRoot);
-            var serverDir = handler.GetSubDirInfo("", "", _serverFilesRoot);
+            var diffs = GetDiffs();
 
-            var container = handler.GetDiffs(clientDir, serverDir);
+            Assert.That(diffs.MissingPaths.Count(), Is.GreaterThan(0));
+            Assert.That(diffs.ChangedPaths.Count(), Is.EqualTo(0));
+            Assert.That(diffs.DeletedPaths.Count(), Is.EqualTo(0));
 
-            Assert.That(container.FilesToCopy.Count, Is.GreaterThan(0));
-            Assert.That(container.FilesToDelete.Count, Is.EqualTo(0));
-            Assert.That(container.FilesToUpdate.Count, Is.EqualTo(0));
         }
 
         [Test]
         public void TestThatChangedFilesOnserverWillBeOverwrittenByFilesFromClient()
         {
             var gitIgnoreFile = Path.Combine(_serverFilesRoot.FullName, @"psake\.gitignore");
-            using(var stream = new FileStream(gitIgnoreFile, FileMode.Append, FileAccess.Write))
+            using (var stream = new FileStream(gitIgnoreFile, FileMode.Append, FileAccess.Write))
             {
-                using(var writer = new StreamWriter(stream))
+                using (var writer = new StreamWriter(stream))
                 {
                     writer.Write("Some text...");
                 }
             }
 
-            var handler = new SyncDirHandler();
+            var diffs = GetDiffs();
 
-            var clientDir = handler.GetSubDirInfo("", "", _clientFilesRoot);
-            var serverDir = handler.GetSubDirInfo("", "", _serverFilesRoot);
-
-            var container = handler.GetDiffs(clientDir, serverDir);
-
-            Assert.That(container.FilesToCopy.Count, Is.EqualTo(0));
-            Assert.That(container.FilesToDelete.Count, Is.EqualTo(0));
-            Assert.That(container.FilesToUpdate.Count, Is.EqualTo(1));
+            Assert.That(diffs.MissingPaths.Count(), Is.EqualTo(0));
+            Assert.That(diffs.ChangedPaths.Count(), Is.EqualTo(1));
+            Assert.That(diffs.DeletedPaths.Count(), Is.EqualTo(0));
         }
 
         [Test]
@@ -70,18 +67,13 @@ namespace ConDep.Client.Tests
             File.Delete(Path.Combine(_serverFilesRoot.FullName, @"psake\psake.cmd"));
             File.Delete(Path.Combine(_serverFilesRoot.FullName, @"psake\nuget\tools\chocolateyInstall.ps1"));
 
-            var handler = new SyncDirHandler();
+            var diffs = GetDiffs();
 
-            var clientDir = handler.GetSubDirInfo("", "", _clientFilesRoot);
-            var serverDir = handler.GetSubDirInfo("", "", _serverFilesRoot);
-
-            var container = handler.GetDiffs(clientDir, serverDir);
-
-            Assert.That(container.FilesToCopy.Count, Is.EqualTo(2));
-            Assert.That(container.FilesToCopy.Contains(@"\psake\psake.cmd"));
-            Assert.That(container.FilesToCopy.Contains(@"\psake\nuget\tools\chocolateyInstall.ps1"));
-            Assert.That(container.FilesToDelete.Count, Is.EqualTo(0));
-            Assert.That(container.FilesToUpdate.Count, Is.EqualTo(0));
+            Assert.That(diffs.MissingPaths.Count(), Is.EqualTo(2));
+            Assert.That(diffs.ChangedPaths.Count(), Is.EqualTo(0));
+            Assert.That(diffs.DeletedPaths.Count(), Is.EqualTo(0));
+            Assert.That(diffs.MissingPaths.Any(x => x.RelativePath == @"psake\psake.cmd"));
+            Assert.That(diffs.MissingPaths.Any(x => x.RelativePath == @"psake\nuget\tools\chocolateyInstall.ps1"));
         }
 
         [Test]
@@ -91,19 +83,24 @@ namespace ConDep.Client.Tests
             File.CreateText(Path.Combine(_serverFilesRoot.FullName, @"psake\test2.txt")).Close();
             File.CreateText(Path.Combine(_serverFilesRoot.FullName, @"psake\nuget\test3.txt")).Close();
 
-            var handler = new SyncDirHandler();
+            var diffs = GetDiffs();
 
-            var clientDir = handler.GetSubDirInfo("", "", _clientFilesRoot);
-            var serverDir = handler.GetSubDirInfo("", "", _serverFilesRoot);
+            Assert.That(diffs.MissingPaths.Count(), Is.EqualTo(0));
+            Assert.That(diffs.ChangedPaths.Count(), Is.EqualTo(0));
+            Assert.That(diffs.DeletedPaths.Count(), Is.EqualTo(3));
+            Assert.That(diffs.DeletedPaths.Any(x => x.RelativePath == @"test1.txt"));
+            Assert.That(diffs.DeletedPaths.Any(x => x.RelativePath == @"psake\test2.txt"));
+            Assert.That(diffs.DeletedPaths.Any(x => x.RelativePath == @"psake\nuget\test3.txt"));
+        }
 
-            var container = handler.GetDiffs(clientDir, serverDir);
+        private SyncDirDiff GetDiffs()
+        {
+            var dstDirInfo = _dirHandler.GetSubDirInfo(_serverFilesRoot.FullName, "", "", _serverFilesRoot);
+            var json = JsonConvert.SerializeObject(dstDirInfo);
+            var syncDirInfo = JsonConvert.DeserializeObject<SyncDirDirectory>(json);
 
-            Assert.That(container.FilesToCopy.Count, Is.EqualTo(0));
-            Assert.That(container.FilesToDelete.Count, Is.EqualTo(3));
-            Assert.That(container.FilesToDelete.Contains(@"\test1.txt"));
-            Assert.That(container.FilesToDelete.Contains(@"\psake\test2.txt"));
-            Assert.That(container.FilesToDelete.Contains(@"\psake\nuget\test3.txt"));
-            Assert.That(container.FilesToUpdate.Count, Is.EqualTo(0));
+            var diffs = syncDirInfo.Diff(_clientFilesRoot);
+            return diffs;
         }
 
         private void DuplicateSyncTestFiles()
@@ -113,7 +110,7 @@ namespace ConDep.Client.Tests
 
             if (Directory.Exists(Path.Combine(root, "server")))
             {
-                Directory.Delete(Path.Combine(root, "server"),true);
+                Directory.Delete(Path.Combine(root, "server"), true);
             }
 
             _clientFilesRoot = new DirectoryInfo(Path.Combine(root, "client"));

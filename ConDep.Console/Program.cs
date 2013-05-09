@@ -92,7 +92,7 @@ namespace ConDep.Console
 
             const int versionAreaLength = 29;
             var version = versionInfo.ProductVersion.Substring(0, versionInfo.ProductVersion.LastIndexOf("."));
-            var versionText = string.Format("Version {0}", version);
+            var versionText = string.Format("Version {0} ", version);
             var versionWhitespace = string.Join(" ", new string[versionAreaLength - (versionText.Length - 1)]);
 
             //Logger.Info(string.Format("ConDep Version {0}", version));

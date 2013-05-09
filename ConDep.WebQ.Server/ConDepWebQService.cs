@@ -5,12 +5,14 @@ namespace ConDep.WebQ.Server
     partial class ConDepWebQService : ServiceBase
     {
         private readonly int _port;
+        private readonly string _prefix;
         private readonly int _timeout;
         private ConDepWebServer _webServer;
 
-        public ConDepWebQService(int timeout, int port)
+        public ConDepWebQService(int timeout, int port, string prefix)
         {
             _port = port;
+            _prefix = prefix;
             _timeout = timeout;
 
             InitializeComponent();
@@ -33,7 +35,7 @@ namespace ConDep.WebQ.Server
                 _webServer.Dispose();
             }
 
-            _webServer = new ConDepWebServer(_port, _timeout, EventLog);
+            _webServer = new ConDepWebServer(_port, EventLog, new HttpProcessHandler(EventLog, _timeout), _prefix);
             _webServer.Start();
         }
 

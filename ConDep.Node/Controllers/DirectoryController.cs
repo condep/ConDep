@@ -1,27 +1,67 @@
-using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
+using ConDep.Node.Model;
 
-namespace ConDep.Client.Controllers
+namespace ConDep.Node.Controllers
 {
     public class DirectoryController : ApiController
     {
-        public HttpResponseMessage Get(string dirPath)
+        private readonly SyncDirHandler _dirHandler;
+        private readonly PathValidator _pathValidator;
+
+        public DirectoryController()
         {
-            if(Directory.Exists(dirPath))
+            _dirHandler = new SyncDirHandler();
+            _pathValidator = new PathValidator();
+        }
+
+        public DirectoryController(SyncDirHandler dirHandler, PathValidator pathValidator)
+        {
+            _dirHandler = dirHandler;
+            _pathValidator = pathValidator;
+        }
+
+        public SyncDirDirectory Get(string dirPath)
+        {
+            if(!_pathValidator.ValidPath(dirPath))
             {
-                var syncDirHandler = new SyncDirHandler();
-                var uri = Request.RequestUri;
-
-                var dirUrl = String.Format("{0}{1}{2}{3}", uri.Scheme, Uri.SchemeDelimiter, uri.Authority, uri.AbsolutePath);
-                var fileUrl = dirUrl.Replace("Directory/", "File/");
-
-                var obj = syncDirHandler.GetSubDirInfo(dirUrl, fileUrl, new DirectoryInfo(dirPath));
-                return Request.CreateResponse(HttpStatusCode.OK, obj);
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.InternalServerError, "Invalid path. Path cannot be root of drive, or any of the common system and windows folders."));
             }
-            return Request.CreateResponse(HttpStatusCode.NotFound);
+
+            var dirUrl = ApiUrls.Sync.DirectoryTemplate(Url);
+            var fileUrl = ApiUrls.Sync.FileTemplate(Url);
+
+            var dir = _dirHandler.GetSubDirInfo(dirPath, dirUrl, fileUrl, new DirectoryInfo(dirPath));
+            return dir;
+        }
+
+        public Task<HttpResponseMessage> Put(string path)
+        {
+            return SyncDir(path);
+        }
+
+        public Task<HttpResponseMessage> Post(string path)
+        {
+            return SyncDir(path);
+        }
+
+        private Task<HttpResponseMessage> SyncDir(string path)
+        {
+            if (!_pathValidator.ValidPath(path))
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
+                                                                            "Invalid path. Path cannot be root of drive, or any of the common system and windows folders."));
+            }
+            if (!Request.Content.IsMimeMultipartContent("dir-sync-data"))
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.UnsupportedMediaType));
+
+            var streamProvider = new MultipartSyncDirStreamProvider(path);
+
+            return Request.Content.ReadAsMultipartAsync(streamProvider)
+                .ContinueWith(t => { return Request.CreateResponse(HttpStatusCode.Created, t.Result.SyncResult); });
         }
     }
 }

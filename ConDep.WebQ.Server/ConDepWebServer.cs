@@ -6,21 +6,22 @@ using System.Timers;
 
 namespace ConDep.WebQ.Server
 {
-    internal sealed class ConDepWebServer : IDisposable
+    public sealed class ConDepWebServer : IDisposable
     {
         private readonly int _port;
         private readonly EventLog _eventLog;
         private HttpListener _listener;
 
         private bool _disposed;
-        private const string PREFIX = "http://+:{0}/ConDepWebQ/";
-        private readonly HttpProcessHandler _processHandler;
+        private readonly IProcessHttpCalls _processHandler;
+        private readonly string _prefix;
 
-        public ConDepWebServer(int port, int timeout, EventLog eventLog)
+        public ConDepWebServer(int port, EventLog eventLog, IProcessHttpCalls processHandler, string prefix)
         {
             _port = port;
             _eventLog = eventLog;
-            _processHandler = new HttpProcessHandler(eventLog, timeout);
+            _processHandler = processHandler;
+            _prefix = prefix;
         }
 
         public void Start()
@@ -32,7 +33,7 @@ namespace ConDep.WebQ.Server
             }
 
             _listener = new HttpListener();
-            _listener.Prefixes.Add(string.Format(PREFIX, _port));
+            _listener.Prefixes.Add(string.Format(_prefix, _port));
             _listener.Start();
 
             var timer = new Timer(60000);

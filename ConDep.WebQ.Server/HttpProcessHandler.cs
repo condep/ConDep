@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Net;
-using System.Runtime.Serialization.Json;
 using System.Timers;
 
 namespace ConDep.WebQ.Server
@@ -15,7 +14,7 @@ namespace ConDep.WebQ.Server
         InternalServerError = 500
     }
 
-    public class HttpProcessHandler
+    public class HttpProcessHandler : IProcessHttpCalls
     {
         private readonly EventLog _eventLog;
         private readonly int _queueItemTimeout;

@@ -83,6 +83,7 @@
     <Compile Include="IOfferWindowsServiceFailureOptions.cs" />
     <Compile Include="IOfferWindowsServiceFailureActions.cs" />
     <Compile Include="IOfferWindowsServiceOptions.cs" />
+    <Compile Include="Operations\Application\Deployment\CopyDir\CopyDirOperation.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOperationBase.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceWithInstallerOperation.cs" />
     <Compile Include="Config\LbMode.cs" />
@@ -263,7 +264,12 @@
     <EmbeddedResource Include="PSScripts\Iis.ps1" />
     <EmbeddedResource Include="PSScripts\WinService.ps1" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ConDep.Node.Client\ConDep.Node.Client.csproj">
+      <Project>{2865f71c-8f37-407a-9b79-4e3914f42016}</Project>
+      <Name>ConDep.Node.Client</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

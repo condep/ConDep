@@ -7,8 +7,8 @@
     <ProjectGuid>{463BF035-13CF-4B8E-9A0D-AACE0FA7BC68}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConDep.Client</RootNamespace>
-    <AssemblyName>ConDep.Client</AssemblyName>
+    <RootNamespace>ConDep.Node</RootNamespace>
+    <AssemblyName>ConDep.Node</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -60,17 +60,31 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WebApi.Hal">
+      <HintPath>..\packages\WebApi.Hal.1.0.0.0\lib\net40\WebApi.Hal.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiUrls.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\DocsController.cs" />
     <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="InvalidAttributesException.cs" />
+    <Compile Include="MultipartSyncDirStreamProvider.cs" />
+    <Compile Include="Controllers\SyncController.cs" />
+    <Compile Include="Model\SyncPath.cs" />
+    <Compile Include="Model\SyncPostProcContent.cs" />
+    <Compile Include="Model\SyncResult.cs" />
+    <Compile Include="Model\Link.cs" />
+    <Compile Include="PathValidator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SyncDirContainer.cs" />
-    <Compile Include="SyncDirDirectory.cs" />
+    <Compile Include="Model\SyncDirDirectory.cs" />
     <Compile Include="Controllers\DirectoryController.cs" />
-    <Compile Include="SyncDirFile.cs" />
+    <Compile Include="Model\SyncDirFile.cs" />
     <Compile Include="SyncDirHandler.cs" />
-    <Compile Include="UploadController.cs" />
+    <Compile Include="Controllers\UploadController.cs" />
+    <Compile Include="Model\SyncFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

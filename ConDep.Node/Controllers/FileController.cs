@@ -2,37 +2,51 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
+using ConDep.Node.Model;
 
-namespace ConDep.Client.Controllers
+namespace ConDep.Node.Controllers
 {
     public class FileController : ApiController
     {
-        public HttpResponseMessage Post(string path, long lastWriteTimeUtc, string fileAttributes)
+        private readonly SyncDirHandler _dirHandler;
+
+        public FileController()
+        {
+            _dirHandler = new SyncDirHandler();
+        }
+
+        public FileController(SyncDirHandler dirHandler)
+        {
+            _dirHandler = dirHandler;
+        }
+
+        public SyncDirFile Get(string path)
+        {
+            var fileUrl = ApiUrls.Sync.FileTemplate(Url);
+            var dirUrl = ApiUrls.Sync.DirectoryTemplate(Url);
+
+            var file = _dirHandler.GetFileInfo(path, fileUrl, dirUrl, new FileInfo(path));
+            return file;
+        }
+
+        public Task<HttpResponseMessage> Post(string path, long lastWriteTimeUtc, string fileAttributes)
         {
             if(File.Exists(path))
             {
                 throw new HttpResponseException(
                     Request.CreateErrorResponse(
-                        HttpStatusCode.Found, 
-                        "File already exist. Use PUT to update existing file.")
+                        HttpStatusCode.Found,
+                        "File already exist. Use PUT to update existing file. Event better, follow the rules of HATEOAS and this will never happen.")
                     );
             }
 
-            var task = Request.Content.ReadAsStreamAsync();
-            task.Wait();
-            var requestStream = task.Result;
-
-            try
-            {
-                CreateFile(path, lastWriteTimeUtc, requestStream, fileAttributes);
-            }
-            catch (IOException)
-            {
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
-            }
-
-            return new HttpResponseMessage { StatusCode = HttpStatusCode.Created };
+            return Request.Content.ReadAsStreamAsync().ContinueWith(t =>
+                                                                        {
+                                                                            CreateFile(path, lastWriteTimeUtc, t.Result, fileAttributes);
+                                                                            return Request.CreateResponse(HttpStatusCode.Created, new SyncResult{CreatedFiles = 1});
+                                                                        });
         }
 
         private static void CreateFile(string path, long lastWriteTimeUtc, Stream requestStream, string fileAttributes)
@@ -85,27 +99,22 @@ namespace ConDep.Client.Controllers
             return Request.CreateResponse(HttpStatusCode.NoContent);
         }
 
-        public HttpResponseMessage Put(string path, long lastWriteTimeUtc, string fileAttributes)
+        public Task<HttpResponseMessage> Put(string path, long lastWriteTimeUtc, string fileAttributes)
         {
             if(!File.Exists(path))
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                throw new HttpResponseException(
+                    Request.CreateErrorResponse(
+                        HttpStatusCode.Found,
+                        "File does not exist. Use POST to create this file. Event better, follow the rules of HATEOAS and this will never happen.")
+                    );
             }
 
-            var task = Request.Content.ReadAsStreamAsync();
-            task.Wait();
-            var requestStream = task.Result;
-
-            try
+            return Request.Content.ReadAsStreamAsync().ContinueWith(t =>
             {
-                UpdateFile(path, lastWriteTimeUtc, requestStream, fileAttributes);
-            }
-            catch (IOException)
-            {
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
-            }
-
-            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK };
+                UpdateFile(path, lastWriteTimeUtc, t.Result, fileAttributes);
+                return Request.CreateResponse(HttpStatusCode.Created, new SyncResult { UpdatedFiles = 1 });
+            });
         }
     }
 }

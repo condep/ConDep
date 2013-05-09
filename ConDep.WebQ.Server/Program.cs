@@ -6,10 +6,12 @@ namespace ConDep.WebQ.Server
 {
     class Program
     {
+        private const string PREFIX = "http://+:{0}/ConDepWebQ/";
         static void Main(string[] args)
         {
             var timeout = 30;
             var port = 80;
+
 
             if(args.Length > 0)
             {
@@ -28,7 +30,7 @@ namespace ConDep.WebQ.Server
                     timeout = parsedTimeout.HasValue ? parsedTimeout.Value : timeout;
                 }
             }
-            ServiceBase.Run(new ServiceBase[] {new ConDepWebQService(timeout, port)});
+            ServiceBase.Run(new ServiceBase[] {new ConDepWebQService(timeout, port, PREFIX)});
         }
 
         private static int? ParseParam(string param)
