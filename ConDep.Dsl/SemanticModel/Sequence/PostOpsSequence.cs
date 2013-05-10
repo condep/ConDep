@@ -57,7 +57,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             {
                 try
                 {
-                    WebDeployDeployer.DisposeAll();
+                    //WebDeployDeployer.DisposeAll();
                 }
                 catch(Exception ex)
                 {

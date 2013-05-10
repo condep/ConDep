@@ -15,6 +15,7 @@ namespace ConDep.Dsl.Tests
             //generator.
         }
 
+        [Ignore]
         [Test]
         public void Test()
         {

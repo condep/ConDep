@@ -110,8 +110,6 @@
     <Compile Include="SequenceTests.cs" />
     <Compile Include="TeamCityLoggerTests.cs" />
     <Compile Include="UnitTestLogger.cs" />
-    <Compile Include="WebDeployDeployerTests.cs" />
-    <Compile Include="WebDeployHandlerMock.cs" />
     <Compile Include="SimpleTestFixtureBase.cs" />
   </ItemGroup>
   <ItemGroup>

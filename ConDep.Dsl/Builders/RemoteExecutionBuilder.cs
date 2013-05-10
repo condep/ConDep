@@ -12,12 +12,10 @@ namespace ConDep.Dsl.Builders
     public class RemoteExecutionBuilder : IOfferRemoteExecution, IConfigureRemoteExecution
     {
         private readonly IManageRemoteSequence _remoteSequence;
-        private readonly IHandleWebDeploy _webDeploy;
 
-        public RemoteExecutionBuilder(IManageRemoteSequence remoteSequence, IHandleWebDeploy webDeploy)
+        public RemoteExecutionBuilder(IManageRemoteSequence remoteSequence)
         {
             _remoteSequence = remoteSequence;
-            _webDeploy = webDeploy;
         }
 
         public IOfferRemoteExecution DosCommand(string cmd)
@@ -77,12 +75,7 @@ namespace ConDep.Dsl.Builders
         }
         public void AddOperation(RemoteCompositeOperation operation)
         {
-            operation.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence(operation), _webDeploy));
-        }
-
-        public void AddOperation(WebDeployProviderBase provider)
-        {
-            _remoteSequence.Add(new RemoteWebDeployOperation(provider, _webDeploy));
+            operation.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence(operation)));
         }
     }
 }

@@ -13,12 +13,10 @@ namespace ConDep.Dsl.Builders
     public class InfrastructureBuilder : IOfferInfrastructure, IConfigureInfrastructure
     {
         private readonly IManageInfrastructureSequence _infrastructureSequence;
-        private readonly IHandleWebDeploy _webDeploy;
 
-        public InfrastructureBuilder(IManageInfrastructureSequence infrastructureSequence, IHandleWebDeploy webDeploy)
+        public InfrastructureBuilder(IManageInfrastructureSequence infrastructureSequence)
         {
             _infrastructureSequence = infrastructureSequence;
-            _webDeploy = webDeploy;
         }
 
         public IOfferInfrastructure IIS(Action<IisInfrastructureOptions> options)
@@ -89,12 +87,12 @@ namespace ConDep.Dsl.Builders
 
         public IOfferSslInfrastructure SslCertificate
         {
-            get { return new SslInfrastructureBuilder(_infrastructureSequence, _webDeploy, this); }
+            get { return new SslInfrastructureBuilder(_infrastructureSequence, this); }
         }
 
         public IOfferInfrastructure RemoteExecution(Action<IOfferRemoteExecution> remoteExecution)
         {
-            remoteExecution(new RemoteExecutionBuilder(_infrastructureSequence, _webDeploy));
+            remoteExecution(new RemoteExecutionBuilder(_infrastructureSequence));
             return this;
         }
 
@@ -102,7 +100,7 @@ namespace ConDep.Dsl.Builders
 
         public void AddOperation(RemoteCompositeInfrastructureOperation operation)
         {
-            operation.Configure(new RemoteCompositeBuilder(_infrastructureSequence.NewCompositeSequence(operation), _webDeploy), new InfrastructureBuilder(_infrastructureSequence, _webDeploy));
+            operation.Configure(new RemoteCompositeBuilder(_infrastructureSequence.NewCompositeSequence(operation)), new InfrastructureBuilder(_infrastructureSequence));
         }
     }
 }

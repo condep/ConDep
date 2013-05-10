@@ -21,7 +21,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             if (operation is IRequireRemotePowerShellScripts)
             {
                 var scriptOp = new PowerShellScriptDeployOperation(((IRequireRemotePowerShellScripts)operation).ScriptPaths);
-                scriptOp.Configure(new RemoteCompositeBuilder(sequence, new WebDeployHandler()));
+                scriptOp.Configure(new RemoteCompositeBuilder(sequence));
             }
 
             _sequence.Add(sequence);
@@ -34,7 +34,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             if (operation is IRequireRemotePowerShellScripts)
             {
                 var scriptOp = new PowerShellScriptDeployOperation(((IRequireRemotePowerShellScripts)operation).ScriptPaths);
-                scriptOp.Configure(new RemoteCompositeBuilder(sequence, new WebDeployHandler()));
+                scriptOp.Configure(new RemoteCompositeBuilder(sequence));
             }
             _sequence.Add(sequence);
             return sequence;

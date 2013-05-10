@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ConDep.Dsl.Logging;
-using Microsoft.Web.Deployment;
 
 namespace ConDep.Dsl.SemanticModel.WebDeploy
 {
     public class WebDeploymentStatus : IReportStatus
     {
         private readonly DateTime _startTime;
-        private readonly List<DeploymentChangeSummary> _summeries = new List<DeploymentChangeSummary>();
         private readonly List<Exception> _untrappedExceptions = new List<Exception>();
         private readonly List<string> _conditionMessages = new List<string>();
         private DateTime _endTime;
@@ -19,16 +16,11 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             _startTime = DateTime.Now;
         }
 
-        public void AddSummery(DeploymentChangeSummary summery)
-        {
-            _summeries.Add(summery);
-        }
-
         public bool HasErrors
         {
             get
             {
-                return _summeries.Any(s => s.Errors > 0) || _untrappedExceptions.Count > 0;
+                return false;// _summeries.Any(s => s.Errors > 0) || _untrappedExceptions.Count > 0;
             }
         }
 
@@ -66,16 +58,16 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             int objectsUpdated = 0;
             double mBytesCopied = 0;
 
-            foreach (var summery in _summeries)
-            {
-                objectsAdded += summery.ObjectsAdded;
-                objectsDeleted += summery.ObjectsDeleted;
-                objectsUpdated += summery.ObjectsUpdated;
-                if(summery.BytesCopied > 0)
-                {
-                    mBytesCopied += ((summery.BytesCopied / 1024.0) / 1024.0);
-                }
-            }
+            //foreach (var summery in _summeries)
+            //{
+            //    objectsAdded += summery.ObjectsAdded;
+            //    objectsDeleted += summery.ObjectsDeleted;
+            //    objectsUpdated += summery.ObjectsUpdated;
+            //    if(summery.BytesCopied > 0)
+            //    {
+            //        mBytesCopied += ((summery.BytesCopied / 1024.0) / 1024.0);
+            //    }
+            //}
 
             string message = string.Format(@"Objects Added     : {0}
 Objects Deleted   : {1}

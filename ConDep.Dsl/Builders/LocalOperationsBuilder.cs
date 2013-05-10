@@ -17,15 +17,13 @@ namespace ConDep.Dsl.Builders
         private readonly IManageInfrastructureSequence _infrastructureSequence;
         private readonly PreOpsSequence _preOpsSequence;
         private readonly IEnumerable<ServerConfig> _servers;
-        private readonly IHandleWebDeploy _webDeploy;
 
-        public LocalOperationsBuilder(LocalSequence localSequence, IManageInfrastructureSequence infrastructureSequence, PreOpsSequence preOpsSequence, IEnumerable<ServerConfig> servers, IHandleWebDeploy webDeploy)
+        public LocalOperationsBuilder(LocalSequence localSequence, IManageInfrastructureSequence infrastructureSequence, PreOpsSequence preOpsSequence, IEnumerable<ServerConfig> servers)
         {
             _localSequence = localSequence;
             _infrastructureSequence = infrastructureSequence;
             _preOpsSequence = preOpsSequence;
             _servers = servers;
-            _webDeploy = webDeploy;
         }
 
         public IOfferLocalOperations TransformConfigFile(string configDirPath, string configName, string transformName)
@@ -52,7 +50,7 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteOperations ToEachServer(Action<IOfferRemoteOperations> action)
         {
-            var builder = new RemoteOperationsBuilder(_localSequence.NewRemoteSequence(_infrastructureSequence, _preOpsSequence, _servers), _webDeploy);
+            var builder = new RemoteOperationsBuilder(_localSequence.NewRemoteSequence(_infrastructureSequence, _preOpsSequence, _servers));
             action(builder);
             return builder;
         }

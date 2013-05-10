@@ -56,7 +56,7 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server1 };
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
+            var preOpsSequence = new PreOpsSequence();
             var loadBalancer = new MockLoadBalancer { Mode = LbMode.Sticky };
 
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
@@ -79,7 +79,7 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server1 };
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
+            var preOpsSequence = new PreOpsSequence();
 
             var loadBalancer = new MockLoadBalancer { Mode = LbMode.Sticky };
 
@@ -103,7 +103,7 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server1 };
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
+            var preOpsSequence = new PreOpsSequence();
             var loadBalancer = new MockLoadBalancer { Mode = LbMode.RoundRobin };
 
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
@@ -126,7 +126,7 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server1 };
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
+            var preOpsSequence = new PreOpsSequence();
             var loadBalancer = new MockLoadBalancer { Mode = LbMode.RoundRobin };
 
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
@@ -150,7 +150,7 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server1 };
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
+            var preOpsSequence = new PreOpsSequence();
             var loadBalancer = new MockLoadBalancer { Mode = LbMode.RoundRobin };
 
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
@@ -176,7 +176,7 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server1 };
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
+            var preOpsSequence = new PreOpsSequence();
             var loadBalancer = new MockLoadBalancer { Mode = LbMode.Sticky };
 
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
@@ -206,7 +206,7 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server1, server2, server3, server4, server5 };
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
+            var preOpsSequence = new PreOpsSequence();
             var loadBalancer = new MockLoadBalancer { Mode = LbMode.RoundRobin };
 
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
@@ -260,7 +260,7 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server1, server2, server3, server4, server5 };
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
+            var preOpsSequence = new PreOpsSequence();
             var loadBalancer = new MockLoadBalancer { Mode = LbMode.Sticky };
 
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
@@ -295,7 +295,7 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server1, server2, server3, server4, server5 };
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
+            var preOpsSequence = new PreOpsSequence();
             var loadBalancer = new MockLoadBalancer { Mode = LbMode.RoundRobin };
 
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
@@ -322,7 +322,7 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server1, server2, server3, server4, server5 };
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
+            var preOpsSequence = new PreOpsSequence();
             var loadBalancer = new MockLoadBalancer { Mode = LbMode.RoundRobin };
 
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
@@ -349,7 +349,7 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server1, server2, server3, server4, server5 };
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
+            var preOpsSequence = new PreOpsSequence();
             var loadBalancer = new MockLoadBalancer { Mode = LbMode.Sticky };
 
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
@@ -387,7 +387,7 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server1, server2, server3, server4, server5 };
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
+            var preOpsSequence = new PreOpsSequence();
             var loadBalancer = new MockLoadBalancer { Mode = LbMode.Sticky };
 
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);
@@ -438,7 +438,7 @@ namespace ConDep.Dsl.Tests
             config.Servers = new[] { server1, server2, server3, server4, server5 };
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence(new WebDeployHandlerMock());
+            var preOpsSequence = new PreOpsSequence();
             var loadBalancer = new MockLoadBalancer { Mode = LbMode.RoundRobin };
 
             var remoteSequence = new RemoteSequence(infrastructureSequence, preOpsSequence, config.Servers, loadBalancer);

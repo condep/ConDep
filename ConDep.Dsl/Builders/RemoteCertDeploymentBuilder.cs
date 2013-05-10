@@ -11,13 +11,11 @@ namespace ConDep.Dsl.Builders
     public class RemoteCertDeploymentBuilder : IOfferRemoteCertDeployment
     {
         private readonly IManageRemoteSequence _remoteSequence;
-        private readonly IHandleWebDeploy _webDeploy;
         private readonly IOfferRemoteDeployment _remoteDeploymentBuilder;
 
-        public RemoteCertDeploymentBuilder(IManageRemoteSequence remoteSequence, IHandleWebDeploy webDeploy, IOfferRemoteDeployment remoteDeploymentBuilder)
+        public RemoteCertDeploymentBuilder(IManageRemoteSequence remoteSequence, IOfferRemoteDeployment remoteDeploymentBuilder)
         {
             _remoteSequence = remoteSequence;
-            _webDeploy = webDeploy;
             _remoteDeploymentBuilder = remoteDeploymentBuilder;
         }
 
@@ -36,7 +34,7 @@ namespace ConDep.Dsl.Builders
 
             var certOp = new CertificateFromStoreOperation(findType, findValue, certOptions);
             var compositeSequence = _remoteSequence.NewCompositeSequence(certOp);
-            certOp.Configure(new RemoteCompositeBuilder(compositeSequence, _webDeploy));
+            certOp.Configure(new RemoteCompositeBuilder(compositeSequence));
             return _remoteDeploymentBuilder;
         }
 
@@ -55,7 +53,7 @@ namespace ConDep.Dsl.Builders
 
             var certOp = new CertificateFromFileOperation(path, password, certOptions);
             var compositeSequence = _remoteSequence.NewCompositeSequence(certOp);
-            certOp.Configure(new RemoteCompositeBuilder(compositeSequence, _webDeploy));
+            certOp.Configure(new RemoteCompositeBuilder(compositeSequence));
             return _remoteDeploymentBuilder;
         }
     }

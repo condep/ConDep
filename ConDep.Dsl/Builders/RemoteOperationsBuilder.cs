@@ -5,11 +5,11 @@ namespace ConDep.Dsl.Builders
 {
     public class RemoteOperationsBuilder : IOfferRemoteOperations
     {
-        public RemoteOperationsBuilder(RemoteSequence remoteSequence, IHandleWebDeploy webDeploy)
+        public RemoteOperationsBuilder(RemoteSequence remoteSequence)
         {
 
-            Configure.DeploymentOperations = new RemoteDeploymentBuilder(remoteSequence, webDeploy);
-            Configure.ExecutionOperations = new RemoteExecutionBuilder(remoteSequence, webDeploy);
+            Configure.DeploymentOperations = new RemoteDeploymentBuilder(remoteSequence);
+            Configure.ExecutionOperations = new RemoteExecutionBuilder(remoteSequence);
 
         }
 

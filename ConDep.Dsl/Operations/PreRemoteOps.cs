@@ -19,14 +19,12 @@ namespace ConDep.Dsl.Operations
         private readonly ServerConfig _server;
         private readonly PreOpsSequence _sequence;
         private readonly ConDepSettings _settings;
-        private IHandleWebDeploy _webDeploy;
 
-        public PreRemoteOps(ServerConfig server, PreOpsSequence sequence, ConDepSettings settings, IHandleWebDeploy webDeploy)
+        public PreRemoteOps(ServerConfig server, PreOpsSequence sequence, ConDepSettings settings)
         {
             _server = server;
             _sequence = sequence;
             _settings = settings;
-            _webDeploy = webDeploy;
         }
 
         public void Configure()
@@ -83,18 +81,18 @@ namespace ConDep.Dsl.Operations
 
         private void TempInstallWebDeploy(IReportStatus status)
         {
-            if(!_settings.Options.WebDeployExist)
-            {
-                Logger.LogSectionStart("Deploying Web Deploy");
-                try
-                {
-                    WebDeployDeployer.DeployTo(_server);
-                }
-                finally
-                {
-                    Logger.LogSectionEnd("Deploying Web Deploy");
-                }
-            }
+            //if(!_settings.Options.WebDeployExist)
+            //{
+            //    Logger.LogSectionStart("Deploying Web Deploy");
+            //    try
+            //    {
+            //        WebDeployDeployer.DeployTo(_server);
+            //    }
+            //    finally
+            //    {
+            //        Logger.LogSectionEnd("Deploying Web Deploy");
+            //    }
+            //}
         }
     }
 }

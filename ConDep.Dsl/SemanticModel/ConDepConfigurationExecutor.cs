@@ -39,7 +39,6 @@ namespace ConDep.Dsl.SemanticModel
                 }
             }
 
-            var webDeploy = new WebDeployHandler();
             var lbLookup = new LoadBalancerLookup(conDepSettings.Config.LoadBalancer);
 
             var sequenceManager = new ExecutionSequenceManager(lbLookup.GetLoadBalancer());
@@ -50,10 +49,10 @@ namespace ConDep.Dsl.SemanticModel
             foreach (var application in applications)
             {
                 var infrastructureSequence = new InfrastructureSequence();
-                var preOpsSequence = new PreOpsSequence(webDeploy);
+                var preOpsSequence = new PreOpsSequence();
                 if (!conDepSettings.Options.DeployOnly)
                 {
-                    var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence, webDeploy);
+                    var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence);
                     Configure.InfrastructureOperations = infrastructureBuilder;
 
                     if (HasInfrastructureDefined(application))
@@ -67,7 +66,7 @@ namespace ConDep.Dsl.SemanticModel
                     }
                 }
 
-                var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(application.GetType().Name), infrastructureSequence, preOpsSequence, conDepSettings.Config.Servers, webDeploy);
+                var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(application.GetType().Name), infrastructureSequence, preOpsSequence, conDepSettings.Config.Servers);
                 Configure.LocalOperations = local;
 
                 application.Configure(local, conDepSettings);
