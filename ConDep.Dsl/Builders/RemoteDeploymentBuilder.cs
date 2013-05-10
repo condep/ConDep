@@ -33,6 +33,16 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
+        public IOfferRemoteDeployment Files(Action<IOfferFileInfo> files)
+        {
+            throw new NotImplementedException();
+            var fileList = new FileInfoList();
+            files(fileList);
+            //var copyFileOperation = new CopyFileOperation(sourceFile, destFile);
+            //AddOperation(copyFileOperation);
+            return this;
+        }
+
         public IOfferRemoteDeployment IisWebApplication(string sourceDir, string webAppName, string webSiteName)
         {
             return IisWebApplication(sourceDir, null, webAppName, webSiteName);

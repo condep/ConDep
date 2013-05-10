@@ -64,7 +64,7 @@ namespace ConDep.Node
 
             if (!fileInfo.Exists)
             {
-                file.Links.Add(new Link() { Rel = ApiRels.FileUpdateTemplate, Method = "POST", Href = string.Format("{0}{1}", link, "&lastWriteTimeUtc={0}&fileAttributes={1}") });
+                file.Links.Add(new Link() { Rel = ApiRels.FileSyncTemplate, Method = "POST", Href = string.Format("{0}{1}", link, "&lastWriteTimeUtc={0}&fileAttributes={1}") });
                 return file;
             }
 
@@ -73,7 +73,7 @@ namespace ConDep.Node
             file.Size = fileInfo.Length;
 
             file.Links.Add(new Link() { Rel = ApiRels.Self, Href = string.Format("{0}", link), Method = "GET" });
-            file.Links.Add(new Link() { Rel = ApiRels.FileUpdateTemplate, Method = "PUT", Href = string.Format("{0}{1}", link, "&lastWriteTimeUtc={0}&fileAttributes={1}") });
+            file.Links.Add(new Link() { Rel = ApiRels.FileSyncTemplate, Method = "PUT", Href = string.Format("{0}{1}", link, "&lastWriteTimeUtc={0}&fileAttributes={1}") });
             file.Links.Add(new Link() { Rel = "http://www.con-dep.net/rels/sync/directory", Method = "PUT", Href = string.Format("{0}", dirLink) });
             return file;
         }

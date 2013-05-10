@@ -1,10 +1,19 @@
+using System.Collections.Generic;
+
 namespace ConDep.Node.Client.Model
 {
     public class SyncResult
     {
-        public int DeletedFiles { get; set; }
-        public int DeletedDirectories { get; set; }
-        public int UpdatedFiles { get; set; }
-        public int CreatedFiles { get; set; }
+        private readonly List<string> _deletedFiles = new List<string>();
+        private readonly List<string> _deletedDirectories = new List<string>();
+        private readonly List<string> _updatedFiles = new List<string>();
+        private readonly List<string> _createdFiles = new List<string>();
+        private readonly List<string> _log = new List<string>();
+
+        public List<string> DeletedFiles { get { return _deletedFiles; } }
+        public List<string> DeletedDirectories { get { return _deletedDirectories; } }
+        public List<string> UpdatedFiles { get { return _updatedFiles; } }
+        public List<string> CreatedFiles { get { return _createdFiles; } }
+        public List<string> Log { get { return _log; } }
     }
 }

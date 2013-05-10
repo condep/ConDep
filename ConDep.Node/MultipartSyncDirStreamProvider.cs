@@ -58,12 +58,14 @@ namespace ConDep.Node
             var file = new FileInfo(localFilePath);
             if(file.Exists)
             {
-                SyncResult.UpdatedFiles++;
+                SyncResult.UpdatedFiles.Add(localFilePath);
+                SyncResult.Log.Add("Updated: " + localFilePath);
             }
             else
             {
                 Directory.CreateDirectory(file.DirectoryName);
-                SyncResult.CreatedFiles++;
+                SyncResult.CreatedFiles.Add(localFilePath);
+                SyncResult.Log.Add("Created: " + localFilePath);
             }
 
             return File.Create(localFilePath, BufferSize, FileOptions.Asynchronous);
@@ -127,17 +129,17 @@ namespace ConDep.Node
             {
                 var fileInfo = new FileInfo(file.Path) {Attributes = FileAttributes.Normal};
                 fileInfo.Delete();
+                SyncResult.DeletedFiles.Add(file.Path);
+                SyncResult.Log.Add("Deleted: " + file.Path);
             }
-
-            SyncResult.DeletedFiles = content.DeletedFiles.Count();
 
             foreach (var dir in content.DeletedDirectories.OrderByDescending(x => x.RelativePath))
             {
                 var dirInfo = new DirectoryInfo(dir.Path) { Attributes = FileAttributes.Normal };
                 dirInfo.Delete();
+                SyncResult.DeletedDirectories.Add(dir.Path);
+                SyncResult.Log.Add("Deleted: " + dir.Path);
             }
-
-            SyncResult.DeletedDirectories = content.DeletedDirectories.Count();
         }
 
         private void UpdateFileWithOriginalSettings(string filePath, DateTime lastWriteTimeUtc, FileAttributes fileAttributes)

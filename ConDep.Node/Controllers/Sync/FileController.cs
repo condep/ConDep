@@ -48,7 +48,10 @@ namespace ConDep.Node.Controllers.Sync
             return Request.Content.ReadAsStreamAsync().ContinueWith(t =>
                                                                         {
                                                                             CreateFile(path, lastWriteTimeUtc, t.Result, fileAttributes);
-                                                                            return Request.CreateResponse(HttpStatusCode.Created, new SyncResult{CreatedFiles = 1});
+                                                                            var syncResult = new SyncResult();
+                                                                            syncResult.CreatedFiles.Add(path);
+                                                                            syncResult.Log.Add("Created: " + path);
+                                                                            return Request.CreateResponse(HttpStatusCode.Created, syncResult);
                                                                         });
         }
 
@@ -117,7 +120,10 @@ namespace ConDep.Node.Controllers.Sync
             return Request.Content.ReadAsStreamAsync().ContinueWith(t =>
             {
                 UpdateFile(path, lastWriteTimeUtc, t.Result, fileAttributes);
-                return Request.CreateResponse(HttpStatusCode.Created, new SyncResult { UpdatedFiles = 1 });
+                var syncResult = new SyncResult();
+                syncResult.UpdatedFiles.Add(path);
+                syncResult.Log.Add("Updated: " + path);
+                return Request.CreateResponse(HttpStatusCode.Created, syncResult);
             });
         }
     }

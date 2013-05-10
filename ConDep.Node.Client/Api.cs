@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -62,6 +63,19 @@ namespace ConDep.Node.Client
             return null;
         }
 
+        public SyncResult SyncFiles(IEnumerable<SyncFileInfo> files)
+        {
+            //var url = DiscoverUrl("http://www.con-dep.net/rels/sync/file_template");
+            //var syncResponse = _client.GetAsync(string.Format(url, dstPath)).Result;
+
+            //if (syncResponse.IsSuccessStatusCode)
+            //{
+            //    var nodeFile = syncResponse.Content.ReadAsAsync<SyncDirFile>().Result;
+            //    return CopyFile(srcPath, _client, nodeFile);
+            //}
+            return null;
+        }
+
         public SyncResult SyncWebApp(string webSiteName, string webAppName, string srcPath, string dstPath = null)
         {
             var url = DiscoverUrl("http://www.con-dep.net/rels/iis_template");
@@ -116,7 +130,7 @@ namespace ConDep.Node.Client
             var fileStream = new FileStream(clientFile.FullName, FileMode.Open, FileAccess.Read, FileShare.Read);
             var content = new StreamContent(fileStream);
 
-            var link = nodeFile.Links.GetByRel("http://www.con-dep.net/rels/sync/file");
+            var link = nodeFile.Links.GetByRel("http://www.con-dep.net/rels/sync/file_sync_template");
             var url = string.Format(link.Href, clientFile.LastWriteTimeUtc.ToFileTime(), clientFile.Attributes.ToString());
 
             message.Method = link.HttpMethod;
@@ -182,5 +196,9 @@ namespace ConDep.Node.Client
             return result.Result;
         }
 
+    }
+
+    public class SyncFileInfo
+    {
     }
 }

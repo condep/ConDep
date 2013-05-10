@@ -68,6 +68,8 @@
     <Compile Include="ApplicationArtifact.cs" />
     <Compile Include="Config\ConDepSettings.cs" />
     <Compile Include="Config\ConfigHandler.cs" />
+    <Compile Include="Operations\Application\Deployment\CopyFile\FileInfoList.cs" />
+    <Compile Include="IOfferFileInfo.cs" />
     <Compile Include="IOfferWindowsServiceFailureOptions.cs" />
     <Compile Include="IOfferWindowsServiceFailureActions.cs" />
     <Compile Include="IOfferWindowsServiceOptions.cs" />

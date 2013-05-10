@@ -21,6 +21,13 @@ namespace ConDep.Dsl
         IOfferRemoteDeployment File(string sourceFile, string destFile);
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        IOfferRemoteDeployment Files(Action<IOfferFileInfo> files);
+
+        /// <summary>
         /// Works exactly as the Directory operation, except it will mark the directory as a Web Application on remote server.
         /// </summary>
         /// <param name="sourceDir"></param>

@@ -31,7 +31,7 @@ namespace ConDep.Node
         public static string FileTemplate = "http://www.con-dep.net/rels/sync/file_template";
         public static string Directory = "http://www.con-dep.net/rels/sync/directory";
         public static string File = "http://www.con-dep.net/rels/sync/file";
-        public static string FileUpdateTemplate = "http://www.con-dep.net/rels/sync/file_update_template";
+        public static string FileSyncTemplate = "http://www.con-dep.net/rels/sync/file_sync_template";
         public static string WebAppTemplate = "http://www.con-dep.net/rels/iis/web_app_template";
         public static string IisTemplate = "http://www.con-dep.net/rels/iis_template";
     }

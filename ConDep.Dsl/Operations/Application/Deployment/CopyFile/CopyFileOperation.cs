@@ -22,6 +22,11 @@ namespace ConDep.Dsl.Operations.Application.Deployment.CopyFile
             _api = new Api(string.Format("http://{0}/ConDepNode/", server.Name));
             var result = _api.SyncFile(_srcFile, _dstFile);
 
+            foreach (var entry in result.Log)
+            {
+                Logger.Info(entry);
+            }
+
             Logger.Info(
     @"Sync result:
 
@@ -29,7 +34,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.CopyFile
     Files Updated       : {3}
     Files Deleted       : {2}
     Directories Deleted : {1}
-", result.CreatedFiles, result.DeletedDirectories, result.DeletedFiles, result.UpdatedFiles);
+", result.CreatedFiles.Count, result.DeletedDirectories.Count, result.DeletedFiles.Count, result.UpdatedFiles.Count);
         }
 
         public bool IsValid(Notification notification)
