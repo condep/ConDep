@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.SemanticModel;
@@ -22,6 +23,7 @@ namespace ConDep.Dsl.Operations.Application.Local.WebRequest
 
         public override void Execute(IReportStatus status, ConDepSettings settings)
         {
+            Thread.Sleep(1000);
             var webRequest = System.Net.WebRequest.Create(_url);
             webRequest.Method = "GET";
             webRequest.ContentLength = 0;
