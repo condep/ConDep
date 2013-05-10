@@ -30,6 +30,16 @@ namespace ConDep.Dsl
         IOfferRemoteDeployment IisWebApplication(string sourceDir, string webAppName, string webSiteName);
 
         /// <summary>
+        /// Works exactly as the Directory operation, except it will mark the directory as a Web Application on remote server.
+        /// </summary>
+        /// <param name="sourceDir"></param>
+        /// <param name="destDir"></param>
+        /// <param name="webAppName"></param>
+        /// <param name="webSiteName"></param>
+        /// <returns></returns>
+        IOfferRemoteDeployment IisWebApplication(string sourceDir, string destDir, string webAppName, string webSiteName);
+
+        /// <summary>
         /// Will deploy and start provided Windows Service to remote server.
         /// </summary>
         /// <param name="serviceName"></param>

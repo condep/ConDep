@@ -5,7 +5,6 @@ using ConDep.Dsl.Operations.Application.Deployment.CopyFile;
 using ConDep.Dsl.Operations.Application.Deployment.NServiceBus;
 using ConDep.Dsl.Operations.Application.Deployment.WebApp;
 using ConDep.Dsl.Operations.Application.Deployment.WindowsService;
-using ConDep.Dsl.Operations.Application.Local;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 
@@ -24,8 +23,6 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteDeployment Directory(string sourceDir, string destDir)
         {
-            //var copyDirProvider = new CopyDirProvider(sourceDir, destDir);
-            //AddOperation(copyDirProvider);
             var copyDirOperation = new CopyDirOperation(sourceDir, destDir);
             AddOperation(copyDirOperation);
             return this;
@@ -33,8 +30,6 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteDeployment File(string sourceFile, string destFile)
         {
-            //var copyFileProvider = new CopyFileProvider(sourceFile, destFile);
-            //AddOperation(copyFileProvider);
             var copyFileOperation = new CopyFileOperation(sourceFile, destFile);
             AddOperation(copyFileOperation);
             return this;
@@ -42,8 +37,13 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteDeployment IisWebApplication(string sourceDir, string webAppName, string webSiteName)
         {
-            var webAppProvider = new WebAppDeploymentProvider(sourceDir, webAppName, webSiteName);
-            AddOperation(webAppProvider);
+            return IisWebApplication(sourceDir, null, webAppName, webSiteName);
+        }
+
+        public IOfferRemoteDeployment IisWebApplication(string sourceDir, string destDir, string webAppName, string webSiteName)
+        {
+            var webAppOperation = new WebAppOperation(sourceDir, webAppName, webSiteName, destDir);
+            AddOperation(webAppOperation);
             return this;
         }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
@@ -22,14 +21,14 @@ namespace ConDep.Node.Client
 
         public SyncResult SyncDir(string srcPath, string dstPath)
         {
-            var availableApiResourcesResponse = _client.GetAsync("api").Result;
-            var availableApiResourcesContent = availableApiResourcesResponse.Content.ReadAsAsync<JToken>().Result;
+            var urlTemplate = DiscoverUrl("http://www.con-dep.net/rels/sync/dir_template");
+            var url = string.Format(urlTemplate, dstPath);
+            return SyncDirByUrl(srcPath, url);
+        }
 
-            var url = (from link in availableApiResourcesContent
-                       where link.Value<string>("rel") == "http://www.con-dep.net/rels/sync/dir_template"
-                       select link.Value<string>("href")).SingleOrDefault();
-
-            var syncResponse = _client.GetAsync(string.Format(url, dstPath)).Result;
+        private SyncResult SyncDirByUrl(string srcPath, string url)
+        {
+            var syncResponse = _client.GetAsync(url).Result;
 
             if (syncResponse.IsSuccessStatusCode)
             {
@@ -39,15 +38,20 @@ namespace ConDep.Node.Client
             return null;
         }
 
-        public SyncResult SyncFile(string srcPath, string dstPath)
+        private string DiscoverUrl(string rel)
         {
             var availableApiResourcesResponse = _client.GetAsync("api").Result;
             var availableApiResourcesContent = availableApiResourcesResponse.Content.ReadAsAsync<JToken>().Result;
 
             var url = (from link in availableApiResourcesContent
-                       where link.Value<string>("rel") == "http://www.con-dep.net/rels/sync/file_template"
+                       where link.Value<string>("rel") == rel
                        select link.Value<string>("href")).SingleOrDefault();
+            return url;
+        }
 
+        public SyncResult SyncFile(string srcPath, string dstPath)
+        {
+            var url = DiscoverUrl("http://www.con-dep.net/rels/sync/file_template");
             var syncResponse = _client.GetAsync(string.Format(url, dstPath)).Result;
 
             if (syncResponse.IsSuccessStatusCode)
@@ -56,6 +60,47 @@ namespace ConDep.Node.Client
                 return CopyFile(srcPath, _client, nodeFile);
             }
             return null;
+        }
+
+        public SyncResult SyncWebApp(string webSiteName, string webAppName, string srcPath, string dstPath = null)
+        {
+            var url = DiscoverUrl("http://www.con-dep.net/rels/iis_template");
+            var url2 = url.Replace("{website}", webSiteName).Replace("{webapp}", webAppName);
+
+            var syncResponse = _client.GetAsync(url2).Result;
+
+            if (syncResponse.IsSuccessStatusCode)
+            {
+                var webAppInfo = syncResponse.Content.ReadAsAsync<WebAppInfo>().Result;
+                if(!string.IsNullOrWhiteSpace(dstPath) && webAppInfo.Exist && webAppInfo.PhysicalPath != dstPath)
+                {
+                    throw new ArgumentException(string.Format("Web app {0} already exist and physical path differs from path provided.", webAppName));
+                }
+
+                var path = string.IsNullOrWhiteSpace(dstPath) ? webAppInfo.PhysicalPath : dstPath;
+                foreach(var link in webAppInfo.Links)
+                {
+                    switch (link.Rel)
+                    {
+                        case "http://www.con-dep.net/rels/iis/web_app_template":
+                            CreateWebApp(link, path);
+                            break;
+                        case "http://www.con-dep.net/rels/sync/dir_template":
+                            return SyncDirByUrl(srcPath, string.Format(link.Href, path));
+                        case "http://www.con-dep.net/rels/sync/directory":
+                            return SyncDirByUrl(srcPath, link.Href);
+                    }
+                }
+            }
+            return null;
+        }
+
+        private void CreateWebApp(Link link, string path)
+        {
+            var message = new HttpRequestMessage {Method = link.HttpMethod, RequestUri = new Uri(string.Format(link.Href, path))};
+
+            var syncResponse = _client.SendAsync(message).Result;
+            
         }
 
         private SyncResult CopyFile(string srcFile, HttpClient client, SyncDirFile nodeFile)

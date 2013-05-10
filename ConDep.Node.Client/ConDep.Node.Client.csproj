@@ -62,6 +62,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SyncPostProcContent.cs" />
     <Compile Include="Model\SyncResult.cs" />
+    <Compile Include="Model\WebAppInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

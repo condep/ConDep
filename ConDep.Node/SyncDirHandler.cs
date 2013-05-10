@@ -20,12 +20,12 @@ namespace ConDep.Node
 
             if (!dirInfo.Exists)
             {
-                dir.Links.Add(new Link() { Rel = "http://www.con-dep.net/rels/sync/directory", Method = "POST", Href = string.Format("{0}", link) });
+                dir.Links.Add(new Link() { Rel = ApiRels.Directory, Method = "POST", Href = string.Format("{0}", link) });
                 return dir;
             }
 
-            dir.Links.Add(new Link() { Rel = "self", Href = string.Format("{0}", link), Method = "GET" });
-            dir.Links.Add(new Link() { Rel = "http://www.con-dep.net/rels/sync/directory", Method = "PUT", Href = string.Format("{0}", link) });
+            dir.Links.Add(new Link() { Rel = ApiRels.Self, Href = string.Format("{0}", link), Method = "GET" });
+            dir.Links.Add(new Link() { Rel = ApiRels.Directory, Method = "PUT", Href = string.Format("{0}", link) });
 
             foreach (var childDir in dirInfo.EnumerateDirectories())
             {
@@ -44,9 +44,9 @@ namespace ConDep.Node
                                    Size = childFile.Length,
                                };
                 var fileLink = string.Format(fileUrl, childFile.FullName);
-                file.Links.Add(new Link { Href = string.Format("{0}", fileLink), Rel = "self", Method = "GET" });
-                file.Links.Add(new Link { Href = string.Format("{0}", fileLink), Rel = "http://www.con-dep.net/rels/sync/file", Method = "PUT" });
-                file.Links.Add(new Link { Href = string.Format("{0}", link), Rel = "http://www.con-dep.net/rels/sync/directory", Method = "PUT" });
+                file.Links.Add(new Link { Href = string.Format("{0}", fileLink), Rel = ApiRels.Self, Method = "GET" });
+                file.Links.Add(new Link { Href = string.Format("{0}", fileLink), Rel = ApiRels.File, Method = "PUT" });
+                file.Links.Add(new Link { Href = string.Format("{0}", link), Rel = ApiRels.Directory, Method = "PUT" });
                 dir.Files.Add(file);
             }
             return dir;
@@ -64,7 +64,7 @@ namespace ConDep.Node
 
             if (!fileInfo.Exists)
             {
-                file.Links.Add(new Link() { Rel = "http://www.con-dep.net/rels/sync/file", Method = "POST", Href = string.Format("{0}{1}", link, "&lastWriteTimeUtc={0}&fileAttributes={1}") });
+                file.Links.Add(new Link() { Rel = ApiRels.FileUpdateTemplate, Method = "POST", Href = string.Format("{0}{1}", link, "&lastWriteTimeUtc={0}&fileAttributes={1}") });
                 return file;
             }
 
@@ -72,8 +72,8 @@ namespace ConDep.Node
             file.LastWriteTimeUtc = fileInfo.LastWriteTimeUtc;
             file.Size = fileInfo.Length;
 
-            file.Links.Add(new Link() { Rel = "self", Href = string.Format("{0}", link), Method = "GET" });
-            file.Links.Add(new Link() { Rel = "http://www.con-dep.net/rels/sync/file", Method = "PUT", Href = string.Format("{0}{1}", link, "&lastWriteTimeUtc={0}&fileAttributes={1}") });
+            file.Links.Add(new Link() { Rel = ApiRels.Self, Href = string.Format("{0}", link), Method = "GET" });
+            file.Links.Add(new Link() { Rel = ApiRels.FileUpdateTemplate, Method = "PUT", Href = string.Format("{0}{1}", link, "&lastWriteTimeUtc={0}&fileAttributes={1}") });
             file.Links.Add(new Link() { Rel = "http://www.con-dep.net/rels/sync/directory", Method = "PUT", Href = string.Format("{0}", dirLink) });
             return file;
         }

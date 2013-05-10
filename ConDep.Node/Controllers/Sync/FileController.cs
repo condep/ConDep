@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using ConDep.Node.Model;
 
-namespace ConDep.Node.Controllers
+namespace ConDep.Node.Controllers.Sync
 {
     public class FileController : ApiController
     {
@@ -24,6 +24,7 @@ namespace ConDep.Node.Controllers
 
         public SyncDirFile Get(string path)
         {
+            path = Environment.ExpandEnvironmentVariables(path);
             var fileUrl = ApiUrls.Sync.FileTemplate(Url);
             var dirUrl = ApiUrls.Sync.DirectoryTemplate(Url);
 
@@ -33,6 +34,8 @@ namespace ConDep.Node.Controllers
 
         public Task<HttpResponseMessage> Post(string path, long lastWriteTimeUtc, string fileAttributes)
         {
+            path = Environment.ExpandEnvironmentVariables(path);
+
             if(File.Exists(path))
             {
                 throw new HttpResponseException(
@@ -101,7 +104,8 @@ namespace ConDep.Node.Controllers
 
         public Task<HttpResponseMessage> Put(string path, long lastWriteTimeUtc, string fileAttributes)
         {
-            if(!File.Exists(path))
+            path = Environment.ExpandEnvironmentVariables(path);
+            if (!File.Exists(path))
             {
                 throw new HttpResponseException(
                     Request.CreateErrorResponse(

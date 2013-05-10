@@ -24,7 +24,11 @@ namespace ConDep.Node
             serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
             config.Routes.MapHttpRoute("Sync", "api/sync/{controller}");
+            config.Routes.MapHttpRoute("WebAppSync", "api/sync/webapp/{siteName}/{appName}", new { controller = "WebApp" });
+            config.Routes.MapHttpRoute("Iis", "api/iis/{siteName}/{appName}", new { controller = "Iis", siteName = RouteParameter.Optional, appName = RouteParameter.Optional });
             config.Routes.MapHttpRoute("Api", "api/{controller}", new { controller = "Home" });
+            //config.Routes.MapHttpRoute("Iis", "api/{controller}", new { controller = "Iis" });
+            //config.Routes.MapHttpRoute("WebApp", "api/iis/{controller}", new { controller = "IisWebApp" });
             //config.Routes.MapHttpRoute("Default", "api/{controller}/{id}", new { id = RouteParameter.Optional });
             //config.Routes.MapHttpRoute("File Upload", "api/sync/{controller}/{filename}");
 

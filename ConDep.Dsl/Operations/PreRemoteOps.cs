@@ -68,9 +68,11 @@ namespace ConDep.Dsl.Operations
 
         private void ConfigureCopyFileOperation(string path)
         {
-            var copyFileProvider = new CopyFileProvider(path, string.Format(@"%windir%\temp\ConDep\{0}\PSScripts\ConDep\{1}", ConDepGlobals.ExecId, Path.GetFileName(path)));
-            var copyOp = new RemoteWebDeployOperation(copyFileProvider, _webDeploy);
-            _sequence.Add(copyOp, true);
+            var copyFileOperation = new CopyFileOperation(path, string.Format(@"%windir%\temp\ConDep\{0}\PSScripts\ConDep\{1}", ConDepGlobals.ExecId, Path.GetFileName(path)));
+            //var copyFileProvider = new CopyFileProvider(path, string.Format(@"%windir%\temp\ConDep\{0}\PSScripts\ConDep\{1}", ConDepGlobals.ExecId, Path.GetFileName(path)));
+            //var copyOp = new RemoteWebDeployOperation(copyFileProvider, _webDeploy);
+            //_sequence.Add(copyOp, true);
+            _sequence.Add(copyFileOperation, true);
         }
 
         public IReportStatus Execute(IReportStatus status)

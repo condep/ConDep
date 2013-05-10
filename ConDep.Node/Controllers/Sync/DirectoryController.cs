@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -5,7 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using ConDep.Node.Model;
 
-namespace ConDep.Node.Controllers
+namespace ConDep.Node.Controllers.Sync
 {
     public class DirectoryController : ApiController
     {
@@ -24,9 +25,10 @@ namespace ConDep.Node.Controllers
             _pathValidator = pathValidator;
         }
 
-        public SyncDirDirectory Get(string dirPath)
+        public SyncDirDirectory Get(string path)
         {
-            if(!_pathValidator.ValidPath(dirPath))
+            path = Environment.ExpandEnvironmentVariables(path);
+            if (!_pathValidator.ValidPath(path))
             {
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.InternalServerError, "Invalid path. Path cannot be root of drive, or any of the common system and windows folders."));
             }
@@ -34,17 +36,19 @@ namespace ConDep.Node.Controllers
             var dirUrl = ApiUrls.Sync.DirectoryTemplate(Url);
             var fileUrl = ApiUrls.Sync.FileTemplate(Url);
 
-            var dir = _dirHandler.GetSubDirInfo(dirPath, dirUrl, fileUrl, new DirectoryInfo(dirPath));
+            var dir = _dirHandler.GetSubDirInfo(path, dirUrl, fileUrl, new DirectoryInfo(path));
             return dir;
         }
 
         public Task<HttpResponseMessage> Put(string path)
         {
+            path = Environment.ExpandEnvironmentVariables(path);
             return SyncDir(path);
         }
 
         public Task<HttpResponseMessage> Post(string path)
         {
+            path = Environment.ExpandEnvironmentVariables(path);
             return SyncDir(path);
         }
 

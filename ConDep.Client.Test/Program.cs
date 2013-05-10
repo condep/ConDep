@@ -7,7 +7,8 @@ namespace ConDep.Client.Test
     {
         private static void Main(string[] args)
         {
-            SyncFile();
+            SyncWebApp();
+            //SyncFile();
             //SyncDir();
         }
 
@@ -34,6 +35,23 @@ namespace ConDep.Client.Test
             var srcRoot = @"C:\GitHub\ConDep\Build\ConDep.Dsl.nuspec";
             var dstRoot = @"C:\temp\ConDep\Build\ConDep.Dsl.nuspec";
             var result = api.SyncFile(srcRoot, dstRoot);
+
+            Console.WriteLine(
+                @"Sync result:
+
+    Files Created       : {0}
+    Files Updated       : {3}
+    Files Deleted       : {2}
+    Directories Deleted : {1}
+", result.CreatedFiles, result.DeletedDirectories, result.DeletedFiles, result.UpdatedFiles);
+        }
+
+        private static void SyncWebApp()
+        {
+            var api = new Api("http://localhost/ConDepNode/");
+            var srcRoot = @"C:\GitHub\ConDep\Build";
+            var dstRoot = @"C:\temp\ConDep\Build";
+            var result = api.SyncWebApp("Default Web Site", "WebAppConDepTest", srcRoot, dstRoot);
 
             Console.WriteLine(
                 @"Sync result:

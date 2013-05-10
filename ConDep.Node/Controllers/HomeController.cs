@@ -7,33 +7,17 @@ using Link = ConDep.Node.Model.Link;
 
 namespace ConDep.Node.Controllers
 {
-    public class ApiRepresentation : Representation
-    {
-        private readonly UrlHelper _urlHelper;
-
-        public ApiRepresentation(UrlHelper urlHelper)
-        {
-            _urlHelper = urlHelper;
-        }
-
-        protected override void CreateHypermedia()
-        {
-            Href = ApiUrls.Home(_urlHelper);
-            Rel = "self";
-            Links.Add(new WebApi.Hal.Link("asdf", "asdf"));
-        }
-    }
-
     public class HomeController : ApiController
     {
         public IEnumerable<Link> Get()
          {
              return new List<Link>
                         {
-                            new Link { Href = ApiUrls.Home(Url), Rel = "self" },
-                            new Link { Href = ApiUrls.Sync.Home(Url), Rel = "http://www.con-dep.net/rels/sync"},
-                            new Link {Href = ApiUrls.Sync.DirectoryTemplate(Url), Rel = "http://www.con-dep.net/rels/sync/dir_template"},
-                            new Link {Href = ApiUrls.Sync.FileTemplate(Url), Rel = "http://www.con-dep.net/rels/sync/file_template"}
+                            new Link { Href = ApiUrls.Home(Url), Rel = ApiRels.Self, Method = "GET"},
+                            new Link { Href = ApiUrls.Sync.Home(Url), Rel = ApiRels.Sync, Method = "GET"},
+                            new Link {Href = ApiUrls.Sync.DirectoryTemplate(Url), Rel = ApiRels.DirTemplate , Method = "GET"},
+                            new Link {Href = ApiUrls.Sync.FileTemplate(Url), Rel = ApiRels.FileTemplate, Method = "GET"},
+                            new Link {Href = ApiUrls.Iis.IisTemplate(Url), Rel = ApiRels.IisTemplate, Method = "GET"}
                         };
              //return new dynamic[]
              //           {
