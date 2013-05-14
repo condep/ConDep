@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.Routing;
-using WebApi.Hal;
 using Link = ConDep.Node.Model.Link;
 
 namespace ConDep.Node.Controllers

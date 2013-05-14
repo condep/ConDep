@@ -6,11 +6,11 @@ using System.Text.RegularExpressions;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations.Application.Deployment.CopyFile;
+using ConDep.Dsl.Operations.Application.Execution.PowerShell;
 using ConDep.Dsl.PSScripts;
 using ConDep.Dsl.Resources;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
-using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.Operations
 {
@@ -67,32 +67,32 @@ namespace ConDep.Dsl.Operations
         private void ConfigureCopyFileOperation(string path)
         {
             var copyFileOperation = new CopyFileOperation(path, string.Format(@"%windir%\temp\ConDep\{0}\PSScripts\ConDep\{1}", ConDepGlobals.ExecId, Path.GetFileName(path)));
-            //var copyFileProvider = new CopyFileProvider(path, string.Format(@"%windir%\temp\ConDep\{0}\PSScripts\ConDep\{1}", ConDepGlobals.ExecId, Path.GetFileName(path)));
-            //var copyOp = new RemoteWebDeployOperation(copyFileProvider, _webDeploy);
-            //_sequence.Add(copyOp, true);
             _sequence.Add(copyFileOperation, true);
         }
 
         public IReportStatus Execute(IReportStatus status)
         {
-            TempInstallWebDeploy(status);
+            TempInstallConDepNode(status);
             return status;
         }
 
-        private void TempInstallWebDeploy(IReportStatus status)
+        private void TempInstallConDepNode(IReportStatus status)
         {
-            //if(!_settings.Options.WebDeployExist)
-            //{
-            //    Logger.LogSectionStart("Deploying Web Deploy");
-            //    try
-            //    {
-            //        WebDeployDeployer.DeployTo(_server);
-            //    }
-            //    finally
-            //    {
-            //        Logger.LogSectionEnd("Deploying Web Deploy");
-            //    }
-            //}
+            Logger.LogSectionStart("Deploying ConDep Node");
+            try
+            {
+                var listenUrl = "http://{0}:80/ConDepNode/";
+                var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "ConDepNode.exe");
+                var byteArray = File.ReadAllBytes(path);
+                var psCopyFileOp = new ConDepNodePublisher(byteArray, string.Format(@"${{env:windir}}\temp\ConDep\{0}\{1}", ConDepGlobals.ExecId, Path.GetFileName(path)), string.Format(listenUrl, "localhost"));
+                psCopyFileOp.Execute(_server);
+                Logger.Info(string.Format("ConDep Node successfully deployed to {0}", _server.Name));
+                Logger.Info(string.Format("Node listening on {0}", string.Format(listenUrl, _server.Name)));
+            }
+            finally
+            {
+                Logger.LogSectionEnd("Deploying ConDep Node");
+            }
         }
     }
 }

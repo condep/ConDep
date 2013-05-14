@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 
 namespace ConDep.Dsl.Config
@@ -50,7 +51,7 @@ namespace ConDep.Dsl.Config
             combinedPath = Path.Combine(executingPath, assemblyName);
             if (File.Exists(combinedPath))
             {
-                assembly = Assembly.LoadFile(path);
+                assembly = Assembly.LoadFile(combinedPath);
                 return true;
             }
 
@@ -72,7 +73,14 @@ namespace ConDep.Dsl.Config
                 absolutePath = absPath;
                 return true;
             }
-            
+
+            var curPath = Path.Combine(Environment.CurrentDirectory, assemblyName);
+            if(File.Exists(curPath))
+            {
+                absolutePath = curPath;
+                return true;
+            }
+
             absolutePath = string.Empty;
             return false;
         }

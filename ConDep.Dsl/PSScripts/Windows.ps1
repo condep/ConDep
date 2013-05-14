@@ -47,10 +47,10 @@ function removeExistingWindowsFeatures($featureList) {
 
 function getMissingWindowsFeatures($featureList) {
     $features = Get-WindowsFeature $featureList
-	return ($features | where { $_.Installed -eq $false } | select -expand Name) -join ","
+	return ($features | where { $_.Installed -eq $false })
 }
 
 function getExistingWindowsFeatures($featureList) {
     $features = Get-WindowsFeature $featureList
-	return ($features | where { $_.Installed -eq $true } | select -expand Name) -join ","
+	return ($features | where { $_.Installed -eq $true })
 }

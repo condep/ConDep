@@ -61,7 +61,7 @@ namespace ConDep.Dsl.Tests
             var expectedResultFile = WriteTextToTempFile(Consts.Result01);
 
             var trans = new TransformConfigOperation(Path.GetDirectoryName(source), Path.GetFileName(source), Path.GetFileName(transform));
-            var webDepStatus = new WebDeploymentStatus();
+            var webDepStatus = new ConDepStatus();
             trans.Execute(webDepStatus, _settingsDefault);
 
             Assert.That(webDepStatus.HasErrors, Is.False);

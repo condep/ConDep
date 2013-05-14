@@ -8,7 +8,6 @@ using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.Remote;
 using ConDep.Dsl.SemanticModel.Sequence;
-using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.SemanticModel
 {
@@ -77,8 +76,14 @@ namespace ConDep.Dsl.SemanticModel
                 notification.Throw();
             }
 
-            sequenceManager.Execute(status, conDepSettings);
-            postOpSeq.Execute(status, conDepSettings);
+            try
+            {
+                sequenceManager.Execute(status, conDepSettings);
+            }
+            finally
+            {
+                postOpSeq.Execute(status, conDepSettings);
+            }
         }
 
         private IEnumerable<ApplicationArtifact> CreateApplicationArtifacts(ConDepSettings settings)

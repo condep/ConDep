@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
@@ -14,9 +15,10 @@ namespace ConDep.Node.Client
     {
         private HttpClient _client;
 
-        public Api(string url)
+        public Api(string url, string userName, string password)
         {
-            _client = new HttpClient { BaseAddress = new Uri(url) };
+            var messageHandler = new HttpClientHandler {Credentials = new NetworkCredential(userName, password)};
+            _client = new HttpClient(messageHandler) { BaseAddress = new Uri(url) };
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 

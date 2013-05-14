@@ -28,23 +28,22 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WebApp
 
         public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
-            _api = new Api(string.Format("http://{0}/ConDepNode/", server.Name));
+            _api = new Api(string.Format("http://{0}/ConDepNode/", server.Name), server.DeploymentUser.UserName, server.DeploymentUser.Password);
             var result = _api.SyncWebApp(_destinationWebSiteName, _webAppName, _sourceDir, _destDir);
 
-            foreach (var entry in result.Log)
+            if (result == null) return;
+
+            if (result.Log.Count > 0)
             {
-                Logger.Info(entry);
+                foreach (var entry in result.Log)
+                {
+                    Logger.Info(entry);
+                }
             }
-
-            Logger.Info(
-                @"Sync result:
-
-    Files Created       : {0}
-    Files Updated       : {3}
-    Files Deleted       : {2}
-    Directories Deleted : {1}
-", result.CreatedFiles.Count, result.DeletedDirectories.Count, result.DeletedFiles.Count, result.UpdatedFiles.Count);
-
+            else
+            {
+                Logger.Info("Nothing to deploy. Everything is in sync.");
+            }
         }
     }
 }

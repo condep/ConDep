@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
+using ConDep.Dsl.Operations.Application.Execution.PowerShell;
 using ConDep.Dsl.Remote.Registry;
 using Microsoft.Win32;
 
@@ -53,31 +56,37 @@ namespace ConDep.Dsl.Remote
 
         private static bool HaveAccessToServer(ServerConfig server)
         {
-            Logger.Info(string.Format("Checking if WMI can be used to reach remote server [{0}]...", server.Name));
+            Logger.Info(
+                string.Format("Checking if WinRM (Remote PowerShell) can be used to reach remote server [{0}]...",
+                                server.Name));
             var success = false;
-            try
+            var path = Environment.ExpandEnvironmentVariables(@"%windir%\system32\WinRM.cmd");
+            var startInfo = new ProcessStartInfo(path)
+                                {
+                                    Arguments = string.Format("id -r:{0} -u:{1} -p:\"{2}\"", server.Name, server.DeploymentUser.UserName, server.DeploymentUser.Password),
+                                    Verb = "RunAs",
+                                    UseShellExecute = false,
+                                    WindowStyle = ProcessWindowStyle.Hidden,
+                                    RedirectStandardError = true,
+                                    RedirectStandardOutput = true
+                                };
+            var process = Process.Start(startInfo);
+            process.WaitForExit(10000);
+
+            if (process.ExitCode == 0)
             {
-                var registry = new RemoteRegistry(server.Name, server.DeploymentUser.UserName, server.DeploymentUser.Password);
-                string windowsName;
-                success = registry.TryGetStringValue(RegistryHive.LocalMachine, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName", out windowsName);
-                if(success)
-                {
-                    Logger.Info(string.Format("Contact was made with server [{0}] using WMI. Server is {1}.", server.Name, windowsName));
-                }
-                else
-                {
-                    Logger.Error(string.Format("Unable to reach server [{0}] using WMI", server.Name));
-                }
+                var message = process.StandardOutput.ReadToEnd();
+                Logger.Info(string.Format("Contact was made with server [{0}] using WinRM (Remote PowerShell). ",
+                                            server.Name));
+                Logger.Verbose(string.Format("Details: {0} ", message));
+                success = true;
             }
-            catch(UnauthorizedAccessException accessException)
+            else
             {
-                Logger.Error(string.Format("Unable to access remote server [{0}] using WMI. Unauthorized Access Exception reported. Please check your credentials.", server.Name), accessException);
-                return false;
-            }
-            catch(Exception ex)
-            {
-                Logger.Error(string.Format("Unable to access remote server [{0}] using WMI.", server.Name), ex);
-                return false;
+                var errorMessage = process.StandardError.ReadToEnd();
+                Logger.Error(string.Format("Unable to reach server [{0}] using WinRM (Remote PowerShell)",
+                                            server.Name));
+                Logger.Error(string.Format("Details: {0}", errorMessage));
             }
             return success;
         }
@@ -86,23 +95,23 @@ namespace ConDep.Dsl.Remote
         {
             try
             {
-                Logger.Info(string.Format("Checking if WMI can be used to check if .NET Framework 4.0 is installed on server [{0}]...", server.Name));
-                var registry = new RemoteRegistry(server.Name, server.DeploymentUser.UserName, server.DeploymentUser.Password);
+                Logger.Info(string.Format("Checking if .NET Framework 4.0 is installed on server [{0}]...", server.Name));
+                var cmd = @"Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full'";// | Get-ItemProperty -name Version -EA 0 | Where { $_.PSChildName -match '^(?!S)\p{L}'} | Select PSChildName, Version";
+                var psExecutor = new PowerShellExecutor();
+                var result = psExecutor.Execute(server, cmd, false);
 
-                int dotNet40Installed;
-                var success = registry.TryGetDWordValue(RegistryHive.LocalMachine, @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full", "Install", out dotNet40Installed);
-                if (!success || dotNet40Installed != 1)
+                if(result.Count() == 1)//Any(x => x.Version == "4.0.30319" && x.PSChildName == "Full"))
                 {
-                    Logger.Error(string.Format("Missing Microsoft .NET Framework version 4.0 on [{0}].", server.Name));
-                    return false;
+                    Logger.Info(string.Format("Microsoft .NET Framework version 4.0 is installed on server [{0}].", server.Name));
+                    return true;
                 }
-                
-                Logger.Info(string.Format("Microsoft .NET Framework version 4.0 is installed on server [{0}].", server.Name));
-                return true;
+
+                Logger.Error(string.Format("Missing Microsoft .NET Framework version 4.0 on [{0}].", server.Name));
+                return false;
             }
             catch(Exception ex)
             {
-                Logger.Error(string.Format("Unable to access remote server to check for .NET Framework 4.0 on server [{0}] using WMI.", server.Name), ex);
+                Logger.Error(string.Format("Unable to access remote server to check for .NET Framework 4.0 on server [{0}] using WinRM.", server.Name), ex);
                 return false;
             }
         }

@@ -14,7 +14,7 @@ namespace ConDep.Client.Test
 
         private static void SyncDir()
         {
-            var api = new Api("http://jat-web03/ConDepNode/");
+            var api = new Api("http://jat-web03/ConDepNode/", "", "");
             var srcRoot = @"C:\GitHub\ConDep\Build";
             var dstRoot = @"C:\temp\ConDep\Build";
             var result = api.SyncDir(srcRoot, dstRoot);
@@ -31,7 +31,7 @@ namespace ConDep.Client.Test
 
         private static void SyncFile()
         {
-            var api = new Api("http://localhost/ConDepNode/");
+            var api = new Api("http://localhost/ConDepNode/", "", "");
             var srcRoot = @"C:\GitHub\ConDep\Build\ConDep.Dsl.nuspec";
             var dstRoot = @"C:\temp\ConDep\Build\ConDep.Dsl.nuspec";
             var result = api.SyncFile(srcRoot, dstRoot);
@@ -48,7 +48,7 @@ namespace ConDep.Client.Test
 
         private static void SyncWebApp()
         {
-            var api = new Api("http://localhost/ConDepNode/");
+            var api = new Api("http://localhost/ConDepNode/", "", "");
             var srcRoot = @"C:\GitHub\ConDep\Build";
             var dstRoot = @"C:\temp\ConDep\Build";
             var result = api.SyncWebApp("Default Web Site", "WebAppConDepTest", srcRoot, dstRoot);

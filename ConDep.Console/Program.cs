@@ -30,7 +30,6 @@ namespace ConDep.Console
                 else
                 {
                     PrintCopyrightMessage();
-                    Logger.LogSectionStart("ConDep");
                     if (!string.IsNullOrWhiteSpace(conDepSettings.Options.WebQAddress))
                     {
                         webQ = new WebQueue(conDepSettings.Options.WebQAddress, conDepSettings.Options.Environment);
@@ -52,7 +51,7 @@ namespace ConDep.Console
 
                     conDepSettings.Config = ConfigHandler.GetEnvConfig(conDepSettings);
 
-                    var status = new WebDeploymentStatus();
+                    var status = new ConDepStatus();
                     ConDepConfigurationExecutor.ExecuteFromAssembly(conDepSettings, status);
 
                     if (status.HasErrors)
@@ -80,7 +79,6 @@ namespace ConDep.Console
                     webQ.LeaveQueue();
                 }
 
-                Logger.LogSectionEnd("ConDep");
                 Environment.Exit(exitCode);
             }
         }

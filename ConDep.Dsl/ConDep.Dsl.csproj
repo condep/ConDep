@@ -52,9 +52,9 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Management" />
-    <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Windows\assembly\GAC_MSIL\System.Management.Automation\1.0.0.0__31bf3856ad364e35\System.Management.Automation.dll</HintPath>
+      <HintPath>..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceProcess" />
@@ -91,6 +91,11 @@
     <Compile Include="Config\ConDepAssemblyHandler.cs" />
     <Compile Include="Config\ConDepAssemblyNotFoundException.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOperation.cs" />
+    <Compile Include="Operations\Application\Execution\PowerShell\ConDepPSHost.cs" />
+    <Compile Include="Operations\Application\Execution\PowerShell\ConDepPsHostRawUI.cs" />
+    <Compile Include="Operations\Application\Execution\PowerShell\ConDepPSHostUI.cs" />
+    <Compile Include="Operations\Application\Execution\PowerShell\PowerShellExecutor.cs" />
+    <Compile Include="Operations\Application\Execution\PowerShell\ConDepNodePublisher.cs" />
     <Compile Include="Operations\Application\Execution\PowerShell\RemotePowerShellHostOperation.cs" />
     <Compile Include="Operations\Application\Execution\RunCmd\RunCmdPsOperation.cs" />
     <Compile Include="Operations\LoadBalancer\ConDepLoadBalancerException.cs" />
@@ -220,7 +225,6 @@
     <Compile Include="NetFrameworkVersion.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebApp\IisWebAppOperation.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IisWebSiteOperation.cs" />
-    <Compile Include="SemanticModel\WebDeploy\ConDepUnsupportedOutcomeException.cs" />
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="SemanticModel\Credentials.cs" />
     <Compile Include="SemanticModel\ConDepConfigurationExecutor.cs" />
@@ -229,9 +233,8 @@
     <Compile Include="SemanticModel\Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SemanticModel\SemanticValidationError.cs" />
-    <Compile Include="SemanticModel\WebDeploy\ConDepWebDeployProviderException.cs" />
     <Compile Include="SemanticModel\ValidationErrorType.cs" />
-    <Compile Include="SemanticModel\WebDeploy\WebDeploymentStatus.cs" />
+    <Compile Include="SemanticModel\WebDeploy\ConDepStatus.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceFailureOptions.cs" />
   </ItemGroup>
   <ItemGroup>
