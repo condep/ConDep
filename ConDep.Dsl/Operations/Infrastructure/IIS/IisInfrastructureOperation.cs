@@ -12,7 +12,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS
         {
             var removeFeatures = _roleServicesToRemove.Count > 0 ? string.Join(",", _roleServicesToRemove) : "$null";
             var addFeatures = "Web-Server,Web-WebServer" + (_roleServicesToAdd.Count > 0 ? "," : "") + string.Join(",", _roleServicesToAdd);
-            server.ExecuteRemote.PowerShell(string.Format("Set-ConDepWindowsFeatures {0} {1}", addFeatures, removeFeatures), opt => opt.WaitIntervalInSeconds(640).RetryAttempts(3));
+            server.ExecuteRemote.PowerShell(string.Format("Set-ConDepWindowsFeatures {0} {1}", addFeatures, removeFeatures));
         }
 
         public override string Name

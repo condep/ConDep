@@ -5,10 +5,12 @@ namespace ConDep.Dsl.Operations.Application.Execution.RunCmd
     public class RunCmdPsOperation : RemoteCompositeOperation
     {
         private readonly string _cmd;
+        private readonly RunCmdOptions.RunCmdOptionValues _values;
 
-        public RunCmdPsOperation(string cmd)
+        public RunCmdPsOperation(string cmd, RunCmdOptions.RunCmdOptionValues values = null)
         {
             _cmd = cmd;
+            _values = values;
         }
 
         public override string Name

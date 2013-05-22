@@ -90,7 +90,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.Certificate
         {
             var certScript = string.Format("[byte[]]$byteArray = {0}; $myCert = new-object System.Security.Cryptography.X509Certificates.X509Certificate2(,$byteArray); ", string.Join(",", cert.GetRawCertData()));
             certScript += string.Format("$store = new-object System.Security.Cryptography.X509Certificates.X509Store('{0}', '{1}'); $store.open(“MaxAllowed”); $store.add($myCert); $store.close();", StoreName.My, StoreLocation.LocalMachine);
-            server.ExecuteRemote.PowerShell(certScript, o => o.WaitIntervalInSeconds(15).RetryAttempts(3));
+            server.ExecuteRemote.PowerShell(certScript);
         }   
     }
 }

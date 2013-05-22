@@ -46,7 +46,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.AppPool
                     , _appPoolOptions.RecycleTimeInMinutes.HasValue ? _appPoolOptions.RecycleTimeInMinutes.Value.ToString(CultureInfo.InvariantCulture.NumberFormat) : "$null"
                     );
             }
-            server.ExecuteRemote.PowerShell(string.Format(@"{0} New-ConDepAppPool '{1}' $appPoolOptions;", appPoolOptions, _appPoolName), psOptions => psOptions.WaitIntervalInSeconds(30));
+            server.ExecuteRemote.PowerShell(string.Format(@"{0} New-ConDepAppPool '{1}' $appPoolOptions;", appPoolOptions, _appPoolName));
         }
     }
 }

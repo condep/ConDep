@@ -41,8 +41,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
                 var start = string.Format("Start-ConDepWinService '{0}' 0 {1}", _serviceName,
                                           "$" + _values.IgnoreFailureOnServiceStartStop);
                 server.ExecuteRemote.PowerShell(start,
-                                                o =>
-                                                o.WaitIntervalInSeconds(60).ContinueOnError(
+                                                o => o.ContinueOnError(
                                                     _values.IgnoreFailureOnServiceStartStop));
             }
         }
@@ -65,7 +64,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
                                        "$" + _values.IgnoreFailureOnServiceStartStop);
             server.ExecuteRemote.PowerShell(remove,
                                             o =>
-                                            o.WaitIntervalInSeconds(60).ContinueOnError(_values.IgnoreFailureOnServiceStartStop));
+                                            o.ContinueOnError(_values.IgnoreFailureOnServiceStartStop));
         }
 
         protected abstract void ConfigureInstallService(IOfferRemoteComposition server);

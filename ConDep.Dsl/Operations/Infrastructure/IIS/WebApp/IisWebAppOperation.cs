@@ -29,8 +29,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebApp
                 , _webAppName
                 , _webSiteName
                 , (_options == null || string.IsNullOrWhiteSpace(_options.PhysicalPath)) ? "$null" : "'" + _options.PhysicalPath + "'"
-                , (_options == null || string.IsNullOrWhiteSpace(_options.AppPool)) ? "$null" : "'" + _options.AppPool + "'")
-            , psOptions => psOptions.WaitIntervalInSeconds(30));
+                , (_options == null || string.IsNullOrWhiteSpace(_options.AppPool)) ? "$null" : "'" + _options.AppPool + "'"));
         }
 
         public override string Name

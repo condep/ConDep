@@ -6,6 +6,7 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
     public class PowerShellOperation : RemoteCompositeOperation
     {
         private readonly FileInfo _scriptFile;
+        private readonly PowerShellOptions.PowerShellOptionValues _values;
         private readonly string _command;
         private int _waitInterval = 30;
 
@@ -14,9 +15,10 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
             _command = command;
         }
 
-        public PowerShellOperation(FileInfo scriptFile)
+        public PowerShellOperation(FileInfo scriptFile, PowerShellOptions.PowerShellOptionValues values = null)
         {
             _scriptFile = scriptFile;
+            _values = values;
         }
 
         public bool ContinueOnError { get; set; }
@@ -40,7 +42,7 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
                 libImport = "Add-Type -Path \"" + @"%temp%\ConDep.Remote.dll" + "\";";
             }
             //elseif($Error.Count -gt 0) {{ Write-Error $Error[0]; exit 1; }} 
-            server.ExecuteRemote.DosCommand(string.Format(@"powershell.exe -noprofile -InputFormat none -Command ""& {{ set-executionpolicy remotesigned -force; $ErrorActionPreference='stop'; Import-Module $env:windir\temp\ConDep\{0}\PSScripts\ConDep; {1}{2}; if(!$?) {{ exit 1; }} else {{ exit $LASTEXITCODE; }} }}""", ConDepGlobals.ExecId, libImport, _command), o => o.ContinueOnError(ContinueOnError).WaitIntervalInSeconds(WaitIntervalInSeconds).RetryAttempts(RetryAttempts));
+            server.ExecuteRemote.DosCommand(string.Format(@"powershell.exe -noprofile -InputFormat none -Command ""& {{ set-executionpolicy remotesigned -force; $ErrorActionPreference='stop'; Import-Module $env:windir\temp\ConDep\{0}\PSScripts\ConDep; {1}{2}; if(!$?) {{ exit 1; }} else {{ exit $LASTEXITCODE; }} }}""", ConDepGlobals.ExecId, libImport, _command), o => o.ContinueOnError(ContinueOnError));
         }
 
         //private string AddExitCodeHandlingToScript(string script)

@@ -6,7 +6,7 @@ using System.Management.Automation.Host;
 using System.Security;
 using ConDep.Dsl.Logging;
 
-namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
+namespace ConDep.Dsl.Remote
 {
     internal class ConDepPSHostUI : PSHostUserInterface
     {

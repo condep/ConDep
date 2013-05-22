@@ -2,35 +2,28 @@
 {
     public class PowerShellOptions : IOfferPowerShellOptions
     {
-        private readonly PowerShellOperation _powerShellOperation;
-
-        public PowerShellOptions(PowerShellOperation powerShellOperation)
-        {
-            _powerShellOperation = powerShellOperation;
-        }
+        private readonly PowerShellOptionValues _values = new PowerShellOptionValues();
 
         public IOfferPowerShellOptions RequireRemoteLib()
         {
-            _powerShellOperation.RequireRemoteLib = true;
+            _values.RequireRemoteLib = true;
             return this;
         }
 
         public IOfferPowerShellOptions ContinueOnError(bool value)
         {
-            _powerShellOperation.ContinueOnError = value;
+            _values.ContinueOnError = value;
             return this;
         }
 
-        public IOfferPowerShellOptions WaitIntervalInSeconds(int seconds)
-        {
-            _powerShellOperation.WaitIntervalInSeconds = seconds;
-            return this;
-        }
+        public PowerShellOptionValues Values { get { return _values; } }
 
-        public IOfferPowerShellOptions RetryAttempts(int attempts)
+        public class PowerShellOptionValues
         {
-            _powerShellOperation.RetryAttempts = attempts;
-            return this;
+            public bool RequireRemoteLib { get; set; }
+
+            public bool ContinueOnError { get; set; }
         }
     }
+
 }

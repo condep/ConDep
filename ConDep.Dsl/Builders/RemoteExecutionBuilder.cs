@@ -4,8 +4,6 @@ using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.Application.Execution.PowerShell;
 using ConDep.Dsl.Operations.Application.Execution.RunCmd;
 using ConDep.Dsl.SemanticModel;
-using ConDep.Dsl.SemanticModel.Sequence;
-using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.Builders
 {
@@ -20,8 +18,6 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteExecution DosCommand(string cmd)
         {
-            //var runCmdProvider = new RunCmdProvider(cmd);
-            //AddOperation(runCmdProvider);
             var runCmdOperation = new RunCmdPsOperation(cmd);
             AddOperation(runCmdOperation);
             return this;
@@ -29,17 +25,15 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteExecution DosCommand(string cmd, Action<IOfferRunCmdOptions> runCmdOptions)
         {
-            //var runCmdProvider = new RunCmdProvider(cmd);
-            //runCmdOptions(new RunCmdOptions(runCmdProvider));
-            //AddOperation(runCmdProvider);
-            var runCmdOperation = new RunCmdPsOperation(cmd);
+            var options = new RunCmdOptions();
+            runCmdOptions(options);
+            var runCmdOperation = new RunCmdPsOperation(cmd, options.Values);
             AddOperation(runCmdOperation);
             return this;
         }
 
         public IOfferRemoteExecution PowerShell(string command)
         {
-            //var psProvider = new PowerShellOperation(command);
             var psProvider = new RemotePowerShellHostOperation(command);
             AddOperation(psProvider);
             return this;
@@ -47,25 +41,26 @@ namespace ConDep.Dsl.Builders
 
         public IOfferRemoteExecution PowerShell(FileInfo scriptFile)
         {
-            var psProvider = new PowerShellOperation(scriptFile);
+            var psProvider = new RemotePowerShellHostOperation(scriptFile);
             AddOperation(psProvider);
             return this;
         }
 
         public IOfferRemoteExecution PowerShell(string command, Action<IOfferPowerShellOptions> powerShellOptions)
         {
-            //var psProvider = new PowerShellOperation(command);
-            var psProvider = new RemotePowerShellHostOperation(command);
-            //powerShellOptions(new PowerShellOptions(psProvider));
-            AddOperation(psProvider);
+            var options = new PowerShellOptions();
+            powerShellOptions(options);
+            var operation = new RemotePowerShellHostOperation(command, options.Values);
+            AddOperation(operation);
             return this;
         }
 
         public IOfferRemoteExecution PowerShell(FileInfo scriptFile, Action<IOfferPowerShellOptions> powerShellOptions)
         {
-            var psProvider = new PowerShellOperation(scriptFile);
-            powerShellOptions(new PowerShellOptions(psProvider));
-            AddOperation(psProvider);
+            var options = new PowerShellOptions();
+            powerShellOptions(options);
+            var operation = new RemotePowerShellHostOperation(scriptFile, options.Values);
+            AddOperation(operation);
             return this;
         }
 
@@ -73,6 +68,7 @@ namespace ConDep.Dsl.Builders
         {
             _remoteSequence.Add(operation);
         }
+
         public void AddOperation(RemoteCompositeOperation operation)
         {
             operation.Configure(new RemoteCompositeBuilder(_remoteSequence.NewCompositeSequence(operation)));

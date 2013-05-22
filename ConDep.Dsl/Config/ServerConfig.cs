@@ -33,5 +33,7 @@ namespace ConDep.Dsl.Config
         }
 
         public string LoadBalancerFarm { get; set; }
+        public string TempFolderPowerShell { get; set; }
+        public string TempFolderDos { get; set; }
     }
 }

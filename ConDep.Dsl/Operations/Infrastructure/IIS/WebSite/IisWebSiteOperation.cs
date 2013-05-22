@@ -58,8 +58,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
                 , _id
                 , "@(" + string.Join(",", bindings) + ")"
                 , (string.IsNullOrWhiteSpace(_options.Values.PhysicalPath) ? "$null" : "'" + _options.Values.PhysicalPath + "'")
-                , _options.Values.AppPool)
-                , o => o.WaitIntervalInSeconds(30).RetryAttempts(3));
+                , _options.Values.AppPool));
 
             foreach(var webApp in _options.Values.WebApps)
             {

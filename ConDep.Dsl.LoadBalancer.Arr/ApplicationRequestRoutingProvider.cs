@@ -45,11 +45,7 @@ namespace ConDep.LoadBalancer.Arr
         {
                 server.ExecuteRemote.PowerShell(string.Format(@"import-module $env:temp\ApplicationRequestRouting; Set-WebFarmServerState -State {0} -Name {1} -UseDnsLookup;",
                              state.ToString(),
-                             serverNameToChangeStateOn), o =>
-                             {
-                                 o.WaitIntervalInSeconds(10);
-                                 o.RetryAttempts(20);
-                             });
+                             serverNameToChangeStateOn));
         }
     }
 }

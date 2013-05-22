@@ -32,7 +32,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
                                            _values.StartupType.HasValue ? "'" + _values.StartupType + "'" : "$null"
                 );
 
-            server.ExecuteRemote.PowerShell(installCmd, opt => opt.WaitIntervalInSeconds(60));
+            server.ExecuteRemote.PowerShell(installCmd);
         }
     }
 }

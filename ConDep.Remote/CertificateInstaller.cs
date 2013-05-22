@@ -11,6 +11,7 @@ namespace ConDep.Remote
     {
         public static void InstallCert(string filePath)
         {
+            filePath = Environment.ExpandEnvironmentVariables(filePath);
             Console.WriteLine(string.Format("Installing certificate using file: [{0}].", filePath));
             var certificate = new X509Certificate2(filePath);
             AddCertToStore(certificate);
@@ -26,7 +27,8 @@ namespace ConDep.Remote
 
         public static void InstallCertToTrustedRoot(string filePath)
         {
-            Console.Write(string.Format("Installing certificate using file: [{0}].", filePath));
+            filePath = Environment.ExpandEnvironmentVariables(filePath);
+            Console.Write("Installing certificate using file: [{0}].", filePath);
             var certificate = new X509Certificate2(filePath);
             var store = new X509Store(StoreName.CertificateAuthority, StoreLocation.LocalMachine);
             AddCertToStore(certificate, store);
@@ -36,7 +38,12 @@ namespace ConDep.Remote
 
         public static void InstallPfx(string filePath, string password, string[] privateKeyUsers)
         {
-            Console.WriteLine(string.Format("Installing certificate using file: [{0}].", filePath));
+            filePath = Environment.ExpandEnvironmentVariables(filePath);
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException(string.Format("File [{0}] not found.", filePath));
+            }
+            Console.WriteLine("Installing certificate using file: [{0}].", filePath);
 
             var cert = new X509Certificate2();
             cert.Import(filePath, password, X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet );

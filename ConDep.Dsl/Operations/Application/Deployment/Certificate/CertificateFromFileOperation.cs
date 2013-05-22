@@ -35,14 +35,14 @@ namespace ConDep.Dsl.Operations.Application.Deployment.Certificate
                     psUserArray = string.Format("@({0})", users);
                 }
 
-                var destPath = string.Format(@"%temp%\{0}.pfx", Guid.NewGuid());
+                var destPath = string.Format(@"{0}\temp\{1}.pfx", "%windir%", Guid.NewGuid());
                 server.Deploy.File(path, destPath);
-                server.ExecuteRemote.PowerShell("$path='" + destPath + "'; $password='" + _password + "'; $privateKeyUsers = " + psUserArray + "; [ConDep.Remote.CertificateInstaller]::InstallPfx($path, $password, $privateKeyUsers);", opt => opt.RequireRemoteLib().WaitIntervalInSeconds(30));
+                server.ExecuteRemote.PowerShell("$path=\"" + destPath + "\"; $password='" + _password + "'; $privateKeyUsers = " + psUserArray + "; [ConDep.Remote.CertificateInstaller]::InstallPfx($path, $password, $privateKeyUsers);", opt => opt.RequireRemoteLib());
             }
             else
             {
                 var base64Cert = Convert.ToBase64String(cert.RawData);
-                server.ExecuteRemote.PowerShell(string.Format("[ConDep.Remote.CertificateInstaller]::InstallCertFromBase64('{0}');", base64Cert), opt => opt.RequireRemoteLib().WaitIntervalInSeconds(20));
+                server.ExecuteRemote.PowerShell(string.Format("[ConDep.Remote.CertificateInstaller]::InstallCertFromBase64('{0}');", base64Cert), opt => opt.RequireRemoteLib());
             }
         }
 

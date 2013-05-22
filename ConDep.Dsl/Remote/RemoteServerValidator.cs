@@ -98,7 +98,7 @@ namespace ConDep.Dsl.Remote
                 Logger.Info(string.Format("Checking if .NET Framework 4.0 is installed on server [{0}]...", server.Name));
                 var cmd = @"Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full'";// | Get-ItemProperty -name Version -EA 0 | Where { $_.PSChildName -match '^(?!S)\p{L}'} | Select PSChildName, Version";
                 var psExecutor = new PowerShellExecutor();
-                var result = psExecutor.Execute(server, cmd, false);
+                var result = psExecutor.Execute(server, cmd, logOutput: false, loadConDepModule: false);
 
                 if(result.Count() == 1)//Any(x => x.Version == "4.0.30319" && x.PSChildName == "Full"))
                 {

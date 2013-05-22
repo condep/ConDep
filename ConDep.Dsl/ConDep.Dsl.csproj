@@ -91,11 +91,12 @@
     <Compile Include="Config\ConDepAssemblyHandler.cs" />
     <Compile Include="Config\ConDepAssemblyNotFoundException.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOperation.cs" />
-    <Compile Include="Operations\Application\Execution\PowerShell\ConDepPSHost.cs" />
-    <Compile Include="Operations\Application\Execution\PowerShell\ConDepPsHostRawUI.cs" />
-    <Compile Include="Operations\Application\Execution\PowerShell\ConDepPSHostUI.cs" />
-    <Compile Include="Operations\Application\Execution\PowerShell\PowerShellExecutor.cs" />
-    <Compile Include="Operations\Application\Execution\PowerShell\ConDepNodePublisher.cs" />
+    <Compile Include="Operations\Application\Execution\RunCmd\RunCmdOptions.cs" />
+    <Compile Include="Remote\ConDepPSHost.cs" />
+    <Compile Include="Remote\ConDepPsHostRawUI.cs" />
+    <Compile Include="Remote\ConDepPSHostUI.cs" />
+    <Compile Include="Remote\PowerShellExecutor.cs" />
+    <Compile Include="Remote\ConDepNodePublisher.cs" />
     <Compile Include="Operations\Application\Execution\PowerShell\RemotePowerShellHostOperation.cs" />
     <Compile Include="Operations\Application\Execution\RunCmd\RunCmdPsOperation.cs" />
     <Compile Include="Operations\LoadBalancer\ConDepLoadBalancerException.cs" />

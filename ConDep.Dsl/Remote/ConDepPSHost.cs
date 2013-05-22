@@ -3,9 +3,8 @@ using System.Globalization;
 using System.Management.Automation.Host;
 using System.Reflection;
 using System.Threading;
-using ConDep.Dsl.Operations.Application.Execution.RunCmd;
 
-namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
+namespace ConDep.Dsl.Remote
 {
     internal class ConDepPSHost : PSHost
     {
@@ -20,7 +19,7 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
 
         public override void SetShouldExit(int exitCode)
         {
-            throw new ConDepUntrappedExitCodeException(exitCode.ToString());
+            throw new NotImplementedException();
             //this.program.ShouldExit = true;
             //this.program.ExitCode = exitCode;
         }

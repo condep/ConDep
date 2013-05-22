@@ -14,19 +14,5 @@ namespace ConDep.Dsl
         /// <param name="value"></param>
         /// <returns></returns>
         IOfferPowerShellOptions ContinueOnError(bool value);
-
-        /// <summary>
-        /// How long ConDep will wait for command to finish executing before giving up and issue a timeout exception. Actual wait time will be this wait interval * RetryAttempts (see RetryAttempts).
-        /// </summary>
-        /// <param name="seconds"></param>
-        /// <returns></returns>
-        IOfferPowerShellOptions WaitIntervalInSeconds(int seconds);
-
-        /// <summary>
-        /// How many times ConDep will retry operation. Consider this together with WaitIntervalInSeconds
-        /// </summary>
-        /// <param name="attempts"></param>
-        /// <returns></returns>
-        IOfferPowerShellOptions RetryAttempts(int attempts);
     }
 }

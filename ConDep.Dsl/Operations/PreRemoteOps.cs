@@ -6,8 +6,8 @@ using System.Text.RegularExpressions;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations.Application.Deployment.CopyFile;
-using ConDep.Dsl.Operations.Application.Execution.PowerShell;
 using ConDep.Dsl.PSScripts;
+using ConDep.Dsl.Remote;
 using ConDep.Dsl.Resources;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
@@ -19,9 +19,13 @@ namespace ConDep.Dsl.Operations
         private readonly ServerConfig _server;
         private readonly PreOpsSequence _sequence;
         private readonly ConDepSettings _settings;
+        const string TMP_FOLDER = @"{0}\temp\ConDep\{1}";
 
         public PreRemoteOps(ServerConfig server, PreOpsSequence sequence, ConDepSettings settings)
         {
+            server.TempFolderDos = string.Format(TMP_FOLDER, "%windir%", ConDepGlobals.ExecId);
+            server.TempFolderPowerShell = string.Format(TMP_FOLDER, "$env:windir", ConDepGlobals.ExecId);
+
             _server = server;
             _sequence = sequence;
             _settings = settings;
@@ -46,6 +50,7 @@ namespace ConDep.Dsl.Operations
             {
                 ConfigureCopyFileOperation(path);
             }
+            //ConfigureCopyFileOperation(Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "ConDep.Remote.dll"));
         }
 
         private string ExtractPowerShellFileFromResource(Assembly assembly, string resource)
@@ -66,7 +71,7 @@ namespace ConDep.Dsl.Operations
 
         private void ConfigureCopyFileOperation(string path)
         {
-            var copyFileOperation = new CopyFileOperation(path, string.Format(@"%windir%\temp\ConDep\{0}\PSScripts\ConDep\{1}", ConDepGlobals.ExecId, Path.GetFileName(path)));
+            var copyFileOperation = new CopyFileOperation(path, string.Format(@"{0}\PSScripts\ConDep\{1}", _server.TempFolderDos, Path.GetFileName(path)));
             _sequence.Add(copyFileOperation, true);
         }
 
@@ -84,7 +89,7 @@ namespace ConDep.Dsl.Operations
                 var listenUrl = "http://{0}:80/ConDepNode/";
                 var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "ConDepNode.exe");
                 var byteArray = File.ReadAllBytes(path);
-                var psCopyFileOp = new ConDepNodePublisher(byteArray, string.Format(@"${{env:windir}}\temp\ConDep\{0}\{1}", ConDepGlobals.ExecId, Path.GetFileName(path)), string.Format(listenUrl, "localhost"));
+                var psCopyFileOp = new ConDepNodePublisher(byteArray, Path.Combine(_server.TempFolderPowerShell, Path.GetFileName(path)), string.Format(listenUrl, "localhost"));
                 psCopyFileOp.Execute(_server);
                 Logger.Info(string.Format("ConDep Node successfully deployed to {0}", _server.Name));
                 Logger.Info(string.Format("Node listening on {0}", string.Format(listenUrl, _server.Name)));
