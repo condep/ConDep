@@ -30,7 +30,8 @@ namespace ConDep.Dsl.SemanticModel
 
             if(!conDepSettings.Options.WebDeployExist)
             {
-                var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers);
+                var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
+                var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers, serverInfoHarvester);
                 if (!serverValidator.IsValid())
                 {
                     Logger.Error("Not all servers fulfill ConDep's requirements. Aborting execution.");

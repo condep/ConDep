@@ -69,8 +69,8 @@ namespace ConDep.Dsl.Remote
                                      new CommandParameter("bytes", _nodeExe.Length)
                                  };
 
-            var executor = new PowerShellExecutor();
-            var result = executor.Execute(server, script, loadConDepModule: false, parameters: parameters);
+            var executor = new PowerShellExecutor(server) {LoadConDepModule = false};
+            var result = executor.Execute(script, parameters: parameters);
             foreach (var psObject in result)
             {
                 Logger.Verbose(psObject.ToString());

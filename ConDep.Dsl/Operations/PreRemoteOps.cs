@@ -50,7 +50,8 @@ namespace ConDep.Dsl.Operations
             {
                 ConfigureCopyFileOperation(path);
             }
-            //ConfigureCopyFileOperation(Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "ConDep.Remote.dll"));
+            var copyFileOperation = new CopyFileOperation(Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "ConDep.Remote.dll"), string.Format(@"{0}\{1}", _server.TempFolderDos, "ConDep.Remote.dll"));
+            _sequence.Add(copyFileOperation, true);
         }
 
         private string ExtractPowerShellFileFromResource(Assembly assembly, string resource)
@@ -69,9 +70,9 @@ namespace ConDep.Dsl.Operations
             return null;
         }
 
-        private void ConfigureCopyFileOperation(string path)
+        private void ConfigureCopyFileOperation(string srcPath)
         {
-            var copyFileOperation = new CopyFileOperation(path, string.Format(@"{0}\PSScripts\ConDep\{1}", _server.TempFolderDos, Path.GetFileName(path)));
+            var copyFileOperation = new CopyFileOperation(srcPath, string.Format(@"{0}\PSScripts\ConDep\{1}", _server.TempFolderDos, Path.GetFileName(srcPath)));
             _sequence.Add(copyFileOperation, true);
         }
 

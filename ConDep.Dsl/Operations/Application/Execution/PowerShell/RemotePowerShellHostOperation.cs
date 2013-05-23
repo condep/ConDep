@@ -11,35 +11,27 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
         private readonly string _cmd;
         private readonly FileInfo _scriptFile;
         private readonly PowerShellOptions.PowerShellOptionValues _values;
-        private PowerShellExecutor _executor;
 
         public RemotePowerShellHostOperation(string cmd, PowerShellOptions.PowerShellOptionValues values = null)
         {
             _cmd = cmd;
             _values = values;
-            _executor = new PowerShellExecutor();
         }
 
         public RemotePowerShellHostOperation(FileInfo scriptFile, PowerShellOptions.PowerShellOptionValues values = null)
         {
             _scriptFile = scriptFile;
             _values = values;
-            _executor = new PowerShellExecutor();
         }
 
         public override void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
-            var libImport = "";
+            var psExec = new PowerShellExecutor(server);
             if (_values != null && _values.RequireRemoteLib)
             {
-                var copyFileOperation = new CopyFileOperation(Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "ConDep.Remote.dll"), Path.Combine(server.TempFolderDos, "ConDep.Remote.dll"));
-                copyFileOperation.Execute(server, status, settings);
-
-                //server.Deploy.File(Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "ConDep.Remote.dll"), @"%temp%\ConDep.Remote.dll");
-                libImport = string.Format(@"Add-Type -Path ""{0}\ConDep.Remote.dll"";", server.TempFolderPowerShell);
+                psExec.LoadConDepDotNetLibrary = true;
             }
-
-            _executor.Execute(server, string.Format("set-executionpolicy remotesigned -force; {0}{1}", libImport, _cmd));
+            psExec.Execute(_cmd);
         }
 
         public override string Name

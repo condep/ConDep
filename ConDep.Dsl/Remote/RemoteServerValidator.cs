@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
-using ConDep.Dsl.Operations.Application.Execution.PowerShell;
-using ConDep.Dsl.Remote.Registry;
-using Microsoft.Win32;
+using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Remote
 {
     internal class RemoteServerValidator
     {
         private readonly IEnumerable<ServerConfig> _servers;
+        private readonly ServerInfoHarvester _serverInfoHarvester;
 
-        public RemoteServerValidator(IEnumerable<ServerConfig> servers)
+        public RemoteServerValidator(IEnumerable<ServerConfig> servers, ServerInfoHarvester serverInfoHarvester)
         {
             _servers = servers;
+            _serverInfoHarvester = serverInfoHarvester;
         }
 
         public bool IsValid()
@@ -25,13 +24,20 @@ namespace ConDep.Dsl.Remote
             try
             {
                 Logger.LogSectionStart("Validating Servers");
+                if (!ValidateWinRm(_servers))
+                {
+                    return false;
+                }
+
+                _serverInfoHarvester.Harvest();
+
                 foreach (var server in _servers)
                 {
                     try
                     {
                         Logger.LogSectionStart(string.Format("Validating {0}", server.Name));
 
-                        if (HaveAccessToServer(server) && HaveNet40(server))
+                        if (HaveNet40(server))
                         {
                             Logger.Info(string.Format("Server requirements on [{0}] are OK.", server.Name));
                         }
@@ -54,16 +60,41 @@ namespace ConDep.Dsl.Remote
             }
         }
 
+        private static bool ValidateWinRm(IEnumerable<ServerConfig> servers)
+        {
+            foreach (var server in servers)
+            {
+                Logger.LogSectionStart(string.Format("Checking for WinRM (PowerShell Remoting) on [{0}]...",
+                                                        server.Name));
+
+                if (HaveAccessToServer(server))
+                {
+                    Logger.Info(string.Format("Successfully validated WinRM on [{0}].", server.Name));
+                }
+                else
+                {
+                    Logger.Error(
+                        string.Format("Could not connect to remote server [{0}] with WinRM (PowerShell Remoting).",
+                                        server.Name));
+                    Logger.Error(string.Format("Server requirements on [{0}] are NOT OK.", server.Name));
+                    return false;
+                }
+            }
+            return true;
+        }
+
         private static bool HaveAccessToServer(ServerConfig server)
         {
             Logger.Info(
                 string.Format("Checking if WinRM (Remote PowerShell) can be used to reach remote server [{0}]...",
-                                server.Name));
+                              server.Name));
             var success = false;
             var path = Environment.ExpandEnvironmentVariables(@"%windir%\system32\WinRM.cmd");
             var startInfo = new ProcessStartInfo(path)
                                 {
-                                    Arguments = string.Format("id -r:{0} -u:{1} -p:\"{2}\"", server.Name, server.DeploymentUser.UserName, server.DeploymentUser.Password),
+                                    Arguments =
+                                        string.Format("id -r:{0} -u:{1} -p:\"{2}\"", server.Name,
+                                                      server.DeploymentUser.UserName, server.DeploymentUser.Password),
                                     Verb = "RunAs",
                                     UseShellExecute = false,
                                     WindowStyle = ProcessWindowStyle.Hidden,
@@ -77,7 +108,7 @@ namespace ConDep.Dsl.Remote
             {
                 var message = process.StandardOutput.ReadToEnd();
                 Logger.Info(string.Format("Contact was made with server [{0}] using WinRM (Remote PowerShell). ",
-                                            server.Name));
+                                          server.Name));
                 Logger.Verbose(string.Format("Details: {0} ", message));
                 success = true;
             }
@@ -85,7 +116,7 @@ namespace ConDep.Dsl.Remote
             {
                 var errorMessage = process.StandardError.ReadToEnd();
                 Logger.Error(string.Format("Unable to reach server [{0}] using WinRM (Remote PowerShell)",
-                                            server.Name));
+                                           server.Name));
                 Logger.Error(string.Format("Details: {0}", errorMessage));
             }
             return success;
@@ -93,27 +124,41 @@ namespace ConDep.Dsl.Remote
 
         private static bool HaveNet40(ServerConfig server)
         {
-            try
+            Logger.Info(string.Format("Checking if .NET Framework 4.0 is installed on server [{0}]...", server.Name));
+            var success = server.ServerInfo.DotNetFrameworks.HasVersion(DotNetVersion.v4_0_full);
+
+            if (success)
             {
-                Logger.Info(string.Format("Checking if .NET Framework 4.0 is installed on server [{0}]...", server.Name));
-                var cmd = @"Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full'";// | Get-ItemProperty -name Version -EA 0 | Where { $_.PSChildName -match '^(?!S)\p{L}'} | Select PSChildName, Version";
-                var psExecutor = new PowerShellExecutor();
-                var result = psExecutor.Execute(server, cmd, logOutput: false, loadConDepModule: false);
-
-                if(result.Count() == 1)//Any(x => x.Version == "4.0.30319" && x.PSChildName == "Full"))
-                {
-                    Logger.Info(string.Format("Microsoft .NET Framework version 4.0 is installed on server [{0}].", server.Name));
-                    return true;
-                }
-
+                Logger.Info(string.Format("Microsoft .NET Framework version 4.0 is installed on server [{0}].",
+                                          server.Name));
+            }
+            else
+            {
                 Logger.Error(string.Format("Missing Microsoft .NET Framework version 4.0 on [{0}].", server.Name));
-                return false;
             }
-            catch(Exception ex)
-            {
-                Logger.Error(string.Format("Unable to access remote server to check for .NET Framework 4.0 on server [{0}] using WinRM.", server.Name), ex);
-                return false;
-            }
+            return success;
+
+            //    try
+            //    {
+            //        Logger.Info(string.Format("Checking if .NET Framework 4.0 is installed on server [{0}]...", server.Name));
+            //        var psExecutor = new PowerShellExecutor(server) {LogOutput = false, LoadConDepModule = false};
+            //        var result = psExecutor.Execute(@"Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full'");
+
+            //        if(result.Count() == 1)//Any(x => x.Version == "4.0.30319" && x.PSChildName == "Full"))
+            //        {
+            //            Logger.Info(string.Format("Microsoft .NET Framework version 4.0 is installed on server [{0}].", server.Name));
+            //            return true;
+            //        }
+
+            //        Logger.Error(string.Format("Missing Microsoft .NET Framework version 4.0 on [{0}].", server.Name));
+            //        return false;
+            //    }
+            //    catch(Exception ex)
+            //    {
+            //        Logger.Error(string.Format("Unable to access remote server to check for .NET Framework 4.0 on server [{0}] using WinRM.", server.Name), ex);
+            //        return false;
+            //    }
+            //}
         }
     }
 }
