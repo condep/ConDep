@@ -108,7 +108,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <PropertyGroup>
-    <PostBuildEvent>..\..\..\packages\ilmerge.2.13.0307\ILMerge.exe /wildcards /internalize /allowDup /out:ConDepNode.exe ConDep.Node.exe *.dll</PostBuildEvent>
+    <PostBuildEvent>$(SolutionDir)\packages\ilmerge.2.13.0307\ILMerge.exe /wildcards /internalize /allowDup /out:ConDepNode.exe ConDep.Node.exe *.dll</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
