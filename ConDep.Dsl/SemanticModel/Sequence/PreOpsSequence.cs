@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations;
-using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
@@ -47,10 +45,6 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 Logger.LogSectionStart("Pre-Operations");
                 sectionAdded = true;
 
-                var remotePreOps = new PreRemoteOps(server, this, settings);
-                remotePreOps.Configure();
-                remotePreOps.Execute(status);
-                
                 foreach (var element in _sequence)
                 {
                     element.Execute(server, status, settings);

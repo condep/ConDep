@@ -5,6 +5,7 @@ using System.Reflection;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
+using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.Remote;
 using ConDep.Dsl.SemanticModel.Sequence;
@@ -50,6 +51,12 @@ namespace ConDep.Dsl.SemanticModel
             {
                 var infrastructureSequence = new InfrastructureSequence();
                 var preOpsSequence = new PreOpsSequence();
+
+                var remotePreOps = new PreRemoteOps(preOpsSequence, conDepSettings);
+                remotePreOps.Configure();
+                preOpsSequence.Add(remotePreOps);
+                //remotePreOps.Execute(status);
+
                 if (!conDepSettings.Options.DeployOnly)
                 {
                     var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence);

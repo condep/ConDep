@@ -14,19 +14,15 @@ using ConDep.Dsl.SemanticModel.Sequence;
 
 namespace ConDep.Dsl.Operations
 {
-    internal class PreRemoteOps
+    internal class PreRemoteOps : IExecuteRemotePreOps
     {
         private readonly ServerConfig _server;
         private readonly PreOpsSequence _sequence;
         private readonly ConDepSettings _settings;
         const string TMP_FOLDER = @"{0}\temp\ConDep\{1}";
 
-        public PreRemoteOps(ServerConfig server, PreOpsSequence sequence, ConDepSettings settings)
+        public PreRemoteOps(PreOpsSequence sequence, ConDepSettings settings)
         {
-            server.TempFolderDos = string.Format(TMP_FOLDER, "%windir%", ConDepGlobals.ExecId);
-            server.TempFolderPowerShell = string.Format(TMP_FOLDER, "$env:windir", ConDepGlobals.ExecId);
-
-            _server = server;
             _sequence = sequence;
             _settings = settings;
         }
@@ -76,10 +72,16 @@ namespace ConDep.Dsl.Operations
             _sequence.Add(copyFileOperation, true);
         }
 
-        public IReportStatus Execute(IReportStatus status)
+        public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
+            server.TempFolderDos = string.Format(TMP_FOLDER, "%windir%", ConDepGlobals.ExecId);
+            server.TempFolderPowerShell = string.Format(TMP_FOLDER, "$env:windir", ConDepGlobals.ExecId);
             TempInstallConDepNode(status);
-            return status;
+        }
+
+        public bool IsValid(Notification notification)
+        {
+            return true;
         }
 
         private void TempInstallConDepNode(IReportStatus status)
@@ -100,5 +102,10 @@ namespace ConDep.Dsl.Operations
                 Logger.LogSectionEnd("Deploying ConDep Node");
             }
         }
+    }
+
+    internal interface IExecuteRemotePreOps : IOperateRemote
+    {
+        void Configure();
     }
 }
