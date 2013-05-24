@@ -29,7 +29,7 @@ task Build-All -depends Init, Build-ConDep-Node, Build-ConDep-Dsl, Build-ConDep-
 
 task Build-ConDep-Node -depends Clean-ConDep-Node, Init { 
 	Exec { msbuild "$pwd\$condep_node\$condep_node.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_node\ }
-	cmd /c $pwd\packages\ilmerge.2.13.0307\ILMerge.exe /wildcards /internalize /allowDup /out:ConDepNode.exe $pwd\$condep_node\ConDep.Node.exe $pwd\$condep_node\*.dll
+	cmd /c $pwd\packages\ilmerge.2.13.0307\ILMerge.exe /wildcards /internalize /allowDup /out:$build_directory\$condep_node\ConDepNode.exe $build_directory\$condep_node\ConDep.Node.exe $build_directory\$condep_node\*.dll
 	
 	Generate-Nuspec-File `
 		-file "$build_directory\$condep_node.nuspec" `
