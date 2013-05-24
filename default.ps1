@@ -47,7 +47,7 @@ task Build-ConDep-Node -depends Clean-ConDep-Node, Init {
 			@{ Name="Microsoft.AspNet.WebApi.SelfHost"; Version="4.0.20918.0"}
 		) `
 		-files @(
-			@{ Path="$condep_dsl\ConDepNode.exe"; Target="lib/net40"}
+			@{ Path="$condep_node\ConDepNode.exe"; Target="lib/net40"}
 		)
 }
 
