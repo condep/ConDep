@@ -15,6 +15,7 @@ properties {
 	$condep_web_q_server = "ConDep.WebQ.Server"
 	$condep_web_q_client = "ConDep.WebQ.Client"
 	$condep_node = "ConDep.Node"
+	$condep_node_client = "ConDep.Node.Client"
 	$lib = "$pwd\lib"
 	$preString = "-rc"
 	$releaseNotes = "Pre-release"
@@ -71,7 +72,8 @@ task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init {
 		) `
 		-files @(
 			@{ Path="$condep_dsl\$condep_dsl.dll"; Target="lib/net40"}, 
-			@{ Path="$condep_dsl\$condep_dsl.xml"; Target="lib/net40"} 
+			@{ Path="$condep_dsl\$condep_dsl.xml"; Target="lib/net40"}, 
+			@{ Path="$condep_dsl\$condep_node_client.dll"; Target="lib/net40"} 
 		)
 }
 
@@ -92,12 +94,12 @@ task Build-ConDep-Console -depends Clean-ConDep-Console, Init {
 		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy msdeploy IIS automation powershell remote" `
 		-dependencies @(
 			@{ Name="$condep_dsl"; Version="$nugetVersion$preString"},
-			@{ Name="$condep_node"; Version="$nugetVersion$preString"},
-			@{ Name="NDesk.Options"; Version="0.2.1"}
+			@{ Name="NDesk.Options"; Version="0.2.1"},
 			@{ Name="log4net"; Version="2.0.0"}
 		) `
 		-files @(
 			@{ Path="$condep_console\$condep.exe"; Target="lib/net40"},
+			@{ Path="$condep_node\ConDepNode.exe"; Target="lib/net40"},
 			@{ Path="$condep_console\$condep_remote.dll"; Target="lib/net40"},
 			@{ Path="$condep_console\$condep_web_q_client.dll"; Target="lib/net40"},
 			@{ Path="$condep_console\ConDep.WebQ.Data.dll"; Target="lib/net40"},
