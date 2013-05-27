@@ -47,15 +47,16 @@ namespace ConDep.Dsl.SemanticModel
             var notification = new Notification();
             var postOpSeq = new PostOpsSequence();
 
+            foreach (var server in conDepSettings.Config.Servers)
+            {
+                var remotePreOps = new PreRemoteOps();
+                remotePreOps.Execute(server, status, conDepSettings);
+            }
+
             foreach (var application in applications)
             {
                 var infrastructureSequence = new InfrastructureSequence();
                 var preOpsSequence = new PreOpsSequence();
-
-                var remotePreOps = new PreRemoteOps(preOpsSequence, conDepSettings);
-                remotePreOps.Configure();
-                preOpsSequence.Add(remotePreOps);
-                //remotePreOps.Execute(status);
 
                 if (!conDepSettings.Options.DeployOnly)
                 {

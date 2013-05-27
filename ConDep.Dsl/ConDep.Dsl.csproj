@@ -92,6 +92,7 @@
     <Compile Include="Remote\ConDepPSHost.cs" />
     <Compile Include="Remote\ConDepPsHostRawUI.cs" />
     <Compile Include="Remote\ConDepPSHostUI.cs" />
+    <Compile Include="Remote\FilePublisher.cs" />
     <Compile Include="Remote\PowerShellExecutor.cs" />
     <Compile Include="Remote\ConDepNodePublisher.cs" />
     <Compile Include="Operations\Application\Execution\PowerShell\RemotePowerShellHostOperation.cs" />
