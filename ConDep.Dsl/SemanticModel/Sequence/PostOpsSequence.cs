@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
 using ConDep.Dsl.Config;
-using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations;
-using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
@@ -37,32 +34,17 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         public void Execute(IReportStatus status, ConDepSettings settings)
         {
-            try
+            var postRemoteOp = new PostRemoteOps();
+            postRemoteOp.Configure(this);
+
+            foreach (var server in ConDepGlobals.ServersWithPreOps.Values)
             {
-                var postRemoteOp = new PostRemoteOps();
-                postRemoteOp.Configure(this);
-
-                foreach (var server in ConDepGlobals.ServersWithPreOps.Values)
+                foreach (var element in _sequence)
                 {
-                    foreach (var element in _sequence)
-                    {
-                        element.Execute(server, status, settings);
+                    element.Execute(server, status, settings);
 
-                        if (status.HasErrors)
-                            return;
-                    }
-                }
-            }
-            finally
-            {
-                try
-                {
-                    //WebDeployDeployer.DisposeAll();
-                }
-                catch(Exception ex)
-                {
-                    Logger.Warn("Unable to remove Web Deploy from server(s).", ex);
-
+                    if (status.HasErrors)
+                        return;
                 }
             }
         }
