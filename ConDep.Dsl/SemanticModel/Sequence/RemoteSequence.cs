@@ -7,7 +7,6 @@ using System.Linq;
 using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.Application.Deployment.PowerShellScript;
 using ConDep.Dsl.Operations.LoadBalancer;
-using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
@@ -15,15 +14,13 @@ namespace ConDep.Dsl.SemanticModel.Sequence
     public class RemoteSequence : IManageRemoteSequence, IExecute
     {
         private readonly IManageInfrastructureSequence _infrastructureSequence;
-        private readonly PreOpsSequence _preOpsSequence;
         private readonly IEnumerable<ServerConfig> _servers;
         private readonly ILoadBalance _loadBalancer;
         private readonly List<IExecuteOnServer> _sequence = new List<IExecuteOnServer>();
 
-        public RemoteSequence(IManageInfrastructureSequence infrastructureSequence, PreOpsSequence preOpsSequence, IEnumerable<ServerConfig> servers, ILoadBalance loadBalancer)
+        public RemoteSequence(IManageInfrastructureSequence infrastructureSequence, IEnumerable<ServerConfig> servers, ILoadBalance loadBalancer)
         {
             _infrastructureSequence = infrastructureSequence;
-            _preOpsSequence = preOpsSequence;
             _servers = servers;
             _loadBalancer = loadBalancer;
         }
@@ -193,10 +190,6 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         private void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
-            _preOpsSequence.Execute(server, status, settings);
-            if (status.HasErrors)
-                return;
-
             _infrastructureSequence.Execute(server, status, settings);
             if (status.HasErrors)
                 return;

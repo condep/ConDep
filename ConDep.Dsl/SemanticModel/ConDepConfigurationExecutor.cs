@@ -56,7 +56,6 @@ namespace ConDep.Dsl.SemanticModel
             foreach (var application in applications)
             {
                 var infrastructureSequence = new InfrastructureSequence();
-                var preOpsSequence = new PreOpsSequence();
 
                 if (!conDepSettings.Options.DeployOnly)
                 {
@@ -74,7 +73,7 @@ namespace ConDep.Dsl.SemanticModel
                     }
                 }
 
-                var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(application.GetType().Name), infrastructureSequence, preOpsSequence, conDepSettings.Config.Servers);
+                var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(application.GetType().Name), infrastructureSequence, conDepSettings.Config.Servers);
                 Configure.LocalOperations = local;
 
                 application.Configure(local, conDepSettings);

@@ -31,9 +31,9 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             }
         }
 
-        public RemoteSequence NewRemoteSequence(IManageInfrastructureSequence infrastructureSequence, PreOpsSequence preOpsSequence, IEnumerable<ServerConfig> servers)
+        public RemoteSequence NewRemoteSequence(IManageInfrastructureSequence infrastructureSequence, IEnumerable<ServerConfig> servers)
         {
-            var sequence = new RemoteSequence(infrastructureSequence, preOpsSequence, servers, _loadBalancer);
+            var sequence = new RemoteSequence(infrastructureSequence, servers, _loadBalancer);
             _sequence.Add(sequence);
             return sequence;
         }

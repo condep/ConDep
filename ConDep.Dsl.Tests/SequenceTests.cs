@@ -34,12 +34,11 @@ namespace ConDep.Dsl.Tests
             settings.Config = config;
 
             var infrastructureSequence = new InfrastructureSequence();
-            var preOpsSequence = new PreOpsSequence();
 
             var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence);
             _infra.Configure(infrastructureBuilder, settings);
 
-            var local = new LocalOperationsBuilder(_sequenceManager.NewLocalSequence("Test"), infrastructureSequence, preOpsSequence, config.Servers);
+            var local = new LocalOperationsBuilder(_sequenceManager.NewLocalSequence("Test"), infrastructureSequence, config.Servers);
             _app.Configure(local, settings);
 
             var notification = new Notification();
