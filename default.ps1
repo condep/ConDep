@@ -26,7 +26,7 @@ include .\tools\psake_ext.ps1
 task default -depends Build-All
 task ci -depends Build-All
 
-task Build-All -depends Init, Build-ConDep-Node, Build-ConDep-Dsl, Build-ConDep-Console, Build-ConDep-Dsl-LB-ARR, Build-ConDep-Dsl-LB-ACE, Build-Tests
+task Build-All -depends Init, Build-ConDep-Node, Build-ConDep-Node-Client, Build-ConDep-Dsl, Build-ConDep-Console, Build-ConDep-Dsl-LB-ARR, Build-ConDep-Dsl-LB-ACE, Build-Tests
 
 task Build-ConDep-Node -depends Clean-ConDep-Node, Init { 
 	Exec { msbuild "$pwd\$condep_node\$condep_node.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_node\ }
@@ -52,6 +52,29 @@ task Build-ConDep-Node -depends Clean-ConDep-Node, Init {
 		)
 }
 
+task Build-ConDep-Node-Client -depends Clean-ConDep-Node-Client, Init { 
+	Exec { msbuild "$pwd\$condep_node_client\$condep_node_client.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_node_client\ }
+	
+	Generate-Nuspec-File `
+		-file "$build_directory\$condep_node_client.nuspec" `
+		-version $nugetVersion `
+		-preString $preString `
+		-id "$condep_node_client" `
+		-title "$condep_node_client" `
+		-licenseUrl "http://www.con-dep.net/license/" `
+		-projectUrl "http://www.con-dep.net/" `
+		-description "The ConDep Node Client is used by ConDep to communicate over HTTP with remote nodes (servers). Mostly for deploying files. If you're looking for ConDep to do deployment or infrastructure as code, please use the ConDep package. ConDep is a highly extendable Domain Specific Language for Continuous Deployment, Continuous Delivery and Infrastructure as Code on Windows." `
+		-iconUrl "https://raw.github.com/torresdal/ConDep/master/images/ConDepNugetLogo.png" `
+		-releaseNotes "$releaseNotes" `
+		-tags "ConDep Continuous Deployment Delivery Infrastructure WebAPI Web API WebDeploy Deploy msdeploy remote" `
+		-dependencies @(
+			@{ Name="Microsoft.AspNet.WebApi.Client"; Version="4.0.20710.0"}
+		) `
+		-files @(
+			@{ Path="$condep_node_client\$condep_node_client.dll"; Target="lib/net40"}
+		)
+}
+
 task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init { 
 	Exec { msbuild "$pwd\$condep_dsl\$condep_dsl.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_dsl\ }
 
@@ -68,12 +91,12 @@ task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init {
 		-releaseNotes "$releaseNotes" `
 		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy msdeploy IIS automation powershell remote" `
 		-dependencies @(
-			@{ Name="log4net"; Version="2.0.0"}
+			@{ Name="log4net"; Version="2.0.0"},
+			@{ Name="$condep_node_client"; Version="$nugetVersion$preString"}
 		) `
 		-files @(
 			@{ Path="$condep_dsl\$condep_dsl.dll"; Target="lib/net40"}, 
-			@{ Path="$condep_dsl\$condep_dsl.xml"; Target="lib/net40"}, 
-			@{ Path="$condep_dsl\$condep_node_client.dll"; Target="lib/net40"} 
+			@{ Path="$condep_dsl\$condep_dsl.xml"; Target="lib/net40"}
 		)
 }
 
@@ -174,6 +197,11 @@ task Init {
 task Clean-ConDep-Node {
 	Write-Host "Cleaning Build output"  -ForegroundColor Green
 	Remove-Item $build_directory\$condep_node -Force -Recurse -ErrorAction SilentlyContinue
+}
+
+task Clean-ConDep-Node-Client {
+	Write-Host "Cleaning Build output"  -ForegroundColor Green
+	Remove-Item $build_directory\$condep_node_client -Force -Recurse -ErrorAction SilentlyContinue
 }
 
 task Clean-ConDep-Dsl {
