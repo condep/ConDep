@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Text;
 using log4net;
 using log4net.Core;
@@ -50,16 +49,7 @@ namespace ConDep.Dsl.Logging
         private void TeamCityMessage(string message, Exception ex, TeamCityMessageStatus status, params object[] formatArgs)
         {
             var formattedMessage = (formatArgs != null && formatArgs.Length > 0) ? string.Format(message, formatArgs) : message;
-            var sb = new StringBuilder(formattedMessage);
-            sb.Replace("|", "||")
-                .Replace("'", "|'")
-                .Replace("\n", "|n")
-                .Replace("\r", "|r")
-                .Replace("\u0085", "|x")
-                .Replace("\u2028", "|l")
-                .Replace("\u2029", "|p")
-                .Replace("[", "|[")
-                .Replace("]", "|]");
+            formattedMessage = EscapeCharsForTeamCity(formattedMessage);
 
             var errorDetails = "";
             if (ex != null)
@@ -67,23 +57,38 @@ namespace ConDep.Dsl.Logging
                 errorDetails = string.Format("Message: {0}\n\nStack Trace:\n{1}", ex.Message, ex.StackTrace);
             }
 
-            var tcMessage = string.Format("##teamcity[message text='{0}' errorDetails='{1}' status='{2}']", sb, errorDetails, status);
+            var tcMessage = string.Format("##teamcity[message text='{0}' errorDetails='{1}' status='{2}']", formattedMessage, errorDetails, status);
             _serviceMessageLogger.Logger.Log(typeof(Logger), Level.All, tcMessage, null);
+        }
+
+        private static string EscapeCharsForTeamCity(string formattedMessage)
+        {
+            var sb = new StringBuilder(formattedMessage);
+            sb.Replace("|", "||")
+              .Replace("'", "|'")
+              .Replace("\n", "|n")
+              .Replace("\r", "|r")
+              .Replace("\u0085", "|x")
+              .Replace("\u2028", "|l")
+              .Replace("\u2029", "|p")
+              .Replace("[", "|[")
+              .Replace("]", "|]");
+            return sb.ToString();
         }
 
         private void TeamCityBlockStart(string name)
         {
-            _serviceMessageLogger.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[blockOpened name='{0}']", name), null);
+            _serviceMessageLogger.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[blockOpened name='{0}']", EscapeCharsForTeamCity(name)), null);
         }
 
         private void TeamCityBlockEnd(string name)
         {
-            _serviceMessageLogger.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[blockClosed name='{0}']", name), null);
+            _serviceMessageLogger.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[blockClosed name='{0}']", EscapeCharsForTeamCity(name)), null);
         }
 
         private void TeamCityProgressMessage(string message)
         {
-            _serviceMessageLogger.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[progressMessage '{0}']", message), null);
+            _serviceMessageLogger.Logger.Log(typeof(Logger), Level.All, string.Format("##teamcity[progressMessage '{0}']", EscapeCharsForTeamCity(message)), null);
         }
     }
 }
