@@ -50,6 +50,8 @@ namespace ConDep.Dsl.Remote.Node
             if(availableApiResourcesResponse == null)
                 throw new Exception("Response was empty");
 
+            Logger.Verbose(string.Format("Status code for response is [{0}]", availableApiResourcesResponse.StatusCode));
+
             var availableApiResourcesContent = availableApiResourcesResponse.Content.ReadAsAsync<JToken>().Result;
             if (availableApiResourcesContent == null)
             {
