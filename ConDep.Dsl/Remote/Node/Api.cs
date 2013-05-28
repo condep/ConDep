@@ -51,8 +51,12 @@ namespace ConDep.Dsl.Remote.Node
                 throw new Exception("Response was empty");
 
             var availableApiResourcesContent = availableApiResourcesResponse.Content.ReadAsAsync<JToken>().Result;
-            if(availableApiResourcesContent == null)
-                throw new Exception("Content of response was empty");
+            if (availableApiResourcesContent == null)
+            {
+                var actualResponse = availableApiResourcesResponse.Content.ReadAsStringAsync().Result;
+
+                throw new Exception("Content of response was empty. Actual response was: " + actualResponse);   
+            }
 
             var url = (from link in availableApiResourcesContent
                        where link.Value<string>("rel") == rel
