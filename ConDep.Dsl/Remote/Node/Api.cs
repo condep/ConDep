@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using ConDep.Dsl.Logging;
 using ConDep.Dsl.Remote.Node.Model;
 using Newtonsoft.Json.Linq;
 
@@ -16,6 +17,7 @@ namespace ConDep.Dsl.Remote.Node
 
         public Api(string url, string userName, string password)
         {
+            Logger.Verbose(string.Format("Connecting to Node API on {0} with user {1}.", url, userName));
             var messageHandler = new HttpClientHandler { Credentials = new NetworkCredential(userName, password) };
             _client = new HttpClient(messageHandler) { BaseAddress = new Uri(url) };
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -42,8 +44,15 @@ namespace ConDep.Dsl.Remote.Node
 
         private string DiscoverUrl(string rel)
         {
+            Logger.Verbose(string.Format("Finding url for [{0}]", rel));
+            
             var availableApiResourcesResponse = _client.GetAsync("api").Result;
+            if(availableApiResourcesResponse == null)
+                throw new Exception("Response was empty");
+
             var availableApiResourcesContent = availableApiResourcesResponse.Content.ReadAsAsync<JToken>().Result;
+            if(availableApiResourcesContent == null)
+                throw new Exception("Content of response was empty");
 
             var url = (from link in availableApiResourcesContent
                        where link.Value<string>("rel") == rel
