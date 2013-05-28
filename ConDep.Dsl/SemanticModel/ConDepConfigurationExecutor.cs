@@ -49,8 +49,12 @@ namespace ConDep.Dsl.SemanticModel
 
             foreach (var server in conDepSettings.Config.Servers)
             {
-                var remotePreOps = new PreRemoteOps();
-                remotePreOps.Execute(server, status, conDepSettings);
+                if (!ConDepGlobals.ServersWithPreOps.ContainsKey(server.Name))
+                {
+                    var remotePreOps = new PreRemoteOps();
+                    remotePreOps.Execute(server, status, conDepSettings);
+                    ConDepGlobals.ServersWithPreOps.Add(server.Name, server);
+                }
             }
 
             foreach (var application in applications)
