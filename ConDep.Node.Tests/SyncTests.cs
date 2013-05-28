@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
-using ConDep.Node.Client.Model;
 using NUnit.Framework;
 using Newtonsoft.Json;
+using ConDep.Dsl.Remote.Node.Model;
 
 namespace ConDep.Node.Tests
 {

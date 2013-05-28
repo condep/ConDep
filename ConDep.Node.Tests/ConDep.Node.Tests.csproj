@@ -53,9 +53,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConDep.Node.Client\ConDep.Node.Client.csproj">
-      <Project>{2865f71c-8f37-407a-9b79-4e3914f42016}</Project>
-      <Name>ConDep.Node.Client</Name>
+    <ProjectReference Include="..\ConDep.Dsl\ConDep.Dsl.csproj">
+      <Project>{e7eba0ac-b91d-450f-8a68-5adcf18fe17e}</Project>
+      <Name>ConDep.Dsl</Name>
     </ProjectReference>
     <ProjectReference Include="..\ConDep.Node\ConDep.Node.csproj">
       <Project>{463bf035-13cf-4b8e-9a0d-aace0fa7bc68}</Project>

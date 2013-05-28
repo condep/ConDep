@@ -1,7 +1,7 @@
 ﻿using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
+using ConDep.Dsl.Remote.Node;
 using ConDep.Dsl.SemanticModel;
-using ConDep.Node.Client;
 
 namespace ConDep.Dsl.Operations.Application.Deployment.CopyFile
 {

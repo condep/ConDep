@@ -32,8 +32,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{BA714BD1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Node", "ConDep.Node\ConDep.Node.csproj", "{463BF035-13CF-4B8E-9A0D-AACE0FA7BC68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Node.Client", "ConDep.Node.Client\ConDep.Node.Client.csproj", "{2865F71C-8F37-407A-9B79-4E3914F42016}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Node.Tests", "ConDep.Node.Tests\ConDep.Node.Tests.csproj", "{43A31011-F39A-42F0-85BC-8EC5C0EF78B1}"
 EndProject
 Global
@@ -156,16 +154,6 @@ Global
 		{463BF035-13CF-4B8E-9A0D-AACE0FA7BC68}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{463BF035-13CF-4B8E-9A0D-AACE0FA7BC68}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{463BF035-13CF-4B8E-9A0D-AACE0FA7BC68}.Release|x86.ActiveCfg = Release|Any CPU
-		{2865F71C-8F37-407A-9B79-4E3914F42016}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2865F71C-8F37-407A-9B79-4E3914F42016}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2865F71C-8F37-407A-9B79-4E3914F42016}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{2865F71C-8F37-407A-9B79-4E3914F42016}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{2865F71C-8F37-407A-9B79-4E3914F42016}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2865F71C-8F37-407A-9B79-4E3914F42016}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2865F71C-8F37-407A-9B79-4E3914F42016}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2865F71C-8F37-407A-9B79-4E3914F42016}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{2865F71C-8F37-407A-9B79-4E3914F42016}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{2865F71C-8F37-407A-9B79-4E3914F42016}.Release|x86.ActiveCfg = Release|Any CPU
 		{43A31011-F39A-42F0-85BC-8EC5C0EF78B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{43A31011-F39A-42F0-85BC-8EC5C0EF78B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43A31011-F39A-42F0-85BC-8EC5C0EF78B1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

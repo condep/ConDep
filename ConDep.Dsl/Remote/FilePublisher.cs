@@ -1,6 +1,6 @@
 ﻿using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
-using ConDep.Node.Client;
+using ConDep.Dsl.Remote.Node;
 
 namespace ConDep.Dsl.Remote
 {
