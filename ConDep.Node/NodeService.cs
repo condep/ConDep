@@ -33,7 +33,7 @@ namespace ConDep.Node
             {
                 TransferMode = TransferMode.Streamed,
                 MaxReceivedMessageSize = 2147483648,
-                ClientCredentialType = HttpClientCredentialType.Windows
+                //ClientCredentialType = HttpClientCredentialType.Windows
                 //MaxReceivedMessageSize = 2000000
             };
 
