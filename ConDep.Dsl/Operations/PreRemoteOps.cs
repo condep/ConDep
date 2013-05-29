@@ -16,6 +16,49 @@ namespace ConDep.Dsl.Operations
     {
         const string TMP_FOLDER = @"{0}\temp\ConDep\{1}";
 
+        public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
+        {
+            try
+            {
+                Logger.LogSectionStart("Pre-Operations");
+
+                server.TempFolderDos = string.Format(TMP_FOLDER, "%windir%", ConDepGlobals.ExecId);
+                Logger.Info(string.Format("Dos temp folder is {0}", server.TempFolderDos));
+                
+                server.TempFolderPowerShell = string.Format(TMP_FOLDER, "$env:windir", ConDepGlobals.ExecId);
+                Logger.Info(string.Format("PowerShell temp folder is {0}", server.TempFolderDos));
+
+                TempInstallConDepNode(status, server);
+
+                try
+                {
+                    Logger.LogSectionStart("Copying PowerShell Scripts");
+                    CopyResourceFiles(Assembly.GetExecutingAssembly(), PowerShellResources.PowerShellScriptResources,
+                                      server);
+
+                    if (settings.Options.Assembly != null)
+                    {
+                        var assemblyResources = settings.Options.Assembly.GetManifestResourceNames();
+                        CopyResourceFiles(settings.Options.Assembly, assemblyResources, server);
+                    }
+                }
+                finally
+                {
+                    Logger.LogSectionEnd("Copying PowerShell Scripts");
+                }
+            }
+            finally
+            {
+                Logger.LogSectionEnd("Pre-Operations");
+            }
+
+        }
+
+        public bool IsValid(Notification notification)
+        {
+            return true;
+        }
+
         private void CopyResourceFiles(Assembly assembly, IEnumerable<string> resources, ServerConfig server)
         {
             if (resources == null || assembly == null) return;
@@ -55,27 +98,6 @@ namespace ConDep.Dsl.Operations
         {
             var filePublisher = new FilePublisher();
             filePublisher.PublishFile(srcPath, dstPath, server);
-        }
-
-        public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
-        {
-            server.TempFolderDos = string.Format(TMP_FOLDER, "%windir%", ConDepGlobals.ExecId);
-            server.TempFolderPowerShell = string.Format(TMP_FOLDER, "$env:windir", ConDepGlobals.ExecId);
-            TempInstallConDepNode(status, server);
-
-            CopyResourceFiles(Assembly.GetExecutingAssembly(), PowerShellResources.PowerShellScriptResources, server);
-
-            if (settings.Options.Assembly != null)
-            {
-                var assemblyResources = settings.Options.Assembly.GetManifestResourceNames();
-                CopyResourceFiles(settings.Options.Assembly, assemblyResources, server);
-            }
-
-        }
-
-        public bool IsValid(Notification notification)
-        {
-            return true;
         }
 
         private void TempInstallConDepNode(IReportStatus status, ServerConfig server)

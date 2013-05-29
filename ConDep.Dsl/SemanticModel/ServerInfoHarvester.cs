@@ -8,6 +8,7 @@ namespace ConDep.Dsl.SemanticModel
     internal class ServerInfoHarvester
     {
         private readonly ConDepSettings _settings;
+        private List<IHarvestServerInfo> _harvesters;
 
         public ServerInfoHarvester(ConDepSettings settings)
         {
@@ -15,12 +16,16 @@ namespace ConDep.Dsl.SemanticModel
         }
 
 
-        public void Harvest()
+        public void Harvest(ServerConfig server)
         {
-            var harvesters = GetHarvesters(_settings).ToList();
-            foreach(var server in _settings.Config.Servers)
+            Harvesters.ForEach(x => x.Harvest(server));
+        }
+
+        private List<IHarvestServerInfo> Harvesters
+        {
+            get
             {
-                harvesters.ForEach(x => x.Harvest(server));
+                return _harvesters ?? GetHarvesters(_settings).ToList();
             }
         }
 
