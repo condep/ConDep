@@ -8,7 +8,19 @@ namespace ConDep.Dsl.Operations
     {
         public void Configure(PostOpsSequence sequence)
         {
-            var op = new RemotePowerShellHostOperation(string.Format("add-type -AssemblyName System.ServiceProcess; $service = get-service condepnode; if($service) {{ $service.Stop() | Out-String; $service.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Stopped); $wmiService = Get-WmiObject -Class Win32_Service -Filter \"Name='condepnode'\"; $wmiService.Delete() | Out-String; }} Remove-Item -force -recurse {0}{1};", @"$env:windir\temp\ConDep\", ConDepGlobals.ExecId));
+            var script = string.Format(@"add-type -AssemblyName System.ServiceProcess; 
+$service = get-service condepnode; 
+
+if($service) {{ 
+    $service.Stop() | Out-Null; 
+    $service.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Stopped); 
+    $wmiService = Get-WmiObject -Class Win32_Service -Filter ""Name='condepnode'\""; 
+    $wmiService.Delete() | Out-Null; 
+}} 
+
+Remove-Item -force -recurse {0}{1};",
+                    @"$env:windir\temp\ConDep\", ConDepGlobals.ExecId);
+            var op = new RemotePowerShellHostOperation(script);
             sequence.Add(op);
         }
     }
