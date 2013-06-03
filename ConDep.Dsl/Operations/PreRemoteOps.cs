@@ -108,8 +108,13 @@ namespace ConDep.Dsl.Operations
                 var listenUrl = "http://{0}:80/ConDepNode/";
                 var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "ConDepNode.exe");
                 var byteArray = File.ReadAllBytes(path);
-                var psCopyFileOp = new ConDepNodePublisher(byteArray, Path.Combine(server.TempFolderPowerShell, Path.GetFileName(path)), string.Format(listenUrl, "localhost"));
-                psCopyFileOp.Execute(server);
+                var nodePublisher = new ConDepNodePublisher(byteArray, Path.Combine(server.TempFolderPowerShell, Path.GetFileName(path)), string.Format(listenUrl, "localhost"));
+                nodePublisher.Execute(server);
+                if (!nodePublisher.ValidateNode(string.Format(listenUrl, server.Name)))
+                {
+                    throw new ConDepNodeValidationException("Unable to make contact witstring.Format(listenUrl, server.Name)h ConDep Node or return content from API.");
+                }
+
                 Logger.Info(string.Format("ConDep Node successfully deployed to {0}", server.Name));
                 Logger.Info(string.Format("Node listening on {0}", string.Format(listenUrl, server.Name)));
             }

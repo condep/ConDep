@@ -211,6 +211,38 @@ namespace ConDep.Dsl.Remote.Node
             });
             result.Wait();
             return result.Result;
-        } 
+        }
+
+        public bool Validate()
+        {
+            try
+            {
+                var availableApiResourcesResponse = _client.GetAsync("api").Result;
+                if (availableApiResourcesResponse == null)
+                {
+                    Logger.Verbose(string.Format("No response from ConDep Node when calling {0}/{1}", _client.BaseAddress, "api"));
+                    return false;
+                }
+
+                var availableApiResourcesContent = availableApiResourcesResponse.Content.ReadAsAsync<JToken>().Result;
+                if (availableApiResourcesContent == null)
+                {
+                    Logger.Verbose(string.Format("No content retreived from ConDep Node when reading content from {0}/{1}", _client.BaseAddress, "api"));
+                    return false;
+                }
+
+                if (availableApiResourcesContent.Count() == 0)
+                {
+                    Logger.Verbose(string.Format("No content retreived from ConDep Node when reading content from {0}/{1}", _client.BaseAddress, "api"));
+                    return false;
+                }
+                Logger.Verbose("Successfully validated ConDep Node.");
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

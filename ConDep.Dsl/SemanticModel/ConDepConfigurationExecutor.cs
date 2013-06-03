@@ -27,8 +27,6 @@ namespace ConDep.Dsl.SemanticModel
             if (conDepSettings.Options == null) { throw new ArgumentException("conDepSettings.Options"); }
             if (status == null) { throw new ArgumentException("status"); }
 
-            var applications = CreateApplicationArtifacts(conDepSettings);
-
             if(!conDepSettings.Options.WebDeployExist)
             {
                 var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
@@ -57,6 +55,7 @@ namespace ConDep.Dsl.SemanticModel
                 }
             }
 
+            var applications = CreateApplicationArtifacts(conDepSettings);
             foreach (var application in applications)
             {
                 var infrastructureSequence = new InfrastructureSequence();
