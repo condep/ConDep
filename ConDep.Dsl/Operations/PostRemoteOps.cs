@@ -15,7 +15,7 @@ if($service) {{
     $service.Stop()
     $service.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Stopped)
     $wmiService = Get-WmiObject -Class Win32_Service -Filter ""Name='condepnode'"" 
-    $wmiService.Delete()
+    $wmiService.Delete() | Out-Null
 }} 
 
 Remove-Item -force -recurse {0}{1}",
