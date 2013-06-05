@@ -29,6 +29,9 @@ namespace ConDep.Dsl.SemanticModel
 
             if(!conDepSettings.Options.WebDeployExist)
             {
+                var clientValidator = new ClientValidator();
+                clientValidator.Validate();
+                
                 var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
                 var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers, serverInfoHarvester);
                 if (!serverValidator.IsValid())

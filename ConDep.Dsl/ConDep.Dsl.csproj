@@ -125,6 +125,8 @@
     <Compile Include="Operations\Application\Execution\RunCmd\RunCmdPsOperation.cs" />
     <Compile Include="Operations\LoadBalancer\ConDepLoadBalancerException.cs" />
     <EmbeddedResource Include="PSScripts\Windows.ps1" />
+    <Compile Include="SemanticModel\ClientValidator.cs" />
+    <Compile Include="SemanticModel\ConDepClientValidationException.cs" />
     <Compile Include="SemanticModel\ConDepGlobals.cs" />
     <Compile Include="IOfferIisInfrastructureRoleOptions.cs" />
     <Compile Include="IOfferPowerShellOptions.cs" />
