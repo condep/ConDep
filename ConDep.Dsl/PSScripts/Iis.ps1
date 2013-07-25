@@ -154,7 +154,7 @@ function AssociateCertificateWithBinding {
 			Remove-Item -Path "IIS:\\SslBindings\$bindingIp!$port" -ErrorAction SilentlyContinue
 			
 			#netsh http add sslcert ipport=$bindingIp:$port certhash=d9744c1e37bd575b431fed64e4e52cae9faced46 appid={5C7D7048-6609-4298-A2ED-6EFB68A66FF3} certstorename=MY clientcertnegotiation=enable
-		    New-Item -Path "IIS:\\SslBindings\$bindingIp!$port" -Value $webSiteCert
+			New-Item -Path "IIS:\\SslBindings\$bindingIp!$port" -Value (Get-Item cert:\LocalMachine\MY\$($webSiteCert.Thumbprint))
 		}
 	}
 }
