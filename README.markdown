@@ -1,6 +1,4 @@
-Trunk : [![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:%28id:bt775%29/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=bt775&guest=1)
-
-WinRM : [![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:%28id:bt1012%29/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=bt1012&guest=1)
+[![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:%28id:bt1012%29/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=bt1012&guest=1)
 About ConDep
 ============
 
