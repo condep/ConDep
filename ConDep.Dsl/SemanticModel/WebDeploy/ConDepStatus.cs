@@ -14,13 +14,13 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             _startTime = DateTime.Now;
         }
 
-        public bool HasErrors
-        {
-            get
-            {
-                return false;// _summeries.Any(s => s.Errors > 0) || _untrappedExceptions.Count > 0;
-            }
-        }
+        //public bool HasErrors
+        //{
+        //    get
+        //    {
+        //        return false;// _summeries.Any(s => s.Errors > 0) || _untrappedExceptions.Count > 0;
+        //    }
+        //}
 
         public DateTime StartTime
         {
@@ -35,6 +35,10 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
 
         public void PrintSummary()
         {
+            if (_endTime < _startTime)
+            {
+                _endTime = DateTime.Now;
+            }
             int objectsAdded = 0;
             int objectsDeleted = 0;
             int objectsUpdated = 0;

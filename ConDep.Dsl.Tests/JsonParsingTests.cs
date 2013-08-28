@@ -208,8 +208,8 @@ namespace ConDep.Dsl.Tests
             var tiersMemStream = new MemoryStream(Encoding.UTF8.GetBytes(_tiersJson));
 
             var parser = new EnvConfigParser();
-            _config = parser.GetEnvConfig(memStream);
-            _tiersConfig = parser.GetEnvConfig(tiersMemStream);
+            _config = parser.GetTypedEnvConfig(memStream);
+            _tiersConfig = parser.GetTypedEnvConfig(tiersMemStream);
         }
 
         [Test]

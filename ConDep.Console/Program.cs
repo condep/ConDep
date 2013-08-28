@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Reflection;
-using ConDep.Dsl.Config;
+using ConDep.Console.Help;
 using ConDep.Dsl.Logging;
-using ConDep.Dsl.SemanticModel;
-using ConDep.Dsl.SemanticModel.WebDeploy;
-using ConDep.WebQ.Client;
 
 namespace ConDep.Console
 {
@@ -14,56 +10,12 @@ namespace ConDep.Console
         static void Main(string[] args)
         {
             var exitCode = 0;
-            WebQueue webQ = null;
+            AppDomain.CurrentDomain.ProcessExit += OnExit;
+
             try
             {
-                new LogConfigLoader().Load();
-                Logger.TraceLevel = TraceLevel.Info;
-
-                var conDepSettings = new ConDepSettings();
-                CommandLineOptionHandler.ParseArgs(args, conDepSettings.Options);
-
-                if (conDepSettings.Options.InstallWebQ)
-                {
-                    throw new NotImplementedException();
-                }
-                else
-                {
-                    PrintCopyrightMessage();
-                    if (!string.IsNullOrWhiteSpace(conDepSettings.Options.WebQAddress))
-                    {
-                        webQ = new WebQueue(conDepSettings.Options.WebQAddress, conDepSettings.Options.Environment);
-                        webQ.WebQueuePositionUpdate += (sender, eventArgs) => Logger.Info(eventArgs.Message);
-                        webQ.WebQueueTimeoutUpdate += (sender, eventArgs) => Logger.Info(eventArgs.Message);
-                        Logger.LogSectionStart("Waiting in Deployment Queue");
-                        try
-                        {
-                            webQ.WaitInQueue(TimeSpan.FromMinutes(30));
-                        }
-                        finally
-                        {
-                            Logger.LogSectionEnd("Waiting in Deployment Queue");
-                        }
-                    }
-
-                    var configAssemblyLoader = new ConDepAssemblyHandler(conDepSettings.Options.AssemblyName);
-                    conDepSettings.Options.Assembly = configAssemblyLoader.GetAssembly();
-
-                    conDepSettings.Config = ConfigHandler.GetEnvConfig(conDepSettings);
-
-                    var status = new ConDepStatus();
-                    ConDepConfigurationExecutor.ExecuteFromAssembly(conDepSettings, status);
-
-                    if (status.HasErrors)
-                    {
-                        exitCode = 1;
-                    }
-                    else
-                    {
-                        status.EndTime = DateTime.Now;
-                        status.PrintSummary();
-                    }
-                }
+                ConfigureLogger();
+                ExecuteCommand(args);
             }
             catch (Exception ex)
             {
@@ -72,35 +24,46 @@ namespace ConDep.Console
                 Logger.Error("Message: " + ex.Message);
                 Logger.Verbose("Stack trace:\n" + ex.StackTrace);
             }
-            finally
-            {
-                if(webQ != null)
-                {
-                    webQ.LeaveQueue();
-                }
+        }
 
-                Environment.Exit(exitCode);
+        private static void ConfigureLogger()
+        {
+            new LogConfigLoader().Load();
+            Logger.TraceLevel = TraceLevel.Info;
+        }
+
+        private static void ExecuteCommand(string[] args)
+        {
+            var helpWriter = new CmdHelpWriter(System.Console.Out);
+            IHandleConDepCommands handler = null;
+
+            try
+            {
+                handler = CmdFactory.Resolve(args);
+                handler.Execute(helpWriter, Logger.LogInstance);
+            }
+            catch (Exception ex)
+            {
+                if (handler != null)
+                {
+                    handler.WriteHelp();
+                    System.Console.ForegroundColor = ConsoleColor.Red;
+                    helpWriter.WriteException(ex);
+                    System.Console.ResetColor();
+                }
+                else
+                {
+                    System.Console.ForegroundColor = ConsoleColor.Red;
+                    helpWriter.WriteException(ex);
+                    System.Console.ResetColor();
+                }
+                Environment.Exit(1);
             }
         }
 
-        private static void PrintCopyrightMessage()
+        static void OnExit(object sender, EventArgs e)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            var versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-
-            const int versionAreaLength = 29;
-            var version = versionInfo.ProductVersion.Substring(0, versionInfo.ProductVersion.LastIndexOf("."));
-            var versionText = string.Format("Version {0} ", version);
-            var versionWhitespace = string.Join(" ", new string[versionAreaLength - (versionText.Length - 1)]);
-
-            //Logger.Info(string.Format("ConDep Version {0}", version));
-            Logger.Info(@"Copyright (c) Jon Arild Torresdal
-   ____            ____             
-  / ___|___  _ __ |  _ \  ___ _ __  
- | |   / _ \| '_ \| | | |/ _ \ '_ \ 
- | |__| (_) | | | | |_| |  __/ |_) |
-  \____\___/|_| |_|____/ \___| .__/ 
-" + versionWhitespace + versionText + "|_|\n");
+            
         }
     }
 }

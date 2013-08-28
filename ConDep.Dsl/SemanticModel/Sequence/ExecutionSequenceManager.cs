@@ -26,8 +26,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             foreach (var localSequence in _sequence)
             {
                 localSequence.Execute(status, settings);
-                if (status.HasErrors)
-                    return;
+                //if (status.HasErrors)
+                //    return;
             }
         }
 

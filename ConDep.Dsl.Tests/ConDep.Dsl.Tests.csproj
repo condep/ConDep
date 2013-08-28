@@ -40,6 +40,24 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
@@ -64,6 +82,10 @@
     </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="NDesk.Options, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -90,9 +112,12 @@
     </Compile>
     <Compile Include="AceTests.cs" />
     <Compile Include="CertTests.cs" />
+    <Compile Include="CmdFactoryTests.cs" />
+    <Compile Include="CmdParserTests.cs" />
     <Compile Include="CompositeProviders\NServiceBus.cs" />
     <Compile Include="ConDepResourceFilesTests.cs" />
     <Compile Include="ConfigTransformTests.cs" />
+    <Compile Include="Encryption.cs" />
     <Compile Include="ImpersonatorTests.cs" />
     <Compile Include="JsonParsingTests.cs" />
     <Compile Include="LoadBalancerTests.cs" />
@@ -113,6 +138,10 @@
     <Compile Include="SimpleTestFixtureBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConDep.Console\ConDep.Console.csproj">
+      <Project>{4dc12ef8-6e21-4749-ac5b-15bcbd097a38}</Project>
+      <Name>ConDep.Console</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConDep.Dsl.LoadBalancer.Ace\ConDep.Dsl.LoadBalancer.Ace.csproj">
       <Project>{0653515e-ff25-482c-b316-eb5bb045bf1e}</Project>
       <Name>ConDep.Dsl.LoadBalancer.Ace</Name>
@@ -129,6 +158,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="dev.env.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <EmbeddedResource Include="ResourceTestFile.txt" />
     <Content Include="testcert.con-dep.net.pfx">

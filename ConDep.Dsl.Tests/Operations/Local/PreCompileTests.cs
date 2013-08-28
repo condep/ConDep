@@ -28,7 +28,6 @@ namespace ConDep.Dsl.Tests.Operations.Local
             {
                 Options =
                 {
-                    WebDeployExist = true,
                     SuspendMode = LoadBalancerSuspendMethod.Graceful
                 }
             };

@@ -8,7 +8,6 @@ namespace ConDep.Dsl.Config
     {
         public string Application { get; set; }
         public bool DeployOnly { get; set; }
-        public bool WebDeployExist { get; set; }
         public bool StopAfterMarkedServer { get; set; }
         public bool ContinueAfterMarkedServer { get; set; }
         public bool DeployAllApps { get; set; }
@@ -21,6 +20,8 @@ namespace ConDep.Dsl.Config
         public string InstallWebQOnServer { get; set; }
         public string Environment { get; set; }
         public string AssemblyName { get; set; }
+        public string CryptoKey { get; set; }
+
         public bool HasApplicationDefined()
         {
             return !string.IsNullOrWhiteSpace(Application);

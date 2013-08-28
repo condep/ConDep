@@ -5,7 +5,7 @@ using ConDep.Dsl.Config;
 
 namespace ConDep.Dsl.SemanticModel
 {
-    internal class ServerInfoHarvester
+    public class ServerInfoHarvester
     {
         private readonly ConDepSettings _settings;
         private List<IHarvestServerInfo> _harvesters;

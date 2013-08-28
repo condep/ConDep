@@ -5,8 +5,9 @@ using ConDep.WebQ.Data;
 
 namespace ConDep.WebQ.Client
 {
-    public class WebQueue
+    public class WebQueue : IDisposable
     {
+        private bool _disposed;
         private readonly string _environment;
         private readonly TimeSpan _refreshInterval;
         private readonly IClient _client;
@@ -95,6 +96,24 @@ namespace ConDep.WebQ.Client
         {
             _client.Dequeue(_item);
         }
- 
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    LeaveQueue();
+                }
+
+                _disposed = true;
+            }
+        }
     }
 }

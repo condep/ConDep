@@ -21,7 +21,6 @@ namespace ConDep.Dsl.Tests
             {
                 Options =
                     {
-                        WebDeployExist = true,
                         StopAfterMarkedServer = true,
                         SuspendMode = LoadBalancerSuspendMethod.Graceful
                     }
@@ -31,7 +30,6 @@ namespace ConDep.Dsl.Tests
             {
                 Options =
                 {
-                    WebDeployExist = true,
                     ContinueAfterMarkedServer = true,
                     SuspendMode = LoadBalancerSuspendMethod.Graceful
                 }
@@ -41,7 +39,6 @@ namespace ConDep.Dsl.Tests
             {
                 Options =
                 {
-                    WebDeployExist = true,
                     SuspendMode = LoadBalancerSuspendMethod.Graceful
                 }
             };

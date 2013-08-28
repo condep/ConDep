@@ -18,7 +18,7 @@
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -28,7 +28,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -39,6 +39,42 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -46,6 +82,10 @@
     </Reference>
     <Reference Include="NDesk.Options">
       <HintPath>..\packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ConDep.Dsl.Tests\bin\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -60,10 +100,37 @@
     <Compile Include="..\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
-    <Compile Include="CommandLineOptionHandler.cs" />
+    <Compile Include="CmdFactory.cs" />
+    <Compile Include="ConDepCommand.cs" />
+    <Compile Include="ConDepValidationException.cs" />
+    <Compile Include="Decrypt\CmdDecryptHandler.cs" />
+    <Compile Include="Decrypt\CmdDecryptHelpWriter.cs" />
+    <Compile Include="Decrypt\CmdDecryptValidator.cs" />
+    <Compile Include="Decrypt\CmdDecryptParser.cs" />
+    <Compile Include="Decrypt\ConDepDecryptOptions.cs" />
+    <Compile Include="Deploy\CmdDeployHelpWriter.cs" />
+    <Compile Include="CmdHelpWriter.cs" />
+    <Compile Include="CmdBaseParser.cs" />
+    <Compile Include="CmdBaseValidator.cs" />
+    <Compile Include="Deploy\CmdDeployHandler.cs" />
+    <Compile Include="Deploy\CmdDeployParser.cs" />
+    <Compile Include="Deploy\CmdDeployValidator.cs" />
+    <Compile Include="CommandLineParser.cs" />
     <Compile Include="CommandLineParams.cs" />
+    <Compile Include="ConDepCmdParseException.cs" />
+    <Compile Include="Encrypt\CmdEncryptHandler.cs" />
+    <Compile Include="Encrypt\CmdEncryptHelpWriter.cs" />
+    <Compile Include="Encrypt\CmdEncryptParser.cs" />
+    <Compile Include="Encrypt\CmdEncryptValidator.cs" />
+    <Compile Include="Encrypt\ConDepEncryptOptions.cs" />
     <Compile Include="HelpWriter.cs" />
+    <Compile Include="Help\CmdHelpHandler.cs" />
+    <Compile Include="Help\CmdHelpParser.cs" />
+    <Compile Include="Help\CmdHelpValidator.cs" />
+    <Compile Include="Help\ConDepHelpOptions.cs" />
+    <Compile Include="IHandleConDepCommands.cs" />
     <Compile Include="LogConfigLoader.cs" />
+    <Compile Include="Mono.Options\Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

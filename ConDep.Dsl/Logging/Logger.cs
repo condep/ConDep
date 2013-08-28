@@ -108,5 +108,9 @@ namespace ConDep.Dsl.Logging
             _log.LogSectionEnd(name);
         }
 
+        public static ILogForConDep LogInstance
+        {
+            get { return _log; }
+        }
     }
 }

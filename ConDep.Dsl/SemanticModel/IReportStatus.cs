@@ -4,6 +4,6 @@ namespace ConDep.Dsl.SemanticModel
 {
     public interface IReportStatus
     {
-        bool HasErrors { get; }
+        //bool HasErrors { get; }
     }
 }

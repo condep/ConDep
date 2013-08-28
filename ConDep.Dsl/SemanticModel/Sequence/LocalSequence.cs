@@ -52,8 +52,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                     Logger.LogSectionEnd(element.Name);
                 }
 
-                if (status.HasErrors)
-                    return;
+                //if (status.HasErrors)
+                //    return;
             }
         }
 

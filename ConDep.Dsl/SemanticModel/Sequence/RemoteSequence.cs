@@ -95,8 +95,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 bool bringOnline = !(roundRobinMaxOfflineServers - (manuelTestServer == null ? 0 : 1) > execCount);
                 ExecuteOnServer(servers[execCount], status, settings, _loadBalancer, !bringOnline, bringOnline);
 
-                if (status.HasErrors)
-                    return;
+                //if (status.HasErrors)
+                //    return;
             }
         }
 
@@ -123,8 +123,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             {
                 ExecuteOnServer(server, status, settings, _loadBalancer, true, true);
 
-                if (status.HasErrors)
-                    return;
+                //if (status.HasErrors)
+                //    return;
 
             }
         }
@@ -175,7 +175,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             {
                 try
                 {
-                    if (bringServerOnlineAfterExecution && !status.HasErrors && !errorDuringLoadBalancing)
+                    //&& !status.HasErrors
+                    if (bringServerOnlineAfterExecution  && !errorDuringLoadBalancing)
                     {
                         Logger.Info(string.Format("Taking server [{0}] online in load balancer.", server.Name));
                         loadBalancer.BringOnline(server.Name, server.LoadBalancerFarm, status);
@@ -191,8 +192,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
         private void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
             _infrastructureSequence.Execute(server, status, settings);
-            if (status.HasErrors)
-                return;
+            //if (status.HasErrors)
+            //    return;
 
             try
             {
@@ -201,8 +202,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 {
                     element.Execute(server, status, settings);
 
-                    if (status.HasErrors)
-                        return;
+                    //if (status.HasErrors)
+                    //    return;
                 }
             }
             finally

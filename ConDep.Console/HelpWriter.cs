@@ -1,12 +1,17 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using ConDep.Dsl.Logging;
 using NDesk.Options;
 
 namespace ConDep.Console
 {
-    internal class HelpWriter
+    public interface IOutputHelp
+    {
+        
+    }
+
+
+    public class HelpWriter
     {
         private readonly TextWriter _writer;
 
@@ -22,6 +27,13 @@ namespace ConDep.Console
             PrintHelpExamples(_writer);
         }
 
+        public void PrintHelp(string helpCommand, OptionSet optionSet = null)
+        {
+            PrintCopyrightMessage(_writer);
+            PrintHelpUsage(optionSet, _writer);
+            PrintHelpExamples(_writer);
+        }
+
         private static void PrintCopyrightMessage(TextWriter writer)
         {
             var assembly = Assembly.GetExecutingAssembly();
@@ -29,6 +41,26 @@ namespace ConDep.Console
 
             writer.WriteLine("ConDep Version {0}", versionInfo.ProductVersion.Substring(0, versionInfo.ProductVersion.LastIndexOf(".")));
             writer.WriteLine("Copyright (c) Jon Arild Torresdal");
+        }
+
+        public void PrintRootHelp()
+        {
+            PrintCopyrightMessage(_writer);
+
+            var help = @"
+Deploy files and infrastructure to remote servers and environments
+
+Usage: ConDep <command> <options>
+
+Available commands:
+    Deploy      Deploy ConDep definitions to one or more servers using specified json-config
+    Encrypt     Encrypt sensitive data, like passwords, in json-config files
+    Decrypt     Decrypt encrypted data in json-config files
+
+For help on individual commands, type condep.exe help <command>.
+
+";
+            _writer.Write(help);
         }
 
         private static void PrintHelpUsage(OptionSet optionSet, TextWriter writer)

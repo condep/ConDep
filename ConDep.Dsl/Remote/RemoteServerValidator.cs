@@ -7,7 +7,7 @@ using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Remote
 {
-    internal class RemoteServerValidator
+    public class RemoteServerValidator : IValidateServer
     {
         private readonly IEnumerable<ServerConfig> _servers;
         private readonly ServerInfoHarvester _serverInfoHarvester;

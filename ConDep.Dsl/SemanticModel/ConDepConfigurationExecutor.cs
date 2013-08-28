@@ -14,12 +14,12 @@ namespace ConDep.Dsl.SemanticModel
 {
     public class ConDepConfigurationExecutor
     {
-        public static void ExecuteFromAssembly(ConDepSettings conDepSettings, IReportStatus status)
+        public static void ExecuteFromAssembly(ConDepSettings conDepSettings, IReportStatus status, IValidateClient clientValidator, IValidateServer serverValidator)
         {
-            new ConDepConfigurationExecutor().Execute(conDepSettings, status);
+            new ConDepConfigurationExecutor().Execute(conDepSettings, status, clientValidator, serverValidator);
         }
 
-        private void Execute(ConDepSettings conDepSettings, IReportStatus status)
+        private void Execute(ConDepSettings conDepSettings, IReportStatus status, IValidateClient clientValidator, IValidateServer serverValidator)
         {
             if (conDepSettings == null) { throw new ArgumentException("conDepSettings"); }
             if (conDepSettings.Options.Assembly == null) { throw new ArgumentException("assembly"); }
@@ -27,18 +27,14 @@ namespace ConDep.Dsl.SemanticModel
             if (conDepSettings.Options == null) { throw new ArgumentException("conDepSettings.Options"); }
             if (status == null) { throw new ArgumentException("status"); }
 
-            if(!conDepSettings.Options.WebDeployExist)
-            {
-                var clientValidator = new ClientValidator();
-                clientValidator.Validate();
+            clientValidator.Validate();
                 
-                var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
-                var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers, serverInfoHarvester);
-                if (!serverValidator.IsValid())
-                {
-                    Logger.Error("Not all servers fulfill ConDep's requirements. Aborting execution.");
-                    return;
-                }
+            //var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
+            //var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers, serverInfoHarvester);
+            if (!serverValidator.IsValid())
+            {
+                Logger.Error("Not all servers fulfill ConDep's requirements. Aborting execution.");
+                return;
             }
 
             var lbLookup = new LoadBalancerLookup(conDepSettings.Config.LoadBalancer);
@@ -144,5 +140,15 @@ namespace ConDep.Dsl.SemanticModel
             var infrastructureInstance = settings.Options.Assembly.CreateInstance(infrastructureType.FullName) as InfrastructureArtifact;
             return infrastructureInstance;
         }
+    }
+
+    public interface IValidateServer
+    {
+        bool IsValid();
+    }
+
+    public interface IValidateClient
+    {
+        void Validate();
     }
 }

@@ -56,8 +56,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 foreach (var element in _sequence)
                 {
                     element.Execute(server, status, settings);
-                    if (status.HasErrors)
-                        return;
+                    //if (status.HasErrors)
+                    //    return;
                 }
             }
             finally

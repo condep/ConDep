@@ -70,8 +70,7 @@ namespace ConDep.Node.Controllers.Iis
         private void CreateWebApp(ServerManager manager, Site site, string appName, string appPath)
         {
             var app = site.Applications.Add("/" + appName, appPath);
-            app.ApplicationPoolName = site.ApplicationDefaults.ApplicationPoolName;
-
+            app.ApplicationPoolName = site.Applications["/"].ApplicationPoolName;
             manager.CommitChanges();
         }
 

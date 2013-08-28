@@ -1,14 +1,25 @@
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 using ConDep.Dsl.Logging;
+using Microsoft.Win32;
+using System.Linq;
 
 namespace ConDep.Dsl.SemanticModel
 {
-    internal class ClientValidator
+    public class ClientValidator : IValidateClient
     {
         public void Validate()
         {
             Logger.LogSectionStart("Validating Client");
+            var psKey = Registry.LocalMachine.OpenSubKey("SOFTWARE/Microsoft/PowerShell");
+
+            if(psKey == null) throw new ConDepClientValidationException("No versions of PowerShell found! What OS are you running on?");
+
+            var psSubKeys = psKey.GetSubKeyNames();
+            if (psSubKeys.Any(key => key != "3"))
+            {
+                
+            }
             try
             {
                 using (var runspace = RunspaceFactory.CreateRunspace())
