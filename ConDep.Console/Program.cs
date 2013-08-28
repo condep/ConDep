@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using ConDep.Console.Help;
 using ConDep.Dsl.Logging;
 
 namespace ConDep.Console
