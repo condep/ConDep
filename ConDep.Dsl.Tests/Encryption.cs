@@ -26,7 +26,7 @@ namespace ConDep.Dsl.Tests
         [Test]
         public void TestThat()
         {
-            var key = JsonPasswordCrypto.GenerateKey(32);
+            var key = JsonPasswordCrypto.GenerateKey(256);
             var crypto = new JsonPasswordCrypto(key);
 
             var somePass = "someW€irdP@ssw0rdWithæøå";

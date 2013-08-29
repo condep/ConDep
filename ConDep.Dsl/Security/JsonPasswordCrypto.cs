@@ -47,9 +47,10 @@ namespace ConDep.Dsl.Security
             return Encoding.UTF8.GetString(decryptedBytes);
         }
 
-        public static string GenerateKey(int length)
+        public static string GenerateKey(int bitLength)
         {
-            var bytes = new byte[length];
+            var byteLength = bitLength/8;
+            var bytes = new byte[byteLength];
             new RNGCryptoServiceProvider().GetBytes(bytes);
 
             return Convert.ToBase64String(bytes);
