@@ -22,10 +22,6 @@ namespace ConDep.Console.Encrypt
 
         public void Execute(CmdHelpWriter helpWriter, ILogForConDep logger)
         {
-            System.Console.Out.WriteLine();
-            helpWriter.PrintCopyrightMessage();
-            System.Console.Out.WriteLine();
-
             var options = _parser.Parse();
             _validator.Validate(options);
 
@@ -35,7 +31,13 @@ namespace ConDep.Console.Encrypt
             var configParser = new EnvConfigParser();
             bool anySuccess = false;
 
-            foreach (var file in configParser.GetConDepConfigFiles(options.Dir))
+            var files = configParser.GetConDepConfigFiles(options.Dir);
+
+            System.Console.WriteLine();
+            helpWriter.PrintCopyrightMessage();
+            System.Console.WriteLine();
+
+            foreach (var file in files)
             {
                 System.Console.Out.WriteLine("\tEncrypting file [{0}] ...", file);
                 try
