@@ -26,13 +26,15 @@ namespace ConDep.Console.Decrypt
             var options = _parser.Parse();
             _validator.Validate(options);
 
-            var key = options.Key;
-            var crypto = new JsonPasswordCrypto(key);
+            var crypto = new JsonPasswordCrypto(options.Key);
 
             var configParser = new EnvConfigParser();
             foreach (var file in configParser.GetConDepConfigFiles(options.Dir))
             {
+                System.Console.Out.WriteLine("\tDecrypting file [{0}] ...", file);
                 DecryptFile(configParser, file, crypto);
+                System.Console.Out.WriteLine("\tFile decrypted.");
+                System.Console.WriteLine();
             }
         }
 
