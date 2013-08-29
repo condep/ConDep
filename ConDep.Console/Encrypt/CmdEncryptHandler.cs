@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Security;
@@ -29,11 +30,26 @@ namespace ConDep.Console.Encrypt
             var configParser = new EnvConfigParser();
             bool anySuccess = false;
 
-            var files = configParser.GetConDepConfigFiles(options.Dir);
+            var files = configParser.GetConDepConfigFiles(options.Dir).ToList();
 
-            System.Console.WriteLine();
             helpWriter.PrintCopyrightMessage();
             System.Console.WriteLine();
+
+            if (!options.Quiet)
+            {
+                System.Console.WriteLine("The following files will be encrypted:");
+                files.ForEach(x => System.Console.WriteLine("\t{0}", x));
+
+                System.Console.Write("\nContinue? (y/n) : ");
+                var choice = System.Console.Read();
+
+                if (Convert.ToChar(choice) != 'y')
+                {
+                    return;
+                }
+
+                System.Console.WriteLine();
+            }
 
             foreach (var file in files)
             {
@@ -71,7 +87,7 @@ namespace ConDep.Console.Encrypt
 
         private string GetKey(ConDepEncryptOptions options)
         {
-            return string.IsNullOrWhiteSpace(options.Key) ? JsonPasswordCrypto.GenerateKey(32) : options.Key;
+            return string.IsNullOrWhiteSpace(options.Key) ? JsonPasswordCrypto.GenerateKey(256) : options.Key;
         }
     }
 }

@@ -5,5 +5,6 @@
         public string Key { get; set; }
         public string Env { get; set; }
         public string Dir { get; set; }
+        public bool Quiet { get; set; }
     }
 }

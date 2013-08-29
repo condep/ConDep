@@ -115,7 +115,9 @@ namespace ConDep.Dsl.Config
             dynamic config;
 
             if (!Encrypted(json, out config))
-                return;
+            {
+                throw new ConDepCryptoException("Unable to decrypt. No content in file [{0}] is encrypted.");                
+            }
 
             DecryptJsonConfig(config, crypto);
             UpdateConfig(file, config);

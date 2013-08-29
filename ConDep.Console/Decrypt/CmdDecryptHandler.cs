@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using ConDep.Dsl.Config;
+﻿using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Security;
-using Newtonsoft.Json.Linq;
 
 namespace ConDep.Console.Decrypt
 {
@@ -25,6 +21,8 @@ namespace ConDep.Console.Decrypt
         {
             var options = _parser.Parse();
             _validator.Validate(options);
+
+            _helpWriter.PrintCopyrightMessage();
 
             var crypto = new JsonPasswordCrypto(options.Key);
 

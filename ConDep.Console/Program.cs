@@ -34,28 +34,28 @@ namespace ConDep.Console
         private static void ExecuteCommand(string[] args)
         {
             var helpWriter = new CmdHelpWriter(System.Console.Out);
-            IHandleConDepCommands handler = null;
 
             try
             {
-                handler = CmdFactory.Resolve(args);
+                var handler = CmdFactory.Resolve(args);
                 handler.Execute(helpWriter, Logger.LogInstance);
             }
             catch (Exception ex)
             {
-                if (handler != null)
-                {
-                    handler.WriteHelp();
-                    System.Console.ForegroundColor = ConsoleColor.Red;
-                    helpWriter.WriteException(ex);
-                    System.Console.ResetColor();
-                }
-                else
-                {
-                    System.Console.ForegroundColor = ConsoleColor.Red;
-                    helpWriter.WriteException(ex);
-                    System.Console.ResetColor();
-                }
+                //if (handler != null)
+                //{
+                //    //handler.WriteHelp();
+                //    System.Console.ForegroundColor = ConsoleColor.Red;
+                //    helpWriter.WriteException(ex);
+                //    System.Console.ResetColor();
+                //}
+                //else
+                //{
+                System.Console.ForegroundColor = ConsoleColor.Red;
+                helpWriter.WriteException(ex);
+                System.Console.ResetColor();
+                System.Console.WriteLine("For help type ConDep Help <command>");
+                //}
                 Environment.Exit(1);
             }
         }

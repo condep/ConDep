@@ -60,13 +60,14 @@ For help on individual commands, type condep.exe help <command>.
             var versionWhitespace = string.Join(" ", new string[versionAreaLength - (versionText.Length - 1)]);
 
             //Logger.Info(string.Format("ConDep Version {0}", version));
-            _writer.Write(@"Copyright (c) Jon Arild Torresdal
+            _writer.Write(@"
+Copyright (c) Jon Arild Torresdal
    ____            ____             
   / ___|___  _ __ |  _ \  ___ _ __  
  | |   / _ \| '_ \| | | |/ _ \ '_ \ 
  | |__| (_) | | | | |_| |  __/ |_) |
   \____\___/|_| |_|____/ \___| .__/ 
-" + versionWhitespace + versionText + "|_|\n");
+" + versionWhitespace + versionText + "|_|\n\n");
         }
 
         public void WriteException(Exception ex)
