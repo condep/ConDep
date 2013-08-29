@@ -13,6 +13,25 @@ namespace ConDep.Dsl.Security
             _key = key;
         }
 
+        public static bool ValidKey(string key)
+        {
+            try
+            {
+                var aes = new AesManaged
+                    {
+                        Key = Convert.FromBase64String(key),
+                        Mode = CipherMode.CBC,
+                        Padding = PaddingMode.ISO10126
+                    };
+                aes.CreateEncryptor();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
         public EncryptedPassword Encrypt(string password)
         {
             var aes = new AesManaged
