@@ -39,12 +39,10 @@ Deploy files and infrastructure to remote servers and environments
 Usage: ConDep <command> <options>
 
 Available commands:
-    Deploy      Deploy files and infrastructure configurations to one or more servers
-    Encrypt     Encrypt sensitive data, like passwords, in json-config files
-    Decrypt     Decrypt encrypted data in json-config files
-
-For help on individual commands, type condep.exe help <command>.
-
+    Deploy              Deploy files and infrastructure configurations to one or more servers
+    Encrypt             Encrypt sensitive data, like passwords, in json-config files
+    Decrypt             Decrypt encrypted data in json-config files
+    Help <command>      Display help for individual help commands
 ";
             _writer.Write(help);
         }
