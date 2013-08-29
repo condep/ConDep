@@ -32,7 +32,7 @@ namespace ConDep.Console.Decrypt
             foreach (var file in configParser.GetConDepConfigFiles(options.Dir))
             {
                 System.Console.Out.WriteLine("\tDecrypting file [{0}] ...", file);
-                DecryptFile(configParser, file, crypto);
+                configParser.DecryptFile(file, crypto);
                 System.Console.Out.WriteLine("\tFile decrypted.");
                 System.Console.WriteLine();
             }
@@ -41,34 +41,6 @@ namespace ConDep.Console.Decrypt
         public void WriteHelp()
         {
             _helpWriter.WriteHelp(_parser.OptionSet);
-        }
-
-        private void DecryptFile(EnvConfigParser parser, string file, JsonPasswordCrypto crypto)
-        {
-            var json = parser.GetConDepConfigAsJsonText(file);
-            dynamic config = JObject.Parse(json);
-
-            if (!parser.AlreadyEncrypted(config))
-                return;
-
-            foreach (var server in config.Servers)
-            {
-                if (server.DeploymentUser != null)
-                {
-                    DecryptJsonValue(crypto, server.DeploymentUser.Password);
-                }
-            }
-
-            DecryptJsonValue(crypto, config.DeploymentUser.Password);
-            parser.UpdateConfig(file, config);
-        }
-
-        private void DecryptJsonValue(JsonPasswordCrypto crypto, dynamic originalValue)
-        {
-            var valueToDecrypt = new EncryptedPassword(originalValue.IV.Value, originalValue.Password.Value);
-            var decryptedValue = crypto.Decrypt(valueToDecrypt);
-            JObject valueToReplace = originalValue;
-            valueToReplace.Replace(decryptedValue);
         }
     }
 }
