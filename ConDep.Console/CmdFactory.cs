@@ -49,7 +49,10 @@ namespace ConDep.Console
                 {
                     return new CmdHelpHandler(Args);
                 }
-
+                var cmdName = CmdName.ToLower();
+                if (cmdName == "/?" || cmdName == "-?" || cmdName == "--help" || cmdName == "-help" || cmdName == "-h" || cmdName == "--h")
+                    return new CmdHelpHandler(Args);
+                    
                 var conventionType = GetType().Assembly.GetTypes().Single(type => type.Name == "Cmd" + CmdName + "Handler");
                 return (IHandleConDepCommands) conventionType.GetConstructors().First().Invoke(new object[] {Args});
             }
