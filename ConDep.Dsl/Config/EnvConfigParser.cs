@@ -1,37 +1,36 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ConDep.Dsl.Security;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ConDep.Dsl.Config
 {
     public class EnvConfigParser
     {
+        private JsonSerializerSettings _jsonSettings;
+
         public void UpdateConfig(string filePath, dynamic config)
         {
-            var settings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                Formatting = Formatting.Indented,
-                //ContractResolver = new ConDepConfigContractResolver()
-            };
-
-            var jsonText = JsonConvert.SerializeObject(config, settings);
+            var jsonText = JsonConvert.SerializeObject(config, JsonSettings);
             File.WriteAllText(filePath, jsonText);
         }
 
-        public bool AlreadyEncrypted(dynamic config)
+        public bool Encrypted(string jsonConfig, out dynamic jsonModel)
         {
-            if (config.DeploymentUser != null)
+            jsonModel = JObject.Parse(jsonConfig);
+
+            if (jsonModel.DeploymentUser != null)
             {
-                if (!(config.DeploymentUser.Password.Value is string))
+                if (!(jsonModel.DeploymentUser.Password.Value is string))
                 {
                     return true;
                 }
             }
-            if (config.Servers != null)
+            if (jsonModel.Servers != null)
             {
-                foreach (var server in config.Servers)
+                foreach (var server in jsonModel.Servers)
                 {
                     if (server.DeploymentUser != null)
                     {
@@ -61,7 +60,7 @@ namespace ConDep.Dsl.Config
         }
 
 
-        public ConDepEnvConfig GetTypedEnvConfig(string filePath)
+        public ConDepEnvConfig GetTypedEnvConfig(string filePath, string cryptoKey)
         {
             if (!File.Exists(filePath))
             {
@@ -70,7 +69,8 @@ namespace ConDep.Dsl.Config
 
             using (var fileStream = File.OpenRead(filePath))
             {
-                return GetTypedEnvConfig(fileStream);
+                var crypto = new JsonPasswordCrypto(cryptoKey);
+                return GetTypedEnvConfig(fileStream, crypto);
             }
         }
 
@@ -92,7 +92,90 @@ namespace ConDep.Dsl.Config
                 }
             }
         }
-        public ConDepEnvConfig GetTypedEnvConfig(Stream stream)
+
+        private JsonSerializerSettings JsonSettings
+        {
+            get
+            {
+                if (_jsonSettings == null)
+                {
+                    _jsonSettings = new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        Formatting = Formatting.Indented,
+                    };
+                }
+                return _jsonSettings;
+            }
+        }
+
+        public void DecryptFile(string file, JsonPasswordCrypto crypto)
+        {
+            var json = GetConDepConfigAsJsonText(file);
+            dynamic config;
+
+            if (!Encrypted(json, out config))
+                return;
+
+            DecryptJsonConfig(config, crypto);
+            UpdateConfig(file, config);
+        }
+
+        public void DecryptJsonConfig(dynamic config, JsonPasswordCrypto crypto)
+        {
+            foreach (var server in config.Servers)
+            {
+                if (server.DeploymentUser != null)
+                {
+                    DecryptJsonValue(crypto, server.DeploymentUser.Password);
+                }
+            }
+
+            DecryptJsonValue(crypto, config.DeploymentUser.Password);
+        }
+
+        private void DecryptJsonValue(JsonPasswordCrypto crypto, dynamic originalValue)
+        {
+            var valueToDecrypt = new EncryptedPassword(originalValue.IV.Value, originalValue.Password.Value);
+            var decryptedValue = crypto.Decrypt(valueToDecrypt);
+            JObject valueToReplace = originalValue;
+            valueToReplace.Replace(decryptedValue);
+        }
+
+        public void EncryptFile(string file, JsonPasswordCrypto crypto)
+        {
+            var json = GetConDepConfigAsJsonText(file);
+            dynamic config;
+
+            if (Encrypted(json, out config))
+                throw new ConDepCryptoException(string.Format("File [{0}] already encrypted.", file));
+
+            EncryptJsonConfig(config, crypto);
+            UpdateConfig(file, config);
+        }
+
+        public void EncryptJsonConfig(dynamic config, JsonPasswordCrypto crypto)
+        {
+            foreach (var server in config.Servers)
+            {
+                if (server.DeploymentUser != null)
+                {
+                    EncryptJsonValue(crypto, server.DeploymentUser.Password);
+                }
+            }
+
+            EncryptJsonValue(crypto, config.DeploymentUser.Password);
+        }
+
+        private static void EncryptJsonValue(JsonPasswordCrypto crypto, JValue valueToEncrypt)
+        {
+            var value = valueToEncrypt.Value<string>();
+            var encryptedValue = crypto.Encrypt(value);
+            valueToEncrypt.Replace(JObject.FromObject(encryptedValue));
+        }
+
+
+        public ConDepEnvConfig GetTypedEnvConfig(Stream stream, JsonPasswordCrypto crypto)
         {
 
             ConDepEnvConfig config;
@@ -101,14 +184,12 @@ namespace ConDep.Dsl.Config
                 using (var reader = new StreamReader(memStream))
                 {
                     var json = reader.ReadToEnd();
-                    var settings = new JsonSerializerSettings
+                    dynamic jsonModel;
+                    if (Encrypted(json, out jsonModel))
                     {
-                        NullValueHandling = NullValueHandling.Ignore,
-                        Formatting = Formatting.Indented,
-                        //ContractResolver = new ConDepConfigContractResolver()
-                    };
-
-                    config = JsonConvert.DeserializeObject<ConDepEnvConfig>(json, settings);
+                        DecryptJsonConfig(jsonModel, crypto);
+                    }
+                    config = JsonConvert.DeserializeObject<ConDepEnvConfig>(json, JsonSettings);
                 }
             }
 

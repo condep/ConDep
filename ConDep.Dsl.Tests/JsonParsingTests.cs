@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Security;
 using NUnit.Framework;
 using System.Linq;
 
@@ -208,8 +209,8 @@ namespace ConDep.Dsl.Tests
             var tiersMemStream = new MemoryStream(Encoding.UTF8.GetBytes(_tiersJson));
 
             var parser = new EnvConfigParser();
-            _config = parser.GetTypedEnvConfig(memStream);
-            _tiersConfig = parser.GetTypedEnvConfig(tiersMemStream);
+            _config = parser.GetTypedEnvConfig(memStream, new JsonPasswordCrypto(null));
+            _tiersConfig = parser.GetTypedEnvConfig(tiersMemStream, new JsonPasswordCrypto(null));
         }
 
         [Test]

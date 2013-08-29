@@ -1,9 +1,7 @@
 ﻿using System;
-using System.IO;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Security;
-using Newtonsoft.Json.Linq;
 
 namespace ConDep.Console.Encrypt
 {
@@ -42,7 +40,7 @@ namespace ConDep.Console.Encrypt
                 System.Console.Out.WriteLine("\tEncrypting file [{0}] ...", file);
                 try
                 {
-                    EncryptFile(configParser, file, crypto);
+                    configParser.EncryptFile(file, crypto);
                     anySuccess = true;
                     System.Console.Out.WriteLine("\tFile encrypted.");
                 }
@@ -69,33 +67,6 @@ namespace ConDep.Console.Encrypt
         public void WriteHelp()
         {
             _helpWriter.WriteHelp(_parser.OptionSet);
-        }
-
-        private void EncryptFile(EnvConfigParser parser, string file, JsonPasswordCrypto crypto)
-        {
-            var json = parser.GetConDepConfigAsJsonText(file);
-            dynamic config = JObject.Parse(json);
-
-            if (parser.AlreadyEncrypted(config))
-                throw new ConDepCryptoException(string.Format("File [{0}] already encrypted.", file));
-
-            foreach (var server in config.Servers)
-            {
-                if (server.DeploymentUser != null)
-                {
-                    EncryptJsonValue(crypto, server.DeploymentUser.Password);
-                }
-            }
-
-            EncryptJsonValue(crypto, config.DeploymentUser.Password);
-            parser.UpdateConfig(file, config);
-        }
-
-        private static void EncryptJsonValue(JsonPasswordCrypto crypto, JValue valueToEncrypt)
-        {
-            var value = valueToEncrypt.Value<string>();
-            var encryptedValue = crypto.Encrypt(value);
-            valueToEncrypt.Replace(JObject.FromObject(encryptedValue));
         }
 
         private string GetKey(ConDepEncryptOptions options)

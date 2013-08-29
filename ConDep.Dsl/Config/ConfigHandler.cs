@@ -10,7 +10,7 @@ namespace ConDep.Dsl.Config
             var envFilePath = Path.Combine(Path.GetDirectoryName(settings.Options.Assembly.Location), envFileName);
 
             var jsonConfigParser = new EnvConfigParser();
-            var envConfig = jsonConfigParser.GetTypedEnvConfig(envFilePath);
+            var envConfig = jsonConfigParser.GetTypedEnvConfig(envFilePath, settings.Options.CryptoKey);
             envConfig.EnvironmentName = settings.Options.Environment;
 
             if (settings.Options.BypassLB)
