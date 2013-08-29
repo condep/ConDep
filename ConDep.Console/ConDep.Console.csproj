@@ -115,7 +115,6 @@
     <Compile Include="Deploy\CmdDeployHandler.cs" />
     <Compile Include="Deploy\CmdDeployParser.cs" />
     <Compile Include="Deploy\CmdDeployValidator.cs" />
-    <Compile Include="CommandLineParser.cs" />
     <Compile Include="CommandLineParams.cs" />
     <Compile Include="ConDepCmdParseException.cs" />
     <Compile Include="Encrypt\CmdEncryptHandler.cs" />
@@ -123,7 +122,6 @@
     <Compile Include="Encrypt\CmdEncryptParser.cs" />
     <Compile Include="Encrypt\CmdEncryptValidator.cs" />
     <Compile Include="Encrypt\ConDepEncryptOptions.cs" />
-    <Compile Include="HelpWriter.cs" />
     <Compile Include="Help\CmdHelpHandler.cs" />
     <Compile Include="Help\CmdHelpParser.cs" />
     <Compile Include="Help\CmdHelpValidator.cs" />
