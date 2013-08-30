@@ -209,8 +209,8 @@ namespace ConDep.Dsl.Tests
             var tiersMemStream = new MemoryStream(Encoding.UTF8.GetBytes(_tiersJson));
 
             var parser = new EnvConfigParser();
-            _config = parser.GetTypedEnvConfig(memStream, new JsonPasswordCrypto(null));
-            _tiersConfig = parser.GetTypedEnvConfig(tiersMemStream, new JsonPasswordCrypto(null));
+            _config = parser.GetTypedEnvConfig(memStream, null);
+            _tiersConfig = parser.GetTypedEnvConfig(tiersMemStream, null);
         }
 
         [Test]

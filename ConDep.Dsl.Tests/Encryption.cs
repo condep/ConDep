@@ -16,12 +16,12 @@ namespace ConDep.Dsl.Tests
             var options = parser.Parse();
         }
 
-        [Test]
-        public void TestThat_ParseJsonFile()
-        {
-            var handler = new CmdEncryptHandler(new string[0]);
-            handler.Execute(null, null);
-        }
+        //[Test]
+        //public void TestThat_ParseJsonFile()
+        //{
+        //    var handler = new CmdEncryptHandler(new string[0]);
+        //    handler.Execute(null, null);
+        //}
 
         [Test]
         public void TestThat()
@@ -35,14 +35,6 @@ namespace ConDep.Dsl.Tests
             var decrPasswd = crypto.Decrypt(encryptedPassword);
 
             Assert.That(somePass, Is.EqualTo(decrPasswd));
-        }
-
-        private static string GenerateKey(int length)
-        {
-            var bytes = new byte[length];
-            new RNGCryptoServiceProvider().GetBytes(bytes);
-
-            return Convert.ToBase64String(bytes);
         }
     }
 }
