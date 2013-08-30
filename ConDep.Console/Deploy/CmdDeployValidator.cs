@@ -1,4 +1,5 @@
 ﻿using ConDep.Dsl.Config;
+using ConDep.Dsl.Security;
 
 namespace ConDep.Console
 {
@@ -9,6 +10,18 @@ namespace ConDep.Console
             ValidateAssemblyName(options);
             ValidateEnvironment(options);
             ValidateApplication(options);
+            ValidateCryptoKey(options);
+        }
+
+        private void ValidateCryptoKey(ConDepOptions options)
+        {
+            if (!string.IsNullOrWhiteSpace(options.CryptoKey))
+            {
+                if (!JsonPasswordCrypto.ValidKey(options.CryptoKey))
+                {
+                    throw new ConDepCmdParseException("Decryption key not valid. Key must be base64 encoded and 128, 192 or 256 bits long.");
+                }
+            }
         }
 
         private void ValidateEnvironment(ConDepOptions options)
