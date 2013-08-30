@@ -246,7 +246,6 @@
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LoggerBase.cs" />
     <Compile Include="Config\ConDepEnvConfig.cs" />
-    <Compile Include="Config\CustomJsonConfigDictionary.cs" />
     <Compile Include="Config\CustomProviderConfig.cs" />
     <Compile Include="Config\DeploymentUserConfig.cs" />
     <Compile Include="Config\LoadBalancerConfig.cs" />

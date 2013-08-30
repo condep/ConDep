@@ -69,8 +69,7 @@ namespace ConDep.Dsl.Config
 
             using (var fileStream = File.OpenRead(filePath))
             {
-                var crypto = new JsonPasswordCrypto(cryptoKey);
-                return GetTypedEnvConfig(fileStream, crypto);
+                return GetTypedEnvConfig(fileStream, cryptoKey);
             }
         }
 
@@ -97,15 +96,11 @@ namespace ConDep.Dsl.Config
         {
             get
             {
-                if (_jsonSettings == null)
-                {
-                    _jsonSettings = new JsonSerializerSettings
+                return _jsonSettings ?? (_jsonSettings = new JsonSerializerSettings
                     {
                         NullValueHandling = NullValueHandling.Ignore,
                         Formatting = Formatting.Indented,
-                    };
-                }
-                return _jsonSettings;
+                    });
             }
         }
 
@@ -177,9 +172,8 @@ namespace ConDep.Dsl.Config
         }
 
 
-        public ConDepEnvConfig GetTypedEnvConfig(Stream stream, JsonPasswordCrypto crypto)
+        public ConDepEnvConfig GetTypedEnvConfig(Stream stream, string cryptoKey)
         {
-
             ConDepEnvConfig config;
             using (var memStream = GetMemoryStreamWithCorrectEncoding(stream))
             {
@@ -189,6 +183,11 @@ namespace ConDep.Dsl.Config
                     dynamic jsonModel;
                     if (Encrypted(json, out jsonModel))
                     {
+                        if (string.IsNullOrWhiteSpace(cryptoKey))
+                        {
+                            throw new ConDepCryptoException("ConDep configuration is encrypted, so a decryption key is needed. Specify using -k switch.");
+                        }
+                        var crypto = new JsonPasswordCrypto(cryptoKey);
                         DecryptJsonConfig(jsonModel, crypto);
                     }
                     config = JsonConvert.DeserializeObject<ConDepEnvConfig>(json, JsonSettings);
@@ -197,25 +196,16 @@ namespace ConDep.Dsl.Config
 
             if (config.Tiers == null)
             {
-                foreach (var server in config.Servers)
+                foreach (var server in config.Servers.Where(server => !server.DeploymentUser.IsDefined))
                 {
-                    if (!server.DeploymentUser.IsDefined)
-                    {
-                        server.DeploymentUser = config.DeploymentUser;
-                    }
+                    server.DeploymentUser = config.DeploymentUser;
                 }
             }
             else
             {
-                foreach (var tier in config.Tiers)
+                foreach (var server in config.Tiers.SelectMany(tier => tier.Servers.Where(server => !server.DeploymentUser.IsDefined)))
                 {
-                    foreach (var server in tier.Servers)
-                    {
-                        if (!server.DeploymentUser.IsDefined)
-                        {
-                            server.DeploymentUser = config.DeploymentUser;
-                        }
-                    }
+                    server.DeploymentUser = config.DeploymentUser;
                 }
             }
             return config;
