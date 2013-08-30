@@ -38,7 +38,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
         {
             if (!_values.DoNotStart)
             {
-                var start = string.Format("Start-ConDepWinService '{0}' 0 {1}", _serviceName,
+                var start = string.Format("Start-ConDepWinService '{0}' {1} {2}", _serviceName, _values.TimeOutInSeconds,
                                           "$" + _values.IgnoreFailureOnServiceStartStop);
                 server.ExecuteRemote.PowerShell(start,
                                                 o => o.ContinueOnError(
@@ -60,7 +60,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
 
         protected void ConfigureRemoveService(IOfferRemoteComposition server)
         {
-            var remove = string.Format("Remove-ConDepWinService '{0}' 0 {1}", _serviceName,
+            var remove = string.Format("Remove-ConDepWinService '{0}' {1} {2}", _serviceName, _values.TimeOutInSeconds,
                                        "$" + _values.IgnoreFailureOnServiceStartStop);
             server.ExecuteRemote.PowerShell(remove,
                                             o =>

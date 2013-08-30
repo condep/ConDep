@@ -163,6 +163,7 @@ function New-ConDepWinService {
 		[string] $displayName = "",
 		[string] $description = "",
 		[System.ServiceProcess.ServiceStartMode] $startupType = [System.ServiceProcess.ServiceStartMode]::Automatic,
+		[int] $timeoutInSeconds = 0,
 		[string[]] $dependsOn = $()) 
 
 	$serviceParams = @{}

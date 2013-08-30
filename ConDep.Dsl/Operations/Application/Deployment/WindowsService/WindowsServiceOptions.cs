@@ -61,6 +61,12 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
             return this;
         }
 
+        public IOfferWindowsServiceOptions TimeoutInSeconds(int timeout)
+        {
+            _values.TimeOutInSeconds = timeout;
+            return this;
+        }
+
         public IOfferWindowsServiceOptions OnServiceFailure(int serviceFailureResetInterval, Action<IOfferWindowsServiceFailureOptions> options)
         {
             _values.ServiceFailureResetInterval = serviceFailureResetInterval;
@@ -85,7 +91,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
             public bool IgnoreFailureOnServiceStartStop { get; set; }
             public ServiceStartMode? StartupType { get; set; }
             public bool DoNotStart { get; set; }
-
+            public int? TimeOutInSeconds { get; set; }
             public bool HasServiceGroup
             {
                 get { return !string.IsNullOrWhiteSpace(ServiceGroup); }
