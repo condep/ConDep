@@ -1,3 +1,4 @@
+[![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:%28id:bt775%29/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=bt775&guest=1)
 About ConDep
 ============
 
