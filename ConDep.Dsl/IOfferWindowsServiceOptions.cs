@@ -67,5 +67,12 @@ namespace ConDep.Dsl
         /// <param name="options"></param>
         /// <returns></returns>
         IOfferWindowsServiceOptions OnServiceFailure(int serviceFailureResetInterval, Action<IOfferWindowsServiceFailureOptions> options);
+
+        /// <summary>
+        /// Timeout for how long ConDep will wait on start or stop for windows service
+        /// </summary>
+        /// <param name="timeout">Timeout in seconds</param>
+        /// <returns></returns>
+        IOfferWindowsServiceOptions TimeoutInSeconds(int timeout);
     }
 }
