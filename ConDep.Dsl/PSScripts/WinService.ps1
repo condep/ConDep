@@ -60,7 +60,30 @@ function Stop-ConDepWinService {
 		{ 
 			Write-Host "Stopping: $($service.DisplayName)"
 			$service.Stop()
-			$service.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Stopped)
+
+            $timedOut = $false
+			if($timeoutInSeconds) {
+				$timeout = new-timespan -seconds $timeoutInSeconds
+                $timeForTimeout = (Get-Date).Add($timeout)
+
+                do {
+                    Start-Sleep -Milliseconds 250
+                    $service.Refresh()
+                    $timedOut = $timeForTimeout -lt (get-date)
+                }
+                while($service.Status -ne [System.ServiceProcess.ServiceControllerStatus]::Stopped -and -not $timedOut)
+				
+                if($timedOut) {
+                    throw "Timeout"
+                }
+			}
+			else {
+                do {
+                    Start-Sleep -Milliseconds 250
+                    $service.Refresh()
+                }
+                while($service.Status -ne [System.ServiceProcess.ServiceControllerStatus]::Stopped)
+			}
 			Write-Host "Stopped: $($service.DisplayName)" 
 		}
 		else {
@@ -90,7 +113,31 @@ function Start-ConDepWinService {
 		{ 
 			Write-Host "Starting: $($service.DisplayName)"
 			$service.Start()
-			$service.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Running)
+
+			if($timeoutInSeconds) {
+				$timeout = new-timespan -seconds $timeoutInSeconds
+                $timeForTimeout = (Get-Date).Add($timeout)
+
+                $timedOut = $false
+                do {
+                    Start-Sleep -Milliseconds 250
+                    $service.Refresh()
+                    $timedOut = $timeForTimeout -lt (get-date)
+                }
+                while($service.Status -ne [System.ServiceProcess.ServiceControllerStatus]::Running -and $service.Status -ne [System.ServiceProcess.ServiceControllerStatus]::Stopped -and -not $timedOut)
+				
+                if($timedOut) {
+                    throw "Timeout"
+                }
+			}
+			else {
+                do {
+                    Start-Sleep -Milliseconds 250
+                    $service.Refresh()
+                }
+                while($service.Status -ne [System.ServiceProcess.ServiceControllerStatus]::Running -and $service.Status -ne [System.ServiceProcess.ServiceControllerStatus]::Stopped)
+			}
+
 			Write-Host "Started: $($service.DisplayName)"
 		} 
 		else 
