@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <log4net>
+    <appender name="TimeConsoleAppender" type="log4net.Appender.ColoredConsoleAppender">
+      <mapping>
+        <level value="ERROR" />
+        <foreColor value="Red, HighIntensity" />
+      </mapping>
+      <mapping>
+        <level value="WARN" />
+        <foreColor value="Yellow, HighIntensity" />
+      </mapping>
+      <mapping>
+        <level value="INFO" />
+        <foreColor value="White" />
+      </mapping>
+      <mapping>
+        <level value="DEBUG" />
+        <foreColor value="Green" />
+      </mapping>
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="[%date{ABSOLUTE}] %message%newline" />
+      </layout>
+    </appender>
+
+    <appender name="PlainConsoleAppender" type="log4net.Appender.ConsoleAppender">
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%message%newline" />
+      </layout>
+    </appender>
+
+    <appender name="TeamCityAppender" type="log4net.Appender.ConsoleAppender">
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%message%newline" />
+      </layout>
+    </appender>
+
+    <appender name="TeamCityServiceMessageAppender" type="log4net.Appender.ConsoleAppender">
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%message" />
+      </layout>
+    </appender>
+
+    <logger name="condep-default">
+      <level value="ALL" />
+      <appender-ref ref="TimeConsoleAppender" />
+    </logger>
+
+    <logger name="condep-no-time">
+      <level value="ALL" />
+      <appender-ref ref="PlainConsoleAppender" />
+    </logger>
+
+    <logger name="condep-teamcity">
+      <level value="ALL" />
+      <appender-ref ref="TeamCityAppender" />
+    </logger>
+
+    <logger name="condep-teamcity-servicemessage">
+      <level value="ALL" />
+      <appender-ref ref="TeamCityServiceMessageAppender" />
+    </logger>
+  </log4net>
+</configuration>

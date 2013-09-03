@@ -8,6 +8,7 @@ properties {
 	$condep_dsl = "ConDep.Dsl"
 	$condep_console = "ConDep.Console"
 	$condep_remote = "ConDep.Remote"
+	$scriptcs_condep = "ScriptCs.ConDep"
 	$condep_dsl_lb_arr = "ConDep.Dsl.LoadBalancer.Arr"
 	$condep_dsl_lb_ace = "ConDep.Dsl.LoadBalancer.Ace"
 	$condep_dsl_tests = "ConDep.Dsl.Tests"
@@ -26,7 +27,7 @@ include .\tools\psake_ext.ps1
 task default -depends Build-All
 task ci -depends Build-All
 
-task Build-All -depends Init, Build-ConDep-Node, Build-ConDep-Dsl, Build-ConDep-Console, Build-ConDep-Dsl-LB-ARR, Build-ConDep-Dsl-LB-ACE, Build-Tests
+task Build-All -depends Init, Build-ConDep-Node, Build-ConDep-Dsl, Build-ConDep-Console, Build-ScriptCs-ConDep, Build-ConDep-Dsl-LB-ARR, Build-ConDep-Dsl-LB-ACE, Build-Tests
 
 task Build-ConDep-Node -depends Clean-ConDep-Node, Init { 
 	Exec { msbuild "$pwd\$condep_node\$condep_node.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_node\ }
@@ -74,6 +75,29 @@ task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init {
 		-files @(
 			@{ Path="$condep_dsl\$condep_dsl.dll"; Target="lib/net40"}, 
 			@{ Path="$condep_dsl\$condep_dsl.xml"; Target="lib/net40"}
+		)
+}
+
+task Build-ScriptCs-ConDep -depends Clean-ScriptCs-ConDep, Init { 
+	Exec { msbuild "$pwd\$scriptcs_condep\$scriptcs_condep.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$scriptcs_condep\ }
+
+	Generate-Nuspec-File `
+		-file "$build_directory\$scriptcs_condep.nuspec" `
+		-version $nugetVersion `
+		-preString $preString `
+		-id "$scriptcs_condep" `
+		-title "$scriptcs_condep" `
+		-licenseUrl "http://www.con-dep.net/license/" `
+		-projectUrl "http://www.con-dep.net/" `
+		-description "ConDep is a highly extendable Domain Specific Language for Continuous Deployment, Continuous Delivery and Infrastructure as Code on Windows." `
+		-iconUrl "https://raw.github.com/torresdal/ConDep/master/images/ConDepNugetLogo.png" `
+		-releaseNotes "$releaseNotes" `
+		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy msdeploy IIS automation powershell remote" `
+		-dependencies @(
+			@{ Name="$condep_dsl"; Version="$nugetVersion$preString"}
+		) `
+		-files @(
+			@{ Path="$scriptcs_condep\$scriptcs_condep.dll"; Target="lib/net40"}
 		)
 }
 
@@ -174,6 +198,11 @@ task Init {
 task Clean-ConDep-Node {
 	Write-Host "Cleaning Build output"  -ForegroundColor Green
 	Remove-Item $build_directory\$condep_node -Force -Recurse -ErrorAction SilentlyContinue
+}
+
+task Clean-ScriptCs-ConDep {
+	Write-Host "Cleaning Build output"  -ForegroundColor Green
+	Remove-Item $build_directory\$scriptcs_condep -Force -Recurse -ErrorAction SilentlyContinue
 }
 
 task Clean-ConDep-Dsl {
