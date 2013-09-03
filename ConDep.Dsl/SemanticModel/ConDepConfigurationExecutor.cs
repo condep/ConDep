@@ -12,13 +12,9 @@ using ConDep.Dsl.SemanticModel.Sequence;
 
 namespace ConDep.Dsl.SemanticModel
 {
+    //Todo: Screaming for refac! 
     public class ConDepConfigurationExecutor
     {
-        public static void ExecuteFromAssembly(ConDepSettings conDepSettings, IReportStatus status, IValidateClient clientValidator, IValidateServer serverValidator)
-        {
-            new ConDepConfigurationExecutor().Execute(conDepSettings, status, clientValidator, serverValidator);
-        }
-
         public static void ExecuteFromAssembly(ConDepSettings conDepSettings, IReportStatus status)
         {
             var clientValidator = new ClientValidator();
@@ -26,43 +22,60 @@ namespace ConDep.Dsl.SemanticModel
             var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
             var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers, serverInfoHarvester);
 
-            new ConDepConfigurationExecutor().Execute(conDepSettings, status, clientValidator, serverValidator);
-        }
-
-        private void Execute(ConDepSettings conDepSettings, IReportStatus status, IValidateClient clientValidator, IValidateServer serverValidator)
-        {
-            if (conDepSettings == null) { throw new ArgumentException("conDepSettings"); }
-            if (conDepSettings.Options.Assembly == null) { throw new ArgumentException("assembly"); }
-            if (conDepSettings.Config == null) { throw new ArgumentException("conDepSettings.Config"); }
-            if (conDepSettings.Options == null) { throw new ArgumentException("conDepSettings.Options"); }
-            if (status == null) { throw new ArgumentException("status"); }
-
-            clientValidator.Validate();
-                
-            //var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
-            //var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers, serverInfoHarvester);
-            if (!serverValidator.IsValid())
-            {
-                Logger.Error("Not all servers fulfill ConDep's requirements. Aborting execution.");
-                return;
-            }
-
             var lbLookup = new LoadBalancerLookup(conDepSettings.Config.LoadBalancer);
             var sequenceManager = new ExecutionSequenceManager(lbLookup.GetLoadBalancer());
 
             var notification = new Notification();
-            var postOpSeq = new PostOpsSequence();
+            PopulateExecutionSequence(conDepSettings, notification, sequenceManager);
 
-            foreach (var server in conDepSettings.Config.Servers)
+            new ConDepConfigurationExecutor().Execute(conDepSettings, clientValidator, serverValidator, sequenceManager);
+        }
+
+        public void Execute(ConDepSettings settings, IValidateClient clientValidator, IValidateServer serverValidator,
+                            ExecutionSequenceManager execManager)
+        {
+            if (settings == null) { throw new ArgumentException("settings"); }
+            if (settings.Options.Assembly == null) { throw new ArgumentException("assembly"); }
+            if (settings.Config == null) { throw new ArgumentException("settings.Config"); }
+            if (settings.Options == null) { throw new ArgumentException("settings.Options"); }
+            if (clientValidator == null) { throw new ArgumentException("clientValidator"); }
+            if (serverValidator == null) { throw new ArgumentException("serverValidator"); }
+            if (execManager == null) { throw new ArgumentException("execManager"); }
+
+            var status = new StatusReporter();
+            Validate(clientValidator, serverValidator);
+            ExecutePreOps(settings, status);
+            var notification = new Notification();
+            if (!execManager.IsValid(notification))
             {
-                if (!ConDepGlobals.ServersWithPreOps.ContainsKey(server.Name))
-                {
-                    var remotePreOps = new PreRemoteOps();
-                    remotePreOps.Execute(server, status, conDepSettings);
-                    ConDepGlobals.ServersWithPreOps.Add(server.Name, server);
-                }
+                notification.Throw();
             }
 
+            try
+            {
+                execManager.Execute(status, settings);
+            }
+            finally
+            {
+                new PostOpsSequence().Execute(status, settings);
+            }
+        }
+
+        private static void Validate(IValidateClient clientValidator, IValidateServer serverValidator)
+        {
+            clientValidator.Validate();
+
+            //var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
+            //var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers, serverInfoHarvester);
+            if (!serverValidator.IsValid())
+            {
+                throw new ConDepValidationException("Not all servers fulfill ConDep's requirements. Aborting execution.");
+            }
+        }
+
+        private static void PopulateExecutionSequence(ConDepSettings conDepSettings, Notification notification,
+                                               ExecutionSequenceManager sequenceManager)
+        {
             var applications = CreateApplicationArtifacts(conDepSettings);
             foreach (var application in applications)
             {
@@ -84,28 +97,28 @@ namespace ConDep.Dsl.SemanticModel
                     }
                 }
 
-                var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(application.GetType().Name), infrastructureSequence, conDepSettings.Config.Servers);
+                var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(application.GetType().Name),
+                                                       infrastructureSequence, conDepSettings.Config.Servers);
                 Configure.LocalOperations = local;
 
                 application.Configure(local, conDepSettings);
             }
+        }
 
-            if (!sequenceManager.IsValid(notification))
+        private static void ExecutePreOps(ConDepSettings conDepSettings, IReportStatus status)
+        {
+            foreach (var server in conDepSettings.Config.Servers)
             {
-                notification.Throw();
-            }
-
-            try
-            {
-                sequenceManager.Execute(status, conDepSettings);
-            }
-            finally
-            {
-                postOpSeq.Execute(status, conDepSettings);
+                if (!ConDepGlobals.ServersWithPreOps.ContainsKey(server.Name))
+                {
+                    var remotePreOps = new PreRemoteOps();
+                    remotePreOps.Execute(server, status, conDepSettings);
+                    ConDepGlobals.ServersWithPreOps.Add(server.Name, server);
+                }
             }
         }
 
-        private IEnumerable<ApplicationArtifact> CreateApplicationArtifacts(ConDepSettings settings)
+        private static IEnumerable<ApplicationArtifact> CreateApplicationArtifacts(ConDepSettings settings)
         {
             var assembly = settings.Options.Assembly;
             if (settings.Options.HasApplicationDefined())
@@ -134,13 +147,13 @@ namespace ConDep.Dsl.SemanticModel
             return application;
         }
 
-        private bool HasInfrastructureDefined(ApplicationArtifact application)
+        private static bool HasInfrastructureDefined(ApplicationArtifact application)
         {
             var typeName = typeof(IDependOnInfrastructure<>).Name;
             return application.GetType().GetInterface(typeName) != null;
         }
 
-        private InfrastructureArtifact GetInfrastructureArtifactForApplication(ConDepSettings settings, ApplicationArtifact application)
+        private static InfrastructureArtifact GetInfrastructureArtifactForApplication(ConDepSettings settings, ApplicationArtifact application)
         {
             var typeName = typeof (IDependOnInfrastructure<>).Name;
             var typeInterface = application.GetType().GetInterface(typeName);

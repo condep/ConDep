@@ -25,7 +25,7 @@ namespace ConDep.Dsl.SemanticModel
                         var result = pipeline.Invoke();
 
                         if (result == null)
-                            throw new ConDepClientValidationException("Unable to detect PowerShell version on client! PowerShell version 3.0 or higher is required.");
+                            throw new ConDepValidationException("Unable to detect PowerShell version on client! PowerShell version 3.0 or higher is required.");
 
                         if (result.Count == 1)
                         {
@@ -36,7 +36,7 @@ namespace ConDep.Dsl.SemanticModel
                                 return;
                             }
                         }
-                        throw new ConDepClientValidationException("Unable to detect PowerShell version on client! PowerShell version 3.0 or higher is required.");
+                        throw new ConDepValidationException("Unable to detect PowerShell version on client! PowerShell version 3.0 or higher is required.");
                     }
                 }
             }
