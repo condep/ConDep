@@ -88,13 +88,14 @@ namespace ConDep.Dsl.Remote
             Logger.Info(
                 string.Format("Checking if WinRM (Remote PowerShell) can be used to reach remote server [{0}]...",
                               server.Name));
+            var cmd = server.DeploymentUser.IsDefined ? string.Format("id -r:{0} -u:{1} -p:\"{2}\"", server.Name,
+                server.DeploymentUser.UserName, server.DeploymentUser.Password) : string.Format("id -r:{0}", server.Name);
+
             var success = false;
             var path = Environment.ExpandEnvironmentVariables(@"%windir%\system32\WinRM.cmd");
             var startInfo = new ProcessStartInfo(path)
                                 {
-                                    Arguments =
-                                        string.Format("id -r:{0} -u:{1} -p:\"{2}\"", server.Name,
-                                                      server.DeploymentUser.UserName, server.DeploymentUser.Password),
+                                    Arguments = cmd,
                                     Verb = "RunAs",
                                     UseShellExecute = false,
                                     WindowStyle = ProcessWindowStyle.Hidden,
