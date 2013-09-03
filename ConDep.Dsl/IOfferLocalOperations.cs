@@ -34,6 +34,6 @@ namespace ConDep.Dsl
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        IOfferRemoteOperations ToEachServer(Action<IOfferRemoteOperations> action);
+        IOfferLocalOperations ToEachServer(Action<IOfferRemoteOperations> action);
     }
 }

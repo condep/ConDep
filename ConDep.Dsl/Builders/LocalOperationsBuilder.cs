@@ -45,11 +45,11 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
-        public IOfferRemoteOperations ToEachServer(Action<IOfferRemoteOperations> action)
+        public IOfferLocalOperations ToEachServer(Action<IOfferRemoteOperations> action)
         {
             var builder = new RemoteOperationsBuilder(_localSequence.NewRemoteSequence(_infrastructureSequence, _servers));
             action(builder);
-            return builder;
+            return this;
         }
 
         public void AddOperation(LocalOperation operation)

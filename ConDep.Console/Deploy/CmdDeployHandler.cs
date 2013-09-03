@@ -35,12 +35,7 @@ namespace ConDep.Console.Deploy
                 webQ = WaitInQueue(logger, conDepSettings);
 
                 var status = new ConDepStatus();
-                var clientValidator = new ClientValidator();
-
-                var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
-                var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers, serverInfoHarvester);
-
-                ConDepConfigurationExecutor.ExecuteFromAssembly(conDepSettings, status, clientValidator, serverValidator);
+                ConDepConfigurationExecutor.ExecuteFromAssembly(conDepSettings, status);
 
                 //if (status.HasErrors)
                 //{
