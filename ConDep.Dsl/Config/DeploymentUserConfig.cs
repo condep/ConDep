@@ -39,7 +39,10 @@ namespace ConDep.Dsl.Config
             get
             {
                 var secureString = new SecureString();
-                Password.ToCharArray().ToList().ForEach(secureString.AppendChar);
+                if (!string.IsNullOrWhiteSpace(Password))
+                {
+                    Password.ToCharArray().ToList().ForEach(secureString.AppendChar);
+                }
                 return secureString;
             }
         }
