@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Web;
 
 namespace ConDep.Dsl.Remote.Node
 {
@@ -43,7 +44,7 @@ namespace ConDep.Dsl.Remote.Node
                                                          };
                 var parameters = content.Headers.ContentDisposition.Parameters;
 
-                parameters.Add(new NameValueHeaderValue("fileAttributes", attributes.ToString()));
+                parameters.Add(new NameValueHeaderValue("fileAttributes", HttpUtility.UrlEncode(attributes.ToString())));
                 parameters.Add(new NameValueHeaderValue("lastWriteTimeUtc", lastWriteTimeUtc.ToFileTime().ToString(CultureInfo.InvariantCulture)));
             }
 

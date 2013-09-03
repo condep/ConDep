@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web;
 using ConDep.Node.Model;
 
 namespace ConDep.Node
@@ -86,7 +87,7 @@ namespace ConDep.Node
                 var attributes = contentDisposition.Parameters.FirstOrDefault(x => x.Name == "fileAttributes");
 
                 FileAttributes fileAttributes;
-                FileAttributes.TryParse(attributes.Value, true, out fileAttributes);
+                FileAttributes.TryParse(HttpUtility.UrlDecode(attributes.Value), true, out fileAttributes);
 
                 UpdateFileWithOriginalSettings(filePath, lastWriteTimeUtc, fileAttributes);
             }
