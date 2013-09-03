@@ -32,6 +32,11 @@ namespace ConDep.Dsl.SemanticModel
         private IEnumerable<IHarvestServerInfo> GetHarvesters(ConDepSettings settings)
         {
             var internalHarvesters = GetHarvesters(GetType().Assembly.GetTypes());
+            if (settings.Options.Assembly == null)
+            {
+                return internalHarvesters;
+            }
+            
             var externalHarvesters = GetHarvesters(settings.Options.Assembly.GetTypes());
             return internalHarvesters.Concat(externalHarvesters);
         }
