@@ -17,6 +17,8 @@ namespace ConDep.Dsl.SemanticModel
     {
         public static void ExecuteFromAssembly(ConDepSettings conDepSettings, IReportStatus status)
         {
+            if (conDepSettings.Options.Assembly == null) { throw new ArgumentException("assembly"); }
+
             var clientValidator = new ClientValidator();
 
             var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
@@ -35,7 +37,6 @@ namespace ConDep.Dsl.SemanticModel
                             ExecutionSequenceManager execManager)
         {
             if (settings == null) { throw new ArgumentException("settings"); }
-            if (settings.Options.Assembly == null) { throw new ArgumentException("assembly"); }
             if (settings.Config == null) { throw new ArgumentException("settings.Config"); }
             if (settings.Options == null) { throw new ArgumentException("settings.Options"); }
             if (clientValidator == null) { throw new ArgumentException("clientValidator"); }
