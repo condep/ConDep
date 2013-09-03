@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Logging;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
@@ -25,7 +26,15 @@ namespace ConDep.Dsl.SemanticModel.Sequence
         {
             foreach (var localSequence in _sequence)
             {
-                localSequence.Execute(status, settings);
+                Logger.LogSectionStart(localSequence.Name);
+                try
+                {
+                    localSequence.Execute(status, settings);
+                }
+                finally
+                {
+                    Logger.LogSectionEnd(localSequence.Name);
+                }
                 //if (status.HasErrors)
                 //    return;
             }

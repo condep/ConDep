@@ -19,6 +19,16 @@ namespace ConDep.Dsl.SemanticModel
             new ConDepConfigurationExecutor().Execute(conDepSettings, status, clientValidator, serverValidator);
         }
 
+        public static void ExecuteFromAssembly(ConDepSettings conDepSettings, IReportStatus status)
+        {
+            var clientValidator = new ClientValidator();
+
+            var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
+            var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers, serverInfoHarvester);
+
+            new ConDepConfigurationExecutor().Execute(conDepSettings, status, clientValidator, serverValidator);
+        }
+
         private void Execute(ConDepSettings conDepSettings, IReportStatus status, IValidateClient clientValidator, IValidateServer serverValidator)
         {
             if (conDepSettings == null) { throw new ArgumentException("conDepSettings"); }
@@ -38,7 +48,6 @@ namespace ConDep.Dsl.SemanticModel
             }
 
             var lbLookup = new LoadBalancerLookup(conDepSettings.Config.LoadBalancer);
-
             var sequenceManager = new ExecutionSequenceManager(lbLookup.GetLoadBalancer());
 
             var notification = new Notification();

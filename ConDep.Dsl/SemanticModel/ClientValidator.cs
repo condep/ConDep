@@ -11,15 +11,6 @@ namespace ConDep.Dsl.SemanticModel
         public void Validate()
         {
             Logger.LogSectionStart("Validating Client");
-            //var psKey = Registry.LocalMachine.OpenSubKey("SOFTWARE/Microsoft/PowerShell");
-
-            //if(psKey == null) throw new ConDepClientValidationException("No versions of PowerShell found! What OS are you running on?");
-
-            //var psSubKeys = psKey.GetSubKeyNames();
-            //if (psSubKeys.Any(key => key != "3"))
-            //{
-                
-            //}
             try
             {
                 using (var runspace = RunspaceFactory.CreateRunspace())
