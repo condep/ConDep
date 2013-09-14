@@ -389,5 +389,35 @@ namespace ConDep.Dsl.Tests
                 Assert.That(server.DeploymentUser, Is.SameAs(_config.DeploymentUser));
             }
         }
+
+        [Test]
+        public void TestThatUnencryptedJsonIsNotIdentifiedAsEncrypted()
+        {
+            var parser = new EnvConfigParser();
+            dynamic config;
+            Assert.That(parser.Encrypted(_json, out config), Is.False);
+            Assert.That(parser.Encrypted(_tiersJson, out config), Is.False);
+        }
+
+        [Test]
+        public void TestThatEncryptedJsonCanBeDecryptedIntoTypedConfig()
+        {
+            var parser = new EnvConfigParser();
+
+            dynamic config;
+            parser.Encrypted(_json, out config);
+            string password = config.DeploymentUser.Password;
+
+            var key = JsonPasswordCrypto.GenerateKey(256);
+            var crypto = new JsonPasswordCrypto(key);
+            parser.EncryptJsonConfig(config, crypto);
+
+            var encryptedJson = parser.ConvertToJsonText(config);
+            Assert.That(parser.Encrypted(encryptedJson, out config), Is.True);
+
+            var memStream = new MemoryStream(Encoding.UTF8.GetBytes(encryptedJson));
+            var decryptedConfig = parser.GetTypedEnvConfig(memStream, key);
+            Assert.That(decryptedConfig.DeploymentUser.Password, Is.EqualTo(password));
+        }
     }
 }

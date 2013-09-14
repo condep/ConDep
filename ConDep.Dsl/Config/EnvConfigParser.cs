@@ -13,8 +13,12 @@ namespace ConDep.Dsl.Config
 
         public void UpdateConfig(string filePath, dynamic config)
         {
-            var jsonText = JsonConvert.SerializeObject(config, JsonSettings);
-            File.WriteAllText(filePath, jsonText);
+            File.WriteAllText(filePath, ConvertToJsonText(config));
+        }
+
+        public string ConvertToJsonText(dynamic config)
+        {
+            return JsonConvert.SerializeObject(config, JsonSettings);
         }
 
         public bool Encrypted(string jsonConfig, out dynamic jsonModel)
@@ -120,6 +124,11 @@ namespace ConDep.Dsl.Config
 
         public void DecryptJsonConfig(dynamic config, JsonPasswordCrypto crypto)
         {
+            if (config.LoadBalancer != null & config.LoadBalancer.Password != null)
+            {
+                DecryptJsonValue(crypto, config.LoadBalancer.Password);
+            }
+
             foreach (var server in config.Servers)
             {
                 if (server.DeploymentUser != null)
@@ -153,11 +162,19 @@ namespace ConDep.Dsl.Config
 
         public void EncryptJsonConfig(dynamic config, JsonPasswordCrypto crypto)
         {
-            foreach (var server in config.Servers)
+            if (config.LoadBalancer != null & config.LoadBalancer.Password != null && !string.IsNullOrWhiteSpace(config.LoadBalancer.Password.Value))
             {
-                if (server.DeploymentUser != null)
+                EncryptJsonValue(crypto, config.LoadBalancer.Password);
+            }
+
+            if (config.Servers != null && config.Servers.Count > 0)
+            {
+                foreach (var server in config.Servers)
                 {
-                    EncryptJsonValue(crypto, server.DeploymentUser.Password);
+                    if (server.DeploymentUser != null)
+                    {
+                        EncryptJsonValue(crypto, server.DeploymentUser.Password);
+                    }
                 }
             }
 
@@ -185,12 +202,17 @@ namespace ConDep.Dsl.Config
                     {
                         if (string.IsNullOrWhiteSpace(cryptoKey))
                         {
-                            throw new ConDepCryptoException("ConDep configuration is encrypted, so a decryption key is needed. Specify using -k switch.");
+                            throw new ConDepCryptoException(
+                                "ConDep configuration is encrypted, so a decryption key is needed. Specify using -k switch.");
                         }
                         var crypto = new JsonPasswordCrypto(cryptoKey);
                         DecryptJsonConfig(jsonModel, crypto);
+                        config = ((JObject) jsonModel).ToObject<ConDepEnvConfig>();
                     }
-                    config = JsonConvert.DeserializeObject<ConDepEnvConfig>(json, JsonSettings);
+                    else
+                    {
+                        config = JsonConvert.DeserializeObject<ConDepEnvConfig>(json, JsonSettings);
+                    }
                 }
             }
 
