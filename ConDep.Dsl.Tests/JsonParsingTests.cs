@@ -415,9 +415,11 @@ namespace ConDep.Dsl.Tests
             var encryptedJson = parser.ConvertToJsonText(config);
             Assert.That(parser.Encrypted(encryptedJson, out config), Is.True);
 
-            var memStream = new MemoryStream(Encoding.UTF8.GetBytes(encryptedJson));
-            var decryptedConfig = parser.GetTypedEnvConfig(memStream, key);
-            Assert.That(decryptedConfig.DeploymentUser.Password, Is.EqualTo(password));
+            using (var memStream = new MemoryStream(Encoding.UTF8.GetBytes(encryptedJson)))
+            {
+                var decryptedConfig = parser.GetTypedEnvConfig(memStream, key);
+                Assert.That(decryptedConfig.DeploymentUser.Password, Is.EqualTo(password));
+            }
         }
     }
 }
