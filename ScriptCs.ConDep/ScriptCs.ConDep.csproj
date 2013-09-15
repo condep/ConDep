@@ -37,8 +37,9 @@
     <Reference Include="Common.Logging">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="ConDep.Dsl">
-      <HintPath>..\packages\ConDep.Dsl.2.0.16-beta\lib\net40\ConDep.Dsl.dll</HintPath>
+    <Reference Include="ConDep.Dsl, Version=2.0.16.45, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ConDep.Dsl\bin\Debug\ConDep.Dsl.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>

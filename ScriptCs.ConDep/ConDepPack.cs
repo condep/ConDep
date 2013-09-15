@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using ConDep.Dsl;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
-using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.Remote;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
-using ConDep.Dsl.SemanticModel.WebDeploy;
 using ScriptCs.Contracts;
 using log4net.Config;
 
@@ -18,10 +15,14 @@ namespace ScriptCs.ConDep
     public class ConDepPack : IScriptPackContext
     {
         private readonly ExecutionSequenceManager _sequenceManager;
+        private readonly InfrastructureSequence _infraSequence;
+        private ConDepSettings _settings;
 
         public ConDepPack()
         {
             _sequenceManager = new ExecutionSequenceManager(new DefaultLoadBalancer());
+            _infraSequence = new InfrastructureSequence();
+            _settings = new ConDepSettings();
 
             ConfigureLogging();
         }
@@ -37,14 +38,27 @@ namespace ScriptCs.ConDep
 
         public ConDepPack ConfigureApplication(string appName, ServerConfig server, Action<IOfferLocalOperations> action)
         {
-            action(new LocalOperationsBuilder(_sequenceManager.NewLocalSequence(appName), new InfrastructureSequence(), new [] {server}));
+            _settings.Config.Servers = new List<ServerConfig>{server};
+            action(new LocalOperationsBuilder(_sequenceManager.NewLocalSequence(appName), new InfrastructureSequence(), _settings.Config.Servers));
             return this;
         }
 
-        public IOfferLocalOperations ConfigureApplication(string appName, ServerConfig server)
-        {
-            return new LocalOperationsBuilder(_sequenceManager.NewLocalSequence(appName), new InfrastructureSequence(), new [] {server});
-        }
+        //public ConDepPack WithInfrastructure(string scriptFile)
+        //{
+            
+        //}
+
+        //public ConDepPack ConfigureApplication(string appName, Action<IOfferLocalOperations> action)
+        //{
+
+        //    action(new LocalOperationsBuilder(_sequenceManager.NewLocalSequence(appName), new InfrastructureSequence(), new[] { server }));
+        //    return this;
+        //}
+
+        //public IOfferLocalOperations ConfigureApplication(string appName, ServerConfig server)
+        //{
+        //    return new LocalOperationsBuilder(_sequenceManager.NewLocalSequence(appName), new InfrastructureSequence(), new [] {server});
+        //}
 
         public IOfferInfrastructure ConfigureInfrastructure()
         {
@@ -54,16 +68,10 @@ namespace ScriptCs.ConDep
         public void Execute()
         {
             var clientValidator = new ClientValidator();
-            clientValidator.Validate();
+            var serverInfoHarvester = new ServerInfoHarvester(_settings);
+            var serverValidator = new RemoteServerValidator(_settings.Config.Servers, serverInfoHarvester);
 
-            //var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
-            //var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers, serverInfoHarvester);
-
-            var settings = new ConDepSettings();
-            var server = new ServerConfig {Name = "127.0.0.1"};
-            settings.Config.Servers= new List<ServerConfig>{server};
-
-            _sequenceManager.Execute(new ConDepStatus(), settings);
+            new ConDepConfigurationExecutor().Execute(_settings, clientValidator, serverValidator, _sequenceManager);
         }
     }
 
@@ -73,7 +81,7 @@ namespace ScriptCs.ConDep
         {
             var condep = new ConDepPack();
             var serverConf = new ServerConfig {Name = "127.0.0.1"};
-
+            
             condep.ConfigureApplication("MyApp", serverConf, app => app
                 .ToEachServer(server =>
                 {
