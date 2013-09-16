@@ -162,7 +162,7 @@ namespace ConDep.Dsl.Config
 
         public void EncryptJsonConfig(dynamic config, JsonPasswordCrypto crypto)
         {
-            if (config.LoadBalancer != null & config.LoadBalancer.Password != null && !string.IsNullOrWhiteSpace(config.LoadBalancer.Password.Value))
+            if (config.LoadBalancer != null && config.LoadBalancer.Password != null && !string.IsNullOrWhiteSpace(config.LoadBalancer.Password.Value))
             {
                 EncryptJsonValue(crypto, config.LoadBalancer.Password);
             }
