@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.ServiceModel;
+using System.ServiceModel.Channels;
 using System.ServiceProcess;
 using System.Web.Http;
 using System.Web.Http.SelfHost;
+using System.Web.Http.SelfHost.Channels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -29,7 +31,7 @@ namespace ConDep.Node
 
             AppDomain.CurrentDomain.UnhandledException += (sender, args) => EventLog.WriteEntry("Error: " + args.ExceptionObject.ToString(), EventLogEntryType.Error);
             var uri = new Uri(url);
-            _config = new HttpSelfHostConfiguration(uri)
+            _config = new NtlmSelfHostConfiguration(uri)
             {
                 TransferMode = TransferMode.Streamed,
                 MaxReceivedMessageSize = 2147483648,

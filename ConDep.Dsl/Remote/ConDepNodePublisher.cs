@@ -78,9 +78,9 @@ namespace ConDep.Dsl.Remote
             }
         }
 
-        public bool ValidateNode(string nodeListenUrl)
+        public bool ValidateNode(string nodeListenUrl, string userName, string password)
         {
-            var api = new Node.Api(nodeListenUrl, "", "");
+            var api = new Node.Api(nodeListenUrl, userName, password);
             if (!api.Validate())
             {
                 Thread.Sleep(1000);
