@@ -15,7 +15,7 @@ namespace ConDep.Dsl.SemanticModel
     //Todo: Screaming for refac! 
     public class ConDepConfigurationExecutor
     {
-        public static void ExecuteFromAssembly(ConDepSettings conDepSettings, IReportStatus status)
+        public static bool ExecuteFromAssembly(ConDepSettings conDepSettings, IReportStatus status)
         {
             if (conDepSettings.Options.Assembly == null) { throw new ArgumentException("assembly"); }
 
@@ -30,10 +30,10 @@ namespace ConDep.Dsl.SemanticModel
             var notification = new Notification();
             PopulateExecutionSequence(conDepSettings, notification, sequenceManager);
 
-            new ConDepConfigurationExecutor().Execute(conDepSettings, clientValidator, serverValidator, sequenceManager);
+            return new ConDepConfigurationExecutor().Execute(conDepSettings, clientValidator, serverValidator, sequenceManager);
         }
 
-        public void Execute(ConDepSettings settings, IValidateClient clientValidator, IValidateServer serverValidator,
+        public bool Execute(ConDepSettings settings, IValidateClient clientValidator, IValidateServer serverValidator,
                             ExecutionSequenceManager execManager)
         {
             if (settings == null) { throw new ArgumentException("settings"); }
@@ -55,6 +55,12 @@ namespace ConDep.Dsl.SemanticModel
             try
             {
                 execManager.Execute(status, settings);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("ConDep execution failed. ", ex);
+                return false;
             }
             finally
             {

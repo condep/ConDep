@@ -25,6 +25,7 @@ namespace ConDep.Console.Deploy
         {
             WebQueue webQ = null;
             var conDepSettings = new ConDepSettings();
+            bool success;
 
             try
             {
@@ -35,17 +36,17 @@ namespace ConDep.Console.Deploy
                 webQ = WaitInQueue(logger, conDepSettings);
 
                 var status = new ConDepStatus();
-                ConDepConfigurationExecutor.ExecuteFromAssembly(conDepSettings, status);
+                success = ConDepConfigurationExecutor.ExecuteFromAssembly(conDepSettings, status);
 
-                //if (status.HasErrors)
-                //{
-                //    throw status.
-                //}
-                //else
-                //{
-                status.EndTime = DateTime.Now;
-                status.PrintSummary();
-                //}
+                if (success)
+                {
+                    status.EndTime = DateTime.Now;
+                    status.PrintSummary();
+                }
+                else
+                {
+                    Environment.Exit(1);
+                }
             }
             finally
             {
