@@ -81,7 +81,7 @@ return $result";
                         }
                     }
 
-                    server.ServerInfo.Network.Add(info);
+                    server.GetServerInfo().Network.Add(info);
                 }
             }
 

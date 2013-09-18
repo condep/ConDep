@@ -24,7 +24,7 @@ namespace ConDep.Dsl.Operations.LoadBalancer
 
                     var type = assembly.GetTypes().Where(t => typeof(ILoadBalance).IsAssignableFrom(t)).FirstOrDefault();
                     var loadBalancer = Activator.CreateInstance(type, _loadBalancerSettings) as ILoadBalance;
-                    loadBalancer.Mode = _loadBalancerSettings.ModeAsEnum;
+                    loadBalancer.Mode = _loadBalancerSettings.GetModeAsEnum();
                     return loadBalancer;
                 }
             }

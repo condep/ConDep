@@ -97,6 +97,13 @@
     <Compile Include="ApplicationArtifact.cs" />
     <Compile Include="Config\ConDepSettings.cs" />
     <Compile Include="Config\ConfigHandler.cs" />
+    <Compile Include="Config\DiskInfo.cs" />
+    <Compile Include="Config\DotNetFrameworks.cs" />
+    <Compile Include="Config\DotNetFrameworkVersion.cs" />
+    <Compile Include="Config\DotNetVersion.cs" />
+    <Compile Include="Config\NetworkInfo.cs" />
+    <Compile Include="Config\OperatingSystemInfo.cs" />
+    <Compile Include="Config\ServerInfo.cs" />
     <Compile Include="Operations\Application\Deployment\CopyFile\FileInfoList.cs" />
     <Compile Include="IOfferFileInfo.cs" />
     <Compile Include="IOfferWindowsServiceFailureOptions.cs" />

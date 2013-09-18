@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using System.Security;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.SemanticModel;
@@ -39,7 +41,7 @@ namespace ConDep.Dsl.Remote
         {
             var host = new ConDepPSHost();
 
-            var remoteCredential = new PSCredential(_server.DeploymentUser.UserName, _server.DeploymentUser.PasswordAsSecString);
+            var remoteCredential = new PSCredential(_server.DeploymentUser.UserName, GetPasswordAsSecString(_server.DeploymentUser.Password));
             var connectionInfo = new WSManConnectionInfo(false, _server.Name, 5985, "/wsman", SHELL_URI,
                                                          remoteCredential);
             //{AuthenticationMechanism = AuthenticationMechanism.Negotiate, SkipCACheck = true, SkipCNCheck = true, SkipRevocationCheck = true};
@@ -62,7 +64,7 @@ namespace ConDep.Dsl.Remote
 
                     if(_loadConDepDotNetLibrary)
                     {
-                        var netLibraryCmd = string.Format(@"Add-Type -Path ""{0}\ConDep.Remote.dll"";", _server.TempFolderPowerShell);
+                        var netLibraryCmd = string.Format(@"Add-Type -Path ""{0}\ConDep.Remote.dll"";", _server.GetServerInfo().TempFolderPowerShell);
                         pipeline.Commands.AddScript(netLibraryCmd);
                     }
 
@@ -88,6 +90,18 @@ namespace ConDep.Dsl.Remote
                     return result;
                 }
             }
-        }    
+
+        }
+
+        public SecureString GetPasswordAsSecString(string password)
+        {
+            var secureString = new SecureString();
+            if (!string.IsNullOrWhiteSpace(password))
+            {
+                password.ToCharArray().ToList().ForEach(secureString.AppendChar);
+            }
+            return secureString;
+        }
+
     }
 }

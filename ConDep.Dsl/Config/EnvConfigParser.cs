@@ -218,14 +218,14 @@ namespace ConDep.Dsl.Config
 
             if (config.Tiers == null)
             {
-                foreach (var server in config.Servers.Where(server => !server.DeploymentUser.IsDefined))
+                foreach (var server in config.Servers.Where(server => !server.DeploymentUser.IsDefined()))
                 {
                     server.DeploymentUser = config.DeploymentUser;
                 }
             }
             else
             {
-                foreach (var server in config.Tiers.SelectMany(tier => tier.Servers.Where(server => !server.DeploymentUser.IsDefined)))
+                foreach (var server in config.Tiers.SelectMany(tier => tier.Servers.Where(server => !server.DeploymentUser.IsDefined())))
                 {
                     server.DeploymentUser = config.DeploymentUser;
                 }

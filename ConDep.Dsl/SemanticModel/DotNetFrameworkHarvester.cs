@@ -42,7 +42,7 @@ foreach($regKeyPath in $regKeys) {
 return $result");
             foreach (var element in result)
             {
-                server.ServerInfo.DotNetFrameworks.Add(element);
+                server.GetServerInfo().DotNetFrameworks.Add(element);
             }
         }
     }

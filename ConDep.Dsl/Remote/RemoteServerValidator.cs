@@ -88,7 +88,7 @@ namespace ConDep.Dsl.Remote
             Logger.Info(
                 string.Format("Checking if WinRM (Remote PowerShell) can be used to reach remote server [{0}]...",
                               server.Name));
-            var cmd = server.DeploymentUser.IsDefined ? string.Format("id -r:{0} -u:{1} -p:\"{2}\"", server.Name,
+            var cmd = server.DeploymentUser.IsDefined() ? string.Format("id -r:{0} -u:{1} -p:\"{2}\"", server.Name,
                 server.DeploymentUser.UserName, server.DeploymentUser.Password) : string.Format("id -r:{0}", server.Name);
 
             var success = false;
@@ -126,7 +126,7 @@ namespace ConDep.Dsl.Remote
         private static bool HaveNet40(ServerConfig server)
         {
             Logger.Info(string.Format("Checking if .NET Framework 4.0 is installed on server [{0}]...", server.Name));
-            var success = server.ServerInfo.DotNetFrameworks.HasVersion(DotNetVersion.v4_0_full);
+            var success = server.GetServerInfo().DotNetFrameworks.HasVersion(DotNetVersion.v4_0_full);
 
             if (success)
             {

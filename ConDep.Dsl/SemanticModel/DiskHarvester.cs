@@ -39,7 +39,7 @@ return $result";
                                     FileSystem = disk.FileSystem,
                                     VolumeName = disk.VolumeName
                                 };
-                    server.ServerInfo.Disks.Add(d);
+                    server.GetServerInfo().Disks.Add(d);
                 }
             }
 

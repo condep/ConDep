@@ -28,7 +28,7 @@ return $osInfo
             var osInfoResult = psExecutor.Execute(osInfo).FirstOrDefault();
             if (osInfoResult != null)
             {
-                server.ServerInfo.OperatingSystem = new OperatingSystemInfo
+                server.GetServerInfo().OperatingSystem = new OperatingSystemInfo
                                                         {
                                                             BuildNumber = osInfoResult.BuildNumber,
                                                             Name = osInfoResult.Name,

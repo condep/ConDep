@@ -12,36 +12,31 @@ namespace ConDep.Dsl.Config
         public string Password { get; set; }
         public string SuspendMode { get; set; }
         public string Mode { get; set; }
-        public LbMode ModeAsEnum
+ 
+        public LbMode GetModeAsEnum()
         {
-            get
+            switch (Mode.ToLower())
             {
-                switch (Mode.ToLower())
-                {
-                    case "sticky":
-                        return LbMode.Sticky;
-                    case "roundrobin":
-                        return LbMode.RoundRobin;
-                    default:
-                        throw new NotSupportedException(string.Format("Load Balancer Mode [{0}] is not supported.", Mode));
-                }
+                case "sticky":
+                    return LbMode.Sticky;
+                case "roundrobin":
+                    return LbMode.RoundRobin;
+                default:
+                    throw new NotSupportedException(string.Format("Load Balancer Mode [{0}] is not supported.", Mode));
             }
-        }
-        public LoadBalancerSuspendMethod SuspendModeAsEnum
+    }
+        public LoadBalancerSuspendMethod GetSuspendModeAsEnum()
         { 
-            get
+            switch (SuspendMode.ToLower())
             {
-                switch (SuspendMode.ToLower())
-                {
-                    case "graceful":
-                        return LoadBalancerSuspendMethod.Graceful;
-                    case "suspendclearconnections":
-                        return LoadBalancerSuspendMethod.SuspendClearConnections;
-                    case "suspend":
-                        return LoadBalancerSuspendMethod.Suspend;
-                    default:
-                        throw new NotSupportedException(string.Format("Load Balancer Suspend Mode [{0}] is not supported.", SuspendMode));
-                }
+                case "graceful":
+                    return LoadBalancerSuspendMethod.Graceful;
+                case "suspendclearconnections":
+                    return LoadBalancerSuspendMethod.SuspendClearConnections;
+                case "suspend":
+                    return LoadBalancerSuspendMethod.Suspend;
+                default:
+                    throw new NotSupportedException(string.Format("Load Balancer Suspend Mode [{0}] is not supported.", SuspendMode));
             }
         }
 

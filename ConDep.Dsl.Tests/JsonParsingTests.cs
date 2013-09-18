@@ -227,9 +227,9 @@ namespace ConDep.Dsl.Tests
             Assert.That(_config.LoadBalancer.Provider, Is.Not.Null.Or.Empty);
             Assert.That(_config.LoadBalancer.UserName, Is.Not.Null.Or.Empty);
             Assert.That(_config.LoadBalancer.Mode, Is.Not.Null.Or.Empty);
-            Assert.That(_config.LoadBalancer.ModeAsEnum, Is.Not.Null.Or.Empty);
+            Assert.That(_config.LoadBalancer.GetModeAsEnum(), Is.Not.Null.Or.Empty);
             Assert.That(_config.LoadBalancer.SuspendMode, Is.Not.Null.Or.Empty);
-            Assert.That(_config.LoadBalancer.SuspendModeAsEnum, Is.Not.Null.Or.Empty);
+            Assert.That(_config.LoadBalancer.GetSuspendModeAsEnum(), Is.Not.Null.Or.Empty);
         }
 
         [Test]
