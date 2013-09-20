@@ -69,7 +69,7 @@ task Build-ConDep-Dsl -depends Clean-ConDep-Dsl, Init {
 		-releaseNotes "$releaseNotes" `
 		-tags "Continuous Deployment Delivery Infrastructure WebDeploy Deploy msdeploy IIS automation powershell remote" `
 		-dependencies @(
-			@{ Name="log4net"; Version="2.0.0"},
+			@{ Name="log4net"; Version="[2.0.0]"},
 			@{ Name="Microsoft.AspNet.WebApi.Client"; Version="4.0.20710.0"}
 		) `
 		-files @(
@@ -119,7 +119,7 @@ task Build-ConDep-Console -depends Clean-ConDep-Console, Init {
 		-dependencies @(
 			@{ Name="$condep_dsl"; Version="$nugetVersion$preString"},
 			@{ Name="NDesk.Options"; Version="0.2.1"},
-			@{ Name="log4net"; Version="2.0.0"}
+			@{ Name="log4net"; Version="[2.0.0]"}
 		) `
 		-files @(
 			@{ Path="$condep_console\$condep.exe"; Target="lib/net40"},
