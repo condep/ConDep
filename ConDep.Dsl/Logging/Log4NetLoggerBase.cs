@@ -15,46 +15,6 @@ namespace ConDep.Dsl.Logging
             ((log4net.Repository.Hierarchy.Logger) _log4netLog.Logger).Level = Level.Info;
         }
 
-        public virtual void Warn(string message, params object[] formatArgs)
-        {
-            Log(message, TraceLevel.Warning, formatArgs);
-        }
-
-        public virtual void Warn(string message, Exception ex, params object[] formatArgs)
-        {
-            Log(message, ex, TraceLevel.Warning, formatArgs);
-        }
-
-        public virtual void Verbose(string message, params object[] formatArgs)
-        {
-            Log(message, TraceLevel.Verbose, formatArgs);
-        }
-
-        public virtual void Verbose(string message, Exception ex, params object[] formatArgs)
-        {
-            Log(message, ex, TraceLevel.Verbose, formatArgs);
-        }
-
-        public virtual void Info(string message, params object[] formatArgs)
-        {
-            Log(message, TraceLevel.Info, formatArgs);
-        }
-
-        public virtual void Info(string message, Exception ex, params object[] formatArgs)
-        {
-            Log(message, ex, TraceLevel.Info, formatArgs);
-        }
-
-        public virtual void Error(string message, params object[] formatArgs)
-        {
-            Log(message, TraceLevel.Error, formatArgs);
-        }
-
-        public virtual void Error(string message, Exception ex, params object[] formatArgs)
-        {
-            Log(message, ex, TraceLevel.Error, formatArgs);
-        }
-
         public override TraceLevel TraceLevel
         {
             get
@@ -88,11 +48,6 @@ namespace ConDep.Dsl.Logging
                         break;
                 }
             }
-        }
-
-        public virtual void Log(string message, TraceLevel traceLevel, params object[] formatArgs)
-        {
-            Log(message, null, traceLevel, formatArgs);
         }
 
         public override void Log(string message, Exception ex, TraceLevel traceLevel, params object[] formatArgs)

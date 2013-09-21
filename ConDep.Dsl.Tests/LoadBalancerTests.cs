@@ -1,4 +1,5 @@
 ﻿using ConDep.Dsl.Config;
+using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
@@ -17,6 +18,7 @@ namespace ConDep.Dsl.Tests
         [SetUp]
         public void Setup()
         {
+            new Logger().AutoResolveLogger();
             _settingsStopAfterMarkedServer = new ConDepSettings
             {
                 Options =

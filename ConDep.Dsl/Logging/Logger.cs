@@ -14,7 +14,7 @@ namespace ConDep.Dsl.Logging
         {
             _log = log;
         }
-
+           
         public void AutoResolveLogger()
         {
             if (RunningOnTeamCity)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations.Application.Local.TransformConfig;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel.WebDeploy;
@@ -17,6 +18,7 @@ namespace ConDep.Dsl.Tests
         [SetUp]
         public void Setup()
         {
+            new Logger().AutoResolveLogger();
             FilesToDeleteAfterTest = new List<string>();
             _settingsDefault = new ConDepSettings
             {

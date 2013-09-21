@@ -8,6 +8,7 @@ using log4net.Appender;
 using log4net.Config;
 using log4net.Repository.Hierarchy;
 using System.Linq;
+using Logger = ConDep.Dsl.Logging.Logger;
 
 namespace ConDep.Dsl.Tests
 {
