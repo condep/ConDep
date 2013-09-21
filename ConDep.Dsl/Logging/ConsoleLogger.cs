@@ -5,7 +5,7 @@ using log4net;
 
 namespace ConDep.Dsl.Logging
 {
-    public class ConsoleLogger : LoggerBase
+    public class ConsoleLogger : Log4NetLoggerBase
     {
         private int _indentLevel;
         private readonly bool _isConsole;

@@ -116,6 +116,7 @@ namespace ConDep.Dsl.SemanticModel
         {
             foreach (var server in conDepSettings.Config.Servers)
             {
+                //Todo: This will not work with ConDep server. After first run, this key will always exist.
                 if (!ConDepGlobals.ServersWithPreOps.ContainsKey(server.Name))
                 {
                     var remotePreOps = new PreRemoteOps();

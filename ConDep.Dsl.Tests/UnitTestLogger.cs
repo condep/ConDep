@@ -6,7 +6,7 @@ using log4net.Core;
 
 namespace ConDep.Dsl.Tests
 {
-    class UnitTestLogger : LoggerBase
+    class UnitTestLogger : Log4NetLoggerBase
     {
         private readonly MemoryAppender _memAppender;
 

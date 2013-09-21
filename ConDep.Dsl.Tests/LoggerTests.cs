@@ -46,8 +46,15 @@ namespace ConDep.Dsl.Tests
             {
                 XmlConfigurator.Configure(logConfigStream);
             }
+            new Logger().AutoResolveLogger();
+            Assert.That(Logger.InternalLogger, RunningOnTeamCity ? Is.TypeOf<TeamCityLogger>() : Is.TypeOf<ConsoleLogger>());
+        }
 
-            Assert.That(new Logger().Resolve(), RunningOnTeamCity ? Is.TypeOf<TeamCityLogger>() : Is.TypeOf<ConsoleLogger>());
+        [Test]
+        public void TestThatLoggerWithCustomLoggerWorks()
+        {
+            Logger.Initialize(new CustomLogger());
+            Assert.That(Logger.InternalLogger, Is.TypeOf<CustomLogger>());
         }
 
         [Test]
@@ -122,5 +129,25 @@ namespace ConDep.Dsl.Tests
             }
 
         }
+    }
+
+    public class CustomLogger : LoggerBase
+    {
+        public override void Log(string message, Exception ex, TraceLevel traceLevel, params object[] formatArgs)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LogSectionStart(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LogSectionEnd(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override TraceLevel TraceLevel { get; set; }
     }
 }

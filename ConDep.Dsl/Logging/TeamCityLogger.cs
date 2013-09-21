@@ -1,11 +1,12 @@
 using System;
+using System.Diagnostics;
 using System.Text;
 using log4net;
 using log4net.Core;
 
 namespace ConDep.Dsl.Logging
 {
-    public class TeamCityLogger : LoggerBase
+    public class TeamCityLogger : Log4NetLoggerBase
     {
         private readonly ILog _serviceMessageLogger;
 

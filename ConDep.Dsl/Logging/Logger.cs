@@ -8,15 +8,28 @@ namespace ConDep.Dsl.Logging
     public class Logger
     {
         private bool? _tcServiceExist;
-        private static readonly ILogForConDep _log = new Logger().Resolve();
+        private static ILogForConDep _log;// = new Logger().Resolve();
 
-        public ILogForConDep Resolve()
+        public static void Initialize(ILogForConDep log)
         {
-            if(RunningOnTeamCity)
+            _log = log;
+        }
+
+        public void AutoResolveLogger()
+        {
+            if (RunningOnTeamCity)
             {
-                return new TeamCityLogger(LogManager.GetLogger("condep-teamcity"));
+                Initialize(new TeamCityLogger(LogManager.GetLogger("condep-teamcity")));
             }
-            return new ConsoleLogger(LogManager.GetLogger("condep-default"));
+            else
+            {
+                Initialize(new ConsoleLogger(LogManager.GetLogger("condep-default")));
+            }
+        }
+
+        public static ILogForConDep InternalLogger
+        {
+            get { return _log; }
         }
       
         private bool RunningOnTeamCity
