@@ -21,6 +21,7 @@ namespace ConDep.Dsl.Remote
         public bool IsValid()
         {
             bool isValid = true;
+            Logger.LogSectionStart("Validating Servers");
             try
             {
                 foreach (var server in _servers)
