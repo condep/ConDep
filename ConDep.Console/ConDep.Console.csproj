@@ -83,9 +83,6 @@
     <Reference Include="NDesk.Options">
       <HintPath>..\packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -133,7 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConDep.Dsl\ConDep.Dsl.csproj">
-      <Project>{E7EBA0AC-B91D-450F-8A68-5ADCF18FE17E}</Project>
+      <Project>{e7eba0ac-b91d-450f-8a68-5adcf18fe17e}</Project>
       <Name>ConDep.Dsl</Name>
     </ProjectReference>
     <ProjectReference Include="..\ConDep.WebQ.Client\ConDep.WebQ.Client.csproj">
@@ -147,7 +144,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="internal.condep.log4net.xml" />

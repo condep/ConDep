@@ -28,6 +28,7 @@ namespace ConDep.Console
         private static void ConfigureLogger()
         {
             new LogConfigLoader().Load();
+            new Logger().AutoResolveLogger();
             Logger.TraceLevel = TraceLevel.Info;
         }
 

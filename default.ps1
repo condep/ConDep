@@ -27,7 +27,11 @@ include .\tools\psake_ext.ps1
 task default -depends Build-All
 task ci -depends Build-All
 
-task Build-All -depends Init, Build-ConDep-Node, Build-ConDep-Dsl, Build-ConDep-Console, Build-ConDep-Dsl-LB-ARR, Build-ConDep-Dsl-LB-ACE, Build-Tests
+task Build-All -depends Init, Restore-Nuget-Packages, Build-ConDep-Node, Build-ConDep-Dsl, Build-ConDep-Console, Build-ConDep-Dsl-LB-ARR, Build-ConDep-Dsl-LB-ACE, Build-Tests
+
+task Restore-Nuget-Packages {
+	cmd /c $pwd\.nuget\nuget.exe restore ConDep.sln
+}
 
 task Build-ConDep-Node -depends Clean-ConDep-Node, Init { 
 	Exec { msbuild "$pwd\$condep_node\$condep_node.csproj" /t:Build /p:Configuration=$configuration /p:OutDir=$build_directory\$condep_node\ }
