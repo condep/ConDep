@@ -124,7 +124,7 @@ namespace ConDep.Dsl.Config
 
         public void DecryptJsonConfig(dynamic config, JsonPasswordCrypto crypto)
         {
-            if (config.LoadBalancer != null & config.LoadBalancer.Password != null)
+            if (config.LoadBalancer != null && config.LoadBalancer.Password != null)
             {
                 DecryptJsonValue(crypto, config.LoadBalancer.Password);
             }
