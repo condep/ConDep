@@ -104,7 +104,7 @@ namespace ConDep.Dsl.Remote
                                     RedirectStandardOutput = true
                                 };
             var process = Process.Start(startInfo);
-            process.WaitForExit(10000);
+            process.WaitForExit();
 
             if (process.ExitCode == 0)
             {
