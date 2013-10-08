@@ -39,6 +39,10 @@ namespace ConDep.Console.Help
             {
                 options.Command = ConDepCommand.Decrypt;
             }
+            else if (command == "server")
+            {
+                options.Command = ConDepCommand.Server;
+            }
             else
             {
                 throw new ConDepCmdParseException(string.Format("The command [{0}] is unknown to ConDep and unable to show help for command.", command));

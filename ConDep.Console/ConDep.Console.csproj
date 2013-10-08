@@ -127,6 +127,10 @@
     <Compile Include="Mono.Options\Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\CmdServerHandler.cs" />
+    <Compile Include="Server\CmdServerHelpWriter.cs" />
+    <Compile Include="Server\CmdServerParser.cs" />
+    <Compile Include="Server\CmdServerValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConDep.Dsl\ConDep.Dsl.csproj">

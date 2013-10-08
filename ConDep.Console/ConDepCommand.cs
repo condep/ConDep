@@ -6,6 +6,7 @@
         Deploy,
         Encrypt,
         Decrypt,
-        Help
+        Help,
+        Server
     }
 }
