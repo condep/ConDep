@@ -10,18 +10,6 @@ namespace ConDep.Node.Controllers.Sync
 {
     public class WebAppController : ApiController
     {
-        private readonly PathValidator _pathValidator;
-
-        public WebAppController()
-            : this(new PathValidator())
-        {
-        }
-
-        public WebAppController(PathValidator pathValidator)
-        {
-            _pathValidator = pathValidator;
-        }
-
         public HttpResponseMessage Get(string siteName, string appName)
         {
             var webAppInfo = new WebAppInfo();

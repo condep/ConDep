@@ -17,10 +17,8 @@ namespace ConDep.Dsl.Remote.Node
 
         public Api(string url, string userName, string password)
         {
-            Logger.Verbose(string.Format("Connecting to Node API on {0} with user {1}.", url, userName));
             var messageHandler = new HttpClientHandler { Credentials = new NetworkCredential(userName, password) };
             _client = new HttpClient(messageHandler) { BaseAddress = new Uri(url) };
-            //_client = new HttpClient { BaseAddress = new Uri(url) };
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
@@ -31,6 +29,66 @@ namespace ConDep.Dsl.Remote.Node
                 var urlTemplate = DiscoverUrl("http://www.con-dep.net/rels/sync/dir_template");
                 var url = string.Format(urlTemplate, dstPath);
                 return SyncDirByUrl(srcPath, url);
+            }
+            catch (AggregateException aggrEx)
+            {
+                throw aggrEx.Flatten();
+            }
+        }
+
+        public SyncResult SyncFile(string srcPath, string dstPath)
+        {
+            try
+            {
+                var url = DiscoverUrl("http://www.con-dep.net/rels/sync/file_template");
+                var syncResponse = _client.GetAsync(string.Format(url, dstPath)).Result;
+
+                if (syncResponse.IsSuccessStatusCode)
+                {
+                    var nodeFile = syncResponse.Content.ReadAsAsync<SyncDirFile>().Result;
+                    return CopyFile(srcPath, _client, nodeFile);
+                }
+                return null;
+            }
+            catch (AggregateException aggrEx)
+            {
+                throw aggrEx.Flatten();
+            }
+        }
+
+        public SyncResult SyncWebApp(string webSiteName, string webAppName, string srcPath, string dstPath = null)
+        {
+            try
+            {
+                var url = DiscoverUrl("http://www.con-dep.net/rels/iis_template");
+                var url2 = url.Replace("{website}", webSiteName).Replace("{webapp}", webAppName);
+
+                var syncResponse = _client.GetAsync(url2).Result;
+
+                if (syncResponse.IsSuccessStatusCode)
+                {
+                    var webAppInfo = syncResponse.Content.ReadAsAsync<WebAppInfo>().Result;
+                    if (!string.IsNullOrWhiteSpace(dstPath) && webAppInfo.Exist && webAppInfo.PhysicalPath != dstPath)
+                    {
+                        throw new ArgumentException(string.Format("Web app {0} already exist and physical path differs from path provided.", webAppName));
+                    }
+
+                    var path = string.IsNullOrWhiteSpace(dstPath) ? webAppInfo.PhysicalPath : dstPath;
+                    foreach (var link in webAppInfo.Links)
+                    {
+                        switch (link.Rel)
+                        {
+                            case "http://www.con-dep.net/rels/iis/web_app_template":
+                                CreateWebApp(link, path);
+                                break;
+                            case "http://www.con-dep.net/rels/sync/dir_template":
+                                return SyncDirByUrl(srcPath, string.Format(link.Href, path));
+                            case "http://www.con-dep.net/rels/sync/directory":
+                                return SyncDirByUrl(srcPath, link.Href);
+                        }
+                    }
+                }
+                return null;
             }
             catch (AggregateException aggrEx)
             {
@@ -81,79 +139,6 @@ namespace ConDep.Dsl.Remote.Node
                            where link.Value<string>("rel") == rel
                            select link.Value<string>("href")).SingleOrDefault();
                 return url;
-            }
-            catch (AggregateException aggrEx)
-            {
-                throw aggrEx.Flatten();
-            }
-        }
-
-        public SyncResult SyncFile(string srcPath, string dstPath)
-        {
-            try
-            {
-                var url = DiscoverUrl("http://www.con-dep.net/rels/sync/file_template");
-                var syncResponse = _client.GetAsync(string.Format(url, dstPath)).Result;
-
-                if (syncResponse.IsSuccessStatusCode)
-                {
-                    var nodeFile = syncResponse.Content.ReadAsAsync<SyncDirFile>().Result;
-                    return CopyFile(srcPath, _client, nodeFile);
-                }
-                return null;
-            }
-            catch (AggregateException aggrEx)
-            {
-                throw aggrEx.Flatten();
-            }
-        }
-
-        //public SyncResult SyncFiles(IEnumerable<SyncFileInfo> files)
-        //{
-        //    //var url = DiscoverUrl("http://www.con-dep.net/rels/sync/file_template");
-        //    //var syncResponse = _client.GetAsync(string.Format(url, dstPath)).Result;
-
-        //    //if (syncResponse.IsSuccessStatusCode)
-        //    //{
-        //    //    var nodeFile = syncResponse.Content.ReadAsAsync<SyncDirFile>().Result;
-        //    //    return CopyFile(srcPath, _client, nodeFile);
-        //    //}
-        //    return null;
-        //}
-
-        public SyncResult SyncWebApp(string webSiteName, string webAppName, string srcPath, string dstPath = null)
-        {
-            try
-            {
-                var url = DiscoverUrl("http://www.con-dep.net/rels/iis_template");
-                var url2 = url.Replace("{website}", webSiteName).Replace("{webapp}", webAppName);
-
-                var syncResponse = _client.GetAsync(url2).Result;
-
-                if (syncResponse.IsSuccessStatusCode)
-                {
-                    var webAppInfo = syncResponse.Content.ReadAsAsync<WebAppInfo>().Result;
-                    if (!string.IsNullOrWhiteSpace(dstPath) && webAppInfo.Exist && webAppInfo.PhysicalPath != dstPath)
-                    {
-                        throw new ArgumentException(string.Format("Web app {0} already exist and physical path differs from path provided.", webAppName));
-                    }
-
-                    var path = string.IsNullOrWhiteSpace(dstPath) ? webAppInfo.PhysicalPath : dstPath;
-                    foreach (var link in webAppInfo.Links)
-                    {
-                        switch (link.Rel)
-                        {
-                            case "http://www.con-dep.net/rels/iis/web_app_template":
-                                CreateWebApp(link, path);
-                                break;
-                            case "http://www.con-dep.net/rels/sync/dir_template":
-                                return SyncDirByUrl(srcPath, string.Format(link.Href, path));
-                            case "http://www.con-dep.net/rels/sync/directory":
-                                return SyncDirByUrl(srcPath, link.Href);
-                        }
-                    }
-                }
-                return null;
             }
             catch (AggregateException aggrEx)
             {

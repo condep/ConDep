@@ -93,7 +93,6 @@
   <ItemGroup>
     <Compile Include="ApiUrls.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\DocsController.cs" />
     <Compile Include="Controllers\Sync\FileController.cs" />
     <Compile Include="Controllers\Iis\IisController.cs" />
     <Compile Include="Controllers\Sync\WebAppController.cs" />
@@ -119,7 +118,6 @@
       <DependentUpon>NodeService.cs</DependentUpon>
     </Compile>
     <Compile Include="SyncDirHandler.cs" />
-    <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Model\SyncFile.cs" />
   </ItemGroup>
   <ItemGroup>
