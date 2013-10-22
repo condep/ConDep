@@ -123,7 +123,8 @@ namespace ConDep.Dsl.SemanticModel
             var typeInterface = application.GetType().GetInterface(typeName);
             var infrastructureType = typeInterface.GetGenericArguments().Single();
 
-            var infrastructureInstance = assembly.CreateInstance(infrastructureType.FullName) as InfrastructureArtifact;
+            var infrastructureInstance = Activator.CreateInstance(infrastructureType) as InfrastructureArtifact;
+
             return infrastructureInstance;
         }
     }
