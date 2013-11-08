@@ -26,17 +26,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
         {
             foreach (var localSequence in _sequence)
             {
-                Logger.LogSectionStart(localSequence.Name);
-                try
-                {
-                    localSequence.Execute(status, settings);
-                }
-                finally
-                {
-                    Logger.LogSectionEnd(localSequence.Name);
-                }
-                //if (status.HasErrors)
-                //    return;
+                LocalSequence sequence = localSequence;
+                Logger.WithLogSection(localSequence.Name, () => sequence.Execute(status, settings));
             }
         }
 

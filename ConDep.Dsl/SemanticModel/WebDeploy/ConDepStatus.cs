@@ -50,9 +50,7 @@ End time        : {1}
 Time Taken      : {2}
 ", StartTime.ToLongTimeString(), EndTime.ToLongTimeString(), (EndTime - StartTime).ToString(@"%h' hrs '%m' min '%s' sec'"));
             Logger.Info("\n");
-            Logger.LogSectionStart("Summary");
-            Logger.Info(message);
-            Logger.LogSectionEnd("Summary");
+            Logger.WithLogSection("Summary", () => Logger.Info(message));
         }
     }
 }

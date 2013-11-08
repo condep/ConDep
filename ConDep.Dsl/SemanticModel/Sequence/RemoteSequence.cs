@@ -152,41 +152,36 @@ namespace ConDep.Dsl.SemanticModel.Sequence
         private void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings, ILoadBalance loadBalancer, bool bringServerOfflineBeforeExecution, bool bringServerOnlineAfterExecution)
         {
             var errorDuringLoadBalancing = false;
-            try
-            {
-                Logger.LogSectionStart(server.Name);
 
-                if (bringServerOfflineBeforeExecution)
-                {
-                    Logger.Info(string.Format("Taking server [{0}] offline in load balancer.", server.Name));
-                    loadBalancer.BringOffline(server.Name, server.LoadBalancerFarm,
-                                                LoadBalancerSuspendMethod.Suspend, status);
-                }
-
-                ExecuteOnServer(server, status, settings);
-                return;
-            }
-            catch
-            {
-                errorDuringLoadBalancing = true;
-                throw;
-            }
-            finally
+            Logger.WithLogSection(server.Name, () =>
             {
                 try
                 {
+                    if (bringServerOfflineBeforeExecution)
+                    {
+                        Logger.Info(string.Format("Taking server [{0}] offline in load balancer.", server.Name));
+                        loadBalancer.BringOffline(server.Name, server.LoadBalancerFarm,
+                                                    LoadBalancerSuspendMethod.Suspend, status);
+                    }
+
+                    ExecuteOnServer(server, status, settings);
+                }
+                catch
+                {
+                    errorDuringLoadBalancing = true;
+                    throw;
+                }
+                finally
+                {
                     //&& !status.HasErrors
-                    if (bringServerOnlineAfterExecution  && !errorDuringLoadBalancing)
+                    if (bringServerOnlineAfterExecution && !errorDuringLoadBalancing)
                     {
                         Logger.Info(string.Format("Taking server [{0}] online in load balancer.", server.Name));
                         loadBalancer.BringOnline(server.Name, server.LoadBalancerFarm, status);
                     }
                 }
-                finally
-                {
-                    Logger.LogSectionEnd(server.Name);
-                }
-            }
+            });
+
         }
 
         private void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings)
@@ -195,21 +190,13 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             //if (status.HasErrors)
             //    return;
 
-            try
-            {
-                Logger.LogSectionStart("Deployment");
-                foreach (var element in _sequence)
+            Logger.WithLogSection("Deployment", () =>
                 {
-                    element.Execute(server, status, settings);
-
-                    //if (status.HasErrors)
-                    //    return;
-                }
-            }
-            finally
-            {
-                Logger.LogSectionEnd("Deployment");
-            }
+                    foreach (var element in _sequence)
+                    {
+                        element.Execute(server, status, settings);
+                    }
+                });
         }
 
         public CompositeSequence NewCompositeSequence(RemoteCompositeOperation operation)

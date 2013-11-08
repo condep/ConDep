@@ -18,39 +18,28 @@ namespace ConDep.Dsl.Operations
 
         public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
-            try
-            {
-                Logger.LogSectionStart("Pre-Operations");
-
-                server.GetServerInfo().TempFolderDos = string.Format(TMP_FOLDER, "%windir%", ConDepGlobals.ExecId);
-                Logger.Info(string.Format("Dos temp folder is {0}", server.GetServerInfo().TempFolderDos));
-
-                server.GetServerInfo().TempFolderPowerShell = string.Format(TMP_FOLDER, "$env:windir", ConDepGlobals.ExecId);
-                Logger.Info(string.Format("PowerShell temp folder is {0}", server.GetServerInfo().TempFolderDos));
-
-                TempInstallConDepNode(status, server);
-
-                try
+            Logger.WithLogSection("Pre-Operations", () =>
                 {
-                    Logger.LogSectionStart("Copying PowerShell Scripts");
-                    CopyResourceFiles(Assembly.GetExecutingAssembly(), PowerShellResources.PowerShellScriptResources,
-                                      server);
+                    server.GetServerInfo().TempFolderDos = string.Format(TMP_FOLDER, "%windir%", ConDepGlobals.ExecId);
+                    Logger.Info(string.Format("Dos temp folder is {0}", server.GetServerInfo().TempFolderDos));
 
-                    if (settings.Options.Assembly != null)
-                    {
-                        var assemblyResources = settings.Options.Assembly.GetManifestResourceNames();
-                        CopyResourceFiles(settings.Options.Assembly, assemblyResources, server);
-                    }
-                }
-                finally
-                {
-                    Logger.LogSectionEnd("Copying PowerShell Scripts");
-                }
-            }
-            finally
-            {
-                Logger.LogSectionEnd("Pre-Operations");
-            }
+                    server.GetServerInfo().TempFolderPowerShell = string.Format(TMP_FOLDER, "$env:windir", ConDepGlobals.ExecId);
+                    Logger.Info(string.Format("PowerShell temp folder is {0}", server.GetServerInfo().TempFolderDos));
+
+                    TempInstallConDepNode(status, server);
+
+                    Logger.WithLogSection("Copying PowerShell Scripts", () =>
+                        {
+                            CopyResourceFiles(Assembly.GetExecutingAssembly(), PowerShellResources.PowerShellScriptResources,
+                                                server);
+
+                            if (settings.Options.Assembly != null)
+                            {
+                                var assemblyResources = settings.Options.Assembly.GetManifestResourceNames();
+                                CopyResourceFiles(settings.Options.Assembly, assemblyResources, server);
+                            }
+                        });
+                });
 
         }
 
@@ -102,26 +91,21 @@ namespace ConDep.Dsl.Operations
 
         private void TempInstallConDepNode(IReportStatus status, ServerConfig server)
         {
-            Logger.LogSectionStart("Deploying ConDep Node");
-            try
-            {
-                var listenUrl = "http://{0}:80/ConDepNode/";
-                var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "ConDepNode.exe");
-                var byteArray = File.ReadAllBytes(path);
-                var nodePublisher = new ConDepNodePublisher(byteArray, Path.Combine(server.GetServerInfo().TempFolderPowerShell, Path.GetFileName(path)), string.Format(listenUrl, "localhost"));
-                nodePublisher.Execute(server);
-                if (!nodePublisher.ValidateNode(string.Format(listenUrl, server.Name), server.DeploymentUser.UserName, server.DeploymentUser.Password))
+            Logger.WithLogSection("Deploying ConDep Node", () =>
                 {
-                    throw new ConDepNodeValidationException("Unable to make contact witstring.Format(listenUrl, server.Name)h ConDep Node or return content from API.");
-                }
+                    var listenUrl = "http://{0}:80/ConDepNode/";
+                    var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "ConDepNode.exe");
+                    var byteArray = File.ReadAllBytes(path);
+                    var nodePublisher = new ConDepNodePublisher(byteArray, Path.Combine(server.GetServerInfo().TempFolderPowerShell, Path.GetFileName(path)), string.Format(listenUrl, "localhost"));
+                    nodePublisher.Execute(server);
+                    if (!nodePublisher.ValidateNode(string.Format(listenUrl, server.Name), server.DeploymentUser.UserName, server.DeploymentUser.Password))
+                    {
+                        throw new ConDepNodeValidationException("Unable to make contact witstring.Format(listenUrl, server.Name)h ConDep Node or return content from API.");
+                    }
 
-                Logger.Info(string.Format("ConDep Node successfully deployed to {0}", server.Name));
-                Logger.Info(string.Format("Node listening on {0}", string.Format(listenUrl, server.Name)));
-            }
-            finally
-            {
-                Logger.LogSectionEnd("Deploying ConDep Node");
-            }
+                    Logger.Info(string.Format("ConDep Node successfully deployed to {0}", server.Name));
+                    Logger.Info(string.Format("Node listening on {0}", string.Format(listenUrl, server.Name)));
+                });
         }
     }
 }

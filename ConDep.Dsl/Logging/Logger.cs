@@ -125,5 +125,32 @@ namespace ConDep.Dsl.Logging
         {
             get { return _log; }
         }
+
+        public static void WithLogSection(string sectionName, Action action)
+        {
+            try
+            {
+                LogSectionStart(sectionName);
+                action();
+            }
+            finally
+            {
+                LogSectionEnd(sectionName);
+            }
+        }
+
+        public static T WithLogSection<T>(string sectionName, Func<T> action)
+        {
+            try
+            {
+                LogSectionStart(sectionName);
+                return action();
+            }
+            finally
+            {
+                LogSectionEnd(sectionName);
+            }
+        }
+
     }
 }

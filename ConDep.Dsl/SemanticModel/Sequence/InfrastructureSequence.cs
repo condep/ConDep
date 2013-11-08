@@ -50,20 +50,13 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
-            try
-            {
-                Logger.LogSectionStart("Infrastructure");
-                foreach (var element in _sequence)
+            Logger.WithLogSection("Infrastructure", () =>
                 {
-                    element.Execute(server, status, settings);
-                    //if (status.HasErrors)
-                    //    return;
-                }
-            }
-            finally
-            {
-                Logger.LogSectionEnd("Infrastructure");
-            }
+                    foreach (var element in _sequence)
+                    {
+                        element.Execute(server, status, settings);
+                    }
+                });
         }
 
         public void Add(IOperateRemote operation, bool addFirst = false)

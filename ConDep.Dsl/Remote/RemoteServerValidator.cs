@@ -20,47 +20,39 @@ namespace ConDep.Dsl.Remote
 
         public bool IsValid()
         {
-            bool isValid = true;
-            Logger.LogSectionStart("Validating Servers");
-            try
+            return Logger.WithLogSection("Validating Servers", () =>
             {
+                bool isValid = true;
                 foreach (var server in _servers)
                 {
-                    try
-                    {
-                        Logger.LogSectionStart(string.Format("Validating {0}", server.Name));
-                        if (!ValidateWinRm(server))
+                    ServerConfig currentServer = server;
+                    Logger.WithLogSection(string.Format("Validating {0}", server.Name), () =>
                         {
-                            return false;
-                        }
+                            if (!ValidateWinRm(currentServer))
+                            {
+                                isValid = false;
+                                return;
+                            }
 
-                        Logger.Info("Collecting server data...");
-                        _serverInfoHarvester.Harvest(server);
-                        Logger.Info("Server data collected");
+                            Logger.Info("Collecting server data...");
+                            _serverInfoHarvester.Harvest(currentServer);
+                            Logger.Info("Server data collected");
 
-                        Logger.Info(string.Format("Validating {0}", server.Name));
+                            Logger.Info("Validating {0}", currentServer.Name);
 
-                        if (HaveNet40(server))
-                        {
-                            Logger.Info(string.Format("Server requirements on [{0}] are OK.", server.Name));
-                        }
-                        else
-                        {
-                            Logger.Error(string.Format("Server requirements on [{0}] are NOT OK.", server.Name));
-                            isValid = false;
-                        }
-                    }
-                    finally
-                    {
-                        Logger.LogSectionEnd(string.Format("Validating {0}", server.Name));
-                    }
+                            if (HaveNet40(currentServer))
+                            {
+                                Logger.Info("Server requirements on [{0}] are OK.", currentServer.Name);
+                            }
+                            else
+                            {
+                                Logger.Error("Server requirements on [{0}] are NOT OK.", currentServer.Name);
+                                isValid = false;
+                            }
+                        });
                 }
                 return isValid;
-            }
-            finally
-            {
-                Logger.LogSectionEnd("Validating Servers");
-            }
+            });
         }
 
         private static bool ValidateWinRm(ServerConfig server)

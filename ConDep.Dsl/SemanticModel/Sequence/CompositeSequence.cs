@@ -33,20 +33,15 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
-            try
-            {
-                Logger.LogSectionStart(_compositeName);
-                foreach (var element in _sequence)
+            Logger.WithLogSection(_compositeName, () =>
                 {
-                    element.Execute(server, status, settings);
-                    //if (status.HasErrors)
-                    //    return;
-                }
-            }
-            finally
-            {
-                Logger.LogSectionEnd(_compositeName);
-            }
+                    foreach (var element in _sequence)
+                    {
+                        element.Execute(server, status, settings);
+                        //if (status.HasErrors)
+                        //    return;
+                    }
+                });
         }
 
         public CompositeSequence NewCompositeSequence(RemoteCompositeOperation operation)
