@@ -83,10 +83,22 @@ namespace ConDep.Dsl.Remote
                     }
 
                     var result = pipeline.Invoke();
-                    foreach (var psObject in result)
+
+                    if (pipeline.Error.Count > 0)
                     {
-                        if(_logOutput) Logger.Info(psObject.ToString());
+                        var errorCollection = new PowerShellErrors();
+                        foreach (var exception in pipeline.Error.NonBlockingRead().OfType<ErrorRecord>())
+                        {
+                            errorCollection.Add(exception.Exception);
+                        }
+                        throw errorCollection;
                     }
+
+                    foreach (var psObject in result.Where(psObject => _logOutput))
+                    {
+                        Logger.Info(psObject.ToString());
+                    }
+                    
                     return result;
                 }
             }

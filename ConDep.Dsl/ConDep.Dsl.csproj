@@ -149,6 +149,7 @@
     <Compile Include="Remote\Node\Model\WebAppInfo.cs" />
     <Compile Include="Remote\Node\MultipartSyncDirContent.cs" />
     <Compile Include="Remote\Node\SyncPostProcContent.cs" />
+    <Compile Include="Remote\PowerShellErrors.cs" />
     <Compile Include="Remote\PowerShellExecutor.cs" />
     <Compile Include="Remote\ConDepNodePublisher.cs" />
     <Compile Include="Operations\Application\Execution\PowerShell\RemotePowerShellHostOperation.cs" />
