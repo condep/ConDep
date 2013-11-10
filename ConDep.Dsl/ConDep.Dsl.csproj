@@ -106,6 +106,7 @@
     <Compile Include="Config\NetworkInfo.cs" />
     <Compile Include="Config\OperatingSystemInfo.cs" />
     <Compile Include="Config\ServerInfo.cs" />
+    <Compile Include="IOfferWindowsInfrastructureOptions.cs" />
     <Compile Include="Logging\LoggerBase.cs" />
     <Compile Include="Operations\Application\Deployment\CopyFile\FileInfoList.cs" />
     <Compile Include="IOfferFileInfo.cs" />
@@ -131,6 +132,8 @@
     <Compile Include="Config\ConDepAssemblyNotFoundException.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOperation.cs" />
     <Compile Include="Operations\Application\Execution\RunCmd\RunCmdOptions.cs" />
+    <Compile Include="Operations\Infrastructure\IIS\IisInfrastructureOperation.cs" />
+    <Compile Include="Operations\Infrastructure\IIS\WindowsInfrastructureOptions.cs" />
     <Compile Include="Remote\ConDepNodeValidationException.cs" />
     <Compile Include="Remote\ConDepPSHost.cs" />
     <Compile Include="Remote\ConDepPsHostRawUI.cs" />
@@ -179,6 +182,8 @@
     <Compile Include="SemanticModel\IExecute.cs" />
     <Compile Include="SemanticModel\IExecuteOnServer.cs" />
     <Compile Include="SemanticModel\IHarvestServerInfo.cs" />
+    <Compile Include="SemanticModel\IValidateClient.cs" />
+    <Compile Include="SemanticModel\IValidateServer.cs" />
     <Compile Include="SemanticModel\NetworkHarvester.cs" />
     <Compile Include="SemanticModel\OperatingSystemHarvester.cs" />
     <Compile Include="SemanticModel\Sequence\PostOpsSequence.cs" />
@@ -210,7 +215,7 @@
     <Compile Include="Remote\Impersonator.cs" />
     <Compile Include="Operations\Infrastructure\IIS\IisInfrastructureIncludeOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\IisInfrastructureOptions.cs" />
-    <Compile Include="Operations\Infrastructure\IIS\IisInfrastructureOperation.cs" />
+    <Compile Include="Operations\Infrastructure\Windows\WindowsFeatureInfrastructureOperation.cs" />
     <Compile Include="Builders\InfrastructureBuilder.cs" />
     <Compile Include="Operations\Application\Deployment\Certificate\CertificateFromFileOperation.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IisWebSiteOptions.cs" />

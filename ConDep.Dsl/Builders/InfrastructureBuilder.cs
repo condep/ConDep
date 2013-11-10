@@ -5,8 +5,8 @@ using ConDep.Dsl.Operations.Infrastructure.IIS;
 using ConDep.Dsl.Operations.Infrastructure.IIS.AppPool;
 using ConDep.Dsl.Operations.Infrastructure.IIS.WebApp;
 using ConDep.Dsl.Operations.Infrastructure.IIS.WebSite;
+using ConDep.Dsl.Operations.Windows;
 using ConDep.Dsl.SemanticModel;
-using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.Builders
 {
@@ -31,6 +31,14 @@ namespace ConDep.Dsl.Builders
         {
             var iisOperation = new IisInfrastructureOperation();
             AddOperation(iisOperation);
+            return this;
+        }
+
+        public IOfferInfrastructure Windows(Action<WindowsInfrastructureOptions> options)
+        {
+            var windowsOperation = new WindowsFeatureInfrastructureOperation();
+            options(new WindowsInfrastructureOptions(windowsOperation));
+            AddOperation(windowsOperation);
             return this;
         }
 

@@ -19,6 +19,12 @@ namespace ConDep.Dsl
         IOfferInfrastructure IIS();
 
         /// <summary>
+        /// Offer common Windows operations
+        /// </summary>
+        /// <returns></returns>
+        IOfferInfrastructure Windows(Action<WindowsInfrastructureOptions> options);
+
+        /// <summary>
         /// Creates a new Web Site in IIS if not exist. If exist, will delete and then create new.
         /// </summary>
         /// <param name="name"></param>
