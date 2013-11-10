@@ -9,7 +9,7 @@ namespace ConDep.Dsl.SemanticModel
     {
         public void Harvest(ServerConfig server)
         {
-            var psExecutor = new PowerShellExecutor(server) { LogOutput = false, LoadConDepModule = false };
+            var psExecutor = new PowerShellExecutor(server) { LoadConDepModule = false };
             var networkInfo = @"$result = @()
 $networkInterfaces = Get-WmiObject win32_networkadapterconfiguration | where { $_.IPEnabled }
 foreach($interface in $networkInterfaces) {
@@ -29,7 +29,7 @@ foreach($interface in $networkInterfaces) {
 
 return $result";
 
-            var networkInfoResult = psExecutor.Execute(networkInfo);
+            var networkInfoResult = psExecutor.Execute(networkInfo, logOutput: false);
             if (networkInfoResult != null)
             {
                 foreach (var network in networkInfoResult)

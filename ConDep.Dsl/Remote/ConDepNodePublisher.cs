@@ -44,23 +44,23 @@ namespace ConDep.Dsl.Remote
 			$service.Stop()
 			$service.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Stopped)
         }}
-        write-host 'Deleting condepnode now...'
+        write-host 'Deleting ConDepNode now...'
         $deleteResult = $wmiService.Delete()
         if($deleteResult.ReturnValue -ne 0) {{
             throw ""Failed to delete ConDepNode service. Return code was $($deleteResult.ReturnValue)""
         }}
-        write-host 'condepnode deleted'
+        write-host 'ConDepNode deleted'
     }}
 
-    write-host 'Creating new condepnode...'
+    write-host 'Creating new ConDepNode...'
     New-Service -Name ConDepNode -BinaryPathName ""$remFile {0}"" -StartupType Manual
-    write-host 'condepnode created'
-    write-host 'starting condepnode...'
+    write-host 'ConDepNode created'
+    write-host 'Starting ConDepNode...'
     $service = get-service condepnode
     $service.Start()
-    write-host 'waiting for node to start...'
+    write-host 'Waiting for node to start...'
 	$service.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Running)
-    write-host 'node started'
+    write-host 'ConDepNode started'
 ", _nodeListenUrl);
 
             var parameters = new List<CommandParameter>
@@ -71,7 +71,7 @@ namespace ConDep.Dsl.Remote
                                  };
 
             var executor = new PowerShellExecutor(server) {LoadConDepModule = false};
-            var result = executor.Execute(script, parameters: parameters);
+            var result = executor.Execute(script, parameters: parameters, logOutput: false);
             foreach (var psObject in result)
             {
                 Logger.Verbose(psObject.ToString());

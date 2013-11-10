@@ -27,7 +27,7 @@ namespace ConDep.Dsl.Logging
 
         public override void LogSectionStart(string name)
         {
-            var sectionName = _indentLevel == 0 ? name : "" + name + ":";
+            var sectionName = _indentLevel == 0 ? name : "" + name;
             base.Log(sectionName, TraceLevel.Info);
             _indentLevel++;
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Logging;
 
 namespace ConDep.Dsl.SemanticModel
 {
@@ -15,10 +16,9 @@ namespace ConDep.Dsl.SemanticModel
             _settings = settings;
         }
 
-
         public void Harvest(ServerConfig server)
         {
-            Harvesters.ForEach(x => x.Harvest(server));
+            Harvesters.ForEach(x => Logger.WithLogSection(x.GetType().Name, () => x.Harvest(server)));
         }
 
         private List<IHarvestServerInfo> Harvesters

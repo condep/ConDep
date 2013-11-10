@@ -7,7 +7,7 @@ namespace ConDep.Dsl.SemanticModel
     {
         public void Harvest(ServerConfig server)
         {
-            var psExecutor = new PowerShellExecutor(server) {LogOutput = false, LoadConDepModule = false};
+            var psExecutor = new PowerShellExecutor(server) {LoadConDepModule = false};
             var result = psExecutor.Execute(@"$regKeys = @(
         ""HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Client"", 
         ""HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"", 
@@ -39,7 +39,7 @@ foreach($regKeyPath in $regKeys) {
     }
 }
 
-return $result");
+return $result", logOutput: false);
             foreach (var element in result)
             {
                 server.GetServerInfo().DotNetFrameworks.Add(element);

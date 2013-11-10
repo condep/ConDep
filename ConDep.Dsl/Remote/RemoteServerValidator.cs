@@ -34,12 +34,8 @@ namespace ConDep.Dsl.Remote
                                 return;
                             }
 
-                            Logger.Info("Collecting server data...");
-                            _serverInfoHarvester.Harvest(currentServer);
-                            Logger.Info("Server data collected");
-
-                            Logger.Info("Validating {0}", currentServer.Name);
-
+                            Logger.WithLogSection("Collecting server data", () => _serverInfoHarvester.Harvest(currentServer));
+ 
                             if (HaveNet40(currentServer))
                             {
                                 Logger.Info("Server requirements on [{0}] are OK.", currentServer.Name);
@@ -57,23 +53,25 @@ namespace ConDep.Dsl.Remote
 
         private static bool ValidateWinRm(ServerConfig server)
         {
-            Logger.Info("Validating WinRM");
-            Logger.Info(string.Format("Checking for WinRM (PowerShell Remoting) on [{0}]...",
-                                                    server.Name));
+            return Logger.WithLogSection("Validating WinRM", () =>
+                {
+                    Logger.Info(string.Format("Checking for WinRM (PowerShell Remoting) on [{0}]...",
+                                                            server.Name));
 
-            if (HaveAccessToServer(server))
-            {
-                Logger.Info(string.Format("Successfully validated WinRM on [{0}].", server.Name));
-            }
-            else
-            {
-                Logger.Error(
-                    string.Format("Could not connect to remote server [{0}] with WinRM (PowerShell Remoting).",
-                                    server.Name));
-                Logger.Error(string.Format("Server requirements on [{0}] are NOT OK.", server.Name));
-                return false;
-            }
-            return true;
+                    if (HaveAccessToServer(server))
+                    {
+                        Logger.Info(string.Format("Successfully validated WinRM on [{0}].", server.Name));
+                    }
+                    else
+                    {
+                        Logger.Error(
+                            string.Format("Could not connect to remote server [{0}] with WinRM (PowerShell Remoting).",
+                                            server.Name));
+                        Logger.Error(string.Format("Server requirements on [{0}] are NOT OK.", server.Name));
+                        return false;
+                    }
+                    return true;
+                });
         }
 
         private static bool HaveAccessToServer(ServerConfig server)

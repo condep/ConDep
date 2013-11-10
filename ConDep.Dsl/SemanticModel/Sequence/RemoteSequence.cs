@@ -187,14 +187,13 @@ namespace ConDep.Dsl.SemanticModel.Sequence
         private void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
             _infrastructureSequence.Execute(server, status, settings);
-            //if (status.HasErrors)
-            //    return;
 
             Logger.WithLogSection("Deployment", () =>
                 {
                     foreach (var element in _sequence)
                     {
-                        element.Execute(server, status, settings);
+                        IExecuteOnServer elementToExecute = element;
+                        Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings));
                     }
                 });
         }

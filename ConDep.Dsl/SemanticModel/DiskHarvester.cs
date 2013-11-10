@@ -8,7 +8,7 @@ namespace ConDep.Dsl.SemanticModel
     {
         public void Harvest(ServerConfig server)
         {
-            var psExecutor = new PowerShellExecutor(server) { LogOutput = false, LoadConDepModule = false };
+            var psExecutor = new PowerShellExecutor(server) { LoadConDepModule = false };
             var diskInfo = @"$disks = Get-WmiObject win32_logicaldisk
 $result = @()
 foreach($disk in $disks) {
@@ -25,7 +25,7 @@ foreach($disk in $disks) {
 
 return $result";
 
-            var diskInfoResult = psExecutor.Execute(diskInfo);
+            var diskInfoResult = psExecutor.Execute(diskInfo, logOutput: false);
             if (diskInfoResult != null)
             {
                 foreach (var disk in diskInfoResult)

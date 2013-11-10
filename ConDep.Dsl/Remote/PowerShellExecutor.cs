@@ -12,7 +12,6 @@ namespace ConDep.Dsl.Remote
     internal class PowerShellExecutor
     {
         private readonly ServerConfig _server;
-        private bool _logOutput = true;
         private bool _loadConDepModule = true;
         private bool _loadConDepDotNetLibrary = false;
 
@@ -22,8 +21,6 @@ namespace ConDep.Dsl.Remote
         {
             _server = server;
         }
-
-        public bool LogOutput { get { return _logOutput; } set { _logOutput = value; } }
 
         public bool LoadConDepModule
         {
@@ -37,7 +34,7 @@ namespace ConDep.Dsl.Remote
             set { _loadConDepDotNetLibrary = value; }
         }
 
-        public IEnumerable<dynamic> Execute(string commandOrScript, IEnumerable<CommandParameter> parameters = null)
+        public IEnumerable<dynamic> Execute(string commandOrScript, IEnumerable<CommandParameter> parameters = null, bool logOutput = true)
         {
             var host = new ConDepPSHost();
 
@@ -50,7 +47,8 @@ namespace ConDep.Dsl.Remote
             {
                 runspace.Open();
 
-                if(_logOutput) Logger.Info("Executing PowerShell commandOrScript: " + commandOrScript);
+                Logger.Info("Executing command/script...");
+                Logger.Verbose(commandOrScript);
                 var ps = PowerShell.Create();
                 ps.Runspace = runspace;
 
@@ -94,7 +92,7 @@ namespace ConDep.Dsl.Remote
                         throw errorCollection;
                     }
 
-                    foreach (var psObject in result.Where(psObject => _logOutput))
+                    foreach (var psObject in result.Where(psObject => logOutput))
                     {
                         Logger.Info(psObject.ToString());
                     }

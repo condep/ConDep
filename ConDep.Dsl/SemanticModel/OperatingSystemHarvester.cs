@@ -9,7 +9,7 @@ namespace ConDep.Dsl.SemanticModel
     {
         public void Harvest(ServerConfig server)
         {
-            var psExecutor = new PowerShellExecutor(server) { LogOutput = false, LoadConDepModule = false };
+            var psExecutor = new PowerShellExecutor(server) { LoadConDepModule = false };
             var osInfo = @"$perfData = Get-WmiObject win32_perfformatteddata_perfos_system -Property SystemUpTime
 $compSystem = Get-WmiObject win32_computersystem -Property Name,SystemType
 $os = Get-WmiObject win32_operatingsystem -Property Caption,Version,BuildNumber
@@ -25,7 +25,7 @@ $osInfo.BuildNumber = $os.BuildNumber
 return $osInfo
 ";
 
-            var osInfoResult = psExecutor.Execute(osInfo).FirstOrDefault();
+            var osInfoResult = psExecutor.Execute(osInfo, logOutput: false).FirstOrDefault();
             if (osInfoResult != null)
             {
                 server.GetServerInfo().OperatingSystem = new OperatingSystemInfo
