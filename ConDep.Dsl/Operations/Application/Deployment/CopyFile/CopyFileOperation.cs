@@ -37,6 +37,8 @@ namespace ConDep.Dsl.Operations.Application.Deployment.CopyFile
             }
         }
 
+        public string Name { get { return "Copy File"; } }
+
         public bool IsValid(Notification notification)
         {
             return true;

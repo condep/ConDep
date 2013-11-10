@@ -1,13 +1,17 @@
+using ConDep.Dsl.Config;
+using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations.Application.Execution.PowerShell;
+using ConDep.Dsl.Remote;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
 
 namespace ConDep.Dsl.Operations
 {
-    internal class PostRemoteOps
+    internal class PostRemoteOps : IOperateRemote
     {
-        public void Configure(PostOpsSequence sequence)
+        public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
+            Logger.Info("Removing ConDepNode from server...");
             var script = string.Format(@"add-type -AssemblyName System.ServiceProcess
 $service = get-service condepnode
 
@@ -20,8 +24,14 @@ if($service) {{
 
 Remove-Item -force -recurse {0}{1}",
                     @"$env:windir\temp\ConDep\", ConDepGlobals.ExecId);
-            var op = new RemotePowerShellHostOperation(script);
-            sequence.Add(op);
+            var executor = new PowerShellExecutor(server);
+            executor.Execute(script);
+        }
+
+        public string Name { get { return "Post Remote Operation"; } }
+        public bool IsValid(Notification notification)
+        {
+            return true;
         }
     }
 }

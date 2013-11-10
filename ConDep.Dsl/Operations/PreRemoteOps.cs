@@ -107,5 +107,8 @@ namespace ConDep.Dsl.Operations
                     Logger.Info(string.Format("Node listening on {0}", string.Format(listenUrl, server.Name)));
                 });
         }
+
+        public string Name { get { return "Pre-Operation"; } }
+
     }
 }

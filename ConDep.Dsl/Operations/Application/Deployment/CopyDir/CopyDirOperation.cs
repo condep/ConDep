@@ -41,5 +41,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.CopyDir
                 Logger.Info("Nothing to deploy. Everything is in sync.");
             }
         }
+
+        public string Name { get { return "Copy Dir"; } }
     }
 }

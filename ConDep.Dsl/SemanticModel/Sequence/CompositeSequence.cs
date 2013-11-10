@@ -37,9 +37,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 {
                     foreach (var element in _sequence)
                     {
-                        element.Execute(server, status, settings);
-                        //if (status.HasErrors)
-                        //    return;
+                        IExecuteOnServer elementToExecute = element;
+                        Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings));
                     }
                 });
         }
@@ -66,5 +65,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
             return isCompSeqValid && isRemoteOpsValid;
         }
+
+        public string Name { get { return "Composite Operation"; } }
     }
 }

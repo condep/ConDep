@@ -54,7 +54,8 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 {
                     foreach (var element in _sequence)
                     {
-                        element.Execute(server, status, settings);
+                        IExecuteOnServer elementToExecute = element;
+                        Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings));
                     }
                 });
         }
@@ -70,5 +71,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 _sequence.Add(operation);
             }
         }
+
+        public string Name { get { return "Infrastructure"; } }
     }
 }

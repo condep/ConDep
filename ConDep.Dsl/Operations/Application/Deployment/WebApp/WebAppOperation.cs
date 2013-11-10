@@ -45,5 +45,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WebApp
                 Logger.Info("Nothing to deploy. Everything is in sync.");
             }
         }
+
+        public string Name { get { return "Web Application"; } }
     }
 }

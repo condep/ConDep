@@ -64,7 +64,8 @@ namespace ConDep.Dsl.SemanticModel
             }
             finally
             {
-                new PostOpsSequence().Execute(status, settings);
+                ExecutePostOps(settings, status);
+                //new PostOpsSequence().Execute(status, settings);
             }
         }
 
@@ -126,6 +127,20 @@ namespace ConDep.Dsl.SemanticModel
             }
         }
 
+        private static void ExecutePostOps(ConDepSettings conDepSettings, IReportStatus status)
+        {
+            foreach (var server in conDepSettings.Config.Servers)
+            {
+                //Todo: This will not work with ConDep server. After first run, this key will always exist.
+                if (ConDepGlobals.ServersWithPreOps.ContainsKey(server.Name))
+                {
+                    var remotePostOps = new PostRemoteOps();
+                    remotePostOps.Execute(server, status, conDepSettings);
+                    ConDepGlobals.ServersWithPreOps.Remove(server.Name);
+                }
+            }
+        }
+
         private static IEnumerable<ApplicationArtifact> CreateApplicationArtifacts(ConDepSettings settings)
         {
             var assembly = settings.Options.Assembly;
@@ -170,15 +185,5 @@ namespace ConDep.Dsl.SemanticModel
             var infrastructureInstance = settings.Options.Assembly.CreateInstance(infrastructureType.FullName) as InfrastructureArtifact;
             return infrastructureInstance;
         }
-    }
-
-    public interface IValidateServer
-    {
-        bool IsValid();
-    }
-
-    public interface IValidateClient
-    {
-        void Validate();
     }
 }
