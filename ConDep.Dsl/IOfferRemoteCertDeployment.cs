@@ -10,7 +10,6 @@ namespace ConDep.Dsl
         /// </summary>
         /// <param name="findType"></param>
         /// <param name="findValue"></param>
-        /// <param name="options"></param>
         /// <returns></returns>
         IOfferRemoteDeployment FromStore(X509FindType findType, string findValue);
 

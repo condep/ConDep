@@ -5,8 +5,6 @@ namespace ConDep.Dsl.Builders
 {
     public class RemoteCompositeBuilder : IOfferRemoteComposition
     {
-        private readonly IOfferRemoteCertDeployment _certDeployment;
-
         public RemoteCompositeBuilder(CompositeSequence compositeSequence)
         {
             Deploy = new RemoteDeploymentBuilder(compositeSequence);

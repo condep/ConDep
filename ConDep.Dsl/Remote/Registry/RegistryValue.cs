@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Management;
 using Microsoft.Win32;
@@ -50,10 +51,12 @@ namespace ConDep.Dsl.Remote.Registry
                 }
                 return false;
             }
+            #pragma warning disable 0168
             catch(UnauthorizedAccessException accessException)
             {
                 throw;
             }
+            #pragma warning restore 0168
             catch
             {
                 return false;

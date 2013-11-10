@@ -23,10 +23,7 @@ namespace ConDep.Dsl.SemanticModel
 
         private List<IHarvestServerInfo> Harvesters
         {
-            get
-            {
-                return _harvesters ?? GetHarvesters(_settings).ToList();
-            }
+            get { return _harvesters ?? (_harvesters = GetHarvesters(_settings).ToList()); }
         }
 
         private IEnumerable<IHarvestServerInfo> GetHarvesters(ConDepSettings settings)

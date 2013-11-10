@@ -6,7 +6,6 @@ namespace ConDep.Dsl.Config
     public class ServerConfig
     {
         private DeploymentUserConfig _deploymentUserRemote;
-        private string _agentUrl;
         private ServerInfo _serverInfo = new ServerInfo();
 
         public string Name { get; set; }

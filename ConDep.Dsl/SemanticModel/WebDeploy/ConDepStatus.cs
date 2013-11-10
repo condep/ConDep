@@ -39,10 +39,6 @@ namespace ConDep.Dsl.SemanticModel.WebDeploy
             {
                 _endTime = DateTime.Now;
             }
-            int objectsAdded = 0;
-            int objectsDeleted = 0;
-            int objectsUpdated = 0;
-            double mBytesCopied = 0;
 
             string message = string.Format(@"
 Start Time      : {0}
