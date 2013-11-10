@@ -85,6 +85,11 @@ namespace ConDep.Console.Encrypt
             _helpWriter.WriteHelp(_parser.OptionSet);
         }
 
+        public void Cancel()
+        {
+            
+        }
+
         private string GetKey(ConDepEncryptOptions options)
         {
             return string.IsNullOrWhiteSpace(options.Key) ? JsonPasswordCrypto.GenerateKey(256) : options.Key;

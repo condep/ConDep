@@ -164,6 +164,7 @@
     <Compile Include="Security\EncryptedPassword.cs" />
     <Compile Include="Security\JsonPasswordCrypto.cs" />
     <Compile Include="SemanticModel\ClientValidator.cs" />
+    <Compile Include="SemanticModel\ConDepExecutionResult.cs" />
     <Compile Include="SemanticModel\ConDepValidationException.cs" />
     <Compile Include="SemanticModel\ConDepGlobals.cs" />
     <Compile Include="IOfferIisInfrastructureRoleOptions.cs" />

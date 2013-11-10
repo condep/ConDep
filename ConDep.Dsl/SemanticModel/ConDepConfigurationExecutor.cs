@@ -51,12 +51,12 @@ namespace ConDep.Dsl.SemanticModel
             var status = new StatusReporter();
             Validate(clientValidator, serverValidator);
 
-            ExecutePreOps(settings, status, token);
+            ExecutePreOps(settings, status);
 
             token.Register(() =>
                 {
                     Logger.Warn("Cancelling execution gracefully!");
-                    ExecutePostOps(settings, status, token);
+                    ExecutePostOps(settings, status);
                 });
             
             var notification = new Notification();
@@ -77,7 +77,7 @@ namespace ConDep.Dsl.SemanticModel
             }
             finally
             {
-                ExecutePostOps(settings, status, token);
+                ExecutePostOps(settings, status);
                 //new PostOpsSequence().Execute(status, settings);
             }
         }
@@ -126,7 +126,7 @@ namespace ConDep.Dsl.SemanticModel
             }
         }
 
-        private static void ExecutePreOps(ConDepSettings conDepSettings, IReportStatus status, CancellationToken token)
+        private static void ExecutePreOps(ConDepSettings conDepSettings, IReportStatus status)
         {
             foreach (var server in conDepSettings.Config.Servers)
             {
@@ -140,7 +140,7 @@ namespace ConDep.Dsl.SemanticModel
             }
         }
 
-        private static void ExecutePostOps(ConDepSettings conDepSettings, IReportStatus status, CancellationToken token)
+        private static void ExecutePostOps(ConDepSettings conDepSettings, IReportStatus status)
         {
             foreach (var server in conDepSettings.Config.Servers)
             {
@@ -197,21 +197,6 @@ namespace ConDep.Dsl.SemanticModel
 
             var infrastructureInstance = settings.Options.Assembly.CreateInstance(infrastructureType.FullName) as InfrastructureArtifact;
             return infrastructureInstance;
-        }
-    }
-
-    public class ConDepExecutionResult
-    {
-        private readonly bool _success;
-
-        public ConDepExecutionResult(bool success)
-        {
-            _success = success;
-        }
-
-        public bool Success
-        {
-            get { return _success; }
         }
     }
 }

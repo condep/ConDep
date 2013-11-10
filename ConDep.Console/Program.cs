@@ -32,10 +32,10 @@ namespace ConDep.Console
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
-            Logger.Info("I'm exiting now because of Cancelation!");
-            if (_handler is CmdDeployHandler)
+            Logger.Warn("I'm exiting now because you force me!");
+            if (_handler != null)
             {
-                ((CmdDeployHandler)_handler).Cancel();
+                _handler.Cancel();
             }
         }
 

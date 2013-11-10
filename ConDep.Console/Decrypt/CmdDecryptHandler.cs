@@ -40,5 +40,10 @@ namespace ConDep.Console.Decrypt
         {
             _helpWriter.WriteHelp(_parser.OptionSet);
         }
+
+        public void Cancel()
+        {
+            
+        }
     }
 }

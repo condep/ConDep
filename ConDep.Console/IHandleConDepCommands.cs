@@ -9,5 +9,6 @@ namespace ConDep.Console
         //TParser Parser { get; }
         //TValidator Validator { get; }
         void WriteHelp();
+        void Cancel();
     }
 }

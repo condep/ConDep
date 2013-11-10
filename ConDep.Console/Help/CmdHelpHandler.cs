@@ -36,5 +36,10 @@ namespace ConDep.Console.Help
         {
             _helpWriter.WriteHelp();
         }
+
+        public void Cancel()
+        {
+            
+        }
     }
 }

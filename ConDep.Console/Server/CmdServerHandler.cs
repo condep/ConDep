@@ -21,5 +21,10 @@ namespace ConDep.Console.Server
         {
             _helpWriter.WriteHelp(_parser.OptionSet);
         }
+
+        public void Cancel()
+        {
+            
+        }
     }
 }
