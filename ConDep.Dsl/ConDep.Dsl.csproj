@@ -186,7 +186,6 @@
     <Compile Include="SemanticModel\IValidateServer.cs" />
     <Compile Include="SemanticModel\NetworkHarvester.cs" />
     <Compile Include="SemanticModel\OperatingSystemHarvester.cs" />
-    <Compile Include="SemanticModel\Sequence\PostOpsSequence.cs" />
     <Compile Include="Operations\PreRemoteOps.cs" />
     <Compile Include="Remote\Registry\RegistryBinaryValue.cs" />
     <Compile Include="Remote\Registry\RegistryDWordValue.cs" />
