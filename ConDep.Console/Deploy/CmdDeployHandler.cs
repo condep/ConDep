@@ -85,6 +85,7 @@ namespace ConDep.Console.Deploy
         {
             if (_tokenSource != null)
             {
+                Logger.Warn("Cancelling task!");
                 _tokenSource.Cancel();
             }
 

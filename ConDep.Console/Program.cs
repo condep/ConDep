@@ -35,6 +35,7 @@ namespace ConDep.Console
             Logger.Warn("I'm exiting now because you force me!");
             if (_handler != null)
             {
+                Logger.Warn("Cancelling handler!");
                 _handler.Cancel();
             }
         }
