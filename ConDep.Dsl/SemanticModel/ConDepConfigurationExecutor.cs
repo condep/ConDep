@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
@@ -15,26 +17,29 @@ namespace ConDep.Dsl.SemanticModel
     //Todo: Screaming for refac! 
     public class ConDepConfigurationExecutor
     {
-        public static bool ExecuteFromAssembly(ConDepSettings conDepSettings, IReportStatus status)
+        public static Task<ConDepExecutionResult> ExecuteFromAssembly(ConDepSettings conDepSettings, IReportStatus status, CancellationToken token)
         {
-            if (conDepSettings.Options.Assembly == null) { throw new ArgumentException("assembly"); }
+            return Task.Factory.StartNew(() =>
+                {
+                    if (conDepSettings.Options.Assembly == null) { throw new ArgumentException("assembly"); }
 
-            var clientValidator = new ClientValidator();
+                    var clientValidator = new ClientValidator();
 
-            var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
-            var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers, serverInfoHarvester);
+                    var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
+                    var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers, serverInfoHarvester);
 
-            var lbLookup = new LoadBalancerLookup(conDepSettings.Config.LoadBalancer);
-            var sequenceManager = new ExecutionSequenceManager(lbLookup.GetLoadBalancer());
+                    var lbLookup = new LoadBalancerLookup(conDepSettings.Config.LoadBalancer);
+                    var sequenceManager = new ExecutionSequenceManager(lbLookup.GetLoadBalancer());
 
-            var notification = new Notification();
-            PopulateExecutionSequence(conDepSettings, notification, sequenceManager);
+                    var notification = new Notification();
+                    PopulateExecutionSequence(conDepSettings, notification, sequenceManager);
 
-            return new ConDepConfigurationExecutor().Execute(conDepSettings, clientValidator, serverValidator, sequenceManager);
+                    var success = new ConDepConfigurationExecutor().Execute(conDepSettings, clientValidator, serverValidator, sequenceManager, token);
+                    return new ConDepExecutionResult(success);
+                }, token);
         }
 
-        public bool Execute(ConDepSettings settings, IValidateClient clientValidator, IValidateServer serverValidator,
-                            ExecutionSequenceManager execManager)
+        public bool Execute(ConDepSettings settings, IValidateClient clientValidator, IValidateServer serverValidator, ExecutionSequenceManager execManager, CancellationToken token)
         {
             if (settings == null) { throw new ArgumentException("settings"); }
             if (settings.Config == null) { throw new ArgumentException("settings.Config"); }
@@ -45,7 +50,15 @@ namespace ConDep.Dsl.SemanticModel
 
             var status = new StatusReporter();
             Validate(clientValidator, serverValidator);
-            ExecutePreOps(settings, status);
+
+            ExecutePreOps(settings, status, token);
+
+            token.Register(() =>
+                {
+                    Logger.Warn("Cancelling execution gracefully!");
+                    ExecutePostOps(settings, status, token);
+                });
+            
             var notification = new Notification();
             if (!execManager.IsValid(notification))
             {
@@ -64,7 +77,7 @@ namespace ConDep.Dsl.SemanticModel
             }
             finally
             {
-                ExecutePostOps(settings, status);
+                ExecutePostOps(settings, status, token);
                 //new PostOpsSequence().Execute(status, settings);
             }
         }
@@ -113,7 +126,7 @@ namespace ConDep.Dsl.SemanticModel
             }
         }
 
-        private static void ExecutePreOps(ConDepSettings conDepSettings, IReportStatus status)
+        private static void ExecutePreOps(ConDepSettings conDepSettings, IReportStatus status, CancellationToken token)
         {
             foreach (var server in conDepSettings.Config.Servers)
             {
@@ -127,7 +140,7 @@ namespace ConDep.Dsl.SemanticModel
             }
         }
 
-        private static void ExecutePostOps(ConDepSettings conDepSettings, IReportStatus status)
+        private static void ExecutePostOps(ConDepSettings conDepSettings, IReportStatus status, CancellationToken token)
         {
             foreach (var server in conDepSettings.Config.Servers)
             {
@@ -184,6 +197,21 @@ namespace ConDep.Dsl.SemanticModel
 
             var infrastructureInstance = settings.Options.Assembly.CreateInstance(infrastructureType.FullName) as InfrastructureArtifact;
             return infrastructureInstance;
+        }
+    }
+
+    public class ConDepExecutionResult
+    {
+        private readonly bool _success;
+
+        public ConDepExecutionResult(bool success)
+        {
+            _success = success;
+        }
+
+        public bool Success
+        {
+            get { return _success; }
         }
     }
 }

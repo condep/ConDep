@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Remote;
@@ -13,6 +15,8 @@ namespace ConDep.Console.Deploy
         private CmdDeployParser _parser;
         private CmdDeployValidator _validator;
         private CmdDeployHelpWriter _helpWriter;
+        private WebQueue _webQ;
+        private CancellationTokenSource _tokenSource;
 
         public CmdDeployHandler(string[] args)
         {
@@ -23,7 +27,6 @@ namespace ConDep.Console.Deploy
 
         public void Execute(CmdHelpWriter helpWriter, ILogForConDep logger)
         {
-            WebQueue webQ = null;
             var conDepSettings = new ConDepSettings();
             bool success;
 
@@ -33,26 +36,44 @@ namespace ConDep.Console.Deploy
                 conDepSettings.Config = ConfigHandler.GetEnvConfig(conDepSettings);
 
                 helpWriter.PrintCopyrightMessage();
-                webQ = WaitInQueue(logger, conDepSettings);
+                _webQ = WaitInQueue(logger, conDepSettings);
 
                 var status = new ConDepStatus();
-                success = ConDepConfigurationExecutor.ExecuteFromAssembly(conDepSettings, status);
+                _tokenSource = new CancellationTokenSource();
+                var token = _tokenSource.Token;
 
-                if (success)
+                var task = ConDepConfigurationExecutor.ExecuteFromAssembly(conDepSettings, status, token);
+
+                task.ContinueWith(result =>
+                        {
+                            if (result.Result.Success)
+                            {
+                                status.EndTime = DateTime.Now;
+                                status.PrintSummary();
+                            }
+                            else
+                            {
+                                Environment.Exit(1);
+                            }
+                        }, TaskContinuationOptions.OnlyOnRanToCompletion);
+
+                task.Wait();
+
+                //while (!task.IsCanceled && !task.IsCompleted && !task.IsFaulted)
+                //{
+                //    Thread.Sleep(1000);
+                //}
+
+                if (task.IsFaulted)
                 {
-                    status.EndTime = DateTime.Now;
-                    status.PrintSummary();
-                }
-                else
-                {
-                    Environment.Exit(1);
+                    throw task.Exception;
                 }
             }
             finally
             {
-                if (webQ != null)
+                if (_webQ != null)
                 {
-                    webQ.LeaveQueue();
+                    _webQ.LeaveQueue();
                 }
 
                 //Environment.Exit(exitCode);
@@ -60,6 +81,19 @@ namespace ConDep.Console.Deploy
 
         }
 
+        public void Cancel()
+        {
+            if (_tokenSource != null)
+            {
+                _tokenSource.Cancel();
+            }
+
+            if (_webQ != null)
+            {
+                Logger.Info("Leaving queue...");
+                _webQ.LeaveQueue();
+            }
+        }
         public void WriteHelp()
         {
             _helpWriter.WriteHelp(_parser.OptionSet);

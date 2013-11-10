@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Diagnostics;
+using ConDep.Console.Deploy;
 using ConDep.Dsl.Logging;
 
 namespace ConDep.Console
 {
     sealed internal class Program
     {
+        private static IHandleConDepCommands _handler;
+
         static void Main(string[] args)
         {
             var exitCode = 0;
-            AppDomain.CurrentDomain.ProcessExit += OnExit;
+            AppDomain.CurrentDomain.ProcessExit += Console_OnExit;
+            System.Console.CancelKeyPress += Console_CancelKeyPress;
 
             try
             {
@@ -22,6 +26,16 @@ namespace ConDep.Console
                 Logger.Error("ConDep reported a fatal error:");
                 Logger.Error("Message: " + ex.Message);
                 Logger.Verbose("Stack trace:\n" + ex.StackTrace);
+            }
+            Environment.ExitCode = exitCode;
+        }
+
+        private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        {
+            Logger.Info("I'm exiting now because of Cancelation!");
+            if (_handler is CmdDeployHandler)
+            {
+                ((CmdDeployHandler)_handler).Cancel();
             }
         }
 
@@ -38,8 +52,8 @@ namespace ConDep.Console
 
             try
             {
-                var handler = CmdFactory.Resolve(args);
-                handler.Execute(helpWriter, Logger.LogInstance);
+                _handler = CmdFactory.Resolve(args);
+                _handler.Execute(helpWriter, Logger.LogInstance);
             }
             catch (Exception ex)
             {
@@ -61,9 +75,9 @@ namespace ConDep.Console
             }
         }
 
-        static void OnExit(object sender, EventArgs e)
+        static void Console_OnExit(object sender, EventArgs e)
         {
-            
+            Logger.Info("I'm exiting now!");   
         }
     }
 }
