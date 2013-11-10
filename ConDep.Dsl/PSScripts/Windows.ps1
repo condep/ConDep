@@ -46,11 +46,25 @@ function removeExistingWindowsFeatures($featureList) {
 }
 
 function getMissingWindowsFeatures($featureList) {
-    $features = Get-WindowsFeature $featureList
-	return ($features | where { $_.Installed -eq $false })
+	$features = @()
+	foreach($feature in $featureList) {
+		$result = Get-WindowsFeature $feature
+		if(!$result) { throw "Feature '$feature' is not an available feature to install on the server. It's not on the Windows feature list." }
+		if($result.Installed -eq $false) { $features.Add($result) }		
+	}
+    #$features = Get-WindowsFeature $featureList
+	#return ($features | where { $_.Installed -eq $false })
+	return $features
 }
 
 function getExistingWindowsFeatures($featureList) {
-    $features = Get-WindowsFeature $featureList
-	return ($features | where { $_.Installed -eq $true })
+    $features = @()
+	foreach($feature in $featureList) {
+		$result = Get-WindowsFeature $feature
+		if(!$result) { throw "Feature '$feature' is not an available feature to install on the server. It's not on the Windows feature list." }
+		if($result.Installed -eq $true) { $features.Add($result) }		
+	}
+	#$features = Get-WindowsFeature $featureList
+	#return ($features | where { $_.Installed -eq $true })
+	return $features
 }
