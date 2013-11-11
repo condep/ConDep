@@ -73,6 +73,7 @@ Copyright (c) Jon Arild Torresdal
         public void WriteException(Exception ex)
         {
             _writer.WriteLine(ex.Message);
+            _writer.Write(ex.StackTrace);
             _writer.WriteLine();
         }
 

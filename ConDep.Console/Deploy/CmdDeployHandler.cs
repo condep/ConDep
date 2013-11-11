@@ -28,7 +28,6 @@ namespace ConDep.Console.Deploy
         public void Execute(CmdHelpWriter helpWriter, ILogForConDep logger)
         {
             var conDepSettings = new ConDepSettings();
-            bool success;
 
             try
             {
@@ -58,11 +57,6 @@ namespace ConDep.Console.Deploy
                         }, TaskContinuationOptions.OnlyOnRanToCompletion);
 
                 task.Wait();
-
-                //while (!task.IsCanceled && !task.IsCompleted && !task.IsFaulted)
-                //{
-                //    Thread.Sleep(1000);
-                //}
 
                 if (task.IsFaulted)
                 {

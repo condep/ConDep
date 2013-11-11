@@ -56,6 +56,18 @@ namespace ConDep.Console
                 _handler = CmdFactory.Resolve(args);
                 _handler.Execute(helpWriter, Logger.LogInstance);
             }
+            catch (AggregateException aggEx)
+            {
+                var flattenEx = aggEx.Flatten();
+                foreach (var ex in flattenEx.InnerExceptions)
+                {
+                    System.Console.ForegroundColor = ConsoleColor.Red;
+                    helpWriter.WriteException(ex);
+                    System.Console.ResetColor();
+                    System.Console.WriteLine("For help type ConDep Help <command>");
+                }
+                Environment.Exit(1);
+            }
             catch (Exception ex)
             {
                 //if (handler != null)
