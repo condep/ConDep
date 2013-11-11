@@ -5,7 +5,6 @@ using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.Application.Deployment.PowerShellScript;
-using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {

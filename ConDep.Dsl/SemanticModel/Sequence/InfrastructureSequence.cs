@@ -55,7 +55,10 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                     foreach (var element in _sequence)
                     {
                         IExecuteOnServer elementToExecute = element;
-                        Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings));
+                        if(element is CompositeSequence)
+                            elementToExecute.Execute(server, status, settings);
+                        else
+                            Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings));
                     }
                 });
         }
