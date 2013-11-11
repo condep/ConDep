@@ -137,6 +137,10 @@
       <Project>{e7eba0ac-b91d-450f-8a68-5adcf18fe17e}</Project>
       <Name>ConDep.Dsl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ConDep.Remote\ConDep.Remote.csproj">
+      <Project>{70370a66-9199-4450-b12e-3ef3e176daf2}</Project>
+      <Name>ConDep.Remote</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConDep.WebQ.Client\ConDep.WebQ.Client.csproj">
       <Project>{F552A5A9-3250-498D-98AE-2B5D6C63C9B8}</Project>
       <Name>ConDep.WebQ.Client</Name>
