@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace ConDep.Dsl.Config
 {
@@ -9,6 +10,6 @@ namespace ConDep.Dsl.Config
         public string SystemType { get; set; }
         public string Name { get; set; }
         public string Version { get; set; }
-        public string BuildNumber { get; set; }
+        public int BuildNumber { get; set; }
     }
 }
