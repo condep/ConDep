@@ -70,9 +70,19 @@ namespace ConDep.Dsl.SemanticModel
                 execManager.Execute(status, settings);
                 return true;
             }
+            catch (AggregateException aggEx)
+            {
+                var flattenEx = aggEx.Flatten();
+                Logger.Error("ConDep execution failed with the following error(s):");
+                foreach (var ex in flattenEx.InnerExceptions)
+                {
+                    Logger.Error("ConDep execution failed.", ex);
+                }
+                return false;
+            }
             catch (Exception ex)
             {
-                Logger.Error("ConDep execution failed. ", ex);
+                Logger.Error("ConDep execution failed.", ex);
                 return false;
             }
             finally
@@ -114,15 +124,35 @@ namespace ConDep.Dsl.SemanticModel
                         {
                             notification.Throw();
                         }
+
+                        //infrastructureInstance.ConditionBlock = (condition, trueAction, falseAction) =>
+                        //    {
+                        //        if (trueAction != null)
+                        //        {
+                        //            var conditionalSequence = infrastructureSequence.NewConditionalInfrastructureSequence(infrastructureInstance,
+                        //                                                                                              condition, true);
+                        //            var infraBuilder = new InfrastructureBuilder(conditionalSequence);
+                        //            trueAction(infraBuilder);
+                        //        }
+
+                        //        if (falseAction != null)
+                        //        {
+                        //            var conditionalSequence = infrastructureSequence.NewConditionalInfrastructureSequence(infrastructureInstance,
+                        //                                                                                              condition, false);
+                        //            var infraBuilder = new InfrastructureBuilder(conditionalSequence);
+                        //            falseAction(infraBuilder);
+                        //        }
+                        //    };
+
                         infrastructureInstance.Configure(infrastructureBuilder, conDepSettings);
                     }
                 }
 
-                var local = new LocalOperationsBuilder(sequenceManager.NewLocalSequence(application.GetType().Name),
-                                                       infrastructureSequence, conDepSettings.Config.Servers);
-                Configure.LocalOperations = local;
+                var localSequence = sequenceManager.NewLocalSequence(application.GetType().Name);
+                var localBuilder = new LocalOperationsBuilder(localSequence, infrastructureSequence, conDepSettings.Config.Servers);
+                Configure.LocalOperations = localBuilder;
 
-                application.Configure(local, conDepSettings);
+                application.Configure(localBuilder, conDepSettings);
             }
         }
 
