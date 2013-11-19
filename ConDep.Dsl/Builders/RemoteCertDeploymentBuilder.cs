@@ -3,8 +3,6 @@ using System.Security.Cryptography.X509Certificates;
 using ConDep.Dsl.Operations.Application.Deployment.Certificate;
 using ConDep.Dsl.Operations.Infrastructure.IIS.WebSite;
 using ConDep.Dsl.SemanticModel;
-using ConDep.Dsl.SemanticModel.Sequence;
-using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.Builders
 {
