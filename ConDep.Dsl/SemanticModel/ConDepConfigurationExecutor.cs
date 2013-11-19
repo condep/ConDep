@@ -34,6 +34,12 @@ namespace ConDep.Dsl.SemanticModel
                     var notification = new Notification();
                     PopulateExecutionSequence(conDepSettings, notification, sequenceManager);
 
+                    if (conDepSettings.Options.DryRun)
+                    {
+                        sequenceManager.DryRun();
+                        return new ConDepExecutionResult(true);
+                    }
+                    
                     var success = new ConDepConfigurationExecutor().Execute(conDepSettings, clientValidator, serverValidator, sequenceManager, token);
                     return new ConDepExecutionResult(success);
                 }, token);
@@ -124,25 +130,6 @@ namespace ConDep.Dsl.SemanticModel
                         {
                             notification.Throw();
                         }
-
-                        //infrastructureInstance.ConditionBlock = (condition, trueAction, falseAction) =>
-                        //    {
-                        //        if (trueAction != null)
-                        //        {
-                        //            var conditionalSequence = infrastructureSequence.NewConditionalInfrastructureSequence(infrastructureInstance,
-                        //                                                                                              condition, true);
-                        //            var infraBuilder = new InfrastructureBuilder(conditionalSequence);
-                        //            trueAction(infraBuilder);
-                        //        }
-
-                        //        if (falseAction != null)
-                        //        {
-                        //            var conditionalSequence = infrastructureSequence.NewConditionalInfrastructureSequence(infrastructureInstance,
-                        //                                                                                              condition, false);
-                        //            var infraBuilder = new InfrastructureBuilder(conditionalSequence);
-                        //            falseAction(infraBuilder);
-                        //        }
-                        //    };
 
                         infrastructureInstance.Configure(infrastructureBuilder, conDepSettings);
                     }

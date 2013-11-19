@@ -8,7 +8,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
     public class ExecutionSequenceManager
     {
         private readonly ILoadBalance _loadBalancer;
-        private readonly List<LocalSequence> _sequence = new List<LocalSequence>();
+        internal readonly List<LocalSequence> _sequence = new List<LocalSequence>();
 
         public ExecutionSequenceManager(ILoadBalance loadBalancer)
         {
@@ -34,6 +34,15 @@ namespace ConDep.Dsl.SemanticModel.Sequence
         public bool IsValid(Notification notification)
         {
             return _sequence.All(x => x.IsValid(notification));
+        }
+
+        public void DryRun()
+        {
+            foreach (var item in _sequence)
+            {
+                Logger.Info(item.Name);
+                item.DryRun();
+            }
         }
     }
 }

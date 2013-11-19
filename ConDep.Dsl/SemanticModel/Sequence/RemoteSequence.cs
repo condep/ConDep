@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using System.Linq;
 using ConDep.Dsl.Operations;
-using ConDep.Dsl.Operations.Application.Deployment.PowerShellScript;
 using ConDep.Dsl.Operations.LoadBalancer;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
@@ -13,16 +11,18 @@ namespace ConDep.Dsl.SemanticModel.Sequence
     //Todo: Could need some refactoring...
     public class RemoteSequence : IManageRemoteSequence, IExecute
     {
-        private readonly IManageInfrastructureSequence _infrastructureSequence;
+        protected readonly IManageInfrastructureSequence _infrastructureSequence;
         private readonly IEnumerable<ServerConfig> _servers;
         private readonly ILoadBalance _loadBalancer;
-        private readonly List<IExecuteOnServer> _sequence = new List<IExecuteOnServer>();
+        internal readonly List<IExecuteOnServer> _sequence = new List<IExecuteOnServer>();
+        private SequenceFactory _sequenceFactory;
 
         public RemoteSequence(IManageInfrastructureSequence infrastructureSequence, IEnumerable<ServerConfig> servers, ILoadBalance loadBalancer)
         {
             _infrastructureSequence = infrastructureSequence;
             _servers = servers;
             _loadBalancer = loadBalancer;
+            _sequenceFactory = new SequenceFactory(_sequence);
         }
 
         public void Add(IOperateRemote operation, bool addFirst = false)
@@ -37,7 +37,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             }
         }
 
-        public void Execute(IReportStatus status, ConDepSettings settings)
+        public virtual void Execute(IReportStatus status, ConDepSettings settings)
         {
             switch (_loadBalancer.Mode)
             {
@@ -53,7 +53,14 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             }
         }
 
-        public string Name { get { return "Remote Operations"; } }
+        public virtual string Name { get { return "Remote Operations"; } }
+        public void DryRun()
+        {
+            foreach (var item in _sequence)
+            {
+                Logger.Info(item.Name);
+            }
+        }
 
         private void ExecuteWithRoundRobin(ConDepSettings settings, IReportStatus status)
         {
@@ -184,7 +191,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         }
 
-        private void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings)
+        protected virtual void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
             _infrastructureSequence.Execute(server, status, settings);
 
@@ -203,14 +210,12 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         public CompositeSequence NewCompositeSequence(RemoteCompositeOperation operation)
         {
-            var sequence = new CompositeSequence(operation.Name);
+            return _sequenceFactory.NewCompositeSequence(operation);
+        }
 
-            if (operation is IRequireRemotePowerShellScripts)
-            {
-                var scriptOp = new PowerShellScriptDeployOperation(((IRequireRemotePowerShellScripts)operation).ScriptPaths);
-                scriptOp.Configure(new RemoteCompositeBuilder(sequence));
-            }
-
+        public CompositeSequence NewConditionalCompositeSequence(Predicate<ServerInfo> condition)
+        {
+            var sequence = new CompositeConditionalSequence(Name, condition, true);
             _sequence.Add(sequence);
             return sequence;
         }

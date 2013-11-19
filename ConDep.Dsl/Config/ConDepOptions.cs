@@ -21,6 +21,7 @@ namespace ConDep.Dsl.Config
         public string Environment { get; set; }
         public string AssemblyName { get; set; }
         public string CryptoKey { get; set; }
+        public bool DryRun { get; set; }
 
         public bool HasApplicationDefined()
         {

@@ -11,7 +11,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
     {
         private readonly string _name;
         private readonly ILoadBalance _loadBalancer;
-        private readonly List<IExecute> _sequence = new List<IExecute>();
+        internal readonly List<IExecute> _sequence = new List<IExecute>();
 
         public LocalSequence(string name, ILoadBalance loadBalancer)
         {
@@ -38,6 +38,13 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return sequence;
         }
 
+        public RemoteSequence NewRemoteConditionalSequence(IManageInfrastructureSequence infrastructureSequence, IEnumerable<ServerConfig> servers, Predicate<ServerInfo> condition, bool expectedConditionResult)
+        {
+            var sequence = new RemoteConditionalSequence(infrastructureSequence, servers, _loadBalancer, condition, expectedConditionResult);
+            _sequence.Add(sequence);
+            return sequence;
+        }
+
         public void Execute(IReportStatus status, ConDepSettings settings)
         {
             foreach (var element in _sequence)
@@ -54,6 +61,14 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             var isLocalOpsValid = _sequence.OfType<LocalOperation>().All(x => x.IsValid(notification));
             var isRemoteSeqValid = _sequence.OfType<RemoteSequence>().All(x => x.IsValid(notification));
             return isLocalOpsValid && isRemoteSeqValid;
+        }
+
+        public void DryRun()
+        {
+            foreach (var item in _sequence)
+            {
+                item.DryRun();
+            }
         }
     }
 }

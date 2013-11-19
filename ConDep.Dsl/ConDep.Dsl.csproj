@@ -132,6 +132,7 @@
     <Compile Include="Config\ConDepAssemblyHandler.cs" />
     <Compile Include="Config\ConDepAssemblyNotFoundException.cs" />
     <Compile Include="Operations\Application\Deployment\WindowsService\WindowsServiceOperation.cs" />
+    <Compile Include="Operations\RemoteOperation.cs" />
     <Compile Include="Operations\Application\Execution\RunCmd\RunCmdOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\IisInfrastructureOperation.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WindowsInfrastructureOptions.cs" />
@@ -230,7 +231,9 @@
     <Compile Include="Operations\Application\Deployment\NServiceBus\NServiceBusOperation.cs" />
     <Compile Include="Operations\RemoteCompositeOperation.cs" />
     <Compile Include="Operations\IOperateRemote.cs" />
+    <Compile Include="SemanticModel\Sequence\CompositeConditionalSequence.cs" />
     <Compile Include="SemanticModel\Sequence\CompositeSequence.cs" />
+    <Compile Include="SemanticModel\Sequence\ConditionalInfrastructureSequence.cs" />
     <Compile Include="SemanticModel\Sequence\ExecutionSequenceManager.cs" />
     <Compile Include="IOfferRemoteDeployment.cs" />
     <Compile Include="IOfferRemoteCertDeployment.cs" />
@@ -250,8 +253,10 @@
     <Compile Include="SemanticModel\IManageSequence.cs" />
     <Compile Include="SemanticModel\Sequence\InfrastructureSequence.cs" />
     <Compile Include="SemanticModel\Sequence\LocalSequence.cs" />
+    <Compile Include="SemanticModel\Sequence\RemoteConditionalSequence.cs" />
     <Compile Include="SemanticModel\Sequence\RemoteSequence.cs" />
     <Compile Include="SemanticModel\IReportStatus.cs" />
+    <Compile Include="SemanticModel\Sequence\SequenceFactory.cs" />
     <Compile Include="SemanticModel\ServerInfoHarvester.cs" />
     <Compile Include="SemanticModel\StatusReporter.cs" />
     <Compile Include="Config\IRequireCustomConfiguration.cs" />

@@ -1,21 +1,22 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations;
-using ConDep.Dsl.Operations.Application.Deployment.PowerShellScript;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
     public class CompositeSequence : IManageRemoteSequence, IExecuteOnServer
     {
         private readonly string _compositeName;
-        private readonly List<IExecuteOnServer> _sequence = new List<IExecuteOnServer>();
+        internal readonly List<IExecuteOnServer> _sequence = new List<IExecuteOnServer>();
+        private SequenceFactory _sequenceFactory;
 
         public CompositeSequence(string compositeName)
         {
             _compositeName = compositeName;
+            _sequenceFactory = new SequenceFactory(_sequence);
         }
 
         public void Add(IOperateRemote operation, bool addFirst = false)
@@ -30,31 +31,30 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             }
         }
 
-        public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
+        public virtual void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
             Logger.WithLogSection(_compositeName, () =>
                 {
                     foreach (var element in _sequence)
                     {
                         IExecuteOnServer elementToExecute = element;
-                        Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings));
+                        if (element is CompositeSequence)
+                            elementToExecute.Execute(server, status, settings);
+                        else
+                            Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings));
+
                     }
                 });
         }
 
         public CompositeSequence NewCompositeSequence(RemoteCompositeOperation operation)
         {
-            var opName = operation.Name;
-            var sequence = new CompositeSequence(opName);
+            return _sequenceFactory.NewCompositeSequence(operation);
+        }
 
-            if (operation is IRequireRemotePowerShellScripts)
-            {
-                var scriptOp = new PowerShellScriptDeployOperation(((IRequireRemotePowerShellScripts) operation).ScriptPaths);
-                scriptOp.Configure(new RemoteCompositeBuilder(sequence));
-            }
-
-            _sequence.Add(sequence);
-            return sequence;
+        public CompositeSequence NewConditionalCompositeSequence(Predicate<ServerInfo> condition)
+        {
+            return new CompositeConditionalSequence(Name, condition, true);
         }
 
         public bool IsValid(Notification notification)
@@ -65,6 +65,6 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return isCompSeqValid && isRemoteOpsValid;
         }
 
-        public string Name { get { return "Composite Operation"; } }
+        public virtual string Name { get { return "Composite Operation"; } }
     }
 }

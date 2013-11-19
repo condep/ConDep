@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using ConDep.Dsl.Config;
-using ConDep.Dsl.Operations.Application.Deployment.CopyFile;
 using ConDep.Dsl.Remote;
 using ConDep.Dsl.SemanticModel;
 
@@ -43,13 +42,5 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
         {
             return true;
         }
-    }
-
-    public abstract class RemoteOperation : IOperateRemote
-    {
-        public abstract void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings);
-        public abstract string Name { get; }
-        public abstract bool IsValid(Notification notification);
-
     }
 }

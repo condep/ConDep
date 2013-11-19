@@ -1,43 +1,47 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations;
-using ConDep.Dsl.Operations.Application.Deployment.PowerShellScript;
-using ConDep.Dsl.SemanticModel.WebDeploy;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
     public class InfrastructureSequence : IManageInfrastructureSequence
     {
-        private readonly List<IExecuteOnServer> _sequence = new List<IExecuteOnServer>();
- 
+        protected readonly List<IExecuteOnServer> _sequence = new List<IExecuteOnServer>();
+        private SequenceFactory _sequenceFactory;
+
+        public InfrastructureSequence()
+        {
+            _sequenceFactory = new SequenceFactory(_sequence);
+        }
+
         public CompositeSequence NewCompositeSequence(RemoteCompositeInfrastructureOperation operation)
         {
-            var sequence = new CompositeSequence(operation.Name);
+            return _sequenceFactory.NewCompositeSequence(operation);
+        }
 
-            if (operation is IRequireRemotePowerShellScripts)
-            {
-                var scriptOp = new PowerShellScriptDeployOperation(((IRequireRemotePowerShellScripts)operation).ScriptPaths);
-                scriptOp.Configure(new RemoteCompositeBuilder(sequence));
-            }
-
+        public InfrastructureSequence NewConditionalInfrastructureSequence(Predicate<ServerInfo> condition)
+        {
+            var sequence = new ConditionalInfrastructureSequence(Name, condition, true);
             _sequence.Add(sequence);
             return sequence;
         }
 
         public CompositeSequence NewCompositeSequence(RemoteCompositeOperation operation)
         {
-            var sequence = new CompositeSequence(operation.Name);
-            if (operation is IRequireRemotePowerShellScripts)
-            {
-                var scriptOp = new PowerShellScriptDeployOperation(((IRequireRemotePowerShellScripts)operation).ScriptPaths);
-                scriptOp.Configure(new RemoteCompositeBuilder(sequence));
-            }
-            _sequence.Add(sequence);
-            return sequence;
+            return _sequenceFactory.NewCompositeSequence(operation);
+        }
+
+        public CompositeSequence NewConditionalCompositeSequence(Predicate<ServerInfo> condition)
+        {
+            return _sequenceFactory.NewConditionalCompositeSequence(condition);
+        }
+
+        public InfrastructureSequence NewConditionalInfrastructureSequence(InfrastructureArtifact artifact, Predicate<ServerInfo> condition, bool expectedConditionResult)
+        {
+            return _sequenceFactory.NewConditionalInfrastructureSequence(artifact, condition, expectedConditionResult);
         }
 
         public bool IsValid(Notification notification)
@@ -48,14 +52,14 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return isRemoteOpValid && isCompositeSeqValid;
         }
 
-        public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
+        public virtual void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
             Logger.WithLogSection("Infrastructure", () =>
                 {
                     foreach (var element in _sequence)
                     {
                         IExecuteOnServer elementToExecute = element;
-                        if(element is CompositeSequence)
+                        if(element is CompositeSequence || element is InfrastructureSequence)
                             elementToExecute.Execute(server, status, settings);
                         else
                             Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings));
@@ -75,6 +79,6 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             }
         }
 
-        public string Name { get { return "Infrastructure"; } }
+        public virtual string Name { get { return "Infrastructure"; } }
     }
 }

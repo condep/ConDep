@@ -1,4 +1,5 @@
 using System;
+using ConDep.Dsl.Config;
 using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.Infrastructure;
 using ConDep.Dsl.Operations.Infrastructure.IIS;
@@ -104,11 +105,17 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
-        //public IOfferRemoteExecution RemoteExecution { get{ return new RemoteExecutionBuilder(_infrastructureSequence, _webDeploy);} }
+
+        public IOfferInfrastructure OnlyIf(Predicate<ServerInfo> condition)
+        {
+            var sequence = _infrastructureSequence.NewConditionalInfrastructureSequence(condition);
+            return new InfrastructureBuilder(sequence);
+        }
 
         public void AddOperation(RemoteCompositeInfrastructureOperation operation)
         {
-            operation.Configure(new RemoteCompositeBuilder(_infrastructureSequence.NewCompositeSequence(operation)), new InfrastructureBuilder(_infrastructureSequence));
+            var infrastructureBuilder = new InfrastructureBuilder(_infrastructureSequence);
+            operation.Configure(new RemoteCompositeBuilder(_infrastructureSequence.NewCompositeSequence(operation)), infrastructureBuilder);
         }
     }
 }
