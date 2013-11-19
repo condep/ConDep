@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using ConDep.Console.Deploy;
 using ConDep.Dsl.Logging;
 
 namespace ConDep.Console
@@ -12,7 +11,6 @@ namespace ConDep.Console
         static void Main(string[] args)
         {
             var exitCode = 0;
-            AppDomain.CurrentDomain.ProcessExit += Console_OnExit;
             System.Console.CancelKeyPress += Console_CancelKeyPress;
 
             try
@@ -86,11 +84,6 @@ namespace ConDep.Console
                 //}
                 Environment.Exit(1);
             }
-        }
-
-        static void Console_OnExit(object sender, EventArgs e)
-        {
-            Logger.Info("I'm exiting now!");   
         }
     }
 }
