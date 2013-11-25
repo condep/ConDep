@@ -107,6 +107,7 @@
     <Compile Include="Config\NetworkInfo.cs" />
     <Compile Include="Config\OperatingSystemInfo.cs" />
     <Compile Include="Config\ServerInfo.cs" />
+    <Compile Include="Config\WindowsOperatingSystem.cs" />
     <Compile Include="IOfferWindowsInfrastructureOptions.cs" />
     <Compile Include="Logging\LoggerBase.cs" />
     <Compile Include="Operations\Application\Deployment\CopyFile\FileInfoList.cs" />
@@ -252,11 +253,14 @@
     </Compile>
     <Compile Include="SemanticModel\IManageSequence.cs" />
     <Compile Include="SemanticModel\Sequence\InfrastructureSequence.cs" />
+    <Compile Include="SemanticModel\Sequence\LoadBalancerExecutorBase.cs" />
     <Compile Include="SemanticModel\Sequence\LocalSequence.cs" />
     <Compile Include="SemanticModel\Sequence\RemoteConditionalSequence.cs" />
     <Compile Include="SemanticModel\Sequence\RemoteSequence.cs" />
     <Compile Include="SemanticModel\IReportStatus.cs" />
+    <Compile Include="SemanticModel\Sequence\RoundRobinLoadBalancerExecutor.cs" />
     <Compile Include="SemanticModel\Sequence\SequenceFactory.cs" />
+    <Compile Include="SemanticModel\Sequence\StickyLoadBalancerExecutor.cs" />
     <Compile Include="SemanticModel\ServerInfoHarvester.cs" />
     <Compile Include="SemanticModel\StatusReporter.cs" />
     <Compile Include="Config\IRequireCustomConfiguration.cs" />
