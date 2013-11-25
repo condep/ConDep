@@ -69,6 +69,9 @@ namespace ConDep.Dsl.Logging
             var sb = new StringBuilder(formattedMessage);
             sb.Replace("|", "||")
               .Replace("'", "|'")
+              .Replace("\"", "|\"")
+              .Replace("<", "|<")
+              .Replace(">", "|>")
               .Replace("\n", "|n")
               .Replace("\r", "|r")
               .Replace("\u0085", "|x")
