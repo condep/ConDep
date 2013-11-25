@@ -67,6 +67,7 @@ namespace ConDep.Console.Deploy
             {
                 if (_webQ != null)
                 {
+                    Logger.Info("Leaving WebQ");
                     _webQ.LeaveQueue();
                 }
 
