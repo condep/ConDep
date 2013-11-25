@@ -55,9 +55,8 @@ namespace ConDep.Dsl.Logging
             var errorDetails = "";
             if (ex != null)
             {
-                var errMessage = EscapeCharsForTeamCity(ex.Message);
-                var stackTrace = EscapeCharsForTeamCity(ex.StackTrace);
-                errorDetails = string.Format("Message: {0}\n\nStack Trace:\n{1}", errMessage, stackTrace);
+                errorDetails = string.Format("Message: {0}\n\nStack Trace:\n{1}", ex.Message, ex.StackTrace);
+                errorDetails = EscapeCharsForTeamCity(errorDetails);
             }
 
             var tcMessage = string.Format("##teamcity[message text='{0}' errorDetails='{1}' status='{2}']", formattedMessage, errorDetails, status);
@@ -74,9 +73,9 @@ namespace ConDep.Dsl.Logging
               .Replace(">", "|>")
               .Replace("\n", "|n")
               .Replace("\r", "|r")
-              .Replace("\u0085", "|x")
-              .Replace("\u2028", "|l")
-              .Replace("\u2029", "|p")
+              .Replace("\u0085", "|x") //Next line
+              .Replace("\u2028", "|l") //Line seperator
+              .Replace("\u2029", "|p") //Paragraph seperator
               .Replace("[", "|[")
               .Replace("]", "|]");
             return sb.ToString();
