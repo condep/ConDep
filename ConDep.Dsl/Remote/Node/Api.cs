@@ -7,13 +7,14 @@ using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Remote.Node.Model;
+using ConDep.Dsl.Resources;
 using Newtonsoft.Json.Linq;
 
 namespace ConDep.Dsl.Remote.Node
 {
     public class Api
     {
-        private HttpClient _client;
+        private readonly HttpClient _client;
 
         public Api(string url, string userName, string password)
         {
@@ -24,126 +25,95 @@ namespace ConDep.Dsl.Remote.Node
 
         public SyncResult SyncDir(string srcPath, string dstPath)
         {
-            try
-            {
-                var urlTemplate = DiscoverUrl("http://www.con-dep.net/rels/sync/dir_template");
-                var url = string.Format(urlTemplate, dstPath);
-                return SyncDirByUrl(srcPath, url);
-            }
-            catch (AggregateException aggrEx)
-            {
-                throw aggrEx.Flatten();
-            }
+            var urlTemplate = DiscoverUrl("http://www.con-dep.net/rels/sync/dir_template");
+            var url = string.Format(urlTemplate, dstPath);
+            Logger.Verbose(string.Format("Using this url to sync: {0}", url));
+            return SyncDirByUrl(srcPath, url);
         }
 
         public SyncResult SyncFile(string srcPath, string dstPath)
         {
-            try
-            {
-                var url = DiscoverUrl("http://www.con-dep.net/rels/sync/file_template");
-                var syncResponse = _client.GetAsync(string.Format(url, dstPath)).Result;
+            var url = DiscoverUrl("http://www.con-dep.net/rels/sync/file_template");
+            var syncResponse = _client.GetAsync(string.Format(url, dstPath)).Result;
 
-                if (syncResponse.IsSuccessStatusCode)
-                {
-                    var nodeFile = syncResponse.Content.ReadAsAsync<SyncDirFile>().Result;
-                    return CopyFile(srcPath, _client, nodeFile);
-                }
-                return null;
-            }
-            catch (AggregateException aggrEx)
+            if (syncResponse.IsSuccessStatusCode)
             {
-                throw aggrEx.Flatten();
+                var nodeFile = syncResponse.Content.ReadAsAsync<SyncDirFile>().Result;
+                return CopyFile(srcPath, _client, nodeFile);
             }
+            return null;
         }
 
         public SyncResult SyncWebApp(string webSiteName, string webAppName, string srcPath, string dstPath = null)
         {
-            try
+            var url = DiscoverUrl("http://www.con-dep.net/rels/iis_template");
+            var url2 = url.Replace("{website}", webSiteName).Replace("{webapp}", webAppName);
+
+            var syncResponse = _client.GetAsync(url2).Result;
+
+            if (syncResponse.IsSuccessStatusCode)
             {
-                var url = DiscoverUrl("http://www.con-dep.net/rels/iis_template");
-                var url2 = url.Replace("{website}", webSiteName).Replace("{webapp}", webAppName);
-
-                var syncResponse = _client.GetAsync(url2).Result;
-
-                if (syncResponse.IsSuccessStatusCode)
+                var webAppInfo = syncResponse.Content.ReadAsAsync<WebAppInfo>().Result;
+                if (!string.IsNullOrWhiteSpace(dstPath) && webAppInfo.Exist && webAppInfo.PhysicalPath != dstPath)
                 {
-                    var webAppInfo = syncResponse.Content.ReadAsAsync<WebAppInfo>().Result;
-                    if (!string.IsNullOrWhiteSpace(dstPath) && webAppInfo.Exist && webAppInfo.PhysicalPath != dstPath)
-                    {
-                        throw new ArgumentException(string.Format("Web app {0} already exist and physical path differs from path provided.", webAppName));
-                    }
+                    throw new ArgumentException(string.Format("Web app {0} already exist and physical path differs from path provided.", webAppName));
+                }
 
-                    var path = string.IsNullOrWhiteSpace(dstPath) ? webAppInfo.PhysicalPath : dstPath;
-                    foreach (var link in webAppInfo.Links)
+                var path = string.IsNullOrWhiteSpace(dstPath) ? webAppInfo.PhysicalPath : dstPath;
+                foreach (var link in webAppInfo.Links)
+                {
+                    switch (link.Rel)
                     {
-                        switch (link.Rel)
-                        {
-                            case "http://www.con-dep.net/rels/iis/web_app_template":
-                                CreateWebApp(link, path);
-                                break;
-                            case "http://www.con-dep.net/rels/sync/dir_template":
-                                return SyncDirByUrl(srcPath, string.Format(link.Href, path));
-                            case "http://www.con-dep.net/rels/sync/directory":
-                                return SyncDirByUrl(srcPath, link.Href);
-                        }
+                        case "http://www.con-dep.net/rels/iis/web_app_template":
+                            CreateWebApp(link, path);
+                            break;
+                        case "http://www.con-dep.net/rels/sync/dir_template":
+                            return SyncDirByUrl(srcPath, string.Format(link.Href, path));
+                        case "http://www.con-dep.net/rels/sync/directory":
+                            return SyncDirByUrl(srcPath, link.Href);
                     }
                 }
-                return null;
             }
-            catch (AggregateException aggrEx)
-            {
-                throw aggrEx.Flatten();
-            }
+            return null;
         }
 
         private SyncResult SyncDirByUrl(string srcPath, string url)
         {
-            try
+            Logger.Verbose("Getting directory structure from server...");
+            var syncResponse = _client.GetAsync(url).Result;
+            Logger.Verbose(string.Format("Directory structure returned with response code {0}", syncResponse.StatusCode));
+            if (syncResponse.IsSuccessStatusCode)
             {
-                var syncResponse = _client.GetAsync(url).Result;
-
-                if (syncResponse.IsSuccessStatusCode)
-                {
-                    var nodeDir = syncResponse.Content.ReadAsAsync<SyncDirDirectory>().Result;
-                    return CopyFiles(srcPath, _client, nodeDir);
-                }
-                return null;
+                Logger.Verbose("Getting content from returned message...");
+                var nodeDir = syncResponse.Content.ReadAsAsync<SyncDirDirectory>().Result;
+                Logger.Verbose("Content returned.");
+                return CopyFiles(srcPath, _client, nodeDir);
             }
-            catch (AggregateException aggrEx)
-            {
-                throw aggrEx.Flatten();
-            }
+            throw new ConDepResourceNotFoundException(string.Format("Unable to sync directory using {0}. Returned status code was {1}.", url, syncResponse.StatusCode));
         }
 
         private string DiscoverUrl(string rel)
         {
-            try
+            Logger.Verbose(string.Format("Finding url for [{0}]", rel));
+
+            var availableApiResourcesResponse = _client.GetAsync("api").Result;
+            if (availableApiResourcesResponse == null)
+                throw new Exception("Response was empty");
+
+            Logger.Verbose(string.Format("Status code for response is [{0}]", availableApiResourcesResponse.StatusCode));
+
+            var availableApiResourcesContent = availableApiResourcesResponse.Content.ReadAsAsync<JToken>().Result;
+            if (availableApiResourcesContent == null)
             {
-                Logger.Verbose(string.Format("Finding url for [{0}]", rel));
+                var actualResponse = availableApiResourcesResponse.Content.ReadAsStringAsync().Result;
 
-                var availableApiResourcesResponse = _client.GetAsync("api").Result;
-                if (availableApiResourcesResponse == null)
-                    throw new Exception("Response was empty");
-
-                Logger.Verbose(string.Format("Status code for response is [{0}]", availableApiResourcesResponse.StatusCode));
-
-                var availableApiResourcesContent = availableApiResourcesResponse.Content.ReadAsAsync<JToken>().Result;
-                if (availableApiResourcesContent == null)
-                {
-                    var actualResponse = availableApiResourcesResponse.Content.ReadAsStringAsync().Result;
-
-                    throw new Exception("Content of response was empty. Actual response was: " + actualResponse);
-                }
-
-                var url = (from link in availableApiResourcesContent
-                           where link.Value<string>("rel") == rel
-                           select link.Value<string>("href")).SingleOrDefault();
-                return url;
+                throw new Exception("Content of response was empty. Actual response was: " + actualResponse);
             }
-            catch (AggregateException aggrEx)
-            {
-                throw aggrEx.Flatten();
-            }
+
+            var url = (from link in availableApiResourcesContent
+                        where link.Value<string>("rel") == rel
+                        select link.Value<string>("href")).SingleOrDefault();
+            return url;
         }
 
         private void CreateWebApp(Link link, string path)
@@ -193,6 +163,8 @@ namespace ConDep.Dsl.Remote.Node
             var content = new MultipartSyncDirContent();
 
             var clientDir = new DirectoryInfo(srcRoot);
+
+            Logger.Verbose("Diffing server file structure with client...");
             var diffs = nodeDir.Diff(clientDir);
 
             var files = diffs.MissingAndChangedPaths;
@@ -201,6 +173,7 @@ namespace ConDep.Dsl.Remote.Node
             {
                 if (file.IsDirectory) continue;
 
+                Logger.Verbose(string.Format("File {0} is missing or changed on server. Adding to upload queue.", file.RelativePath));
                 var fileInfo = new FileInfo(file.Path);
                 var fileStream = new FileStream(fileInfo.FullName, FileMode.Open);
                 content.Add(new StreamContent(fileStream), "file", file.RelativePath, fileInfo.Attributes, fileInfo.LastWriteTimeUtc);
@@ -216,19 +189,22 @@ namespace ConDep.Dsl.Remote.Node
 
             var link = nodeDir.Links.GetByRel("http://www.con-dep.net/rels/sync/directory");
 
+            Logger.Verbose(string.Format("Using url {0} to {1} missing or changed files.", link.Href, link.HttpMethod));
             message.Method = link.HttpMethod;
             message.Content = content;
             message.RequestUri = new Uri(link.Href);
 
-            var result = client.SendAsync(message).ContinueWith(task =>
-            {
-                if (task.Result.IsSuccessStatusCode)
+            Logger.Verbose("Copying files now...");
+            var result = client.SendAsync(message)
+                .ContinueWith(task =>
                 {
-                    var syncResult = task.Result.Content.ReadAsAsync<SyncResult>().Result;
-                    return syncResult;
-                }
-                return null;
-            });
+                    if (task.Result.IsSuccessStatusCode)
+                    {
+                        var syncResult = task.Result.Content.ReadAsAsync<SyncResult>().Result;
+                        return syncResult;
+                    }
+                    return null;
+                });
             result.Wait();
             return result.Result;
         }
