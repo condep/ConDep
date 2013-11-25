@@ -19,7 +19,7 @@ namespace ConDep.Console.Encrypt
             _helpWriter = new CmdEncryptHelpWriter(System.Console.Out);
         }
 
-        public void Execute(CmdHelpWriter helpWriter, ILogForConDep logger)
+        public void Execute(CmdHelpWriter helpWriter)
         {
             var options = _parser.Parse();
             _validator.Validate(options);

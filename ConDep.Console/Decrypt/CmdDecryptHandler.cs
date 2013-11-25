@@ -17,7 +17,7 @@ namespace ConDep.Console.Decrypt
             _helpWriter = new CmdDecryptHelpWriter(System.Console.Out);
         }
 
-        public void Execute(CmdHelpWriter helpWriter, ILogForConDep logger)
+        public void Execute(CmdHelpWriter helpWriter)
         {
             var options = _parser.Parse();
             _validator.Validate(options);

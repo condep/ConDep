@@ -5,7 +5,7 @@ namespace ConDep.Console
 {
     public interface IHandleConDepCommands//<TParser, TValidator>
     {
-        void Execute(CmdHelpWriter helpWriter, ILogForConDep logger);
+        void Execute(CmdHelpWriter helpWriter);
         //TParser Parser { get; }
         //TValidator Validator { get; }
         void WriteHelp();

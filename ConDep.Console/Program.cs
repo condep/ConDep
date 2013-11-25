@@ -30,7 +30,7 @@ namespace ConDep.Console
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
-            Logger.Warn("I'm exiting now because you force me!");
+            Logger.Warn("I'm exiting now because you force my hand!");
             if (_handler != null)
             {
                 Logger.Warn("Cancelling handler!");
@@ -52,7 +52,7 @@ namespace ConDep.Console
             try
             {
                 _handler = CmdFactory.Resolve(args);
-                _handler.Execute(helpWriter, Logger.LogInstance);
+                _handler.Execute(helpWriter);
             }
             catch (AggregateException aggEx)
             {
@@ -68,20 +68,10 @@ namespace ConDep.Console
             }
             catch (Exception ex)
             {
-                //if (handler != null)
-                //{
-                //    //handler.WriteHelp();
-                //    System.Console.ForegroundColor = ConsoleColor.Red;
-                //    helpWriter.WriteException(ex);
-                //    System.Console.ResetColor();
-                //}
-                //else
-                //{
                 System.Console.ForegroundColor = ConsoleColor.Red;
                 helpWriter.WriteException(ex);
                 System.Console.ResetColor();
                 System.Console.WriteLine("For help type ConDep Help <command>");
-                //}
                 Environment.Exit(1);
             }
         }

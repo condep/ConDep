@@ -15,7 +15,7 @@ namespace ConDep.Console.Help
             _validator = new CmdHelpValidator();
         }
 
-        public void Execute(CmdHelpWriter helpWriter, ILogForConDep logger)
+        public void Execute(CmdHelpWriter helpWriter)
         {
             _helpWriter = helpWriter;
             var options = _parser.Parse();

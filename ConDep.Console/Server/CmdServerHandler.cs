@@ -13,7 +13,7 @@ namespace ConDep.Console.Server
             _helpWriter = new CmdServerHelpWriter(System.Console.Out);
         }
 
-        public void Execute(CmdHelpWriter helpWriter, ILogForConDep logger)
+        public void Execute(CmdHelpWriter helpWriter)
         {
         }
 
