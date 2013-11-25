@@ -86,7 +86,7 @@ namespace ConDep.WebQ.Client
                     throw new TimeoutException("ConDep timed out waiting in queue.");
                 }
 
-                OnWebQueueTimeoutUpdate(this, new WebQueueEventArgs(string.Format("Will wait in queue for {0} minutes before timing out.", (timeForTimeout - DateTime.Now).ToString("c", CultureInfo.CurrentCulture)), _item));
+                OnWebQueueTimeoutUpdate(this, new WebQueueEventArgs(string.Format("Will wait in queue for {0} minutes before timing out.", (timeForTimeout - DateTime.Now).ToString(@"hh\:mm\:ss", CultureInfo.CurrentCulture)), _item));
             } while (true);
 
             _item = _client.SetAsStarted(_item);
