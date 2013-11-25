@@ -55,8 +55,9 @@ namespace ConDep.Dsl.Logging
             var errorDetails = "";
             if (ex != null)
             {
-                errorDetails = string.Format("Message: {0}\n\nStack Trace:\n{1}", ex.Message, ex.StackTrace);
-                errorDetails = EscapeCharsForTeamCity(errorDetails);
+                var errMessage = EscapeCharsForTeamCity(ex.Message);
+                var stackTrace = EscapeCharsForTeamCity(ex.StackTrace);
+                errorDetails = string.Format("Message: {0}\n\nStack Trace:\n{1}", errMessage, stackTrace);
             }
 
             var tcMessage = string.Format("##teamcity[message text='{0}' errorDetails='{1}' status='{2}']", formattedMessage, errorDetails, status);
