@@ -136,7 +136,7 @@ namespace ConDep.Dsl.SemanticModel
                 var localBuilder = new LocalOperationsBuilder(localSequence, infrastructureSequence, conDepSettings.Config.Servers);
                 Configure.LocalOperations = localBuilder;
 
-                application.Configure(localBuilder, infrastructureBuilder, conDepSettings);
+                application.Configure(localBuilder, conDepSettings);
             }
         }
 
