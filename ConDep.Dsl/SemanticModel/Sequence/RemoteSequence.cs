@@ -15,7 +15,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
         private readonly IEnumerable<ServerConfig> _servers;
         private readonly ILoadBalance _loadBalancer;
         internal readonly List<IExecuteOnServer> _sequence = new List<IExecuteOnServer>();
-        private SequenceFactory _sequenceFactory;
+        private readonly SequenceFactory _sequenceFactory;
 
         public RemoteSequence(IManageInfrastructureSequence infrastructureSequence, IEnumerable<ServerConfig> servers, ILoadBalance loadBalancer)
         {
@@ -39,18 +39,26 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
         public virtual void Execute(IReportStatus status, ConDepSettings settings)
         {
+            LoadBalancerExecutorBase lbExecutor;
+ 
             switch (_loadBalancer.Mode)
             {
                 case LbMode.Sticky:
-                    ExecuteWithSticky(settings, status);
-                    return;
+                    lbExecutor = new StickyLoadBalancerExecutor(_infrastructureSequence, _sequence, _servers, _loadBalancer);
+                    break;
+                    //ExecuteWithSticky(settings, status);
+                    //return;
                 case LbMode.RoundRobin:
-                    ExecuteWithRoundRobin(settings, status);
-                    return;
+                    lbExecutor = new RoundRobinLoadBalancerExecutor(_infrastructureSequence, _sequence, _servers, _loadBalancer);
+                    break;
+                    //ExecuteWithRoundRobin(settings, status);
+                    //return;
                 default:
                     throw new ConDepLoadBalancerException(string.Format("Load Balancer mode [{0}] not supported.",
                                                                     _loadBalancer.Mode));
             }
+
+            lbExecutor.Execute(status, settings);
         }
 
         public virtual string Name { get { return "Remote Operations"; } }
@@ -60,135 +68,6 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             {
                 Logger.Info(item.Name);
             }
-        }
-
-        private void ExecuteWithRoundRobin(ConDepSettings settings, IReportStatus status)
-        {
-            var servers = _servers.ToList();
-            var roundRobinMaxOfflineServers = (int)Math.Ceiling(((double)servers.Count) / 2);
-            ServerConfig manuelTestServer = null;
-
-            if (settings.Options.StopAfterMarkedServer)
-            {
-                manuelTestServer = servers.SingleOrDefault(x => x.StopServer) ?? servers.First();
-                ExecuteOnServer(manuelTestServer, status, settings, _loadBalancer, true, false);
-                return;
-            }
-
-            if (settings.Options.ContinueAfterMarkedServer)
-            {
-                manuelTestServer = servers.SingleOrDefault(x => x.StopServer) ?? servers.First();
-                servers.Remove(manuelTestServer);
-
-                if (roundRobinMaxOfflineServers == 1)
-                {
-                    _loadBalancer.BringOnline(manuelTestServer.Name, manuelTestServer.LoadBalancerFarm, status);
-                }
-            }
-
-            if (servers.Count == 1)
-            {
-                ExecuteOnServer(servers.First(), status, settings, _loadBalancer, true, true);
-                return;
-            }
-
-            for (int execCount = 0; execCount < servers.Count; execCount++)
-            {
-                if (execCount == roundRobinMaxOfflineServers - (manuelTestServer == null ? 0 : 1))
-                {
-                    TurnRoundRobinServersAround(_loadBalancer, servers, roundRobinMaxOfflineServers, manuelTestServer, status);
-                }
-
-                bool bringOnline = !(roundRobinMaxOfflineServers - (manuelTestServer == null ? 0 : 1) > execCount);
-                ExecuteOnServer(servers[execCount], status, settings, _loadBalancer, !bringOnline, bringOnline);
-
-                //if (status.HasErrors)
-                //    return;
-            }
-        }
-
-        private void ExecuteWithSticky(ConDepSettings settings, IReportStatus status)
-        {
-            var servers = _servers.ToList();
-            ServerConfig manuelTestServer;
-
-            if (settings.Options.StopAfterMarkedServer)
-            {
-                manuelTestServer = servers.SingleOrDefault(x => x.StopServer) ?? servers.First();
-                ExecuteOnServer(manuelTestServer, status, settings, _loadBalancer, true, false);
-                return;
-            }
-
-            if (settings.Options.ContinueAfterMarkedServer)
-            {
-                manuelTestServer = servers.SingleOrDefault(x => x.StopServer) ?? servers.First();
-                _loadBalancer.BringOnline(manuelTestServer.Name, manuelTestServer.LoadBalancerFarm, status);
-                servers.Remove(manuelTestServer);
-            }
-
-            foreach (var server in servers)
-            {
-                ExecuteOnServer(server, status, settings, _loadBalancer, true, true);
-
-                //if (status.HasErrors)
-                //    return;
-
-            }
-        }
-
-        private void TurnRoundRobinServersAround(ILoadBalance loadBalancer, IEnumerable<ServerConfig> servers, int roundRobinMaxOfflineServers, ServerConfig testServer, IReportStatus status)
-        {
-            if(testServer != null)
-            {
-                loadBalancer.BringOnline(testServer.Name, testServer.LoadBalancerFarm, status);
-            }
-            var numberOfServers = roundRobinMaxOfflineServers - (testServer == null ? 0 : 1);
-
-            var serversToBringOnline = servers.Take(numberOfServers);
-            foreach (var server in serversToBringOnline)
-            {
-                loadBalancer.BringOnline(server.Name, server.LoadBalancerFarm, status);
-            }
-            var serversToBringOffline = servers.Skip(numberOfServers);
-            foreach (var server in serversToBringOffline)
-            {
-                loadBalancer.BringOffline(server.Name, server.LoadBalancerFarm, LoadBalancerSuspendMethod.Suspend, status);
-            }
-        }
-
-        private void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings, ILoadBalance loadBalancer, bool bringServerOfflineBeforeExecution, bool bringServerOnlineAfterExecution)
-        {
-            var errorDuringLoadBalancing = false;
-
-            Logger.WithLogSection(server.Name, () =>
-            {
-                try
-                {
-                    if (bringServerOfflineBeforeExecution)
-                    {
-                        Logger.Info(string.Format("Taking server [{0}] offline in load balancer.", server.Name));
-                        loadBalancer.BringOffline(server.Name, server.LoadBalancerFarm,
-                                                    LoadBalancerSuspendMethod.Suspend, status);
-                    }
-
-                    ExecuteOnServer(server, status, settings);
-                }
-                catch
-                {
-                    errorDuringLoadBalancing = true;
-                    throw;
-                }
-                finally
-                {
-                    //&& !status.HasErrors
-                    if (bringServerOnlineAfterExecution && !errorDuringLoadBalancing)
-                    {
-                        Logger.Info(string.Format("Taking server [{0}] online in load balancer.", server.Name));
-                        loadBalancer.BringOnline(server.Name, server.LoadBalancerFarm, status);
-                    }
-                }
-            });
-
         }
 
         protected virtual void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings)
