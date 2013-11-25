@@ -118,43 +118,46 @@ namespace ConDep.Dsl.SemanticModel
             {
                 var infrastructureSequence = new InfrastructureSequence();
 
-                if (!conDepSettings.Options.DeployOnly)
+                var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence);
+                Configure.InfrastructureOperations = infrastructureBuilder;
+
+                if (HasInfrastructureDefined(application))
                 {
-                    var infrastructureBuilder = new InfrastructureBuilder(infrastructureSequence);
-                    Configure.InfrastructureOperations = infrastructureBuilder;
-
-                    if (HasInfrastructureDefined(application))
+                    var infrastructureInstance = GetInfrastructureArtifactForApplication(conDepSettings, application);
+                    if (!infrastructureSequence.IsValid(notification))
                     {
-                        var infrastructureInstance = GetInfrastructureArtifactForApplication(conDepSettings, application);
-                        if (!infrastructureSequence.IsValid(notification))
-                        {
-                            notification.Throw();
-                        }
-
-                        infrastructureInstance.Configure(infrastructureBuilder, conDepSettings);
+                        notification.Throw();
                     }
+
+                    infrastructureInstance.Configure(infrastructureBuilder, conDepSettings);
                 }
 
                 var localSequence = sequenceManager.NewLocalSequence(application.GetType().Name);
                 var localBuilder = new LocalOperationsBuilder(localSequence, infrastructureSequence, conDepSettings.Config.Servers);
                 Configure.LocalOperations = localBuilder;
 
-                application.Configure(localBuilder, conDepSettings);
+                application.Configure(localBuilder, infrastructureBuilder, conDepSettings);
             }
         }
 
         private static void ExecutePreOps(ConDepSettings conDepSettings, IReportStatus status)
         {
-            foreach (var server in conDepSettings.Config.Servers)
-            {
-                //Todo: This will not work with ConDep server. After first run, this key will always exist.
-                if (!ConDepGlobals.ServersWithPreOps.ContainsKey(server.Name))
+            Logger.WithLogSection("Executing pre-operations", () =>
                 {
-                    var remotePreOps = new PreRemoteOps();
-                    remotePreOps.Execute(server, status, conDepSettings);
-                    ConDepGlobals.ServersWithPreOps.Add(server.Name, server);
-                }
-            }
+                    foreach (var server in conDepSettings.Config.Servers)
+                    {
+                        Logger.WithLogSection(server.Name, () =>
+                            {
+                                //Todo: This will not work with ConDep server. After first run, this key will always exist.
+                                if (!ConDepGlobals.ServersWithPreOps.ContainsKey(server.Name))
+                                {
+                                    var remotePreOps = new PreRemoteOps();
+                                    remotePreOps.Execute(server, status, conDepSettings);
+                                    ConDepGlobals.ServersWithPreOps.Add(server.Name, server);
+                                }
+                            });
+                    }
+                });
         }
 
         private static void ExecutePostOps(ConDepSettings conDepSettings, IReportStatus status)
