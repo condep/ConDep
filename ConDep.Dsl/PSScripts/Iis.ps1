@@ -144,11 +144,11 @@ function AssociateCertificateWithBinding {
 			$findResult = $certFinder.Find($Binding.FindType, $Binding.FindValue, $false)
 
 			if(!$findResult) { 
-				throw "No Certificate found when looking for [$findType] with value [$findValue] found."
+				throw "No Certificate found when looking for [$($Binding.FindType)] with value [$($Binding.FindValue)] found."
 			}
 
 			if($findResult.Count -gt 1) {
-				throw "Certificates with $findValue returned more than 1 result."
+				throw "Certificates with [$($Binding.FindValue)] returned more than 1 result."
 			}
 
 			$webSiteCert = $findResult | Select-Object -First 1
