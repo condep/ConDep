@@ -57,11 +57,6 @@ namespace ConDep.Console.Deploy
                         }, TaskContinuationOptions.OnlyOnRanToCompletion);
 
                 task.Wait();
-
-                if (task.IsFaulted)
-                {
-                    throw task.Exception;
-                }
             }
             finally
             {
