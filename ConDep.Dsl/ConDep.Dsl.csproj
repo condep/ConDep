@@ -223,7 +223,7 @@
     <Compile Include="Builders\InfrastructureBuilder.cs" />
     <Compile Include="Operations\Application\Deployment\Certificate\CertificateFromFileOperation.cs" />
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IisWebSiteOptions.cs" />
-    <Compile Include="Operations\LoadBalancer\LoadBalancerSuspendMethod.cs" />
+    <Compile Include="Config\LoadBalancerSuspendMethod.cs" />
     <Compile Include="Builders\RemoteDeploymentBuilder.cs" />
     <Compile Include="IOfferRemoteOperations.cs" />
     <Compile Include="Builders\LocalOperationsBuilder.cs" />
