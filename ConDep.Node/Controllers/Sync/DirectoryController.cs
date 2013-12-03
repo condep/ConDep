@@ -65,7 +65,7 @@ namespace ConDep.Node.Controllers.Sync
             var streamProvider = new MultipartSyncDirStreamProvider(path);
 
             return Request.Content.ReadAsMultipartAsync(streamProvider)
-                .ContinueWith(t => { return Request.CreateResponse(HttpStatusCode.Created, t.Result.SyncResult); });
+                .ContinueWith(t => Request.CreateResponse(HttpStatusCode.Created, t.Result.SyncResult));
         }
     }
 }
