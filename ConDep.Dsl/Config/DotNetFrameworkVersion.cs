@@ -1,5 +1,8 @@
+using System;
+
 namespace ConDep.Dsl.Config
 {
+    [Serializable]
     public class DotNetFrameworkVersion
     {
         public bool Installed { get; set; }

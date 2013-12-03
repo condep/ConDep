@@ -14,7 +14,7 @@ namespace ConDep.Server.Api.Controllers
         {
             try
             {
-                using (var session = ConDepServer.DocumentStore.OpenSession())
+                using (var session = RavenDb.DocumentStore.OpenSession())
                 {
                     return session.Advanced.LoadStartingWith<ConDepEnvConfig>(DOC_ID_PREFIX) ?? new ConDepEnvConfig[0];
                 }
@@ -27,13 +27,13 @@ namespace ConDep.Server.Api.Controllers
 
         public ConDepEnvConfig Get(string id)
         {
-            bool docExist = ConDepServer.DocumentStore.DatabaseCommands.Head(string.Format(DOC_ID_TEMPLATE, id)) != null;
+            bool docExist = RavenDb.DocumentStore.DatabaseCommands.Head(string.Format(DOC_ID_TEMPLATE, id)) != null;
             if (!docExist) throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound, string.Format("No environment with id [{0}] found!", id)));
 
             try
             {
 
-                using (var session = ConDepServer.DocumentStore.OpenSession())
+                using (var session = RavenDb.DocumentStore.OpenSession())
                 {
                     return session.Load<ConDepEnvConfig>(string.Format(DOC_ID_TEMPLATE, id));
                 }
@@ -46,7 +46,7 @@ namespace ConDep.Server.Api.Controllers
 
         public HttpResponseMessage Put(ConDepEnvConfig config)
         {
-            using (var session = ConDepServer.DocumentStore.OpenSession())
+            using (var session = RavenDb.DocumentStore.OpenSession())
             {
                 session.Store(config);
                 session.SaveChanges();

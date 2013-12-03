@@ -1,5 +1,8 @@
+using System;
+
 namespace ConDep.Dsl.Config
 {
+    [Serializable]
     public enum DotNetVersion
     {
         v4_5_full,

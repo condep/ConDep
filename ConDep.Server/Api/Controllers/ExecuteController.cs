@@ -1,49 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Http;
-using ConDep.Dsl;
 using ConDep.Dsl.Remote.Node.Model;
+using ConDep.Server.Api.Model;
 
 namespace ConDep.Server.Api.Controllers
 {
     public class ExecuteController : ApiController
     {
-         public List<Link> Post(string module, string artifact, string env)
-         {
-             /**
-                1) Load assembly
-                2) Create instance of artifact
-                3) Execute on new thread
-                4) Return execution id, link to log and link to status
-             **/
-             var log = new ExecutionLog(Guid.NewGuid().ToString());
-             using (var session = ConDepServer.DocumentStore.OpenSession())
-             {
-                 session.Store(log);
-                 session.SaveChanges();
-             }
+        //http://localhost/condepserver/api/execute?module=ConDepSamples&artifact=DotNetWebSslApplication&env=dev
+        public async Task<List<Link>> Post(string module, string artifact, string env)
+        {
+            var execId = Guid.NewGuid().ToString();
 
-             var executor = new ConDepExecutor(ConDepServer.DocumentStore, log.ExecId, module, artifact, env);
-             var thread = new Thread(executor.Execute);
-             thread.Start();
+            using (var session = RavenDb.DocumentStore.OpenSession())
+            {
+                var queueItem = new QueueItem()
+                    {
+                        ExecId = execId,
+                        CreatedUtc = DateTime.UtcNow,
+                        QueueStatus = QueueStatus.InQueue,
+                        ExecutionData = new QueueExecutionData
+                            {
+                                Module = module,
+                                Artifact = artifact,
+                                Environment = env,
+                            }
+                    };
+                session.Store(queueItem);
 
-             return new List<Link>
+                var executionStatus = new ExecutionStatus()
+                    {
+                        ExecId = execId,
+                        Status = "Added to execution queue",
+                        UpdatedUtc = DateTime.UtcNow
+                    };
+                session.Store(executionStatus);
+
+                session.SaveChanges();
+            }
+
+            return new List<Link>
                  {
+                    new Link()
+                        {
+                            Href = string.Format("/condepserver/api/queue"),
+                            Method = "GET",
+                            Rel = "http://www.con-dep.net/rels/server/queue"
+                        },
+                    new Link()
+                         {
+                             Href = string.Format("/condepserver/api/queue/{0}", execId),
+                             Method = "GET",
+                             Rel = "http://www.con-dep.net/rels/server/queue"
+                         },
                      new Link()
                          {
-                             Href = string.Format("/condepserver/api/log/{0}", log.ExecId),
+                             Href = string.Format("/condepserver/api/log/{0}", execId),
                              Method = "GET",
                              Rel = "http://www.con-dep.net/rels/server/log"
                          },
                     new Link()
                          {
-                             Href = string.Format("/condepserver/api/status/{0}", log.ExecId),
+                             Href = string.Format("/condepserver/api/status/{0}", execId),
                              Method = "GET",
                              Rel = "http://www.con-dep.net/rels/server/status"
                          }
                  };
-         }
+        }
     }
 }

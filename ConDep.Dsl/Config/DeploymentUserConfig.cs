@@ -4,6 +4,7 @@ using System.Security;
 
 namespace ConDep.Dsl.Config
 {
+    [Serializable]
     public class DeploymentUserConfig
     {
         public string UserName { get; set; }

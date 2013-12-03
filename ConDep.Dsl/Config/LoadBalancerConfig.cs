@@ -4,6 +4,7 @@ using ConDep.Dsl.Operations.LoadBalancer;
 
 namespace ConDep.Dsl.Config
 {
+    [Serializable]
     public class LoadBalancerConfig
     {
         public string Name { get; set; }
@@ -43,6 +44,7 @@ namespace ConDep.Dsl.Config
         public List<CustomValue> CustomValues { get; set; } 
     }
 
+    [Serializable]
     public class CustomValue
     {
         public string Key { get; set; }

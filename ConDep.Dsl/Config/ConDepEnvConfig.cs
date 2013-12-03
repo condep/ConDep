@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using ConDep.Dsl.Security;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ConDep.Dsl.Config
 {
+    [Serializable]
     public class ConDepEnvConfig
     {
         public string EnvironmentName { get; set; }

@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace ConDep.Dsl.Config
 {
+    [Serializable]
     public class DotNetFrameworks : IEnumerable<DotNetFrameworkVersion>
     {
         private List<DotNetFrameworkVersion> _versions = new List<DotNetFrameworkVersion>(); 

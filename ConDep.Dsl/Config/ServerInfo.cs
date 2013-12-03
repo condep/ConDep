@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace ConDep.Dsl.Config
 {
+    [Serializable]
     public class ServerInfo
     {
         private readonly DotNetFrameworks _dotNetFrameworks = new DotNetFrameworks();

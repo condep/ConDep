@@ -2,6 +2,7 @@ using System;
 
 namespace ConDep.Dsl.Config
 {
+    [Serializable]
     public class DiskInfo
     {
         public string DeviceId { get; set; }

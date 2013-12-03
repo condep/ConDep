@@ -1,5 +1,8 @@
+using System;
+
 namespace ConDep.Dsl.Config
 {
+    [Serializable]
     public class WebSiteBindingConfig
     {
         public string BindingType { get; set; }

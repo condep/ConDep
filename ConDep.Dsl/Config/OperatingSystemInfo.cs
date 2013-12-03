@@ -3,6 +3,7 @@ using System.Globalization;
 
 namespace ConDep.Dsl.Config
 {
+    [Serializable]
     public class OperatingSystemInfo
     {
         public TimeSpan SystemUpTime { get; set; }

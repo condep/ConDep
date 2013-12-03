@@ -1,9 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 using ConDep.Dsl.Operations.LoadBalancer;
 
 namespace ConDep.Dsl.Config
 {
+    [Serializable]
     public class ConDepOptions
     {
         public string Application { get; set; }

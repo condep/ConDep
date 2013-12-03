@@ -1,5 +1,8 @@
-namespace ConDep.Dsl.Operations.LoadBalancer
+using System;
+
+namespace ConDep.Dsl.Config
 {
+    [Serializable]
     public enum LoadBalancerSuspendMethod
     {
         Graceful,

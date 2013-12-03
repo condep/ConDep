@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace ConDep.Dsl.Config
 {
+    [Serializable]
     public class ServerConfig
     {
         private DeploymentUserConfig _deploymentUserRemote;
