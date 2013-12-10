@@ -16,7 +16,7 @@ namespace ConDep.Server
     {
         private readonly EventLog _eventLog;
         private readonly Dictionary<string, QueueItem> _itemsInExecution = new Dictionary<string, QueueItem>();
-        private List<CancellationTokenSource> _tokenSources = new List<CancellationTokenSource>();
+        private readonly Dictionary<string, CancellationTokenSource> _tokenSources = new Dictionary<string, CancellationTokenSource>();
  
         public QueueExecutor(EventLog eventLog)
         {
@@ -25,8 +25,9 @@ namespace ConDep.Server
 
         protected void Execute(string id)
         {
+            bool success = false;
+            QueueItem item = null;
             var tokenSource = new CancellationTokenSource();
-            _tokenSources.Add(tokenSource);
 
             _eventLog.WriteEntry(string.Format("A new execution was added to the queue with id {0}.", id), EventLogEntryType.Information);
             AppDomain appDomain = null;
@@ -40,22 +41,20 @@ namespace ConDep.Server
                 var executor = (ConDepExecutor)appDomain.CreateInstanceAndUnwrap(typeof(ConDepExecutor).Assembly.FullName, typeof(ConDepExecutor).FullName);
 
                 ConDepSettings settings;
-                QueueItem item;
 
                 using (var session = RavenDb.DocumentStore.OpenSession())
                 {
-                    item = session.Load<QueueItem>(id);
+                    item = session.Load<QueueItem>(RavenDb.GetFullId<QueueItem>(id));
                     item.QueueStatus = QueueStatus.InProgress;
 
                     settings = new ConDepSettings
                     {
                         Options = new ConDepOptions
                         {
-                            //Assembly = LoadAssembly(module),
                             Application = item.ExecutionData.Artifact,
                             Environment = item.ExecutionData.Environment
                         },
-                        Config = session.Load<ConDepEnvConfig>("environments/" + item.ExecutionData.Environment)
+                        Config = session.Load<ConDepEnvConfig>(RavenDb.GetFullId<ConDepEnvConfig>(item.ExecutionData.Environment))
                     };
 
                     foreach (var server in settings.Config.Servers.Where(server => !server.DeploymentUser.IsDefined()))
@@ -63,30 +62,38 @@ namespace ConDep.Server
                         server.DeploymentUser = settings.Config.DeploymentUser;
                     }
 
+                    var executionStatus = session.Load<ExecutionStatus>(RavenDb.GetFullId<ExecutionStatus>(id));
+                    executionStatus.Events.Add(new ExecutionEvent { DateUtc = DateTime.UtcNow, Message = "Executing now."});
+
                     session.SaveChanges();
                 }
 
-                executor.Execute(executorCancelable, item.ExecId, settings, item.ExecutionData.Module, item.ExecutionData.Artifact, item.ExecutionData.Environment);
+                _tokenSources.Add(id, tokenSource);
+                success = executor.Execute(executorCancelable, item.ExecId, settings, item.ExecutionData.Module, item.ExecutionData.Artifact, item.ExecutionData.Environment);
             }
             finally
             {
                 if (appDomain != null)
                     AppDomain.Unload(appDomain);
 
-                _tokenSources.Remove(tokenSource);
+                if(item != null) _tokenSources.Remove(item.ExecId);
                 tokenSource.Dispose();
 
-                RemoveFromQueue(id);
+                RemoveFromQueue(id, success);
             }
         }
 
-        private void RemoveFromQueue(string id)
+        private void RemoveFromQueue(string id, bool successfullyExecuted)
         {
             using (var session = RavenDb.DocumentStore.OpenSession())
             {
-                var item = session.Load<QueueItem>(id);
+                var item = session.Load<QueueItem>(RavenDb.GetFullId<QueueItem>(id));
                 item.FinishedUtc = DateTime.UtcNow;
                 item.QueueStatus = QueueStatus.Finished;
+
+                var executionStatus = session.Load<ExecutionStatus>(RavenDb.GetFullId<ExecutionStatus>(id));
+                executionStatus.FinishedUtc = DateTime.UtcNow;
+                executionStatus.FinishedStatus = successfullyExecuted ? FinishedStatus.Success : FinishedStatus.Failed;
 
                 session.SaveChanges();
 
@@ -112,30 +119,63 @@ namespace ConDep.Server
 
         protected void EvaluateForExecution(string environment)
         {
+            IEnumerable<QueueItem> itemsStillInQueue;
             using (var session = RavenDb.DocumentStore.OpenSession())
             {
-                RavenQueryStatistics stats;
-                var itemsStillInQueue = session.Query<QueueItem>()
-                    .Statistics(out stats)
-                    .Where(x => x.ExecutionData.Environment == environment && x.QueueStatus != QueueStatus.Finished)
-                    .OrderBy(order => order.CreatedUtc)
-                    .Customize(x => x.WaitForNonStaleResults());
-
-                var firstItem = itemsStillInQueue.FirstOrDefault();
-                if (firstItem == null) return;
-                if (_itemsInExecution.ContainsKey(firstItem.ExecId)) return;
-                
-                _itemsInExecution.Add(firstItem.ExecId, firstItem);
-                Execute(string.Format("execution_queue/{0}", firstItem.ExecId));
+                var query = new ListItemsStillInQueueQuery(session);
+                itemsStillInQueue = query.Execute(environment);
             }
+
+            var firstItem = itemsStillInQueue.FirstOrDefault();
+            if (firstItem == null) return;
+            if (_itemsInExecution.ContainsKey(firstItem.ExecId)) return;
+
+            _itemsInExecution.Add(firstItem.ExecId, firstItem);
+            Execute(firstItem.ExecId);
         }
 
         public void Cancel()
         {
-            foreach (var tokenSource in _tokenSources)
+            foreach (var tokenSource in _tokenSources.Values)
             {
+                using (tokenSource)
+                {
+                    tokenSource.Cancel();
+                }
+            }
+            _tokenSources.Clear();
+        }
+
+        public void Cancel(string execId)
+        {
+            using (var tokenSource = _tokenSources[execId])
+            {
+                if (tokenSource == null) return;
+                
                 tokenSource.Cancel();
+                _tokenSources.Remove(execId);
             }
         }
+    }
+
+    public class ListItemsStillInQueueQuery
+    {
+        private readonly IDocumentSession _session;
+
+        public ListItemsStillInQueueQuery(IDocumentSession session)
+        {
+            _session = session;
+        }
+
+        public List<QueueItem> Execute(string environment)
+        {
+            RavenQueryStatistics stats;
+            return _session.Query<QueueItem>()
+                .Statistics(out stats)
+                .Where(x => x.ExecutionData.Environment == environment && x.QueueStatus != QueueStatus.Finished)
+                .OrderBy(order => order.CreatedUtc)
+                .Customize(x => x.WaitForNonStaleResultsAsOfLastWrite()).ToList();
+
+        } 
     }
 }

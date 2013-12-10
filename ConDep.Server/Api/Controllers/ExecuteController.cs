@@ -33,8 +33,10 @@ namespace ConDep.Server.Api.Controllers
                 var executionStatus = new ExecutionStatus()
                     {
                         ExecId = execId,
-                        Status = "Added to execution queue",
-                        UpdatedUtc = DateTime.UtcNow
+                        StartedUtc = DateTime.UtcNow,
+                        Environment = env,
+                        Module = module,
+                        RelativeLogLocation = string.Format("{0}/{1}/{2}", "logs", env, execId + ".log")
                     };
                 session.Store(executionStatus);
 
@@ -44,12 +46,6 @@ namespace ConDep.Server.Api.Controllers
             return new List<Link>
                  {
                     new Link()
-                        {
-                            Href = string.Format("/condepserver/api/queue"),
-                            Method = "GET",
-                            Rel = "http://www.con-dep.net/rels/server/queue"
-                        },
-                    new Link()
                          {
                              Href = string.Format("/condepserver/api/queue/{0}", execId),
                              Method = "GET",
@@ -57,9 +53,9 @@ namespace ConDep.Server.Api.Controllers
                          },
                      new Link()
                          {
-                             Href = string.Format("/condepserver/api/log/{0}", execId),
+                             Href = string.Format("/condepserver/api/logs/{0}/{1}", env, execId),
                              Method = "GET",
-                             Rel = "http://www.con-dep.net/rels/server/log"
+                             Rel = "http://www.con-dep.net/rels/server/logs"
                          },
                     new Link()
                          {

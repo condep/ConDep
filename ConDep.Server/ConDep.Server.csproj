@@ -118,9 +118,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Controllers\ArtifactController.cs" />
+    <Compile Include="Api\Controllers\CancelController.cs" />
     <Compile Include="Api\Controllers\ConfigController.cs" />
     <Compile Include="Api\Controllers\ExecuteController.cs" />
-    <Compile Include="Api\Controllers\LogController.cs" />
+    <Compile Include="Api\Controllers\LogsController.cs" />
     <Compile Include="Api\Controllers\QueueController.cs" />
     <Compile Include="Api\Model\ModuleInfo.cs" />
     <Compile Include="Api\Controllers\ModulesController.cs" />

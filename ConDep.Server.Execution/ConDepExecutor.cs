@@ -20,8 +20,9 @@ namespace ConDep.Server.Execution
             _cts = new CancellationTokenSource();
         }
 
-        public void Execute(ITokenSource tokenSource, string execId, ConDepSettings settings, string module, string artifact, string env)
+        public bool Execute(ITokenSource tokenSource, string execId, ConDepSettings settings, string module, string artifact, string env)
         {
+            bool success;
             XmlConfigurator.Configure();
 
             Logger.Initialize(new FileLogger(Path.Combine("logs", env), execId, LogManager.GetLogger("condep-file")));
@@ -32,9 +33,19 @@ namespace ConDep.Server.Execution
 
                 ConDepGlobals.Reset();
                 IReportStatus status = new ConDepStatus();
-
                 ConDepConfigurationExecutor.ExecuteFromAssembly(settings, status, tokenSource.Token).Wait();
                 Logger.Info("ConDep finished execution run successfully");
+                success = true;
+            }
+            catch (AggregateException aggEx)
+            {
+                var flattenEx = aggEx.Flatten();
+                foreach (var ex in flattenEx.InnerExceptions)
+                {
+                    Logger.Error("Unhandled exception during deployment", ex);
+                }
+                Logger.Error("ConDep finished execution run with errors");
+                success = false;
             }
             catch (Exception ex)
             {
@@ -43,8 +54,12 @@ namespace ConDep.Server.Execution
                     Logger.Error("Unhandled exception during deployment", ex);
                     Logger.Error("ConDep finished execution run with errors");
                 }
-                catch {}
+                catch
+                {
+                }
+                success = false;
             }
+            return success;
         }
 
         private Assembly LoadAssembly(string module)
@@ -64,6 +79,7 @@ namespace ConDep.Server.Execution
 
         public void Cancel()
         {
+            Logger.Warn("Cancellation of execution was triggered. Cancelling all operations now...");
             if (_cts != null)
             {
                 _cts.Cancel();

@@ -13,7 +13,7 @@ namespace ConDep.Server
     {
         private HttpSelfHostServer _server;
         private HttpSelfHostConfiguration _config;
-        private readonly QueueExecutor _queueExecutor;
+        private static QueueExecutor _queueExecutor;
 
         public ConDepServer(string url)
         {
@@ -32,7 +32,8 @@ namespace ConDep.Server
             serializerSettings.Formatting = Formatting.Indented;
             serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
-            _config.Routes.MapHttpRoute("Default", "api/{controller}/{id}", new {id = RouteParameter.Optional});
+            _config.Routes.MapHttpRoute("Logs", "api/logs/{env}/{id}", new { controller = "logs", env = RouteParameter.Optional, id = RouteParameter.Optional });
+            _config.Routes.MapHttpRoute("Default", "api/{controller}/{id}", new { id = RouteParameter.Optional });
         }
 
         private void ConfigureService()
@@ -49,6 +50,11 @@ namespace ConDep.Server
             AppDomain.CurrentDomain.UnhandledException += (sender, args) => EventLog.WriteEntry("Error: " + args.ExceptionObject.ToString(), EventLogEntryType.Error);
         }
 
+        public static QueueExecutor QueueExecutor
+        {
+            get { return _queueExecutor; }
+        }
+
         protected override void OnStart(string[] args)
         {
             StartWebServer();
@@ -59,6 +65,7 @@ namespace ConDep.Server
         private void StartRavenDb()
         {
             RavenDb.DocumentStore.Initialize();
+            RavenDb.CreateIndexes();
             RavenDb.DocumentStore.Changes()
                          .ForDocumentsStartingWith("execution_queue")
                          .Subscribe(change =>
