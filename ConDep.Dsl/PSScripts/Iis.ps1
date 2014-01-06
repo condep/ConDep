@@ -8,7 +8,8 @@ function New-ConDepIisWebSite {
 		[Parameter(Mandatory=$true)] [int] $Id,
 		[hashtable[]] $Bindings = @(),
 		[string] $Path = "", 
-		[string] $AppPool = "")
+		[string] $AppPool = "",
+		[string] $LogPath)
 		
 	$defaultPath = "$env:SystemDrive\inetpub\$Name"
 	$physicalPath = if($Path) { $Path } else { $defaultPath }
@@ -22,6 +23,15 @@ function New-ConDepIisWebSite {
 	$webSite = new-item -force IIS:\Sites\$Name -Id $Id -Bindings $bindings -PhysicalPath $physicalPath -ApplicationPool $AppPool
 	
 	$Bindings | Where-Object {$_.protocol -eq "https"} | AssociateCertificateWithBinding
+
+	if($LogPath){
+		if(!(Test-Path -Path $LogPath)) {
+		    New-Item -Path $LogPath -Type Directory
+	    }
+
+		Set-ItemProperty IIS:\Sites\$Name -name logfile -value @{directory=$LogPath}
+	}
+
 	StartWebSite $webSite
 }
 

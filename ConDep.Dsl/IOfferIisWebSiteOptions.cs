@@ -49,5 +49,12 @@ namespace ConDep.Dsl
         /// <param name="options"></param>
         /// <returns></returns>
         IOfferIisWebSiteOptions WebApp(string name, Action<IOfferIisWebAppOptions> options);
+
+        /// <summary>
+        /// Sets the log directory for the Web Site.
+        /// </summary>
+        /// <param name="logDirectory"></param>
+        /// <returns></returns>
+        IOfferIisWebSiteOptions LogDirectory(string logDirectory);
     }
 }
