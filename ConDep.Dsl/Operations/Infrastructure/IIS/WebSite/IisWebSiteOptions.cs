@@ -52,6 +52,12 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
             return this;
         }
 
+        public IOfferIisWebSiteOptions LogDirectory(string logDirectory)
+        {
+            _values.LogDirectory = logDirectory;
+            return this;
+        }
+
         public IOfferIisWebSiteOptions WebApp(string name, Action<IOfferIisWebAppOptions> options)
         {
             _values.AddWebApp(name, options);
@@ -71,6 +77,8 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 
             public string PhysicalPath { get; set; }
             public string AppPool { get; set; }
+            public string LogDirectory { get; set; }
+
             public IEnumerable<Tuple<string, Action<IOfferIisWebAppOptions>>> WebApps { get { return _webApps; } }
 
             public void AddWebApp(string name, Action<IOfferIisWebAppOptions> options = null)

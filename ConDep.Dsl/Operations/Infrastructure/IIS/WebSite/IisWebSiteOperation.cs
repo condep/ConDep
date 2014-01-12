@@ -1,9 +1,6 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
-using ConDep.Dsl.Resources;
 using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
@@ -13,7 +10,6 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
         private readonly string _webSiteName;
         private readonly int _id;
         private readonly IisWebSiteOptions _options;
-        private List<string> _scriptPaths = new List<string>();
 
         public IisWebSiteOperation(string webSiteName, int id)
         {
@@ -53,12 +49,13 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
                 bindings.Add(string.Format("@{{protocol='https';bindingInformation='{0}:{1}:{2}';findType=[{3}]::{4};findValue='{5}'}}", httpsBinding.BindingOptions.Ip, httpsBinding.BindingOptions.Port, httpsBinding.BindingOptions.HostName, type.FullName, httpsBinding.FindType, httpsBinding.FindName));
             }
 
-            server.ExecuteRemote.PowerShell(string.Format(@"New-ConDepIisWebSite '{0}' {1} {2} {3} '{4}';"
+            server.ExecuteRemote.PowerShell(string.Format(@"New-ConDepIisWebSite '{0}' {1} {2} {3} '{4}' '{5}';"
                 , _webSiteName
                 , _id
                 , "@(" + string.Join(",", bindings) + ")"
                 , (string.IsNullOrWhiteSpace(_options.Values.PhysicalPath) ? "$null" : "'" + _options.Values.PhysicalPath + "'")
-                , _options.Values.AppPool));
+                , _options.Values.AppPool
+                , _options.Values.LogDirectory));
 
             foreach(var webApp in _options.Values.WebApps)
             {
