@@ -79,7 +79,19 @@ namespace ConDep.Dsl
         /// </summary>
         IOfferSslInfrastructure SslCertificate { get; }
 
+        /// <summary>
+        /// Provide operations for remote execution.
+        /// </summary>
+        /// <param name="remoteExecution"></param>
+        /// <returns></returns>
         IOfferInfrastructure RemoteExecution(Action<IOfferRemoteExecution> remoteExecution);
+
+        /// <summary>
+        /// Provide operations for remote deployment.
+        /// </summary>
+        /// <param name="remoteDeployment"></param>
+        /// <returns></returns>
+        IOfferInfrastructure RemoteDeployment(Action<IOfferRemoteDeployment> remoteDeployment);
 
         /// <summary>
         /// Server side condition. Any Operation followed by <see cref="OnlyIf"/> will only execute if the condition is met.

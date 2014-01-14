@@ -105,6 +105,12 @@ namespace ConDep.Dsl.Builders
             return this;
         }
 
+        public IOfferInfrastructure RemoteDeployment(Action<IOfferRemoteDeployment> remoteDeployment)
+        {
+            remoteDeployment(new RemoteDeploymentBuilder(_infrastructureSequence));
+            return this;
+        }
+
 
         public IOfferInfrastructure OnlyIf(Predicate<ServerInfo> condition)
         {
