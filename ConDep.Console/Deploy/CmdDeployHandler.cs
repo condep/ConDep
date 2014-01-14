@@ -35,7 +35,10 @@ namespace ConDep.Console.Deploy
                 conDepSettings.Config = ConfigHandler.GetEnvConfig(conDepSettings);
 
                 helpWriter.PrintCopyrightMessage();
-                _webQ = WaitInQueue(conDepSettings);
+                if(QueuingRequested(conDepSettings))
+                {
+                    _webQ = WaitInQueue(conDepSettings);
+                }
 
                 var status = new ConDepStatus();
                 _tokenSource = new CancellationTokenSource();
@@ -71,6 +74,11 @@ namespace ConDep.Console.Deploy
 
         }
 
+        protected static bool QueuingRequested(ConDepSettings conDepSettings)
+        {
+            return !string.IsNullOrWhiteSpace(conDepSettings.Options.WebQAddress);
+        }
+
         public void Cancel()
         {
             if (_tokenSource != null)
@@ -103,19 +111,15 @@ namespace ConDep.Console.Deploy
 
         private static WebQueue WaitInQueue(ConDepSettings conDepSettings)
         {
-            if (!string.IsNullOrWhiteSpace(conDepSettings.Options.WebQAddress))
-            {
-                var webQ = new WebQueue(conDepSettings.Options.WebQAddress, conDepSettings.Options.Environment);
-                webQ.WebQueuePositionUpdate += (sender, eventArgs) => Logger.Info(eventArgs.Message);
-                webQ.WebQueueTimeoutUpdate += (sender, eventArgs) => Logger.Info(eventArgs.Message);
+            var webQ = new WebQueue(conDepSettings.Options.WebQAddress, conDepSettings.Options.Environment);
+            webQ.WebQueuePositionUpdate += (sender, eventArgs) => Logger.Info(eventArgs.Message);
+            webQ.WebQueueTimeoutUpdate += (sender, eventArgs) => Logger.Info(eventArgs.Message);
 
-                Logger.WithLogSection("Waiting in Deployment Queue", () =>
-                    {
-                        webQ.WaitInQueue(TimeSpan.FromMinutes(30));
-                        return webQ;
-                    });
-            }
-            return null;
+            return Logger.WithLogSection("Waiting in Deployment Queue", () =>
+                {
+                    webQ.WaitInQueue(TimeSpan.FromMinutes(30));
+                    return webQ;
+                });
         }
     }
 }
