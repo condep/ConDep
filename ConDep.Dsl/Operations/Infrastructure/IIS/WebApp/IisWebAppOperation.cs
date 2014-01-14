@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebApp
@@ -8,7 +7,6 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebApp
         private readonly string _webAppName;
         private readonly string _webSiteName;
         private readonly IisWebAppOptions.IisWebAppOptionsValues _options;
-        private List<string> _scriptPaths = new List<string>();
 
         public IisWebAppOperation(string webAppName, string webSiteName)
         {
@@ -34,12 +32,12 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebApp
 
         public override string Name
         {
-            get { return "Web Application"; }
+            get { return "Web Application - " + _webSiteName + " - " + _webAppName; }
         }
 
         public override bool IsValid(Notification notification)
         {
-            return !string.IsNullOrWhiteSpace(_webAppName) 
+            return !string.IsNullOrWhiteSpace(_webAppName)
                 && !string.IsNullOrWhiteSpace(_webSiteName);
         }
     }
