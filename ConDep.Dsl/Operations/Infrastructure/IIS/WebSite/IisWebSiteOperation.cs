@@ -27,7 +27,7 @@ namespace ConDep.Dsl.Operations.Infrastructure.IIS.WebSite
 
         public override string Name
         {
-            get { return "IIS Web Site"; }
+            get { return "IIS Web Site - " + _webSiteName; }
         }
 
         public override bool IsValid(Notification notification)
