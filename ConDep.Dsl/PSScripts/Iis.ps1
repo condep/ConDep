@@ -17,6 +17,7 @@ function New-ConDepIisWebSite {
 	if(!$Bindings) {
 		$Bindings = @(@{protocol='http';bindingInformation=':80:'})
 	}
+	
 	RemoveWebSite $Id
 	CreateWebSiteDir $physicalPath
 
@@ -26,13 +27,17 @@ function New-ConDepIisWebSite {
 
 	if($LogPath){
 		if(!(Test-Path -Path $LogPath)) {
-		    New-Item -Path $LogPath -Type Directory
-	    }
+			Write-Debug "Creating log directory $LogPath"
+			New-Item -Path $LogPath -Type Directory
+	    	}
 
+		Write-Debug "Setting log path to $LogPath"
 		Set-ItemProperty IIS:\Sites\$Name -name logfile -value @{directory=$LogPath}
 	}
 
+	Write-Debug "Starting Web Site $webSite..."
 	StartWebSite $webSite
+	Write-Debug "Web Site $webSite started."
 }
 
 function New-ConDepAppPool {
@@ -149,6 +154,8 @@ function AssociateCertificateWithBinding {
 				$bindingIp = "0.0.0.0"
 			}
 
+			Write-Debug "Associating binding $bindingIp:$Port"
+
 			$certsInStore = Get-ChildItem cert:\\LocalMachine\\MY
 			$certFinder = new-object System.Security.Cryptography.X509Certificates.X509Certificate2Collection(,$certsInStore)
 			$findResult = $certFinder.Find($Binding.FindType, $Binding.FindValue, $false)
@@ -166,6 +173,7 @@ function AssociateCertificateWithBinding {
 			
 			#netsh http add sslcert ipport=$bindingIp:$port certhash=d9744c1e37bd575b431fed64e4e52cae9faced46 appid={5C7D7048-6609-4298-A2ED-6EFB68A66FF3} certstorename=MY clientcertnegotiation=enable
 			New-Item -Path "IIS:\\SslBindings\$bindingIp!$port" -Value (Get-Item cert:\LocalMachine\MY\$($webSiteCert.Thumbprint))
+			Write-Debug "SSL binding for SSL cert $($webSiteCert.Thumbprint) created."
 		}
 	}
 }
@@ -207,6 +215,7 @@ function CreateWebSiteDir($dirPath) {
 	}
 	
 	if(!(Test-Path -path $dirPath)) {
+		Write-Debug "Creating directory $dirPath"
 		New-Item -Path $dirPath -Type Directory
 	}
 }
