@@ -154,7 +154,7 @@ function AssociateCertificateWithBinding {
 				$bindingIp = "0.0.0.0"
 			}
 
-			Write-Debug "Associating binding $bindingIp:$Port"
+			Write-Debug "Associating binding $($bindingIp):$($Port)"
 
 			$certsInStore = Get-ChildItem cert:\\LocalMachine\\MY
 			$certFinder = new-object System.Security.Cryptography.X509Certificates.X509Certificate2Collection(,$certsInStore)
