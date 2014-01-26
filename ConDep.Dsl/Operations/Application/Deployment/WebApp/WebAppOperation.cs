@@ -1,3 +1,4 @@
+using System.Threading;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Remote.Node;
@@ -26,7 +27,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WebApp
             return true;
         }
 
-        public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
+        public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings, CancellationToken token)
         {
             _api = new Api(string.Format("http://{0}/ConDepNode/", server.Name), server.DeploymentUser.UserName, server.DeploymentUser.Password, settings.Options.ApiTimout);
             var result = _api.SyncWebApp(_destinationWebSiteName, _webAppName, _sourceDir, _destDir);

@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.SemanticModel;
@@ -19,7 +20,7 @@ namespace ConDep.Dsl.Operations.Application.Local.TransformConfig
 			_transformName = transformName;
 		}
 
-        public override void Execute(IReportStatus status, ConDepSettings settings)
+        public override void Execute(IReportStatus status, ConDepSettings settings, CancellationToken token)
         {
 			var configFilePath = Path.Combine(_configDirPath, _configName);
 			var transformFilePath = Path.Combine(_configDirPath, _transformName);

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations.Application.Local.TransformConfig;
-using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 using NUnit.Framework;
 
@@ -14,10 +14,14 @@ namespace ConDep.Dsl.Tests
     public class ConfigTransformTests
     {
         private ConDepSettings _settingsDefault;
+        private CancellationToken _token;
 
         [SetUp]
         public void Setup()
         {
+            var tokenSource = new CancellationTokenSource();
+            _token = tokenSource.Token;
+
             new Logger().AutoResolveLogger();
             FilesToDeleteAfterTest = new List<string>();
             _settingsDefault = new ConDepSettings
@@ -63,7 +67,7 @@ namespace ConDep.Dsl.Tests
 
             var trans = new TransformConfigOperation(Path.GetDirectoryName(source), Path.GetFileName(source), Path.GetFileName(transform));
             var webDepStatus = new ConDepStatus();
-            trans.Execute(webDepStatus, _settingsDefault);
+            trans.Execute(webDepStatus, _settingsDefault, _token);
 
             //Assert.That(webDepStatus.HasErrors, Is.False);
 

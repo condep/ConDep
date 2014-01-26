@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Dsl.Tests", "ConDep.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Server.Execution", "ConDep.Server.Execution\ConDep.Server.Execution.csproj", "{C2A653D9-9060-4D8B-8B76-1FB2BB863A2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConDep.Server.Tests", "ConDep.Server.Tests\ConDep.Server.Tests.csproj", "{ABCCE33A-25D9-441E-A98F-75C23BF54D82}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -243,6 +245,18 @@ Global
 		{C2A653D9-9060-4D8B-8B76-1FB2BB863A2F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C2A653D9-9060-4D8B-8B76-1FB2BB863A2F}.Release|x64.ActiveCfg = Release|Any CPU
 		{C2A653D9-9060-4D8B-8B76-1FB2BB863A2F}.Release|x86.ActiveCfg = Release|Any CPU
+		{ABCCE33A-25D9-441E-A98F-75C23BF54D82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABCCE33A-25D9-441E-A98F-75C23BF54D82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABCCE33A-25D9-441E-A98F-75C23BF54D82}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{ABCCE33A-25D9-441E-A98F-75C23BF54D82}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{ABCCE33A-25D9-441E-A98F-75C23BF54D82}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ABCCE33A-25D9-441E-A98F-75C23BF54D82}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ABCCE33A-25D9-441E-A98F-75C23BF54D82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABCCE33A-25D9-441E-A98F-75C23BF54D82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABCCE33A-25D9-441E-A98F-75C23BF54D82}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{ABCCE33A-25D9-441E-A98F-75C23BF54D82}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{ABCCE33A-25D9-441E-A98F-75C23BF54D82}.Release|x64.ActiveCfg = Release|Any CPU
+		{ABCCE33A-25D9-441E-A98F-75C23BF54D82}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

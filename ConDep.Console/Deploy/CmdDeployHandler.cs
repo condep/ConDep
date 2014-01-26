@@ -45,18 +45,22 @@ namespace ConDep.Console.Deploy
                 _tokenSource = new CancellationTokenSource();
                 var token = _tokenSource.Token;
 
-                var task = ConDepConfigurationExecutor.ExecuteFromAssembly(conDepSettings, status, token);
-                task.Wait(token);
+                var task = ConDepConfigurationExecutor.ExecuteFromAssemblyAsync(conDepSettings, token);
 
-                if (task.Result.Success)
-                {
-                    status.EndTime = DateTime.Now;
-                    status.PrintSummary();
-                }
-                else
-                {
-                    failed = true;
-                }
+                task.ContinueWith(result =>
+                        {
+                            if (result.Result.Success)
+                            {
+                                status.EndTime = DateTime.Now;
+                                status.PrintSummary();
+                            }
+                            else
+                            {
+                                Environment.Exit(1);
+                            }
+                        }, TaskContinuationOptions.OnlyOnRanToCompletion);
+
+                task.Wait();
             }
             finally
             {

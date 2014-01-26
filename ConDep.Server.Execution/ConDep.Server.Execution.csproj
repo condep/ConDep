@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArtifactResolver.cs" />
     <Compile Include="ConDepExecutor.cs" />
     <Compile Include="FileLogger.cs" />
     <Compile Include="ITokenSource.cs" />

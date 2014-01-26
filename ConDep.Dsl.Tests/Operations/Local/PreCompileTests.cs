@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Operations.Application.Local.PreCompile;
 using ConDep.Dsl.Operations.LoadBalancer;
@@ -16,10 +17,13 @@ namespace ConDep.Dsl.Tests.Operations.Local
         private string _validWebAppPath;
         private string _validOutputPath;
         private ConDepSettings _settingsDefault;
+        private CancellationToken _token;
 
         [SetUp]
         public void Setup()
         {
+            var tokenSource = new CancellationTokenSource();
+            _token = tokenSource.Token;
             _buildManager = new Mock<IWrapClientBuildManager>();
             _buildManager.Setup(x => x.PrecompileApplication(It.IsAny<PreCompileCallback>()));
             _validWebAppPath = Path.GetTempPath();
@@ -39,7 +43,7 @@ namespace ConDep.Dsl.Tests.Operations.Local
             var operation = new PreCompileOperation("MyWebApp", @"C:\temp\MyWebApp", @"C:\temp\MyWebAppCompiled", _buildManager.Object);
             
             var status = new StatusReporter();
-            operation.Execute(status, _settingsDefault);
+            operation.Execute(status, _settingsDefault, _token);
 
             Assert.That(status.HasErrors, Is.False);
             _buildManager.Verify(manager => manager.PrecompileApplication(It.IsAny<PreCompileCallback>()));

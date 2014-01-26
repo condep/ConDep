@@ -20,50 +20,49 @@ namespace ConDep.Dsl.SemanticModel
         private bool _cancelled = false;
         private bool _serverNodeInstalled = false;
 
-        public static Task<ConDepExecutionResult> ExecuteFromAssembly(ConDepSettings conDepSettings, IReportStatus status, CancellationToken token)
+        public static ConDepExecutionResult ExecuteFromAssembly(ConDepSettings conDepSettings, CancellationToken token)
         {
-            token.ThrowIfCancellationRequested();
-
-            return Task.Factory.StartNew(() =>
+            try
+            {
+                if (conDepSettings.Options.Assembly == null)
                 {
-                    try
-                    {
-                        if (conDepSettings.Options.Assembly == null)
-                        {
-                            throw new ArgumentException("assembly");
-                        }
+                    throw new ArgumentException("assembly");
+                }
 
-                        var clientValidator = new ClientValidator();
+                var clientValidator = new ClientValidator();
 
-                        var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
-                        var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers,
-                                                                        serverInfoHarvester);
+                var serverInfoHarvester = new ServerInfoHarvester(conDepSettings);
+                var serverValidator = new RemoteServerValidator(conDepSettings.Config.Servers,
+                                                                serverInfoHarvester);
 
-                        var lbLookup = new LoadBalancerLookup(conDepSettings.Config.LoadBalancer);
-                        var sequenceManager = new ExecutionSequenceManager(lbLookup.GetLoadBalancer());
+                var lbLookup = new LoadBalancerLookup(conDepSettings.Config.LoadBalancer);
+                var sequenceManager = new ExecutionSequenceManager(lbLookup.GetLoadBalancer());
 
-                        var notification = new Notification();
-                        PopulateExecutionSequence(conDepSettings, notification, sequenceManager);
+                var notification = new Notification();
+                PopulateExecutionSequence(conDepSettings, notification, sequenceManager);
 
-                        if (conDepSettings.Options.DryRun)
-                        {
-                            sequenceManager.DryRun();
-                            return new ConDepExecutionResult(true);
-                        }
+                if (conDepSettings.Options.DryRun)
+                {
+                    sequenceManager.DryRun();
+                    return new ConDepExecutionResult(true);
+                }
 
-                        var success = new ConDepConfigurationExecutor().Execute(conDepSettings, clientValidator,
-                                                                                serverValidator, sequenceManager, token);
-                        return new ConDepExecutionResult(success);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error("An error sneaked by.", ex);
-                        throw;
-                    }
-                }, token);
+                return new ConDepConfigurationExecutor().Execute(conDepSettings, clientValidator,
+                                                                        serverValidator, sequenceManager, token);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("An error sneaked by.", ex);
+                throw;
+            }
         }
 
-        public bool Execute(ConDepSettings settings, IValidateClient clientValidator, IValidateServer serverValidator, ExecutionSequenceManager execManager, CancellationToken token)
+        public static Task<ConDepExecutionResult> ExecuteFromAssemblyAsync(ConDepSettings conDepSettings, CancellationToken token)
+        {
+            return Task.Factory.StartNew(() => ExecuteFromAssembly(conDepSettings, token), token);
+        }
+
+        public ConDepExecutionResult Execute(ConDepSettings settings, IValidateClient clientValidator, IValidateServer serverValidator, ExecutionSequenceManager execManager, CancellationToken token)
         {
             if (settings == null) { throw new ArgumentException("settings"); }
             if (settings.Config == null) { throw new ArgumentException("settings.Config"); }
@@ -74,10 +73,12 @@ namespace ConDep.Dsl.SemanticModel
 
             var status = new StatusReporter();
 
-            Validate(clientValidator, serverValidator);
+            try
+            {
+                Validate(clientValidator, serverValidator);
 
-            ExecutePreOps(settings, status);
-            _serverNodeInstalled = true;
+                ExecutePreOps(settings, status, token);
+                _serverNodeInstalled = true;
 
             token.Register(() => Cancel(settings, status));
             
@@ -87,41 +88,59 @@ namespace ConDep.Dsl.SemanticModel
                 notification.Throw();
             }
 
-            try
+                execManager.Execute(status, settings, token);
+                return new ConDepExecutionResult(true);
+            }
+            catch (OperationCanceledException)
             {
-                execManager.Execute(status, settings);
-                return true;
+                Cancel(settings, status, token);
+                return new ConDepExecutionResult(false) { Cancelled = true };
             }
             catch (AggregateException aggEx)
             {
-                Logger.Error("ConDep execution failed with the following error(s):");
-                foreach (var ex in aggEx.InnerExceptions)
-                {
-                    Logger.Error("ConDep execution failed.", ex);
-                }
-                return false;
+                var result = new ConDepExecutionResult(false);
+                var flattenEx = aggEx.Flatten();
+                    {
+                foreach (var ex in flattenEx.InnerExceptions)
+                        {
+                            Cancel(settings, status, token);
+                            result.Cancelled = true;
+                            Logger.Warn("ConDep execution cancelled.");
+                        }
+                        else
+                        {
+                            result.AddException(inner);
+                            Logger.Error("ConDep execution failed.", inner);
+                        }
+                        
+                        return true;
+                    });
+                return result;
             }
             catch (Exception ex)
             {
+                var result = new ConDepExecutionResult(false);
+                result.AddException(ex);
                 Logger.Error("ConDep execution failed.", ex);
-                return false;
+                return result;
             }
             finally
             {
-                if(!_cancelled) ExecutePostOps(settings, status);
+                if(!_cancelled) ExecutePostOps(settings, status, token);
                 //new PostOpsSequence().Execute(status, settings);
             }
         }
 
-        private void Cancel(ConDepSettings settings, StatusReporter status)
+        private void Cancel(ConDepSettings settings, StatusReporter status, CancellationToken token)
         {
             Logger.WithLogSection("Cancellation", () =>
                 {
                     try
                     {
+                        var tokenSource = new CancellationTokenSource();
                         Logger.Warn("Cancelling execution gracefully!");
                         _cancelled = true;
-                        if (_serverNodeInstalled) ExecutePostOps(settings, status);
+                        if (_serverNodeInstalled) ExecutePostOps(settings, status, tokenSource.Token);
                     }
                     catch (AggregateException aggEx)
                     {
@@ -182,7 +201,7 @@ namespace ConDep.Dsl.SemanticModel
             }
         }
 
-        private static void ExecutePreOps(ConDepSettings conDepSettings, IReportStatus status)
+        private static void ExecutePreOps(ConDepSettings conDepSettings, IReportStatus status, CancellationToken token)
         {
             Logger.WithLogSection("Executing pre-operations", () =>
                 {
@@ -194,7 +213,7 @@ namespace ConDep.Dsl.SemanticModel
                                 if (!ConDepGlobals.ServersWithPreOps.ContainsKey(server.Name))
                                 {
                                     var remotePreOps = new PreRemoteOps();
-                                    remotePreOps.Execute(server, status, conDepSettings);
+                                    remotePreOps.Execute(server, status, conDepSettings, token);
                                     ConDepGlobals.ServersWithPreOps.Add(server.Name, server);
                                 }
                             });
@@ -202,7 +221,7 @@ namespace ConDep.Dsl.SemanticModel
                 });
         }
 
-        private static void ExecutePostOps(ConDepSettings conDepSettings, IReportStatus status)
+        private static void ExecutePostOps(ConDepSettings conDepSettings, IReportStatus status, CancellationToken token)
         {
             foreach (var server in conDepSettings.Config.Servers)
             {
@@ -210,7 +229,7 @@ namespace ConDep.Dsl.SemanticModel
                 if (ConDepGlobals.ServersWithPreOps.ContainsKey(server.Name))
                 {
                     var remotePostOps = new PostRemoteOps();
-                    remotePostOps.Execute(server, status, conDepSettings);
+                    remotePostOps.Execute(server, status, conDepSettings, token);
                     ConDepGlobals.ServersWithPreOps.Remove(server.Name);
                 }
             }

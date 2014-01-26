@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 
@@ -17,9 +18,9 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             _expectedConditionResult = expectedConditionResult;
         }
 
-        protected override void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings)
+        protected override void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings, CancellationToken token)
         {
-            _infrastructureSequence.Execute(server, status, settings);
+            _infrastructureSequence.Execute(server, status, settings, token);
 
             Logger.WithLogSection("Deployment", () =>
                 {
@@ -29,9 +30,9 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                         {
                             IExecuteOnServer elementToExecute = element;
                             if (element is CompositeSequence)
-                                elementToExecute.Execute(server, status, settings);
+                                elementToExecute.Execute(server, status, settings, token);
                             else
-                                Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings));
+                                Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings, token));
                         }
                     }
                     else

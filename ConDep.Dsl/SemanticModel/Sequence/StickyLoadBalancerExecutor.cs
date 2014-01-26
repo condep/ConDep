@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using ConDep.Dsl.Config;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
@@ -16,7 +17,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             _loadBalancer = loadBalancer;
         }
 
-        public override void Execute(IReportStatus status, ConDepSettings settings)
+        public override void Execute(IReportStatus status, ConDepSettings settings, CancellationToken token)
         {
             var servers = _servers.ToList();
             ServerConfig manuelTestServer;
@@ -24,7 +25,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             if (settings.Options.StopAfterMarkedServer)
             {
                 manuelTestServer = servers.SingleOrDefault(x => x.StopServer) ?? servers.First();
-                ExecuteOnServer(manuelTestServer, status, settings, _loadBalancer, true, false);
+                ExecuteOnServer(manuelTestServer, status, settings, _loadBalancer, true, false, token);
                 return;
             }
 
@@ -37,7 +38,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
             foreach (var server in servers)
             {
-                ExecuteOnServer(server, status, settings, _loadBalancer, true, true);
+                ExecuteOnServer(server, status, settings, _loadBalancer, true, true, token);
             }
         }
     }

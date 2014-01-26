@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations;
@@ -52,17 +53,19 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return isRemoteOpValid && isCompositeSeqValid;
         }
 
-        public virtual void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
+        public virtual void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings, CancellationToken token)
         {
             Logger.WithLogSection("Infrastructure", () =>
                 {
                     foreach (var element in _sequence)
                     {
+                        token.ThrowIfCancellationRequested();
+
                         IExecuteOnServer elementToExecute = element;
                         if(element is CompositeSequence || element is InfrastructureSequence)
-                            elementToExecute.Execute(server, status, settings);
+                            elementToExecute.Execute(server, status, settings, token);
                         else
-                            Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings));
+                            Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings, token));
                     }
                 });
         }

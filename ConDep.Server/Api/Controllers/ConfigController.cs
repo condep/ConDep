@@ -5,7 +5,7 @@ using ConDep.Dsl.Config;
 
 namespace ConDep.Server.Api.Controllers
 {
-    public class ConfigController : ApiController
+    public class ConfigController : RavenDbController
     {
         private const string DOC_ID_PREFIX = "environments";
         private const string DOC_ID_TEMPLATE = DOC_ID_PREFIX + "/{0}";
@@ -14,10 +14,7 @@ namespace ConDep.Server.Api.Controllers
         {
             try
             {
-                using (var session = RavenDb.DocumentStore.OpenSession())
-                {
-                    return session.Advanced.LoadStartingWith<ConDepEnvConfig>(DOC_ID_PREFIX) ?? new ConDepEnvConfig[0];
-                }
+                return Session.Advanced.LoadStartingWith<ConDepEnvConfig>(DOC_ID_PREFIX) ?? new ConDepEnvConfig[0];
             }
             catch
             {
@@ -27,16 +24,11 @@ namespace ConDep.Server.Api.Controllers
 
         public ConDepEnvConfig Get(string id)
         {
-            bool docExist = RavenDb.DocumentStore.DatabaseCommands.Head(string.Format(DOC_ID_TEMPLATE, id)) != null;
-            if (!docExist) throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound, string.Format("No environment with id [{0}] found!", id)));
-
             try
             {
-
-                using (var session = RavenDb.DocumentStore.OpenSession())
-                {
-                    return session.Load<ConDepEnvConfig>(string.Format(DOC_ID_TEMPLATE, id));
-                }
+                var config = Session.Load<ConDepEnvConfig>(string.Format(DOC_ID_TEMPLATE, id));
+                if (config == null) throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound, string.Format("No environment with id [{0}] found!", id)));
+                return config;
             }
             catch
             {
@@ -46,11 +38,7 @@ namespace ConDep.Server.Api.Controllers
 
         public HttpResponseMessage Put(ConDepEnvConfig config)
         {
-            using (var session = RavenDb.DocumentStore.OpenSession())
-            {
-                session.Store(config);
-                session.SaveChanges();
-            }
+            Session.Store(config);
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
 

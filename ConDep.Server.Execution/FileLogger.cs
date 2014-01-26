@@ -11,28 +11,20 @@ namespace ConDep.Server.Execution
 {
     public class FileLogger : Log4NetLoggerBase
     {
-        private readonly string _logFolder;
-        private readonly string _logId;
         private int _indentLevel;
         private const string LEVEL_INDICATOR = " ";
 
-        public FileLogger(string logFolder, string logId, ILog log4netLog)
+        public FileLogger(string relativeLogPath, ILog log4netLog)
             : base(log4netLog)
         {
-            _logFolder = logFolder;
-            _logId = logId;
-
             var hier = log4netLog.Logger.Repository as Hierarchy;
             var fileAppender = (FileAppender)hier.GetAppenders().FirstOrDefault(appender => appender.Name.Equals("TimeFileAppender", StringComparison.InvariantCultureIgnoreCase));
 
             if (fileAppender == null) return;
 
-            fileAppender.File = Path.Combine(_logFolder, _logId + ".log");
+            fileAppender.File = relativeLogPath;
             fileAppender.ActivateOptions();
         }
-
-        public FileLogger(string logId, ILog log4netLog)
-            : this("logs", logId, log4netLog){}
 
         public override void LogSectionStart(string name)
         {

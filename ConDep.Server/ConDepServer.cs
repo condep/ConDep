@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
 using System.ServiceProcess;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
 using System.Web.Http;
 using System.Web.Http.SelfHost;
+using ConDep.Server.Infrastructure;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Raven.Abstractions.Data;
+using StructureMap;
 
 namespace ConDep.Server
 {
@@ -13,26 +18,25 @@ namespace ConDep.Server
     {
         private HttpSelfHostServer _server;
         private HttpSelfHostConfiguration _config;
-        private static QueueExecutor _queueExecutor;
 
         public ConDepServer(string url)
         {
             InitializeComponent();
+
             ConfigureService();
             ConfigureWebApi(url);
-
-            _queueExecutor = new QueueExecutor(EventLog);
         }
 
         private void ConfigureWebApi(string url)
         {
             var uri = new Uri(url);
-            _config = new HttpSelfHostConfiguration(uri);
+            _config = new HttpSelfHostConfiguration(uri) { DependencyResolver = new StructureMapDependencyResolver(ObjectFactory.Container) };
+
             var serializerSettings = _config.Formatters.JsonFormatter.SerializerSettings;
             serializerSettings.Formatting = Formatting.Indented;
             serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
-            _config.Routes.MapHttpRoute("Logs", "api/logs/{env}/{id}", new { controller = "logs", env = RouteParameter.Optional, id = RouteParameter.Optional });
+            _config.Routes.MapHttpRoute("Logs", "api/logs/{env}", new { controller = "logs", env = RouteParameter.Optional });
             _config.Routes.MapHttpRoute("Default", "api/{controller}/{id}", new { id = RouteParameter.Optional });
         }
 
@@ -47,19 +51,42 @@ namespace ConDep.Server
             EventLog.Source = "ConDepServer";
             EventLog.Log = "Application";
 
-            AppDomain.CurrentDomain.UnhandledException += (sender, args) => EventLog.WriteEntry("Error: " + args.ExceptionObject.ToString(), EventLogEntryType.Error);
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+                {
+                    EventLog.WriteEntry("Error: " + args.ExceptionObject.ToString(), EventLogEntryType.Error);
+                };
         }
 
-        public static QueueExecutor QueueExecutor
+#if(DEBUG)
+        public void Start(string[] args)
         {
-            get { return _queueExecutor; }
-        }
+            OnStart(args);
 
+            while (true)
+            {
+                Thread.Sleep(1);
+            }
+        }
+#endif
         protected override void OnStart(string[] args)
         {
-            StartWebServer();
+            IoCBootStrapper.Bootstrap();
+            EventDispatcher.AutoRegister();
+
             StartRavenDb();
-            _queueExecutor.EvaluateForExecution();
+            StartWebServer();
+        }
+
+        private void HandleAggregateException(Task task)
+        {
+            if (task.Exception != null)
+            {
+                    task.Exception.Handle(inner =>
+                        {
+                            EventLog.WriteEntry("Error: " + inner.ToString(), EventLogEntryType.Error);
+                            return true;
+                        });
+            } 
         }
 
         private void StartRavenDb()
@@ -72,7 +99,7 @@ namespace ConDep.Server
                              {
                                  if (change.Type == DocumentChangeTypes.Put)
                                  {
-                                     _queueExecutor.EvaluateForExecution();
+                                     //_queueExecutor.EvaluateForExecution().ContinueWith(HandleAggregateException, TaskContinuationOptions.OnlyOnFaulted);
                                  }
                              });
         }
@@ -86,7 +113,7 @@ namespace ConDep.Server
 
         protected override void OnStop()
         {
-            _queueExecutor.Cancel();
+            //_queueExecutor.Cancel();
 
             RavenDb.DocumentStore.Dispose();
             //EventLog.WriteEntry("ConDep Data Store stopped", EventLogEntryType.Information);

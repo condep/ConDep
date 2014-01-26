@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -6,6 +7,7 @@ using System.Reflection;
 using System.Web.Http;
 using ConDep.Dsl;
 using ConDep.Dsl.Remote.Node.Model;
+using ConDep.Server.Execution;
 
 namespace ConDep.Server.Api.Controllers
 {
@@ -17,23 +19,29 @@ namespace ConDep.Server.Api.Controllers
             var dirInfo = new DirectoryInfo(Path.Combine(executingPath, "modules"));
 
             var returnValues = new List<Link>();
-            foreach (var dll in dirInfo.GetFiles())
+
+            var appDomain = AppDomain.CreateDomain("ArtifactLookup", null, AppDomain.CurrentDomain.SetupInformation);
+            var resolver = (ArtifactResolver)appDomain.CreateInstanceAndUnwrap(typeof(ArtifactResolver).Assembly.FullName, typeof(ArtifactResolver).FullName);
+
+            try
             {
-                var assembly = Assembly.LoadFile(dll.FullName);
-                var artifacts = assembly.GetTypes().Where(t => typeof(ApplicationArtifact).IsAssignableFrom(t));
-                foreach (var artifact in artifacts)
+                foreach (var dll in dirInfo.GetFiles("*.dll"))
                 {
-                    var link = new Link
-                    {
-                        Href = string.Format("/condepserver/api/execute?module={0}&artifact={1}&env={{0}}", assembly.GetName().Name, artifact.FullName),
-                        Method = "POST",
-                        Rel = ""
-                    };
-                    returnValues.Add(link);
+                    var apps = resolver.Resolve(dll.FullName);
+
+                    returnValues.AddRange(apps.Select(artifact => new Link
+                        {
+                            Href = string.Format("/condepserver/api/execute?module={0}&artifact={1}&env={{0}}", 
+                            Path.GetFileNameWithoutExtension(dll.Name), artifact), 
+                            Method = "POST", Rel = ""
+                        }));
                 }
+                return returnValues;
             }
-            return returnValues;
+            finally
+            {
+                AppDomain.Unload(appDomain);
+            }
         }
-        
     }
 }

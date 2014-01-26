@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using System.Linq;
@@ -37,7 +38,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             }
         }
 
-        public virtual void Execute(IReportStatus status, ConDepSettings settings)
+        public virtual void Execute(IReportStatus status, ConDepSettings settings, CancellationToken token)
         {
             LoadBalancerExecutorBase lbExecutor;
  
@@ -58,7 +59,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                                                                     _loadBalancer.Mode));
             }
 
-            lbExecutor.Execute(status, settings);
+            lbExecutor.Execute(status, settings, token);
         }
 
         public virtual string Name { get { return "Remote Operations"; } }
@@ -70,9 +71,9 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             }
         }
 
-        protected virtual void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings)
+        protected virtual void ExecuteOnServer(ServerConfig server, IReportStatus status, ConDepSettings settings, CancellationToken token)
         {
-            _infrastructureSequence.Execute(server, status, settings);
+            _infrastructureSequence.Execute(server, status, settings, token);
 
             Logger.WithLogSection("Deployment", () =>
                 {
@@ -80,9 +81,9 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                     {
                         IExecuteOnServer elementToExecute = element;
                         if (element is CompositeSequence)
-                            elementToExecute.Execute(server, status, settings);
+                            elementToExecute.Execute(server, status, settings, token);
                         else
-                            Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings));
+                            Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings, token));
                     }
                 });
         }

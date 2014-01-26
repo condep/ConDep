@@ -24,12 +24,14 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return sequence;
         }
 
-        public void Execute(IReportStatus status, ConDepSettings settings)
+        public void Execute(IReportStatus status, ConDepSettings settings, CancellationToken token)
         {
             foreach (var localSequence in _sequence)
             {
+                token.ThrowIfCancellationRequested();
+
                 LocalSequence sequence = localSequence;
-                Logger.WithLogSection(localSequence.Name, () => sequence.Execute(status, settings));
+                Logger.WithLogSection(localSequence.Name, () => sequence.Execute(status, settings, token));
             }
         }
 

@@ -12,7 +12,13 @@ namespace ConDep.Server
                 url = args[0];
             }
 
+#if(DEBUG)
+            var service = new ConDepServer(url);
+            service.Start(args);
+#else
             ServiceBase.Run(new ServiceBase[] { new ConDepServer(url) });
+#endif
+
         }
     }
 }

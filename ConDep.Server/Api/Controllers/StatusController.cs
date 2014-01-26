@@ -1,16 +1,13 @@
 ﻿using System.Web.Http;
-using ConDep.Server.Api.Model;
+using ConDep.Server.Model.DeploymentAggregate;
 
 namespace ConDep.Server.Api.Controllers
 {
-    public class StatusController : ApiController
+    public class StatusController : RavenDbController
     {
-        public ExecutionStatus Get(string id)
+        public Deployment Get(string id)
         {
-            using (var session = RavenDb.DocumentStore.OpenSession())
-            {
-                return session.Load<ExecutionStatus>("execution_status/" + id);
-            }
+            return Session.Load<Deployment>(RavenDb.GetFullId<Deployment>(id));
         }    
     }
 }

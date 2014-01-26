@@ -21,7 +21,7 @@ namespace ConDep.Dsl.Operations.Application.Local.WebRequest
             return !string.IsNullOrWhiteSpace(_url) && Uri.IsWellFormedUriString(_url, UriKind.Absolute);
         }
 
-        public override void Execute(IReportStatus status, ConDepSettings settings)
+        public override void Execute(IReportStatus status, ConDepSettings settings, CancellationToken token)
         {
             Thread.Sleep(1000);
             var webRequest = System.Net.WebRequest.Create(_url);

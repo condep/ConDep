@@ -1,81 +1,78 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using ConDep.Dsl.Config;
 using ConDep.Dsl.Remote.Node.Model;
-using ConDep.Server.Api.Model;
+using ConDep.Server.Model.DeploymentAggregate;
+using Raven.Client;
 
 namespace ConDep.Server.Api.Controllers
 {
     public class LogsController : ApiController
     {
-        public HttpResponseMessage Get()
+        public IEnumerable<Link> Get()
         {
-            return GetLinksToEnvironments();
+            return GetEnvironmentLinks();
         }
 
-        public HttpResponseMessage Get(string env, string id = null)
+        public dynamic Get(string env, int pageSize = 10, int page = 0)
         {
-            if (string.IsNullOrWhiteSpace(id)) return GetLinksToLogs(env);
-
-            return GetLogById(id);
+            return GetLogLinksForEnvironment(env, pageSize, page);
         }
 
-        private HttpResponseMessage GetLinksToLogs(string env)
+        private dynamic GetLogLinksForEnvironment(string env, int pageSize, int page)
         {
             var logs = new List<Link>();
+            int totalPages;
+            int totalResults;
+
             using(var session = RavenDb.DocumentStore.OpenSession())
             {
-                var items = session.Query<ExecutionStatus, ExecutionStatus_ByEnvironment>()
-                                   .Where(x => x.Environment.Equals(env, StringComparison.InvariantCultureIgnoreCase));
+                RavenQueryStatistics stats;
+                var items = session.Query<Deployment, ExecutionStatus_ByEnvironment>()
+                                   .Statistics(out stats)
+                                   .Skip(page * pageSize)
+                                   .Take(pageSize)
+                                   .Where(x => x.Environment.Equals(env, StringComparison.InvariantCultureIgnoreCase))
+                                   .OrderByDescending(x => x.StartedUtc).ToList();
 
-                foreach (var item in items)
-                {
-                    logs.Add(new Link
-                    {
-                        Href = string.Format("/condepserver/api/logs/{0}/{1}", item.Environment, item.ExecId),
-                        Method = "GET",
-                        Rel = "http://www.con-dep.net/rels/server/logs"
-                    });
-                }
+                totalResults = stats.TotalResults;
+                var remainder = totalResults%pageSize > 0 ? 1 : 0;
+                totalPages = totalResults/pageSize + remainder;
+
+                logs.AddRange(items.Select(item => this.GetLinkFor<LogController>(HttpMethod.Get, item.Id)));
             }
 
-            return Request.CreateResponse(HttpStatusCode.Found, logs);
+            return new
+                {
+                    Environment = env,
+                    CurrentPage = page,
+                    LastPage = totalPages - 1,
+                    ItemsOnPage = logs.Count,
+                    ItemsInTotal = totalResults,
+                    Next = page + 1 <= totalPages - 1
+                               ? this.GetLinkNext(HttpMethod.Get, page + 1, env)
+                               : null,
+                    Previous = page - 1 >= 0
+                                   ? this.GetLinkPrevious(HttpMethod.Get, page - 1, env)
+                                   : null,
+                    Logs = logs
+                };
         }
 
-        private HttpResponseMessage GetLinksToEnvironments()
+        private IEnumerable<Link> GetEnvironmentLinks()
         {
-            return Request.CreateResponse(HttpStatusCode.Found, "Should return links to all evnironments");
-        }
-
-        private HttpResponseMessage GetLogById(string id)
-        {
-            string relLogLoc = "";
             using (var session = RavenDb.DocumentStore.OpenSession())
             {
-                var item = session.Load<ExecutionStatus>(RavenDb.GetFullId<ExecutionStatus>(id));
-
-                if (item == null) return Request.CreateResponse(HttpStatusCode.NotFound);
-
-                relLogLoc = item.RelativeLogLocation;
-            }
-
-            var fileLoc = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), relLogLoc);
-            if (!File.Exists(fileLoc))
-                return Request.CreateResponse(HttpStatusCode.NotFound);
-
-            using (var fileStream = new FileStream(fileLoc, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                using (var textReader = new StreamReader(fileStream))
+                var environments = session.Query<ConDepEnvConfig>();
+                foreach (var env in environments)
                 {
-                    var response = Request.CreateResponse(HttpStatusCode.OK);
-                    response.Content = new StringContent(textReader.ReadToEnd());
-                    return response;
+                    yield return this.GetLink(HttpMethod.Get, env.EnvironmentName);
                 }
             }
         }
+
     }
 }

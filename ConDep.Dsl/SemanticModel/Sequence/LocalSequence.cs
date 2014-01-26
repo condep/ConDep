@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations.Application.Local;
@@ -45,12 +46,14 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             return sequence;
         }
 
-        public void Execute(IReportStatus status, ConDepSettings settings)
+        public void Execute(IReportStatus status, ConDepSettings settings, CancellationToken token)
         {
             foreach (var element in _sequence)
             {
+                token.ThrowIfCancellationRequested();
+
                 IExecute internalElement = element;
-                Logger.WithLogSection(internalElement.Name, () => internalElement.Execute(status, settings));
+                Logger.WithLogSection(internalElement.Name, () => internalElement.Execute(status, settings, token));
             }
         }
 

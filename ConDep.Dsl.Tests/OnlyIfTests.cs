@@ -1,14 +1,9 @@
-﻿using System.Collections.Generic;
-using ConDep.Dsl.Builders;
+﻿using ConDep.Dsl.Builders;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Operations;
-using ConDep.Dsl.Operations.Application.Execution.PowerShell;
 using ConDep.Dsl.Operations.LoadBalancer;
-using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
 using NUnit.Framework;
-using System.Linq;
-using ConDep.Dsl;
 
 namespace ConDep.Dsl.Tests
 {

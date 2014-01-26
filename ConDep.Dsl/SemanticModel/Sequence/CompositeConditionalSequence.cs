@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 
@@ -16,7 +17,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             _expectedConditionResult = expectedConditionResult;
         }
 
-        public override void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
+        public override void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings, CancellationToken token)
         {
             Logger.WithLogSection(Name, () =>
                 {
@@ -25,7 +26,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                         foreach (var element in _sequence)
                         {
                             IExecuteOnServer elementToExecute = element;
-                            Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings));
+                            Logger.WithLogSection(element.Name, () => elementToExecute.Execute(server, status, settings, token));
                         }
                     }
                     else

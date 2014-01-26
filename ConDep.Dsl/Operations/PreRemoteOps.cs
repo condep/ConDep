@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.PSScripts;
@@ -17,8 +18,10 @@ namespace ConDep.Dsl.Operations
         const string TMP_FOLDER = @"{0}\temp\ConDep\{1}";
         const string NODE_LISTEN_URL = "http://{0}:80/ConDepNode/";
 
-        public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
+        public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             Logger.WithLogSection("Pre-Operations", () =>
                 {
                     server.GetServerInfo().TempFolderDos = string.Format(TMP_FOLDER, "%windir%", ConDepGlobals.ExecId);

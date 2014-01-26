@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Remote;
 using ConDep.Dsl.SemanticModel;
@@ -23,7 +24,7 @@ namespace ConDep.Dsl.Operations.Application.Execution.PowerShell
             _values = values;
         }
 
-        public override void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
+        public override void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings, CancellationToken token)
         {
             var psExec = new PowerShellExecutor(server);
             if (_values != null && _values.RequireRemoteLib)

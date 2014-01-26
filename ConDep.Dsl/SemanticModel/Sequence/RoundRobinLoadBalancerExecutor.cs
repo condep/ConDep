@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using ConDep.Dsl.Config;
-using ConDep.Dsl.Operations.LoadBalancer;
 
 namespace ConDep.Dsl.SemanticModel.Sequence
 {
@@ -17,7 +17,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             _loadBalancer = loadBalancer;
         }
 
-        public override void Execute(IReportStatus status, ConDepSettings settings)
+        public override void Execute(IReportStatus status, ConDepSettings settings, CancellationToken token)
         {
             var servers = _servers.ToList();
             var roundRobinMaxOfflineServers = (int)Math.Ceiling(((double)servers.Count) / 2);
@@ -26,7 +26,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
             if (settings.Options.StopAfterMarkedServer)
             {
                 manuelTestServer = servers.SingleOrDefault(x => x.StopServer) ?? servers.First();
-                ExecuteOnServer(manuelTestServer, status, settings, _loadBalancer, true, false);
+                ExecuteOnServer(manuelTestServer, status, settings, _loadBalancer, true, false, token);
                 return;
             }
 
@@ -43,7 +43,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
 
             if (servers.Count == 1)
             {
-                ExecuteOnServer(servers.First(), status, settings, _loadBalancer, true, true);
+                ExecuteOnServer(servers.First(), status, settings, _loadBalancer, true, true, token);
                 return;
             }
 
@@ -55,7 +55,7 @@ namespace ConDep.Dsl.SemanticModel.Sequence
                 }
 
                 bool bringOnline = !(roundRobinMaxOfflineServers - (manuelTestServer == null ? 0 : 1) > execCount);
-                ExecuteOnServer(servers[execCount], status, settings, _loadBalancer, !bringOnline, bringOnline);
+                ExecuteOnServer(servers[execCount], status, settings, _loadBalancer, !bringOnline, bringOnline, token);
 
                 //if (status.HasErrors)
                 //    return;
