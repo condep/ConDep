@@ -127,7 +127,7 @@
   <ItemGroup>
     <Compile Include="Api\ApiControllerExtensions.cs" />
     <Compile Include="Api\Controllers\ArtifactController.cs" />
-    <Compile Include="Api\Controllers\CancellaionController.cs" />
+    <Compile Include="Api\Controllers\CancelController.cs" />
     <Compile Include="Api\Controllers\ConfigController.cs" />
     <Compile Include="Api\Controllers\DeploymentController.cs" />
     <Compile Include="Api\Controllers\LogController.cs" />
@@ -135,13 +135,14 @@
     <Compile Include="Api\Controllers\QueueController.cs" />
     <Compile Include="Api\Controllers\RavenDbController.cs" />
     <Compile Include="Application\DeploymentScheduler.cs" />
+    <Compile Include="ConDepDeploymentNotFound.cs" />
+    <Compile Include="Domain\Deployment\DeploymentCancelled.cs" />
     <Compile Include="Domain\Infrastructure\CommandHandlerContainer.cs" />
     <Compile Include="ConDepCommandHandlerException.cs" />
     <Compile Include="Domain\Deployment\DeploymentHandler.cs" />
     <Compile Include="Domain\Infrastructure\InMemoryCommandQueue.cs" />
     <Compile Include="Domain\Infrastructure\InMemoryCommandBus.cs" />
     <Compile Include="Domain\Queue\Model\DeploymentDequeued.cs" />
-    <Compile Include="Domain\Queue\Model\DeploymentQueue.cs" />
     <Compile Include="Domain\Deployment\DeploymentCreated.cs" />
     <Compile Include="Domain\Deployment\Model\DeploymentMessage.cs" />
     <Compile Include="Domain\Deployment\Model\DeploymentStatus.cs" />
@@ -150,7 +151,6 @@
     <Compile Include="Api\Controllers\PipelineController.cs" />
     <Compile Include="Api\Controllers\StatusController.cs" />
     <Compile Include="Domain\Queue\Model\DeploymentQueueHandler.cs" />
-    <Compile Include="Domain\Queue\Model\EnvironmentQueue.cs" />
     <Compile Include="Domain\Queue\Model\QueueExecutionData.cs" />
     <Compile Include="Domain\Queue\Model\QueueItem.cs" />
     <Compile Include="Api\Controllers\SecurityController.cs" />
@@ -161,12 +161,13 @@
     <Compile Include="Domain\Queue\Model\QueueStatus.cs" />
     <Compile Include="ConDepQueueException.cs" />
     <Compile Include="Domain\Queue\Model\ConDepQueueItemDoesNotExistException.cs" />
+    <Compile Include="ExecutionData.cs" />
     <Compile Include="ExecutionInfoHandler.cs" />
     <Compile Include="Domain\Infrastructure\CommandInfrastructure.cs" />
     <Compile Include="Domain\Queue\DeploymentQueued.cs" />
     <Compile Include="Domain\Infrastructure\EventDispatcher.cs" />
     <Compile Include="Domain\Infrastructure\EventInfrastructure.cs" />
-    <Compile Include="Domain\Commands\ProcessDeploymentQueue.cs" />
+    <Compile Include="Domain\Commands\ProcessEnvironmentQueue.cs" />
     <Compile Include="Application\DeploymentProcess.cs" />
     <Compile Include="Domain\Commands\QueueDeployment.cs" />
     <Compile Include="Domain\Commands\UpdateQueueStatus.cs" />

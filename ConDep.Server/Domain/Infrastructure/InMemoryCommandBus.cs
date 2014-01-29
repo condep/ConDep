@@ -24,8 +24,12 @@ namespace ConDep.Server.Infrastructure
             Trace.WriteLine("Resolving handler for " + typeof(TCommand).Name);
             var handler = CommandHandlerContainer.Resolve<TCommand>();
             Trace.WriteLine("Handler " + handler.GetType().Name + "found for command " + typeof(TCommand).Name);
-            _queue.Enqueue(HandleCommand, handler, command);
-            Trace.WriteLine("Queuing command " + typeof(TCommand).Name + " for execution");
+
+            IAggregateRoot aggregate = handler.Execute(command).Result;
+
+            PersistChanges(handler, aggregate);
+            //_queue.Enqueue(HandleCommand, handler, command);
+            //Trace.WriteLine("Queuing command " + typeof(TCommand).Name + " for execution");
         }
 
         private async void HandleCommand<TCommand>(IHandleCommand<TCommand> handler, TCommand command) where TCommand : ICommand

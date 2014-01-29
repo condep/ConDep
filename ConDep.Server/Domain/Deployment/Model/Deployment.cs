@@ -59,8 +59,15 @@ namespace ConDep.Server.Model.DeploymentAggregate
         public void Start()
         {
             StartedUtc = DateTime.UtcNow;
-            Status = DeploymentStatus.AwaitingExecution;
+            Status = DeploymentStatus.InProgress;
             AddEvent(new DeploymentCreated(Id, Environment, Module, Artifact));
+        }
+
+        public void Cancel()
+        {
+            FinishedUtc = DateTime.UtcNow;
+            Status = DeploymentStatus.Cancelled;
+            AddEvent(new DeploymentCancelled(Id));
         }
 
         public void AddException(DateTime dateTime, Exception exception)
@@ -73,6 +80,11 @@ namespace ConDep.Server.Model.DeploymentAggregate
             Exceptions.Add(new DeploymentMessage(DateTime.UtcNow, exception.Message));
         }
 
+        public void AddException(TimedException exception)
+        {
+            Exceptions.Add(new DeploymentMessage(exception.DateTime, exception.Exception.Message));
+        }
+
         public void AddExecutionEvent(DateTime dateTime, string message)
         {
             ExecutionEvents.Add(new DeploymentMessage(dateTime.ToUniversalTime(), message));
@@ -81,6 +93,11 @@ namespace ConDep.Server.Model.DeploymentAggregate
         public void AddExecutionEvent(string message)
         {
             ExecutionEvents.Add(new DeploymentMessage(DateTime.UtcNow, message));
+        }
+
+        public void SetLogLocation(string relativeLogPath)
+        {
+            RelativeLogLocation = relativeLogPath;
         }
     }
 

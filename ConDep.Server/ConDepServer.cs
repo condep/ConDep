@@ -35,6 +35,7 @@ namespace ConDep.Server
             var serializerSettings = _config.Formatters.JsonFormatter.SerializerSettings;
             serializerSettings.Formatting = Formatting.Indented;
             serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            _config.Formatters.Remove(_config.Formatters.XmlFormatter);
 
             _config.Routes.MapHttpRoute("Logs", "api/logs/{env}", new { controller = "logs", env = RouteParameter.Optional });
             _config.Routes.MapHttpRoute("Default", "api/{controller}/{id}", new { id = RouteParameter.Optional });

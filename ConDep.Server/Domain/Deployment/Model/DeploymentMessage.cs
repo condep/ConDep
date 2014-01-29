@@ -4,6 +4,11 @@ namespace ConDep.Server.Model.DeploymentAggregate
 {
     public class DeploymentMessage
     {
+        private DeploymentMessage()
+        {
+            
+        }
+
         public DeploymentMessage(string message)
         {
             Message = message;

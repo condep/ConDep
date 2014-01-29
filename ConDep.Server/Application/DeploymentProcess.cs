@@ -29,7 +29,7 @@ namespace ConDep.Server.Application
         public void Handle(DeploymentQueued @event)
         {
             Trace.WriteLine("DeploymentProcess: " + GetHashCode());
-            var cmd = new ProcessDeploymentQueue(@event.Environment);
+            var cmd = new ProcessEnvironmentQueue(@event.Environment);
             _commandBus.Send(cmd);
 
         }
@@ -44,8 +44,8 @@ namespace ConDep.Server.Application
         public void Handle(DeploymentCreated @event)
         {
             Trace.WriteLine("DeploymentProcess: " + GetHashCode());
-            var inProgressCmd = new SetDeploymentQueueItemInProgress(@event.SourceId, @event.Environment);
-            _commandBus.Send(inProgressCmd);
+            var deploymentQueueItemInProgressCmd = new SetDeploymentQueueItemInProgress(@event.SourceId, @event.Environment);
+            _commandBus.Send(deploymentQueueItemInProgressCmd);
 
             var deployCmd = new Deploy(@event.SourceId);
             _commandBus.Send(deployCmd);
@@ -64,7 +64,7 @@ namespace ConDep.Server.Application
         public void Handle(DeploymentDequeued @event)
         {
             Trace.WriteLine("DeploymentProcess: " + GetHashCode());
-            var cmd = new ProcessDeploymentQueue(@event.Environment);
+            var cmd = new ProcessEnvironmentQueue(@event.Environment);
             _commandBus.Send(cmd);
         }
     }

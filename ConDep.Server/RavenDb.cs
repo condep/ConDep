@@ -23,20 +23,8 @@ namespace ConDep.Server
                     "execution_info/{0}"
                 },
                 {
-                    typeof(QueueItem),
-                    "execution_queue/{0}"
-                },
-                {
                     typeof(ConDepEnvConfig),
                     "environments/{0}"
-                },
-                {
-                    typeof(EnvironmentQueue),
-                    "deployment_queue/{0}"
-                },
-                {
-                    typeof(DeploymentQueue),
-                    "deployment_queue"
                 }
             };
 
@@ -60,24 +48,14 @@ namespace ConDep.Server
                 (dbname, commands, config) => new CompletedTask<string>(GetFullId<ConDepEnvConfig>(config.EnvironmentName)));
 
             docStore.Conventions.RegisterIdConvention<QueueItem>(
-                (dbname, commands, item) => GetFullId<QueueItem>(item.Id.ToString()));
+                (dbname, commands, item) => item.Environment + "/" + item.DeploymentId );
             docStore.Conventions.RegisterAsyncIdConvention<QueueItem>(
-                (dbname, commands, item) => new CompletedTask<string>(GetFullId<QueueItem>(item.Id.ToString())));
+                (dbname, commands, item) => new CompletedTask<string>(item.Environment + "/" + item.DeploymentId));
 
             docStore.Conventions.RegisterIdConvention<Deployment>(
                 (dbname, commands, item) => GetFullId<Deployment>(item.Id.ToString()));
             docStore.Conventions.RegisterAsyncIdConvention<Deployment>(
                 (dbname, commands, item) => new CompletedTask<string>(GetFullId<Deployment>(item.Id.ToString())));
-
-            docStore.Conventions.RegisterIdConvention<EnvironmentQueue>(
-                (dbname, commands, item) => item.Environment);
-            docStore.Conventions.RegisterAsyncIdConvention<EnvironmentQueue>(
-                (dbname, commands, item) => new CompletedTask<string>(item.Environment));
-
-            docStore.Conventions.RegisterIdConvention<DeploymentQueue>(
-                (dbname, commands, item) => GetFullId<DeploymentQueue>());
-            docStore.Conventions.RegisterAsyncIdConvention<EnvironmentQueue>(
-                (dbname, commands, item) => new CompletedTask<string>(GetFullId<DeploymentQueue>()));
         }
 
         private static readonly Lazy<IDocumentStore> inMemoryDocStore = new Lazy<IDocumentStore>(() =>
@@ -118,19 +96,19 @@ namespace ConDep.Server
         }
     }
 
-    public class EnvironmentQueue_Environments : AbstractIndexCreationTask<EnvironmentQueue, EnvironmentQueue_Environments.Result>
-    {
-        public class Result
-        {
-            public string Environment { get; set; }
-        }
+    //public class EnvironmentQueue_Environments : AbstractIndexCreationTask<EnvironmentQueue, EnvironmentQueue_Environments.Result>
+    //{
+    //    public class Result
+    //    {
+    //        public string Environment { get; set; }
+    //    }
 
-        public EnvironmentQueue_Environments()
-        {
-            Map = items => from item in items
-                           select new {item.Environment};
-        }
-    }
+    //    public EnvironmentQueue_Environments()
+    //    {
+    //        Map = items => from item in items
+    //                       select new {item.Environment};
+    //    }
+    //}
     public class ExecutionStatus_ByEnvironment : AbstractIndexCreationTask<Deployment>
     {
         public ExecutionStatus_ByEnvironment()
@@ -141,6 +119,32 @@ namespace ConDep.Server
                                    item.Environment,
                                    item.StartedUtc
                                };
+        }
+    }
+
+    public class QueueItem_FirstInAllEnvironments : AbstractIndexCreationTask<QueueItem>
+    {
+        public QueueItem_FirstInAllEnvironments()
+        {
+            Map = items => from item in items
+                           orderby item.CreatedUtc
+                           select new
+                               {
+                                   item.DeploymentId,
+                                   item.Environment,
+                                   item.CreatedUtc
+                               };
+
+            Reduce = items => from item in items
+                              orderby item.CreatedUtc
+                              group item by item.Environment
+                              into g
+                              select new
+                                  {
+                                      Environment = g.Key,
+                                      g.First().DeploymentId,
+                                      g.First().CreatedUtc
+                                  };
         }
     }
 

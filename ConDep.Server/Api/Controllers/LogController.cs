@@ -1,16 +1,16 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
 using ConDep.Server.Model.DeploymentAggregate;
 
 namespace ConDep.Server.Api.Controllers
 {
     public class LogController : RavenDbController
     {
-        public HttpResponseMessage Get(string id)
+        public HttpResponseMessage Get(Guid id)
         {
-            var item = Session.Load<Deployment>(RavenDb.GetFullId<Deployment>(id));
+            var item = Session.Load<Deployment>(id);
 
             if (item == null) return Request.CreateResponse(HttpStatusCode.NotFound);
 

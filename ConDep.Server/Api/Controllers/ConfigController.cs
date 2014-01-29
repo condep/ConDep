@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ConDep.Dsl.Config;
@@ -7,14 +8,15 @@ namespace ConDep.Server.Api.Controllers
 {
     public class ConfigController : RavenDbController
     {
-        private const string DOC_ID_PREFIX = "environments";
-        private const string DOC_ID_TEMPLATE = DOC_ID_PREFIX + "/{0}";
-
-        public ConDepEnvConfig[] Get()
+        public HttpResponseMessage Get()
         {
             try
             {
-                return Session.Advanced.LoadStartingWith<ConDepEnvConfig>(DOC_ID_PREFIX) ?? new ConDepEnvConfig[0];
+                var configs = Session.Advanced.LoadStartingWith<ConDepEnvConfig>(RavenDb.GetFullId<ConDepEnvConfig>("")) ?? new ConDepEnvConfig[0];
+
+                var links = configs.Select(config => this.GetLinkFor<ConfigController>(HttpMethod.Get, config.EnvironmentName)).ToList();
+
+                return Request.CreateResponse(HttpStatusCode.Found, links);
             }
             catch
             {
@@ -22,13 +24,13 @@ namespace ConDep.Server.Api.Controllers
             }
         }
 
-        public ConDepEnvConfig Get(string id)
+        public HttpResponseMessage Get(string id)
         {
             try
             {
-                var config = Session.Load<ConDepEnvConfig>(string.Format(DOC_ID_TEMPLATE, id));
+                var config = Session.Load<ConDepEnvConfig>(RavenDb.GetFullId<ConDepEnvConfig>(id));
                 if (config == null) throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound, string.Format("No environment with id [{0}] found!", id)));
-                return config;
+                return Request.CreateResponse(HttpStatusCode.Found, config);
             }
             catch
             {

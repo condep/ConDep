@@ -1,169 +1,202 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Server.Commands;
-using ConDep.Server.Domain.Infrastructure;
 using ConDep.Server.Execution;
 using ConDep.Server.Infrastructure;
 using ConDep.Server.Model.DeploymentAggregate;
-using Raven.Client;
 
 namespace ConDep.Server
 {
-    public class DeploymentService : 
-        IHandleCommand<Deploy>,
-        IHandleCommand<CancelDeployment>
+    public class DeploymentService 
     {
-        private readonly Dictionary<Guid, CancellationTokenSource> _tokenSources = new Dictionary<Guid, CancellationTokenSource>();
+        private readonly ICommandBus _commandBus;
+        private static readonly ConcurrentDictionary<Guid, CancellationTokenSource> _tokenSources = new ConcurrentDictionary<Guid, CancellationTokenSource>();
  
-        public DeploymentService(IDocumentSession session)
+        public DeploymentService(ICommandBus commandBus)
         {
-            Session = session;
+            _commandBus = commandBus;
         }
 
-        public async Task<IAggregateRoot> Execute(Deploy command)
+        public void Deploy(ExecutionData execData, ConDepEnvConfig config)
         {
-            var result = new ConDepExecutionResult(false);
-            var deployment = Session.Load<Deployment>(command.Id);
-            if (deployment == null) throw new ConDepDeploymentNotFound();
+            if (execData == null) throw new ConDepDeploymentNotFound();
 
-            var relativeLogPath = Path.Combine("logs", deployment.Environment, deployment.Id + ".log");
-            var tokenSource = new CancellationTokenSource();
-
-            AppDomain appDomain = null;
-            try
-            {
-                appDomain = AppDomain.CreateDomain("ConDepExec", null, AppDomain.CurrentDomain.SetupInformation);
-
-                var executorCancelable = (ConDepExecutor)appDomain.CreateInstanceAndUnwrap(typeof(ConDepExecutor).Assembly.FullName, typeof(ConDepExecutor).FullName);
-                tokenSource.Token.Register(executorCancelable.Cancel);
-
-                var executor = (ConDepExecutor)appDomain.CreateInstanceAndUnwrap(typeof(ConDepExecutor).Assembly.FullName, typeof(ConDepExecutor).FullName);
-
-                var settings = new ConDepSettings
+            Task.Run(() =>
                 {
-                    Options = new ConDepOptions
-                    {
-                        Application = deployment.Artifact,
-                        Environment = deployment.Environment
-                    },
-                    Config = Session.Load<ConDepEnvConfig>(RavenDb.GetFullId<ConDepEnvConfig>(deployment.Environment))
-                };
+                    var result = new ConDepExecutionResult(false);
+                    FileInfo assemblyFile = null;
 
-                foreach (var server in settings.Config.Servers.Where(server => !server.DeploymentUser.IsDefined()))
-                {
-                    server.DeploymentUser = settings.Config.DeploymentUser;
-                }
+                    var relativeLogPath = Path.Combine("logs", execData.Environment, execData.DeploymentId + ".log");
+                    var tokenSource = new CancellationTokenSource();
 
-                deployment.AddExecutionEvent("Executing now");
-
-                _tokenSources.Add(command.Id, tokenSource);
-                executor.Execute(executorCancelable, deployment.Id, relativeLogPath, settings, deployment.Module,
-                                     deployment.Artifact, deployment.Environment)
-                                     .ContinueWith(task =>
-                                         {
-                                             result = task.Result;
-                                         });
-
-            }
-            finally
-            {
-                if (appDomain != null)
-                {
+                    AppDomain appDomain = null;
                     try
                     {
-                        AppDomain.Unload(appDomain);
+                        appDomain = AppDomain.CreateDomain("ConDepExec", null, AppDomain.CurrentDomain.SetupInformation);
+
+                        var executorCancelable = (ConDepExecutor)appDomain.CreateInstanceAndUnwrap(typeof(ConDepExecutor).Assembly.FullName, typeof(ConDepExecutor).FullName);
+                        tokenSource.Token.Register(executorCancelable.Cancel);
+
+                        var executor = (ConDepExecutor)appDomain.CreateInstanceAndUnwrap(typeof(ConDepExecutor).Assembly.FullName, typeof(ConDepExecutor).FullName);
+
+                        var settings = CreateConDepSettings(execData, config);
+
+                        AddExecutionEvent(execData.DeploymentId, "Executing now");
+
+                        _tokenSources.TryAdd(execData.DeploymentId, tokenSource);
+
+                        assemblyFile = CopyAssemblyToTempLocation(execData.DeploymentId, execData.Module);
+
+                        var logPathCmd = new SetDeploymentLogLocation(execData.DeploymentId, relativeLogPath);
+                        _commandBus.Send(logPathCmd);
+
+                        result = executor.Execute(executorCancelable, execData.DeploymentId, relativeLogPath, settings, assemblyFile.FullName,
+                                                execData.Artifact, execData.Environment);
                     }
-                    catch (Exception ex)
+                    finally
                     {
-                        deployment.AddException(ex);
-                    }
-                }
-
-                try
-                {
-                    _tokenSources.Remove(deployment.Id);
-
-                    deployment.AddExecutionEvent("Execution finished.");
-
-                    if (result.HasExceptions())
-                    {
-                        foreach (var ex in result.ExceptionMessages)
+                        if (appDomain != null)
                         {
-                            deployment.AddException(ex.DateTime, ex.Exception);
+                            try
+                            {
+                                AppDomain.Unload(appDomain);
+                                if (assemblyFile != null)
+                                {
+                                    assemblyFile.Delete();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                AddException(execData.DeploymentId, ex);
+                            }
+                        }
+
+                        try
+                        {
+                            CancellationTokenSource token;
+                            if (_tokenSources.TryRemove(execData.DeploymentId, out token))
+                            {
+                                token.Dispose();
+                            }
+
+                            AddExecutionEvent(execData.DeploymentId, "Execution finished");
+
+                            if (result.HasExceptions())
+                            {
+                                foreach (var ex in result.ExceptionMessages)
+                                {
+                                    AddException(execData.DeploymentId, ex);
+                                }
+                            }
+
+                            FinishDeployment(execData.DeploymentId, result, relativeLogPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            AddException(execData.DeploymentId, ex);
                         }
                     }
-
-                    if (result.Success)
-                    {
-                        deployment.Finish(DeploymentStatus.Success, relativeLogPath);
-                    }
-                    else if (result.Cancelled)
-                    {
-                        deployment.Finish(DeploymentStatus.Cancelled, relativeLogPath);
-                    }
-                    else if (!result.Success)
-                    {
-                        deployment.Finish(DeploymentStatus.Failed, relativeLogPath);
-                    }
-                    tokenSource.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    deployment.AddException(DateTime.Now, ex);
-                }
-            }
-            return deployment;
+                });
         }
 
-        //Todo: Need to handle scoping of token sources for this to work
-        public async Task<IAggregateRoot> Execute(CancelDeployment command)
+        private void FinishDeployment(Guid deploymentId, ConDepExecutionResult result, string relativeLogPath)
         {
-            if (command.Id != Guid.Empty)
+            if (result.Success)
             {
-                Cancel(command.Id);
+                var finishDeployment = new FinishDeployment(deploymentId, DeploymentStatus.Success, relativeLogPath);
+                _commandBus.Send(finishDeployment);
             }
-            else
+            else if (result.Cancelled)
             {
-                Cancel();
+                var finishDeployment = new FinishDeployment(deploymentId, DeploymentStatus.Cancelled, relativeLogPath);
+                _commandBus.Send(finishDeployment);
             }
-            return null;
+            else if (!result.Success)
+            {
+                var finishDeployment = new FinishDeployment(deploymentId, DeploymentStatus.Failed, relativeLogPath);
+                _commandBus.Send(finishDeployment);
+            }
         }
 
-        private void Cancel()
+        private void AddException(Guid deploymentId, TimedException timedException)
         {
-            foreach (var tokenSource in _tokenSources.Values)
-            {
-                using (tokenSource)
-                {
-                    tokenSource.Cancel();
-                }
-            }
-            _tokenSources.Clear();
+            var exceptionCmd = new AddDeploymentTimedException(deploymentId, timedException);
+            _commandBus.Send(exceptionCmd);
         }
 
-        private void Cancel(Guid execId)
+        private void AddException(Guid deploymentId, Exception ex)
+        {
+            var exceptionCmd = new AddDeploymentException(deploymentId, ex);
+            _commandBus.Send(exceptionCmd);
+        }
+
+        private void AddExecutionEvent(Guid deploymentId, string message)
+        {
+            var executionEvent = new AddDeploymentExecutionEvent(deploymentId, message);
+            _commandBus.Send(executionEvent);
+        }
+
+        private static ConDepSettings CreateConDepSettings(ExecutionData execData, ConDepEnvConfig config)
+        {
+            var settings = new ConDepSettings
+                {
+                    Options = new ConDepOptions
+                        {
+                            Application = execData.Artifact,
+                            Environment = execData.Environment
+                        },
+                    Config = config
+                };
+
+            foreach (var server in settings.Config.Servers.Where(server => !server.DeploymentUser.IsDefined()))
+            {
+                server.DeploymentUser = settings.Config.DeploymentUser;
+            }
+            return settings;
+        }
+
+        private FileInfo CopyAssemblyToTempLocation(Guid execId, string module)
+        {
+            var executingPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var modulesDir = Path.Combine(executingPath, "modules");
+
+            var fileInfo = new FileInfo(Path.Combine(modulesDir, module + ".dll"));
+            var tempDir = Path.Combine(modulesDir, "temp");
+
+            if (!Directory.Exists(tempDir))
+            {
+                Directory.CreateDirectory(tempDir);
+            }
+
+            var newFilePath = Path.Combine(tempDir, execId + ".dll");
+
+            return fileInfo.CopyTo(newFilePath);
+        }
+
+
+        public void Cancel(Guid execId)
         {
             if (!_tokenSources.ContainsKey(execId)) return;
 
-            using (var tokenSource = _tokenSources[execId])
-            {
-                if (tokenSource == null) return;
-
-                tokenSource.Cancel();
-                _tokenSources.Remove(execId);
-            }
+            Task.Run(() =>
+                {
+                    CancellationTokenSource token;
+                    if (_tokenSources.TryGetValue(execId, out token))
+                    {
+                        token.Cancel();
+                        if (_tokenSources.TryRemove(execId, out token))
+                        {
+                            token.Dispose();
+                        }
+                    }
+                });
         }
-
-        public IDocumentSession Session { get; private set; }
-    }
-
-    public class ConDepDeploymentNotFound : Exception
-    {
     }
 }

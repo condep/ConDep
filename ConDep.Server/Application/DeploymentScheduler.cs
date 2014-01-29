@@ -2,12 +2,14 @@
 using System.Timers;
 using ConDep.Server.Commands;
 using ConDep.Server.Infrastructure;
+using Raven.Client;
 
 namespace ConDep.Server.Application
 {
     public class DeploymentScheduler : IDisposable
     {
         private readonly ICommandBus _bus;
+        private readonly IDocumentSession _session;
         private bool _disposed;
         private Timer _processTimer;
         private Timer _cleanupTimer;

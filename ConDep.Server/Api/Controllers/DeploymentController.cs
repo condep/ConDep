@@ -6,7 +6,6 @@ using System.Web.Http;
 using ConDep.Dsl.Remote.Node.Model;
 using ConDep.Server.Commands;
 using ConDep.Server.Infrastructure;
-using Raven.Client;
 
 namespace ConDep.Server.Api.Controllers
 {
@@ -32,25 +31,11 @@ namespace ConDep.Server.Api.Controllers
                 HttpStatusCode.Created,
                 new List<Link>
                     {
-                        this.GetLinkFor<QueueController>(HttpMethod.Get, execId),
+                        this.GetLinkFor<QueueController>(HttpMethod.Get),
                         this.GetLinkFor<LogController>(HttpMethod.Get, execId),
                         this.GetLinkFor<StatusController>(HttpMethod.Get, execId),
-                        this.GetLinkFor<CancellaionController>(HttpMethod.Get, execId)
+                        this.GetLinkFor<CancelController>(HttpMethod.Post, execId)
                     });
-        }
-
-        private static void CreateExecutionStatus(string module, string env, Guid execId, IDocumentSession session)
-        {
-            //var executionInfo = new ExecutionInfo()
-            //    {
-            //        Status = ExecutionStatus.Queued,
-            //        ExecId = execId,
-            //        StartedUtc = DateTime.UtcNow,
-            //        Environment = env,
-            //        Module = module,
-            //        RelativeLogLocation = string.Format("{0}/{1}/{2}", "logs", env, execId + ".log")
-            //    };
-            //session.Store(executionInfo);
         }
     }
 }

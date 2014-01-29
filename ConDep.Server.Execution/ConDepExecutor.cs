@@ -20,7 +20,7 @@ namespace ConDep.Server.Execution
             _cts = new CancellationTokenSource();
         }
 
-        public async Task<ConDepExecutionResult> Execute(ITokenSource tokenSource, Guid execId, string relativeLogPath, ConDepSettings settings, string module, string artifact, string env)
+        public ConDepExecutionResult Execute(ITokenSource tokenSource, Guid execId, string relativeLogPath, ConDepSettings settings, string assemblyFilePath, string artifact, string env)
         {
             //var mergedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(tokenSource.Token, _cts.Token);
             XmlConfigurator.Configure();
@@ -29,7 +29,7 @@ namespace ConDep.Server.Execution
 
             try
             {
-                settings.Options.Assembly = LoadAssembly(module);
+                settings.Options.Assembly = Assembly.LoadFile(assemblyFilePath);
 
                 ConDepGlobals.Reset();
                 try
@@ -89,14 +89,6 @@ namespace ConDep.Server.Execution
                     return result;
                 }
             }
-        }
-
-        private Assembly LoadAssembly(string module)
-        {
-            var executingPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var fileInfo = new FileInfo(Path.Combine(executingPath, "modules", module + ".dll"));
-
-            return Assembly.LoadFile(fileInfo.FullName);
         }
 
         public CancellationToken Token { get { return _cts.Token; } }
