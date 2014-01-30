@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConDep.Server.Model.QueueAggregate;
+using ConDep.Server.Domain.Queue.Model;
 
 namespace ConDep.Server.Api.Controllers
 {

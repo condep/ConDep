@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using ConDep.Server.Domain.Infrastructure;
 using Newtonsoft.Json;
 using Raven.Abstractions.Exceptions;
 using Raven.Client;
 
-namespace ConDep.Server.Infrastructure
+namespace ConDep.Server.Domain.Infrastructure
 {
     public class InMemoryCommandBus : ICommandBus
     {

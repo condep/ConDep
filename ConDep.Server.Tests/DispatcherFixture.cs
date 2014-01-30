@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ConDep.Server.Domain.Infrastructure;
-using ConDep.Server.Infrastructure;
 using NUnit.Framework;
 using FluentAssertions;
 using Raven.Client;

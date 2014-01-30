@@ -3,20 +3,19 @@ using ConDep.Server.Domain.Infrastructure;
 
 namespace ConDep.Server.Domain.Deployment
 {
-    public class DeploymentCreated : IEvent
+    public class CreateDeployment : ICommand
     {
-        public DeploymentCreated(Guid id, string environment, string module, string artifact)
+        public CreateDeployment(Guid id, string environment, string module, string artifact)
         {
-            SourceId = id;
+            Id = id;
             Environment = environment;
             Module = module;
             Artifact = artifact;
         }
 
-        public Guid SourceId { get; private set; }
+        public Guid Id { get; private set; }
         public string Environment { get; private set; }
-        public string Module { get; private set; }
         public string Artifact { get; private set; }
-        public bool Dispatched { get; set; }
+        public string Module { get; private set; }
     }
 }

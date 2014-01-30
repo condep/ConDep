@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ConDep.Server.Domain.Infrastructure;
 using Raven.Client;
 
-namespace ConDep.Server.Infrastructure
+namespace ConDep.Server.Domain.Infrastructure
 {
     public interface ICommand
     {

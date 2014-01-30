@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ConDep.Server
+namespace ConDep.Server.Application
 {
     public class ExecutionData
     {

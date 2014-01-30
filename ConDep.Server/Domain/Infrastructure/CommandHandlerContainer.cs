@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConDep.Server.Infrastructure;
 using StructureMap;
 
 namespace ConDep.Server.Domain.Infrastructure

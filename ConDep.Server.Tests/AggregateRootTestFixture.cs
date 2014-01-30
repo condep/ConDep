@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ConDep.Server.Domain.Infrastructure;
-using ConDep.Server.Infrastructure;
 using NUnit.Framework;
 
 namespace ConDep.Server.Tests

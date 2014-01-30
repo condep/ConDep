@@ -1,5 +1,5 @@
 ﻿using System.Web.Http;
-using ConDep.Server.Model.DeploymentAggregate;
+using ConDep.Server.Domain.Deployment.Model;
 
 namespace ConDep.Server.Api.Controllers
 {

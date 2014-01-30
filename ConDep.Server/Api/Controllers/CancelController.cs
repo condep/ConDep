@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using ConDep.Server.Commands;
-using ConDep.Server.Infrastructure;
-using ConDep.Server.Model.DeploymentAggregate;
+using ConDep.Server.Domain.Deployment;
+using ConDep.Server.Domain.Deployment.Model;
+using ConDep.Server.Domain.Infrastructure;
 
 namespace ConDep.Server.Api.Controllers
 {

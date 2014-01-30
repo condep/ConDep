@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Web.Http;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.Remote.Node.Model;
-using ConDep.Server.Model.DeploymentAggregate;
+using ConDep.Server.Domain.Deployment.Model;
 using Raven.Client;
 
 namespace ConDep.Server.Api.Controllers

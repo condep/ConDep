@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ConDep.Server.Model
+namespace ConDep.Server.Domain.Module.Model
 {
     public class ModuleInfo
     {

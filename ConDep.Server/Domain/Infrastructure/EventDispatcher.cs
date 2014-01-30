@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using StructureMap;
 
-namespace ConDep.Server.Infrastructure
+namespace ConDep.Server.Domain.Infrastructure
 {
     public class EventDispatcher
     {
@@ -25,7 +24,7 @@ namespace ConDep.Server.Infrastructure
                 }
                 catch (Exception ex)
                 {
-                    throw new ConDepUnableToRegisterEventHandler("See inner exception for details.", ex);
+                    throw new ConDepUnableToRegisterEventHandlerException("See inner exception for details.", ex);
                 }
             }
         }
@@ -37,7 +36,7 @@ namespace ConDep.Server.Infrastructure
 
             if (_handlers.ContainsKey(handlerId))
             {
-                throw new ConDepEventHandlerAllreadyRegistered();
+                throw new ConDepEventHandlerAllreadyRegisteredException();
             }
 
             _handlers.Add(handlerId, handler);
@@ -73,17 +72,5 @@ namespace ConDep.Server.Infrastructure
                     methodInfo.Invoke(handler, new object[] { @event });
                 });
         }
-    }
-
-    public class ConDepUnableToRegisterEventHandler : Exception
-    {
-        public ConDepUnableToRegisterEventHandler(string message, Exception inner) : base(message, inner)
-        {
-            
-        }
-    }
-
-    public class ConDepEventHandlerAllreadyRegistered : Exception
-    {
     }
 }

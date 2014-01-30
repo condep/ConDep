@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Timers;
 
-namespace ConDep.Server.Infrastructure
+namespace ConDep.Server.Domain.Infrastructure
 {
     public class InMemoryCommandQueue
     {

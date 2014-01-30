@@ -1,7 +1,7 @@
 ﻿using System;
-using ConDep.Server.Infrastructure;
+using ConDep.Server.Domain.Infrastructure;
 
-namespace ConDep.Server.Commands
+namespace ConDep.Server.Domain.Queue
 {
     public class ProcessEnvironmentQueue : ICommand
     {

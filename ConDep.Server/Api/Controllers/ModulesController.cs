@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Web.Http;
-using ConDep.Server.Model;
+using ConDep.Server.Domain.Module.Model;
 
 namespace ConDep.Server.Api.Controllers
 {

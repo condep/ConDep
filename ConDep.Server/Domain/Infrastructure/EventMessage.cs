@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ConDep.Server.Infrastructure
+namespace ConDep.Server.Domain.Infrastructure
 {
     public class EventMessage
     {

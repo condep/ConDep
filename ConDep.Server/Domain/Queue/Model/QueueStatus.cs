@@ -1,4 +1,4 @@
-﻿namespace ConDep.Server.Model.QueueAggregate
+﻿namespace ConDep.Server.Domain.Queue.Model
 {
     public enum QueueStatus
     {

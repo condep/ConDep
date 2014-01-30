@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Timers;
-using ConDep.Server.Commands;
-using ConDep.Server.Infrastructure;
+using ConDep.Server.Domain.Infrastructure;
+using ConDep.Server.Domain.Queue;
 using Raven.Client;
 
 namespace ConDep.Server.Application

@@ -1,8 +1,8 @@
 ﻿using System;
-using ConDep.Server.Infrastructure;
-using ConDep.Server.Model.QueueAggregate;
+using ConDep.Server.Domain.Infrastructure;
+using ConDep.Server.Domain.Queue.Model;
 
-namespace ConDep.Server.Domain.Queue.Model
+namespace ConDep.Server.Domain.Queue
 {
     public class DeploymentQueueItemInProgress : IEvent
     {

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using ConDep.Server.Domain.Queue.Model;
-using ConDep.Server.Infrastructure;
+using ConDep.Server.Domain.Infrastructure;
 using Raven.Client;
 using StructureMap;
 using StructureMap.Pipeline;

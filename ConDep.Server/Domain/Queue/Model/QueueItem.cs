@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using ConDep.Server.Domain.Infrastructure;
-using ConDep.Server.Domain.Queue.Model;
-using ConDep.Server.DomainEvents;
-using ConDep.Server.Infrastructure;
 
-namespace ConDep.Server.Model.QueueAggregate
+namespace ConDep.Server.Domain.Queue.Model
 {
     public class QueueItem : IAggregateRoot, IPublishEvents
     {

@@ -7,12 +7,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.SemanticModel;
-using ConDep.Server.Commands;
+using ConDep.Server.Domain.Deployment;
+using ConDep.Server.Domain.Deployment.Model;
+using ConDep.Server.Domain.Infrastructure;
 using ConDep.Server.Execution;
-using ConDep.Server.Infrastructure;
-using ConDep.Server.Model.DeploymentAggregate;
 
-namespace ConDep.Server
+namespace ConDep.Server.Application
 {
     public class DeploymentService 
     {

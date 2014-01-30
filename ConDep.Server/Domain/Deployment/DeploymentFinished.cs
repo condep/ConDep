@@ -3,12 +3,15 @@ using ConDep.Server.Domain.Infrastructure;
 
 namespace ConDep.Server.Domain.Deployment
 {
-    public class DeploymentCancelled : IEvent
+    public class DeploymentFinished : IEvent
     {
-        public DeploymentCancelled(Guid sourceId)
+        public DeploymentFinished(Guid id, string environment)
         {
-            SourceId = sourceId;
+            SourceId = id;
+            Environment = environment;
         }
+
+        public string Environment { get; set; }
 
         public Guid SourceId { get; private set; }
         public bool Dispatched { get; set; }

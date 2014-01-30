@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ConDep.Server.Commands;
+using ConDep.Server.Domain.Deployment;
 using ConDep.Server.Domain.Infrastructure;
-using ConDep.Server.Infrastructure;
-using ConDep.Server.Model.QueueAggregate;
+using ConDep.Server.Domain.Queue.Model;
 using Raven.Client;
-using Raven.Abstractions.Linq;
 using System.Linq;
 
-namespace ConDep.Server.Domain.Queue.Model
+namespace ConDep.Server.Domain.Queue
 {
     public class DeploymentQueueHandler :
         IHandleCommand<QueueDeployment>,

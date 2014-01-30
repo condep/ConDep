@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics;
-using ConDep.Server.Commands;
-using ConDep.Server.Domain.Queue.Model;
-using ConDep.Server.DomainEvents;
-using ConDep.Server.Infrastructure;
-using ConDep.Server.Model.DeploymentAggregate;
+using ConDep.Server.Domain.Deployment;
+using ConDep.Server.Domain.Infrastructure;
+using ConDep.Server.Domain.Queue;
 
 namespace ConDep.Server.Application
 {

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using ConDep.Server.Model.DeploymentAggregate;
+using ConDep.Server.Domain.Deployment.Model;
 
 namespace ConDep.Server.Api.Controllers
 {

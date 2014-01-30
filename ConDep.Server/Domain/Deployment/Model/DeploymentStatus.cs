@@ -1,4 +1,4 @@
-﻿namespace ConDep.Server.Model.DeploymentAggregate
+﻿namespace ConDep.Server.Domain.Deployment.Model
 {
     public enum DeploymentStatus
     {

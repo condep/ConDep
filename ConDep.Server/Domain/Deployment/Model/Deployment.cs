@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Server.Domain.Infrastructure;
-using ConDep.Server.DomainEvents;
-using ConDep.Server.Infrastructure;
 using Raven.Imports.Newtonsoft.Json;
 
-namespace ConDep.Server.Model.DeploymentAggregate
+namespace ConDep.Server.Domain.Deployment.Model
 {
     public class Deployment : IAggregateRoot, IPublishEvents
     {
@@ -99,19 +97,5 @@ namespace ConDep.Server.Model.DeploymentAggregate
         {
             RelativeLogLocation = relativeLogPath;
         }
-    }
-
-    public class DeploymentFinished : IEvent
-    {
-        public DeploymentFinished(Guid id, string environment)
-        {
-            SourceId = id;
-            Environment = environment;
-        }
-
-        public string Environment { get; set; }
-
-        public Guid SourceId { get; private set; }
-        public bool Dispatched { get; set; }
     }
 }

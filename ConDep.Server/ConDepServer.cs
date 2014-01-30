@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Web.Http;
 using System.Web.Http.SelfHost;
-using ConDep.Server.Infrastructure;
+using ConDep.Server.Domain.Infrastructure;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Raven.Abstractions.Data;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Raven.Imports.Newtonsoft.Json;
 
-namespace ConDep.Server.Infrastructure
+namespace ConDep.Server.Domain.Infrastructure
 {
     public interface IPublishEvents
     {
