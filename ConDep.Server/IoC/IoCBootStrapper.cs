@@ -27,7 +27,6 @@ namespace ConDep.Server
                     config.For<ICommandBus>().Singleton().Use<InMemoryCommandBus>();
                     config.For<IDocumentStore>().Use(RavenDb.DocumentStore);
                     config.For<IDocumentSession>().LifecycleIs(new ThreadLocalStorageLifecycle()).AlwaysUnique().Use(GetRavenSession);
-                    //config.For<DeploymentQueue>().Use(GetDeploymentQueue);
                 }
             );
         }
@@ -35,25 +34,6 @@ namespace ConDep.Server
         private IDocumentSession GetRavenSession()
         {
             return RavenDb.DocumentStore.OpenSession();
-        }
-
-        //private DeploymentQueue GetDeploymentQueue()
-        //{
-        //    var session = RavenDb.DocumentStore.OpenSession();
-        //    var queue = session.Load<DeploymentQueue>(RavenDb.GetFullId<DeploymentQueue>());
-        //    if(queue == null) queue = new DeploymentQueue(session);
-        //    return queue;
-        //}
-
-        public static Container CreateIoCContainer()
-        {
-            return new Container(config =>
-                {
-
-                    config.For<ICommandBus>().Singleton().Use<InMemoryCommandBus>();
-                    config.For<IEventBus>().Use<LocalEventBus>();
-                    config.For<IDocumentStore>().Use(RavenDb.DocumentStore);
-                });
         }
     }
 }

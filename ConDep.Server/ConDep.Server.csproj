@@ -189,8 +189,8 @@
     <Compile Include="Domain\Infrastructure\EventMessage.cs" />
     <Compile Include="Domain\Infrastructure\IAggregateRoot.cs" />
     <Compile Include="Domain\Infrastructure\IPublishEvents.cs" />
-    <Compile Include="IoCBootStrapper.cs" />
-    <Compile Include="IocConfig.cs" />
+    <Compile Include="IoC\IoCBootStrapper.cs" />
+    <Compile Include="IoC\StructureMapDependencyResolver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConDepServer.cs">
@@ -201,6 +201,7 @@
     </Compile>
     <Compile Include="Application\DeploymentService.cs" />
     <Compile Include="RavenDb.cs" />
+    <Compile Include="IoC\StructureMapScope.cs" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>

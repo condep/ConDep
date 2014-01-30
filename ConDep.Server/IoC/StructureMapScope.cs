@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http.Dependencies;
-using ConDep.Server.Api.Controllers;
-using System.Collections.Generic;
 using StructureMap;
 
 namespace ConDep.Server
@@ -40,22 +39,6 @@ namespace ConDep.Server
         public void Dispose()
         {
             container.Dispose();
-        }
-    }
-
-    public class StructureMapDependencyResolver : StructureMapScope, IDependencyResolver
-    {
-        private readonly IContainer container;
-
-        public StructureMapDependencyResolver(IContainer container) : base(container)
-        {
-            this.container = container;
-        }
-
-        public IDependencyScope BeginScope()
-        {
-            var childContainer = container.GetNestedContainer();
-            return new StructureMapScope(childContainer);
         }
     }
 }
