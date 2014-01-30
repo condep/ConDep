@@ -1,11 +1,11 @@
 ﻿using System;
 using ConDep.Server.Domain.Infrastructure;
 
-namespace ConDep.Server.Domain.Deployment
+namespace ConDep.Server.Domain.Queue.Commands
 {
-    public class SetDeploymentQueueItemInProgress : ICommand
+    public class DeQueueDeployment : ICommand
     {
-        public SetDeploymentQueueItemInProgress(Guid id, string environment)
+        public DeQueueDeployment(Guid id, string environment)
         {
             Id = id;
             Environment = environment;

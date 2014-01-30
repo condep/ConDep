@@ -2,7 +2,7 @@
 using ConDep.Dsl.SemanticModel;
 using ConDep.Server.Domain.Infrastructure;
 
-namespace ConDep.Server.Domain.Deployment
+namespace ConDep.Server.Domain.Deployment.Commands
 {
     public class AddDeploymentTimedException : ICommand
     {

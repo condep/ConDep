@@ -1,7 +1,7 @@
 ﻿using System;
 using ConDep.Server.Domain.Infrastructure;
 
-namespace ConDep.Server.Domain.Queue
+namespace ConDep.Server.Domain.Queue.Events
 {
     public class QueueItemExpired : IEvent
     {

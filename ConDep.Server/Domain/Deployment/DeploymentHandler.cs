@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ConDep.Dsl.Config;
 using ConDep.Server.Application;
+using ConDep.Server.Domain.Deployment.Commands;
 using ConDep.Server.Domain.Infrastructure;
 using Raven.Client;
 

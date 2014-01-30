@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ConDep.Dsl.Config;
 using ConDep.Dsl.SemanticModel;
 using ConDep.Server.Domain.Deployment;
+using ConDep.Server.Domain.Deployment.Commands;
 using ConDep.Server.Domain.Deployment.Model;
 using ConDep.Server.Domain.Infrastructure;
 using ConDep.Server.Execution;
@@ -106,6 +107,24 @@ namespace ConDep.Server.Application
                 });
         }
 
+        public void Cancel(Guid execId)
+        {
+            if (!_tokenSources.ContainsKey(execId)) return;
+
+            Task.Run(() =>
+                {
+                    CancellationTokenSource token;
+                    if (_tokenSources.TryGetValue(execId, out token))
+                    {
+                        token.Cancel();
+                        if (_tokenSources.TryRemove(execId, out token))
+                        {
+                            token.Dispose();
+                        }
+                    }
+                });
+        }
+
         private void FinishDeployment(Guid deploymentId, ConDepExecutionResult result, string relativeLogPath)
         {
             if (result.Success)
@@ -178,25 +197,6 @@ namespace ConDep.Server.Application
             var newFilePath = Path.Combine(tempDir, execId + ".dll");
 
             return fileInfo.CopyTo(newFilePath);
-        }
-
-
-        public void Cancel(Guid execId)
-        {
-            if (!_tokenSources.ContainsKey(execId)) return;
-
-            Task.Run(() =>
-                {
-                    CancellationTokenSource token;
-                    if (_tokenSources.TryGetValue(execId, out token))
-                    {
-                        token.Cancel();
-                        if (_tokenSources.TryRemove(execId, out token))
-                        {
-                            token.Dispose();
-                        }
-                    }
-                });
         }
     }
 }

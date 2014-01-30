@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ConDep.Server.Domain.Infrastructure;
+using ConDep.Server.Domain.Queue.Events;
 
 namespace ConDep.Server.Domain.Queue.Model
 {

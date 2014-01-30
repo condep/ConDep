@@ -1,7 +1,7 @@
 ﻿using System;
 using ConDep.Server.Domain.Infrastructure;
 
-namespace ConDep.Server.Domain.Deployment
+namespace ConDep.Server.Domain.Deployment.Events
 {
     public class DeploymentFinished : IEvent
     {

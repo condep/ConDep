@@ -6,6 +6,7 @@ using System.Web.Http;
 using ConDep.Dsl.Remote.Node.Model;
 using ConDep.Server.Domain.Infrastructure;
 using ConDep.Server.Domain.Queue;
+using ConDep.Server.Domain.Queue.Commands;
 
 namespace ConDep.Server.Api.Controllers
 {

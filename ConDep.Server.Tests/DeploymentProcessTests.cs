@@ -1,6 +1,7 @@
 ﻿using ConDep.Server.Application;
 using ConDep.Server.Domain.Infrastructure;
 using ConDep.Server.Domain.Queue;
+using ConDep.Server.Domain.Queue.Commands;
 using NUnit.Framework;
 using Raven.Client;
 using Raven.Client.Embedded;

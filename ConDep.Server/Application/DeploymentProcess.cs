@@ -1,7 +1,11 @@
 ﻿using System.Diagnostics;
 using ConDep.Server.Domain.Deployment;
+using ConDep.Server.Domain.Deployment.Commands;
+using ConDep.Server.Domain.Deployment.Events;
 using ConDep.Server.Domain.Infrastructure;
 using ConDep.Server.Domain.Queue;
+using ConDep.Server.Domain.Queue.Commands;
+using ConDep.Server.Domain.Queue.Events;
 
 namespace ConDep.Server.Application
 {

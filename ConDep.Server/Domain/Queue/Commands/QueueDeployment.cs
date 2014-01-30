@@ -1,7 +1,7 @@
 ﻿using System;
 using ConDep.Server.Domain.Infrastructure;
 
-namespace ConDep.Server.Domain.Queue
+namespace ConDep.Server.Domain.Queue.Commands
 {
     public class QueueDeployment : ICommand
     {

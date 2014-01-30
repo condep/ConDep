@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using ConDep.Server.Domain.Deployment;
+using ConDep.Server.Domain.Deployment.Commands;
 using ConDep.Server.Domain.Deployment.Model;
 using ConDep.Server.Domain.Infrastructure;
 
