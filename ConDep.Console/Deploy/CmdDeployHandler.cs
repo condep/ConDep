@@ -1,10 +1,8 @@
-﻿using System;
+using System;
 using System.Threading;
-using System.Threading.Tasks;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Execution;
 using ConDep.Dsl.Logging;
-using ConDep.Dsl.Remote;
-using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.WebDeploy;
 using ConDep.WebQ.Client;
 
@@ -27,6 +25,7 @@ namespace ConDep.Console.Deploy
 
         public void Execute(CmdHelpWriter helpWriter)
         {
+            var failed = false;
             var conDepSettings = new ConDepSettings();
 
             try
@@ -44,22 +43,18 @@ namespace ConDep.Console.Deploy
                 _tokenSource = new CancellationTokenSource();
                 var token = _tokenSource.Token;
 
-                var task = ConDepConfigurationExecutor.ExecuteFromAssembly(conDepSettings, status, token);
+                var task = ConDepConfigurationExecutor.ExecuteFromAssemblyAsync(conDepSettings, token);
+                task.Wait(token);
 
-                task.ContinueWith(result =>
-                        {
-                            if (result.Result.Success)
-                            {
-                                status.EndTime = DateTime.Now;
-                                status.PrintSummary();
-                            }
-                            else
-                            {
-                                Environment.Exit(1);
-                            }
-                        }, TaskContinuationOptions.OnlyOnRanToCompletion);
-
-                task.Wait();
+                if (task.Result.Success)
+                {
+                    status.EndTime = DateTime.Now;
+                    status.PrintSummary();
+                }
+                else
+                {
+                    failed = true;
+                }
             }
             finally
             {
@@ -68,8 +63,10 @@ namespace ConDep.Console.Deploy
                     Logger.Info("Leaving WebQ");
                     _webQ.LeaveQueue();
                 }
-
-                //Environment.Exit(exitCode);
+                if (failed)
+                {
+                    Environment.Exit(1);
+                }
             }
 
         }
