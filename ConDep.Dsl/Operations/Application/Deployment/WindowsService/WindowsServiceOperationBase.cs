@@ -57,7 +57,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
         {
             if (string.IsNullOrWhiteSpace(_values.UserName)) return;
 
-            server.ExecuteRemote.PowerShell("$userName=\"" + _values.UserName + "\"; [ConDep.Remote.LsaWrapperCaller]::AddLogonAsAServiceRights $userName", opt => opt.RequireRemoteLib());
+            server.ExecuteRemote.PowerShell("$userName=\"" + _values.UserName + "\"; [ConDep.Remote.LsaWrapperCaller]::AddLogonAsAServiceRights($userName)", opt => opt.RequireRemoteLib());
         }
 
         protected void ConfigureServiceFailure(IOfferRemoteComposition server)
