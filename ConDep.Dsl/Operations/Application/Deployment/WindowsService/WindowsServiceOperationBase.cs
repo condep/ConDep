@@ -24,6 +24,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
             ConfigureRemoveService(server);
             ConfigureDeployment(server);
             ConfigureInstallService(server);
+            ConfigureUserRights(server);
             ConfigureServiceFailure(server);
             ConfigureServiceConfig(server);
             ConfigureServiceStart(server);
@@ -50,6 +51,13 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
         {
             var serviceConfigCommand = _values.GetServiceConfigCommand(_serviceName);
             if (!string.IsNullOrWhiteSpace(serviceConfigCommand)) server.ExecuteRemote.DosCommand(serviceConfigCommand);
+        }
+
+        protected void ConfigureUserRights(IOfferRemoteComposition server)
+        {
+            if (string.IsNullOrWhiteSpace(_values.UserName)) return;
+
+            server.ExecuteRemote.PowerShell("$userName=\"" + _values.UserName + "\"; [ConDep.Remote.LsaWrapperCaller]::AddLogonAsAServiceRights $userName", opt => opt.RequireRemoteLib());
         }
 
         protected void ConfigureServiceFailure(IOfferRemoteComposition server)
