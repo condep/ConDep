@@ -1,3 +1,5 @@
+using System;
+
 namespace ConDep.Dsl
 {
     public interface IOfferIisInfrastructureRoleOptions
@@ -18,7 +20,32 @@ namespace ConDep.Dsl
         /// ASP.NET provides a server side object-oriented programming environment for building Web sites and Web applications that use managed code. ASP.NET is not just a new version of ASP. ASP.NET provides a robust infrastructure for building Web applications, and it has been completely re-architected to provide a highly productive programming experience based on the .NET Framework.
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Use AspNet35 or AspNet45 instead. This now defaults to AspNet35.")]
         IOfferIisInfrastructureRoleOptions AspNet();
+
+        /// <summary>
+        /// Provides a server-side object-oriented programming environment for building Web sites and Web applications using managed code. 
+        /// </summary>
+        /// <returns></returns>
+        IOfferIisInfrastructureRoleOptions AspNet35();
+
+        /// <summary>
+        /// Windows Server 2012 and later. Provides a server-side object-oriented programming environment for building Web sites and Web applications using managed code. 
+        /// </summary>
+        /// <returns></returns>
+        IOfferIisInfrastructureRoleOptions AspNet45();
+
+        /// <summary>
+        /// Enables managed code developers to change, add, and extend Web server functionality in the entire request pipeline, the configuration, and the UI. 
+        /// </summary>
+        /// <returns></returns>
+        IOfferIisInfrastructureRoleOptions AspNet35Ext();
+
+        /// <summary>
+        /// Enables managed code developers to change, add, and extend Web server functionality in the entire request pipeline, the configuration, and the UI. 
+        /// </summary>
+        /// <returns></returns>
+        IOfferIisInfrastructureRoleOptions AspNet45Ext();
 
         /// <summary>
         /// Active Server Pages (ASP) provides a server side scripting environment for building Web sites and Web applications. ASP offers improved performance over CGI scripts by providing IIS with native support for both VBScript and JScript. Use ASP if you have existing applications that require ASP support. For new development, consider using ASP.NET.

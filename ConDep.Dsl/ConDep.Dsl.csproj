@@ -137,7 +137,7 @@
     <Compile Include="Operations\RemoteOperation.cs" />
     <Compile Include="Operations\Application\Execution\RunCmd\RunCmdOptions.cs" />
     <Compile Include="Operations\Infrastructure\IIS\IisInfrastructureOperation.cs" />
-    <Compile Include="Operations\Infrastructure\IIS\WindowsInfrastructureOptions.cs" />
+    <Compile Include="Operations\Infrastructure\Windows\WindowsInfrastructureOptions.cs" />
     <Compile Include="Remote\ConDepNodeValidationException.cs" />
     <Compile Include="Remote\ConDepPSHost.cs" />
     <Compile Include="Remote\ConDepPsHostRawUI.cs" />

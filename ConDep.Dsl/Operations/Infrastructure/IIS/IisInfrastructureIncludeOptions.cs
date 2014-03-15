@@ -32,6 +32,30 @@ namespace ConDep.Dsl.Operations.Infrastructure
             return this;
         }
 
+        public IOfferIisInfrastructureRoleOptions AspNet35()
+        {
+            _iisOperation.AddRoleService("Web-Asp-Net");
+            return this;
+        }
+
+        public IOfferIisInfrastructureRoleOptions AspNet45()
+        {
+            _iisOperation.AddRoleService("Web-Asp-Net45");
+            return this;
+        }
+
+        public IOfferIisInfrastructureRoleOptions AspNet35Ext()
+        {
+            _iisOperation.AddRoleService("Web-Net-Ext");
+            return this;
+        }
+
+        public IOfferIisInfrastructureRoleOptions AspNet45Ext()
+        {
+            _iisOperation.AddRoleService("Web-Net-Ext45");
+            return this;
+        }
+
         public IOfferIisInfrastructureRoleOptions Asp()
         {
             _iisOperation.AddRoleService("Web-ASP");
