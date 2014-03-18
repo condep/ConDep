@@ -63,9 +63,10 @@ function UpdateWebSiteBindings($webSite, $bindings) {
 		$bindings = @(@{protocol='http';bindingInformation=':80:'})
 	}
 
+    $name = $webSite.name
+
     Write-Debug "Updating WebSite bindings now..."
-    $webSite.bindings = $bindings;
-    $webSite | Set-Item
+    Set-ItemProperty -Path "IIS:\Sites\$name" -Name Bindings -Value $bindings
 
     Write-Debug "Associating certificates with https bindings now..."
     $bindings | Where-Object {$_.protocol -eq "https"} | AssociateCertificateWithBinding
@@ -231,15 +232,9 @@ function New-ConDepIisHttpBinding {
 		[string] $HostHeader = ""
 	)
 
-#	try {
-		$cmd = GetNewWebBindingCommand $WebSiteName $Port $Ip $HostHeader $false
-		Invoke-Expression $cmd
+	$cmd = GetNewWebBindingCommand $WebSiteName $Port $Ip $HostHeader $false
+	Invoke-Expression $cmd
 
-		#StartWebSite $webSite
-#	}
-#	catch {
-#		Write-Error "ConDep Error: " $Error.Count
-#	}
 }
 
 function New-ConDepIisHttpsBinding {
@@ -255,7 +250,6 @@ function New-ConDepIisHttpsBinding {
 	Invoke-Expression $cmd
 	
 	AssociateCertificateWithBinding $Port $SslCertFindType $SslCertFindValue $Ip
-	#StartWebSite $webSite
 }
 
 function GetNewWebBindingCommand ([string] $WebSiteName, [string] $Port = "", [string] $Ip = "", [string] $HostHeader = "", [bool] $Ssl) {
