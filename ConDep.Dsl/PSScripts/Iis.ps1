@@ -10,34 +10,155 @@ function New-ConDepIisWebSite {
 		[string] $Path = "", 
 		[string] $AppPool = "",
 		[string] $LogPath)
-		
-	$defaultPath = "$env:SystemDrive\inetpub\$Name"
-	$physicalPath = if($Path) { $Path } else { $defaultPath }
 
-	if(!$Bindings) {
-		$Bindings = @(@{protocol='http';bindingInformation=':80:'})
+    $webSite = GetWebSite $Id
+
+	if(!$webSite) {
+        write-debug "WebSite $Name does not exist. Creating now..."
+
+		$defaultPath = "$env:SystemDrive\inetpub\$Name"
+		$physicalPath = if($Path) { $Path } else { $defaultPath }
+
+        Write-Debug "Physical path for WebSite is $physicalPath"
+
+		if(!$Bindings) {
+			$Bindings = @(@{protocol='http';bindingInformation=':80:'})
+		}
+
+		CreateWebSiteDir $physicalPath
+		$webSite = new-item -force IIS:\Sites\$Name -Id $Id -Bindings $bindings -PhysicalPath $physicalPath -ApplicationPool $AppPool
+
+		$Bindings | Where-Object {$_.protocol -eq "https"} | AssociateCertificateWithBinding
+
+        UpdateWebSiteLogPath $webSite $LogPath
 	}
-	
-	RemoveWebSite $Id
-	CreateWebSiteDir $physicalPath
+    else {
+	    UpdateWebSiteName $webSite $Name
+	    UpdateWebSiteBindings $webSite $Bindings
+	    UpdateWebSitePath $webSite $Path
+	    UpdateWebSiteAppPool $webSite $AppPool
+	    UpdateWebSiteLogPath $webSite $LogPath
+    }
 
-	$webSite = new-item -force IIS:\Sites\$Name -Id $Id -Bindings $bindings -PhysicalPath $physicalPath -ApplicationPool $AppPool
-	
-	$Bindings | Where-Object {$_.protocol -eq "https"} | AssociateCertificateWithBinding
-
-	if($LogPath){
-		if(!(Test-Path -Path $LogPath)) {
-			Write-Debug "Creating log directory $LogPath"
-			New-Item -Path $LogPath -Type Directory
-	    	}
-
-		Write-Debug "Setting log path to $LogPath"
-		Set-ItemProperty IIS:\Sites\$Name -name logfile -value @{directory=$LogPath}
-	}
 
 	Write-Debug "Starting Web Site $webSite..."
 	StartWebSite $webSite
 	Write-Debug "Web Site $webSite started."
+}
+
+function UpdateWebSiteName($webSite, $name) {
+    if($webSite.name -ne $name) {
+        Write-Debug "WebSite name $name differs from current $($webSite.name). Updating now..."
+        $webSite.name = $name
+        $webSite | Set-Item
+    }
+    else {
+        Write-Debug "WebSite name $name is correct. Doing nothing."
+    }
+}
+
+function UpdateWebSiteBindings($webSite, $bindings) {
+    if(!$bindings) {
+        Write-Debug "No bindings provided. Using default."
+		$bindings = @(@{protocol='http';bindingInformation=':80:'})
+	}
+
+    Write-Debug "Updating WebSite bindings now..."
+    $webSite.bindings = $bindings;
+    $webSite | Set-Item
+
+    Write-Debug "Associating certificates with https bindings now..."
+    $bindings | Where-Object {$_.protocol -eq "https"} | AssociateCertificateWithBinding
+}
+
+function UpdateWebSitePath($webSite, $path) {
+    $name = $webSite.name
+
+    $defaultPath = "$env:SystemDrive\inetpub\$name"
+    $physicalPath = if($path) { $path } else { $defaultPath }
+
+    CreateWebSiteDir $physicalPath
+
+    if($webSite.physicalPath -ne $path) {
+        Write-Debug "WebSite physical path differs. Setting path to $path"
+        $webSite.physicalPath = $path
+        $webSite | Set-Item
+    }
+    else {
+        Write-Debug "WebSite physical path $path is correct. Doing nothing."
+    }
+}
+
+function UpdateWebSiteAppPool($webSite, $appPool) {
+    if($webSite.applicationPool -ne $appPool) {
+        Write-Debug "WebSite application pool has changed to $appPool. Updating now..."
+        $webSite.applicationPool = $appPool
+        $webSite | Set-Item
+    }   
+    else {
+        Write-Debug "WebSite application pool $appPool is correct. Doing nothing."
+    }
+}
+
+function UpdateWebSiteLogPath($webSite, $logPath) {
+    if($logPath){
+        if(!(Test-Path -Path $logPath)) {
+	        Write-Debug "Creating log directory $logPath"
+	        New-Item -Path $logPath -Type Directory
+	    }
+
+        if($webSite.logFile) {
+            if($webSite.logFile.directory -ne $logPath) {
+                $name = $webSite.name
+                Write-Debug "Setting log path to $logPath"
+                #Set-ItemProperty IIS:\Sites\$name -name logfile -value @{directory=$logPath}
+                $webSite.logFile.directory = $logPath
+                $webSite | Set-Item
+            }
+        }
+    }
+
+}
+
+function AssociateCertificateWithBinding {
+	 [CmdletBinding()]
+	 param(
+		[Parameter(Mandatory=$True,ValueFromPipeline=$True,ValueFromPipelinebyPropertyName=$True)] 
+		[hashtable[]] $Bindings
+	)
+	PROCESS {
+		foreach($Binding in $Bindings) {
+			$bindingDetails = $Binding.bindingInformation.Split(":")
+			$bindingIp = $bindingDetails[0]
+			$Port = $bindingDetails[1]
+			
+			if(!$bindingIp) {
+				Write-Host "No binding ip, setting ip to [0.0.0.0]. Port is [$port]."
+				$bindingIp = "0.0.0.0"
+			}
+
+			Write-Debug "Associating binding $($bindingIp):$($Port)"
+
+			$certsInStore = Get-ChildItem cert:\\LocalMachine\\MY
+			$certFinder = new-object System.Security.Cryptography.X509Certificates.X509Certificate2Collection(,$certsInStore)
+			$findResult = $certFinder.Find($Binding.FindType, $Binding.FindValue, $false)
+
+			if(!$findResult) { 
+				throw "No Certificate found when looking for [$($Binding.FindType)] with value [$($Binding.FindValue)] found."
+			}
+
+			if($findResult.Count -gt 1) {
+				throw "Certificates with [$($Binding.FindValue)] returned more than 1 result."
+			}
+
+			$webSiteCert = $findResult | Select-Object -First 1
+			Remove-Item -Path "IIS:\\SslBindings\$bindingIp!$port" -ErrorAction SilentlyContinue
+			
+			#netsh http add sslcert ipport=$bindingIp:$port certhash=d9744c1e37bd575b431fed64e4e52cae9faced46 appid={5C7D7048-6609-4298-A2ED-6EFB68A66FF3} certstorename=MY clientcertnegotiation=enable
+			New-Item -Path "IIS:\\SslBindings\$bindingIp!$port" -Value (Get-Item cert:\LocalMachine\MY\$($webSiteCert.Thumbprint))
+			Write-Debug "SSL binding for SSL cert $($webSiteCert.Thumbprint) created."
+		}
+	}
 }
 
 function New-ConDepAppPool {
@@ -137,47 +258,6 @@ function New-ConDepIisHttpsBinding {
 	#StartWebSite $webSite
 }
 
-function AssociateCertificateWithBinding {
-	 [CmdletBinding()]
-	 param(
-		[Parameter(Mandatory=$True,ValueFromPipeline=$True,ValueFromPipelinebyPropertyName=$True)] 
-		[hashtable[]] $Bindings
-	)
-	PROCESS {
-		foreach($Binding in $Bindings) {
-			$bindingDetails = $Binding.bindingInformation.Split(":")
-			$bindingIp = $bindingDetails[0]
-			$Port = $bindingDetails[1]
-			
-			if(!$bindingIp) {
-				Write-Host "No binding ip, setting ip to [0.0.0.0]. Port is [$port]."
-				$bindingIp = "0.0.0.0"
-			}
-
-			Write-Debug "Associating binding $($bindingIp):$($Port)"
-
-			$certsInStore = Get-ChildItem cert:\\LocalMachine\\MY
-			$certFinder = new-object System.Security.Cryptography.X509Certificates.X509Certificate2Collection(,$certsInStore)
-			$findResult = $certFinder.Find($Binding.FindType, $Binding.FindValue, $false)
-
-			if(!$findResult) { 
-				throw "No Certificate found when looking for [$($Binding.FindType)] with value [$($Binding.FindValue)] found."
-			}
-
-			if($findResult.Count -gt 1) {
-				throw "Certificates with [$($Binding.FindValue)] returned more than 1 result."
-			}
-
-			$webSiteCert = $findResult | Select-Object -First 1
-			Remove-Item -Path "IIS:\\SslBindings\$bindingIp!$port" -ErrorAction SilentlyContinue
-			
-			#netsh http add sslcert ipport=$bindingIp:$port certhash=d9744c1e37bd575b431fed64e4e52cae9faced46 appid={5C7D7048-6609-4298-A2ED-6EFB68A66FF3} certstorename=MY clientcertnegotiation=enable
-			New-Item -Path "IIS:\\SslBindings\$bindingIp!$port" -Value (Get-Item cert:\LocalMachine\MY\$($webSiteCert.Thumbprint))
-			Write-Debug "SSL binding for SSL cert $($webSiteCert.Thumbprint) created."
-		}
-	}
-}
-
 function GetNewWebBindingCommand ([string] $WebSiteName, [string] $Port = "", [string] $Ip = "", [string] $HostHeader = "", [bool] $Ssl) {
 	if(!$Port -and !$Ip -and !$HostHeader) {
 		throw "Either port, ip or host header must be specified to create a new binding in IIS."
@@ -209,6 +289,11 @@ function RemoveWebSite($webSiteId) {
 	get-website | where-object { $_.ID -eq $webSiteId } | Remove-Website
 }
 
+function GetWebSite($webSiteId) {
+	$site = get-website | where-object { $_.ID -eq $webSiteId }
+	return $site
+}
+
 function CreateWebSiteDir($dirPath) {
 	if(!$dirPath) {
 		return
@@ -218,30 +303,10 @@ function CreateWebSiteDir($dirPath) {
 		Write-Debug "Creating directory $dirPath"
 		New-Item -Path $dirPath -Type Directory
 	}
+    else {
+        Write-Debug "WebSite path $dirPath allready exist. Doing nothing."
+    }
 }
-
-#function AssociateCertificateWithBinding([string] $port, [string] $certCommonName, [string] $bindingIp = "0.0.0.0") {
-#	$matchString = "CN=*$certCommonName*"
-#    $webSiteCerts = Get-ChildItem cert:\\LocalMachine\\MY | Where-Object {$_.Subject -match $matchString}
-#	
-#	if(!$bindingIp) {
-#		Write-Host "No binding ip, setting ip to 0.0.0.0."
-#		$bindingIp = "0.0.0.0"
-#	}
-#	
-#	if($webSiteCerts.Count -gt 1) {
-#		throw "Certificates with $matchString returned more than 1 result."
-#	}
-#
-#	if(!$webSiteCerts) { 
-#		throw "No Certificate with $matchString found."
-#	}
-#
-#	$webSiteCert = $webSiteCerts | Select-Object -First 1
-#
-#	Remove-Item -Path "IIS:\\SslBindings\$bindingIp!$port" -ErrorAction SilentlyContinue
-#   New-Item -Path "IIS:\\SslBindings\$bindingIp!$port" -Value $webSiteCert
-#}
 
 function StartWebSite($webSite) {
 	if($webSite.State -eq 'Stopped') 
@@ -255,34 +320,4 @@ function StartWebSite($webSite) {
 		}
 		Write-Host "Web site started"
 	} 
-}
-
-function GetNewWebSiteCommand([string]$name, [int]$id, [string]$path = "", [string]$port = "", [string]$ip = "", [string]$hostHeader = "", [string] $appPool = "", [bool] $ssl) {
-	$newWebSiteCmd = "New-Item -force IIS:\Sites\$name -id $id -bindings @{}"
-	
-	if($path) {
-		$newWebSiteCmd += "-PhysicalPath $path "
-	}
-	
-	if($port) {
-		$newWebSiteCmd += "-Port $port "
-	}
-	
-	if($ip) {
-		$newWebSiteCmd += "-IPAddress $ip "	
-	}
-	
-	if($hostHeader) {
-		$newWebSiteCmd += "-HostHeader $hostHeader "
-	}
-	
-	if($appPool) {
-		$newWebSiteCmd += "-ApplicationPool $appPool "
-	}
-	
-	if($ssl) {
-		$newWebSiteCmd += "-Ssl "
-	}
-	
-	return $newWebSiteCmd
 }
