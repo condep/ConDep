@@ -62,7 +62,7 @@ function getExistingWindowsFeatures($featureList) {
 	foreach($feature in $featureList) {
 		$result = Get-WindowsFeature $feature
 		if(!$result) { throw "Feature '$feature' is not an available feature to install on the server. It's not on the Windows feature list." }
-		if($result.Installed -eq $true) { $features.Add($result) }		
+		if($result.Installed -eq $true) { $features += $result }		
 	}
 	#$features = Get-WindowsFeature $featureList
 	#return ($features | where { $_.Installed -eq $true })
