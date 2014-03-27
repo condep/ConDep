@@ -256,10 +256,16 @@ namespace ConDep.Dsl.SemanticModel
         private static IEnumerable<InfrastructureArtifact> GetInfrastructureArtifactForApplication(ConDepSettings settings, ApplicationArtifact application)
         {
             var typeName = typeof (IDependOnInfrastructure<>).Name;
-            var typeInterface = application.GetType().GetInterface(typeName);
-            var infrastructureTypes = typeInterface.GetGenericArguments();
+            var typeInterfaces = application.GetType().GetInterfaces();
 
-            return infrastructureTypes.Select(type => settings.Options.Assembly.CreateInstance(type.FullName) as InfrastructureArtifact);
+            var infraInterfaces = typeInterfaces.Where(x => x.Name == typeName);
+            foreach (var infraInterface in infraInterfaces)
+            {
+                var infrastructureType = infraInterface.GetGenericArguments().Single();
+
+                var infrastructureInstance = settings.Options.Assembly.CreateInstance(infrastructureType.FullName) as InfrastructureArtifact;
+                yield return infrastructureInstance;
+            }
         }
     }
 }
