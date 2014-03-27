@@ -249,7 +249,8 @@ namespace ConDep.Dsl.SemanticModel
         private static bool HasInfrastructureDefined(ApplicationArtifact application)
         {
             var typeName = typeof(IDependOnInfrastructure<>).Name;
-            return application.GetType().GetInterface(typeName) != null;
+            var interfaces = application.GetType().GetInterfaces();
+            return interfaces.Any(x => x.Name == typeName);
         }
 
         private static IEnumerable<InfrastructureArtifact> GetInfrastructureArtifactForApplication(ConDepSettings settings, ApplicationArtifact application)
