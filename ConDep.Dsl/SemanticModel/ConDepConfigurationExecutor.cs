@@ -163,13 +163,16 @@ namespace ConDep.Dsl.SemanticModel
 
                 if (HasInfrastructureDefined(application))
                 {
-                    var infrastructureInstance = GetInfrastructureArtifactForApplication(conDepSettings, application);
+                    var infrastructureInstances = GetInfrastructureArtifactForApplication(conDepSettings, application);
+                    foreach (var infrastructureInstance in infrastructureInstances)
+                    {
+                        infrastructureInstance.Configure(infrastructureBuilder, conDepSettings);
+                    }
+
                     if (!infrastructureSequence.IsValid(notification))
                     {
                         notification.Throw();
                     }
-
-                    infrastructureInstance.Configure(infrastructureBuilder, conDepSettings);
                 }
 
                 var localSequence = sequenceManager.NewLocalSequence(application.GetType().Name);
@@ -249,14 +252,13 @@ namespace ConDep.Dsl.SemanticModel
             return application.GetType().GetInterface(typeName) != null;
         }
 
-        private static InfrastructureArtifact GetInfrastructureArtifactForApplication(ConDepSettings settings, ApplicationArtifact application)
+        private static IEnumerable<InfrastructureArtifact> GetInfrastructureArtifactForApplication(ConDepSettings settings, ApplicationArtifact application)
         {
             var typeName = typeof (IDependOnInfrastructure<>).Name;
             var typeInterface = application.GetType().GetInterface(typeName);
-            var infrastructureType = typeInterface.GetGenericArguments().Single();
+            var infrastructureTypes = typeInterface.GetGenericArguments();
 
-            var infrastructureInstance = settings.Options.Assembly.CreateInstance(infrastructureType.FullName) as InfrastructureArtifact;
-            return infrastructureInstance;
+            return infrastructureTypes.Select(type => settings.Options.Assembly.CreateInstance(type.FullName) as InfrastructureArtifact);
         }
     }
 }
