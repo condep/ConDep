@@ -24,7 +24,7 @@ if($service) {{
 
 Remove-Item -force -recurse {0}{1}",
                     @"$env:windir\temp\ConDep\", ConDepGlobals.ExecId);
-            var executor = new PowerShellExecutor(server);
+            var executor = new PowerShellExecutor(server) {LoadConDepModule = false};
             executor.Execute(script);
         }
 
