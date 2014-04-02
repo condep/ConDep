@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.ServiceProcess;
 using ConDep.Dsl.SemanticModel;
 
 namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
@@ -29,7 +30,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WindowsService
                                            string.IsNullOrWhiteSpace(_values.Description)
                                                ? "$null"
                                                : ("'" + _values.Description + "'"),
-                                           _values.StartupType.HasValue ? "'" + _values.StartupType + "'" : "$null"
+                                           _values.StartupType.HasValue ? "'" + _values.StartupType + "'" : "'" + ServiceStartMode.Manual + "'"
                 );
 
             server.ExecuteRemote.PowerShell(installCmd);
