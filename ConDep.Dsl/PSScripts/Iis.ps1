@@ -12,14 +12,13 @@ function New-ConDepIisWebSite {
 		[string] $LogPath)
 
     $webSite = GetWebSite $Id
+	$defaultPath = "$env:SystemDrive\inetpub\$Name"
+	$physicalPath = if($Path) { $Path } else { $defaultPath }
+
+    Write-Debug "Physical path for WebSite is $physicalPath"
 
 	if(!$webSite) {
         write-debug "WebSite $Name does not exist. Creating now..."
-
-		$defaultPath = "$env:SystemDrive\inetpub\$Name"
-		$physicalPath = if($Path) { $Path } else { $defaultPath }
-
-        Write-Debug "Physical path for WebSite is $physicalPath"
 
 		if(!$Bindings) {
 			$Bindings = @(@{protocol='http';bindingInformation=':80:'})
@@ -33,9 +32,12 @@ function New-ConDepIisWebSite {
         UpdateWebSiteLogPath $webSite $LogPath
 	}
     else {
-	    UpdateWebSiteName $webSite $Name
+	    UpdateWebSiteName $Id $Name
+
+		$webSite = GetWebSite $Id
+
 	    UpdateWebSiteBindings $webSite $Bindings
-	    UpdateWebSitePath $webSite $Path
+	    UpdateWebSitePath $webSite $physicalPath
 	    UpdateWebSiteAppPool $webSite $AppPool
 	    UpdateWebSiteLogPath $webSite $LogPath
     }
@@ -46,11 +48,12 @@ function New-ConDepIisWebSite {
 	Write-Debug "Web Site $webSite started."
 }
 
-function UpdateWebSiteName($webSite, $name) {
+function UpdateWebSiteName($id, $name) {
+	$webSite = GetWebSite $id
+
     if($webSite.name -ne $name) {
         Write-Debug "WebSite name $name differs from current $($webSite.name). Updating now..."
-        $webSite.name = $name
-        $webSite | Set-Item
+		$webSite | set-itemproperty -Name name -Value $name
     }
     else {
         Write-Debug "WebSite name $name is correct. Doing nothing."
@@ -82,8 +85,7 @@ function UpdateWebSitePath($webSite, $path) {
 
     if($webSite.physicalPath -ne $path) {
         Write-Debug "WebSite physical path differs. Setting path to $path"
-        $webSite.physicalPath = $path
-        $webSite | Set-Item
+		Set-ItemProperty -Path "IIS:\Sites\$name" -Name PhysicalPath -Value $path
     }
     else {
         Write-Debug "WebSite physical path $path is correct. Doing nothing."
@@ -93,8 +95,7 @@ function UpdateWebSitePath($webSite, $path) {
 function UpdateWebSiteAppPool($webSite, $appPool) {
     if($webSite.applicationPool -ne $appPool) {
         Write-Debug "WebSite application pool has changed to $appPool. Updating now..."
-        $webSite.applicationPool = $appPool
-        $webSite | Set-Item
+		Set-ItemProperty -Path "IIS:\Sites\$name" -Name ApplicationPool -Value $appPool
     }   
     else {
         Write-Debug "WebSite application pool $appPool is correct. Doing nothing."
@@ -112,9 +113,7 @@ function UpdateWebSiteLogPath($webSite, $logPath) {
             if($webSite.logFile.directory -ne $logPath) {
                 $name = $webSite.name
                 Write-Debug "Setting log path to $logPath"
-                #Set-ItemProperty IIS:\Sites\$name -name logfile -value @{directory=$logPath}
-                $webSite.logFile.directory = $logPath
-                $webSite | Set-Item
+                Set-ItemProperty IIS:\Sites\$name -name logfile -value @{directory=$logPath}
             }
         }
     }
