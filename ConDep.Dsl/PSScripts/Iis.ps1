@@ -283,7 +283,7 @@ function RemoveWebSite($webSiteId) {
 }
 
 function GetWebSite($webSiteId) {
-	$site = get-website | where-object { $_.ID -eq $webSiteId }
+	$site = get-item -Path "IIS:\Sites\*" | where-object { $_.ID -eq $webSiteId }
 	return $site
 }
 
