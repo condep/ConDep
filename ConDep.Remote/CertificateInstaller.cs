@@ -48,12 +48,13 @@ namespace ConDep.Remote
             var cert = new X509Certificate2();
             cert.Import(filePath, password, X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet );
 
+            AddCertToStore(cert);
+
             if (cert.HasPrivateKey)
             {
                 GrantUserReadAccessToCertificate(privateKeyUsers, cert);
             }
 
-            AddCertToStore(cert);
             RemoveCertFileFromDisk(filePath);
         }
 
@@ -88,23 +89,46 @@ namespace ConDep.Remote
             if (privateKeyUsers == null)
                 return;
 
-            var rsa = certificate.PrivateKey as RSACryptoServiceProvider;
-            var cspParams = new CspParameters(rsa.CspKeyContainerInfo.ProviderType, rsa.CspKeyContainerInfo.ProviderName,
-                                              rsa.CspKeyContainerInfo.KeyContainerName)
-                                {
-                                    Flags = CspProviderFlags.UseExistingKey | CspProviderFlags.UseMachineKeyStore,
-                                    CryptoKeySecurity = rsa.CspKeyContainerInfo.CryptoKeySecurity
-                                };
+            var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
 
-            foreach (var user in privateKeyUsers)
+            try
             {
-                cspParams.CryptoKeySecurity.AddAccessRule(new CryptoKeyAccessRule(user, CryptoKeyRights.GenericRead,
-                                                                                  AccessControlType.Allow));
+                store.Open(OpenFlags.ReadWrite);
+
+                var certs = store.Certificates;
+                var result = certs.Find(X509FindType.FindByThumbprint, certificate.Thumbprint, false);
+
+                if (result.Count == 1)
+                {
+                    var storeCert = result[0];
+
+                    var rsa = storeCert.PrivateKey as RSACryptoServiceProvider;
+                    var cspParams = new CspParameters(rsa.CspKeyContainerInfo.ProviderType, rsa.CspKeyContainerInfo.ProviderName,
+                                                      rsa.CspKeyContainerInfo.KeyContainerName)
+                    {
+                        Flags = CspProviderFlags.UseExistingKey | CspProviderFlags.UseMachineKeyStore,
+                        CryptoKeySecurity = rsa.CspKeyContainerInfo.CryptoKeySecurity
+                    };
+
+                    foreach (var user in privateKeyUsers)
+                    {
+                        cspParams.CryptoKeySecurity.AddAccessRule(new CryptoKeyAccessRule(user, CryptoKeyRights.GenericRead,
+                                                                                          AccessControlType.Allow));
+                    }
+
+                    using (var rsa2 = new RSACryptoServiceProvider(cspParams))
+                    {
+                        // Only created to persist the rule change in the CryptoKeySecurity
+                    }
+                    return;
+                }
+
+                //store.Add(certificate);
+                Console.WriteLine("Certificate installed in store.");
             }
-
-            using (var rsa2 = new RSACryptoServiceProvider(cspParams))
+            finally
             {
-                // Only created to persist the rule change in the CryptoKeySecurity
+                store.Close();
             }
         }
 
@@ -116,11 +140,27 @@ namespace ConDep.Remote
 
         private static void AddCertToStore(X509Certificate2 certificate, X509Store store)
         {
+            try
+            {
+                store.Open(OpenFlags.ReadWrite);
 
-            store.Open(OpenFlags.ReadWrite);
-            store.Add(certificate);
-            store.Close();
-            Console.WriteLine("Certificate installed in store.");
+                var certs = store.Certificates;
+                var result = certs.Find(X509FindType.FindByThumbprint, certificate.Thumbprint, false);
+
+                //Will only add cert to store if it doesn't already exist.
+                if (result.Count > 0)
+                {
+                    store.Close();
+                    return;
+                }
+
+                store.Add(certificate);
+                Console.WriteLine("Certificate installed in store.");
+            }
+            finally
+            {
+                store.Close();
+            }
         }
 
         private static void RemoveCertFileFromDisk(string filePath)
