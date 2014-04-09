@@ -47,7 +47,7 @@ namespace ConDep.Dsl.Remote.Node
         public SyncResult SyncWebApp(string webSiteName, string webAppName, string srcPath, string dstPath = null)
         {
             var url = DiscoverUrl("http://www.con-dep.net/rels/iis_template");
-            var url2 = url.Replace("{website}", webSiteName).Replace("{webapp}", webAppName);
+            var url2 = url.Replace("{website}", webSiteName).Replace("{webapp}", Uri.EscapeDataString(webAppName));
 
             var syncResponse = _client.GetAsync(url2).Result;
 
@@ -74,7 +74,7 @@ namespace ConDep.Dsl.Remote.Node
                     }
                 }
             }
-            return null;
+            throw new ConDepResourceNotFoundException(string.Format("Unable to sync Web Application using {0}. Returned status code was {1}.", url, syncResponse.StatusCode));
         }
 
         private SyncResult SyncDirByUrl(string srcPath, string url)
