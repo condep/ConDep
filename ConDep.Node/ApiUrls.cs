@@ -17,8 +17,8 @@ namespace ConDep.Node
 
         public static class Iis
         {
-            public static string IisTemplate(UrlHelper url) { return url.Link("Iis", new { controller = "Iis"}) + "/{website}/{webapp}"; }
-            public static string WebApp(UrlHelper url, string webSite, string webApp) { return url.Link("Iis", new { controller = "Iis", siteName = webSite, appName = webApp }) + "?path={0}"; }
+            public static string IisTemplate(UrlHelper url) { return url.Link("Iis", new { controller = "Iis" }) + "/{website}/?webapp={webapp}"; }
+            public static string WebApp(UrlHelper url, string webSite, string webApp) { return url.Link("Iis", new { controller = "Iis", siteName = webSite }) + "?webapp={webapp}&path={0}"; }
             //public static string WebSite(UrlHelper url) { return url.Link("Iis", new { controller = "WebSite" }); }
         }
     }
