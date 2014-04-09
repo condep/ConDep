@@ -76,13 +76,12 @@ namespace ConDep.Node
         public static void AddRoutes(HttpConfiguration config)
         {
             config.Routes.MapHttpRoute("Sync", "api/sync/{controller}");
-            config.Routes.MapHttpRoute("WebAppSync", "api/sync/webapp/{siteName}/{appName}", new {controller = "WebApp"});
-            config.Routes.MapHttpRoute("Iis", "api/iis/{siteName}/{appName}",
+            config.Routes.MapHttpRoute("WebAppSync", "api/sync/webapp/{siteName}", new {controller = "WebApp"});
+            config.Routes.MapHttpRoute("Iis", "api/iis/{siteName}",
                                        new
                                            {
                                                controller = "Iis",
                                                siteName = RouteParameter.Optional,
-                                               appName = RouteParameter.Optional
                                            });
             config.Routes.MapHttpRoute("Api", "api/{controller}", new {controller = "Home"});
         }
