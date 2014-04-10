@@ -65,7 +65,7 @@ namespace ConDep.Dsl.Remote.Node
                     switch (link.Rel)
                     {
                         case "http://www.con-dep.net/rels/iis/web_app_template":
-                            CreateWebApp(link, path);
+                            CreateWebApp(link, webAppName, path);
                             break;
                         case "http://www.con-dep.net/rels/sync/dir_template":
                             return SyncDirByUrl(srcPath, string.Format(link.Href, path));
@@ -116,9 +116,9 @@ namespace ConDep.Dsl.Remote.Node
             return url;
         }
 
-        private void CreateWebApp(Link link, string path)
+        private void CreateWebApp(Link link, string appName, string path)
         {
-            var message = new HttpRequestMessage { Method = link.HttpMethod, RequestUri = new Uri(string.Format(link.Href, path)) };
+            var message = new HttpRequestMessage { Method = link.HttpMethod, RequestUri = new Uri(string.Format(link.Href, path).Replace("{webapp}", appName)) };
 
             var syncResponse = _client.SendAsync(message).Result;
 
