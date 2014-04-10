@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceProcess;
+using System.Threading;
 using System.Web.Http;
 using System.Web.Http.SelfHost;
 using System.Web.Http.SelfHost.Channels;
@@ -45,6 +46,15 @@ namespace ConDep.Node
             _server.CloseAsync().Wait();
             _server.Dispose();
             EventLog.WriteEntry("ConDepNode stopped", EventLogEntryType.Information);
+        }
+
+        public void Start(string[] args)
+        {
+            OnStart(args);
+            while (true)
+            {
+                Thread.Sleep(1);
+            }
         }
     }
 
