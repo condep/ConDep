@@ -118,7 +118,7 @@ namespace ConDep.Dsl.Remote.Node
 
         private void CreateWebApp(Link link, string appName, string path)
         {
-            var message = new HttpRequestMessage { Method = link.HttpMethod, RequestUri = new Uri(string.Format(link.Href, path).Replace("{webapp}", appName)) };
+            var message = new HttpRequestMessage { Method = link.HttpMethod, RequestUri = new Uri(string.Format(link.Href, path)) };
 
             var syncResponse = _client.SendAsync(message).Result;
 

@@ -12,13 +12,13 @@ namespace ConDep.Node
             public static string Directory(UrlHelper url) { return url.Link("Sync", new { controller = "Directory" }); }
             public static string DirectoryTemplate(UrlHelper url) { return url.Link("Sync", new { controller = "Directory" }) + "?path={0}"; }
             public static string FileTemplate(UrlHelper url) { return url.Link("Sync", new { controller = "File" }) + "?path={0}"; }
-            public static string WebApp(UrlHelper url, string webSite, string webApp) { return url.Link("Iis", new { controller = "Iis", siteName = webSite }) + "?appName={webApp}&path={0}"; }
+            public static string WebApp(UrlHelper url, string webSite, string webApp) { return url.Link("Iis", new { controller = "Iis", siteName = webSite }) + "?appName=" + webApp + " &path={0}"; }
         }
 
         public static class Iis
         {
             public static string IisTemplate(UrlHelper url) { return url.Link("Iis", new { controller = "Iis" }) + "/{website}/?appName={webapp}"; }
-            public static string WebApp(UrlHelper url, string webSite, string webApp) { return url.Link("Iis", new { controller = "Iis", siteName = webSite }) + "?appName={webapp}&path={0}"; }
+            public static string WebApp(UrlHelper url, string webSite, string webApp) { return url.Link("Iis", new { controller = "Iis", siteName = webSite }) + "?appName=" + webApp + "&path={0}"; }
             //public static string WebSite(UrlHelper url) { return url.Link("Iis", new { controller = "WebSite" }); }
         }
     }
