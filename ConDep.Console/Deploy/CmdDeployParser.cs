@@ -32,7 +32,7 @@ namespace ConDep.Console
                     {"s|sams|stopAfterMarkedServer", "Will only deploy to server marked as StopServer in json config, or first server if no server is marked. After execution, run ConDep with the continueAfterMarkedServer switch to continue deployment to remaining servers.\n", v => _options.StopAfterMarkedServer = v != null},
                     {"c|cams|continueAfterMarkedServer", "Will continue deployment to remaining servers. Used after ConDep has previously executed with the stopAfterMarkedServer switch.\n", v => _options.ContinueAfterMarkedServer = v != null},
                     {"dryrun", "Will output the execution sequence without actually executing it.", v => _options.DryRun = v != null},
-                    {"apiTimeout=", "Timeout in seconds before calls to the ConDep server api (ConDep Node) will time out (default is 100 seconds).", v => _options.ApiTimout = Convert.ToInt32(v) }
+                    {"apiTimeout=", "Timeout in milliseconds before calls to the ConDep server api (ConDep Node) will time out (default is 100 seconds).", v => _options.ApiTimout = Convert.ToInt32(v) }
                 };
 
         }
