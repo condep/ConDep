@@ -27,17 +27,16 @@ namespace ConDep.Dsl.Operations
                     server.GetServerInfo().TempFolderPowerShell = string.Format(TMP_FOLDER, "$env:windir", ConDepGlobals.ExecId);
                     Logger.Info(string.Format("PowerShell temp folder is {0}", server.GetServerInfo().TempFolderDos));
 
-                    TempInstallConDepNode(server);
+                    TempInstallConDepNode(server, settings);
 
                     Logger.WithLogSection("Copying PowerShell Scripts", () =>
                         {
-                            CopyResourceFiles(Assembly.GetExecutingAssembly(), PowerShellResources.PowerShellScriptResources,
-                                                server);
+                            CopyResourceFiles(Assembly.GetExecutingAssembly(), PowerShellResources.PowerShellScriptResources, server, settings);
 
                             if (settings.Options.Assembly != null)
                             {
                                 var assemblyResources = settings.Options.Assembly.GetManifestResourceNames();
-                                CopyResourceFiles(settings.Options.Assembly, assemblyResources, server);
+                                CopyResourceFiles(settings.Options.Assembly, assemblyResources, server, settings);
                             }
                         });
                 });
@@ -49,17 +48,17 @@ namespace ConDep.Dsl.Operations
             return true;
         }
 
-        private void CopyResourceFiles(Assembly assembly, IEnumerable<string> resources, ServerConfig server)
+        private void CopyResourceFiles(Assembly assembly, IEnumerable<string> resources, ServerConfig server, ConDepSettings settings)
         {
             if (resources == null || assembly == null) return;
             
             foreach (var path in resources.Select(resource => ExtractPowerShellFileFromResource(assembly, resource)).Where(path => !string.IsNullOrWhiteSpace(path)))
             {
-                CopyFile(path, server);
+                CopyFile(path, server, settings);
             }
             var src = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "ConDep.Remote.dll");
             var dst = string.Format(@"{0}\{1}", server.GetServerInfo().TempFolderDos, "ConDep.Remote.dll");
-            CopyFile(src, dst, server);
+            CopyFile(src, dst, server, settings);
         }
 
         private string ExtractPowerShellFileFromResource(Assembly assembly, string resource)
@@ -78,19 +77,19 @@ namespace ConDep.Dsl.Operations
             return null;
         }
 
-        private void CopyFile(string srcPath, ServerConfig server)
+        private void CopyFile(string srcPath, ServerConfig server, ConDepSettings settings)
         {
             var dstPath = string.Format(@"{0}\PSScripts\ConDep\{1}", server.GetServerInfo().TempFolderDos, Path.GetFileName(srcPath));
-            CopyFile(srcPath, dstPath, server);
+            CopyFile(srcPath, dstPath, server, settings);
         }
 
-        private void CopyFile(string srcPath, string dstPath, ServerConfig server)
+        private void CopyFile(string srcPath, string dstPath, ServerConfig server, ConDepSettings settings)
         {
             var filePublisher = new FilePublisher();
-            filePublisher.PublishFile(srcPath, dstPath, server);
+            filePublisher.PublishFile(srcPath, dstPath, server, settings);
         }
 
-        private void TempInstallConDepNode(ServerConfig server)
+        private void TempInstallConDepNode(ServerConfig server, ConDepSettings settings)
         {
             Logger.WithLogSection("Deploying ConDep Node", () =>
                 {
@@ -113,7 +112,7 @@ namespace ConDep.Dsl.Operations
                     }
 
                     var byteArray = File.ReadAllBytes(path);
-                    var nodePublisher = new ConDepNodePublisher(byteArray, Path.Combine(server.GetServerInfo().TempFolderPowerShell, Path.GetFileName(path)), string.Format(NODE_LISTEN_URL, "localhost"));
+                    var nodePublisher = new ConDepNodePublisher(byteArray, Path.Combine(server.GetServerInfo().TempFolderPowerShell, Path.GetFileName(path)), string.Format(NODE_LISTEN_URL, "localhost"), settings);
                     nodePublisher.Execute(server);
                     if (!nodePublisher.ValidateNode(string.Format(NODE_LISTEN_URL, server.Name), server.DeploymentUser.UserName, server.DeploymentUser.Password))
                     {

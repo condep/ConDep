@@ -24,6 +24,7 @@ namespace ConDep.Dsl.Config
         public string AssemblyName { get; set; }
         public string CryptoKey { get; set; }
         public bool DryRun { get; set; }
+        public int ApiTimout { get; set; }
 
         public bool HasApplicationDefined()
         {

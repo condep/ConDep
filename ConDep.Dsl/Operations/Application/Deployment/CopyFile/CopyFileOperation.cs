@@ -19,7 +19,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.CopyFile
 
         public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
-            _api = new Api(string.Format("http://{0}/ConDepNode/", server.Name), server.DeploymentUser.UserName, server.DeploymentUser.Password);
+            _api = new Api(string.Format("http://{0}/ConDepNode/", server.Name), server.DeploymentUser.UserName, server.DeploymentUser.Password, settings.Options.ApiTimout);
             var result = _api.SyncFile(_srcFile, _dstFile);
 
             if (result == null) return;

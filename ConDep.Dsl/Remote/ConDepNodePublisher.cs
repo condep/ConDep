@@ -12,12 +12,14 @@ namespace ConDep.Dsl.Remote
         private readonly byte[] _nodeExe;
         private readonly string _nodeDestPath;
         private readonly string _nodeListenUrl;
+        private readonly ConDepSettings _settings;
 
-        public ConDepNodePublisher(byte[] nodeExe, string nodeDestPath, string nodeListenUrl)
+        public ConDepNodePublisher(byte[] nodeExe, string nodeDestPath, string nodeListenUrl, ConDepSettings settings)
         {
             _nodeExe = nodeExe;
             _nodeDestPath = nodeDestPath;
             _nodeListenUrl = nodeListenUrl;
+            _settings = settings;
         }
 
         public void Execute(ServerConfig server)
@@ -80,7 +82,7 @@ namespace ConDep.Dsl.Remote
 
         public bool ValidateNode(string nodeListenUrl, string userName, string password)
         {
-            var api = new Node.Api(nodeListenUrl, userName, password);
+            var api = new Node.Api(nodeListenUrl, userName, password, _settings.Options.ApiTimout);
             if (!api.Validate())
             {
                 Thread.Sleep(1000);

@@ -28,7 +28,7 @@ namespace ConDep.Dsl.Operations.Application.Deployment.WebApp
 
         public void Execute(ServerConfig server, IReportStatus status, ConDepSettings settings)
         {
-            _api = new Api(string.Format("http://{0}/ConDepNode/", server.Name), server.DeploymentUser.UserName, server.DeploymentUser.Password);
+            _api = new Api(string.Format("http://{0}/ConDepNode/", server.Name), server.DeploymentUser.UserName, server.DeploymentUser.Password, settings.Options.ApiTimout);
             var result = _api.SyncWebApp(_destinationWebSiteName, _webAppName, _sourceDir, _destDir);
 
             if (result == null) return;
