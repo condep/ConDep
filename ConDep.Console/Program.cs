@@ -56,8 +56,7 @@ namespace ConDep.Console
             }
             catch (AggregateException aggEx)
             {
-                var flattenEx = aggEx.Flatten();
-                foreach (var ex in flattenEx.InnerExceptions)
+                foreach (var ex in aggEx.InnerExceptions)
                 {
                     System.Console.ForegroundColor = ConsoleColor.Red;
                     helpWriter.WriteException(ex);

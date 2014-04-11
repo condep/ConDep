@@ -94,9 +94,8 @@ namespace ConDep.Dsl.SemanticModel
             }
             catch (AggregateException aggEx)
             {
-                var flattenEx = aggEx.Flatten();
                 Logger.Error("ConDep execution failed with the following error(s):");
-                foreach (var ex in flattenEx.InnerExceptions)
+                foreach (var ex in aggEx.InnerExceptions)
                 {
                     Logger.Error("ConDep execution failed.", ex);
                 }
