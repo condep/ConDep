@@ -30,7 +30,7 @@ namespace ConDep.Remote
             filePath = Environment.ExpandEnvironmentVariables(filePath);
             Console.Write("Installing certificate using file: [{0}].", filePath);
             var certificate = new X509Certificate2(filePath);
-            var store = new X509Store(StoreName.CertificateAuthority, StoreLocation.LocalMachine);
+            var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
             AddCertToStore(certificate, store);
             RemoveCertFileFromDisk(filePath);
         }
