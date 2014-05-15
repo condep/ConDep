@@ -18,10 +18,15 @@ namespace ConDep.Remote
             RemoveCertFileFromDisk(filePath);
         }
 
-        public static void InstallCertFromBase64(string base64Cert)
+        public static X509Certificate2 GetCertFromBase64(string base64Cert)
         {
             var cert = Convert.FromBase64String(base64Cert);
-            var certificate = new X509Certificate2(cert);
+            return new X509Certificate2(cert);
+        }
+
+        public static void InstallCertFromBase64(string base64Cert)
+        {
+            var certificate = GetCertFromBase64(base64Cert);
             AddCertToStore(certificate);
         }
 
