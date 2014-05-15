@@ -204,7 +204,22 @@ namespace ConDep.Dsl.Remote.Node
                         var syncResult = task.Result.Content.ReadAsAsync<SyncResult>().Result;
                         return syncResult;
                     }
-                    return null;
+                    else
+                    {
+                        var errorResult = task.Result.Content.ReadAsAsync<SyncResult>().Result;
+
+                        foreach (var entry in errorResult.Log)
+                        {
+                            Logger.Info(entry);    
+                        }
+
+                        foreach (var error in errorResult.Errors)
+                        {
+                            Logger.Error(error);    
+                        }
+
+                        throw new ApplicationException("Error while deploying WebApp. See log for more information");
+                    }
                 });
             result.Wait();
             return result.Result;

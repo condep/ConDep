@@ -64,8 +64,32 @@ namespace ConDep.Node.Controllers.Sync
 
             var streamProvider = new MultipartSyncDirStreamProvider(path);
 
-            return Request.Content.ReadAsMultipartAsync(streamProvider)
-                .ContinueWith(t => Request.CreateResponse(HttpStatusCode.Created, t.Result.SyncResult));
+            var task = Request.Content.ReadAsMultipartAsync(streamProvider)
+                .ContinueWith(t =>
+                {
+                    if (t.IsCanceled || t.IsFaulted)
+                    {
+                        var errorSyncResult = new SyncResult();
+                        if (t.Exception != null)
+                        {
+                            foreach (var ex in t.Exception.Flatten().InnerExceptions)
+                            {
+                                errorSyncResult.Errors.Add(ex.ToString());
+                            }
+                        }
+
+                        return Request.CreateResponse(HttpStatusCode.InternalServerError, errorSyncResult);
+                    }
+
+                    if (t.Result.SyncResult.Errors.Count > 0)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.InternalServerError, t.Result.SyncResult);
+                    }
+
+                    return Request.CreateResponse(HttpStatusCode.Created, t.Result.SyncResult);
+                });
+
+            return task;
         }
     }
 }
