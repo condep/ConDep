@@ -72,5 +72,13 @@ namespace ConDep.Dsl
         /// <param name="minutes"></param>
         /// <returns></returns>
         IOfferIisAppPoolOptions RecycleTimeInMinutes(int minutes);
+
+        /// <summary>
+        /// Disables the process for overlapped recycling af the application pool.
+        /// False is default.
+        /// </summary>
+        /// <param name="disable"></param>
+        /// <returns></returns>
+        IOfferIisAppPoolOptions DisableOverlappedRecycle(bool disable);
     }
 }
