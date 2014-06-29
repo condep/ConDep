@@ -1,9 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using ConDep.Dsl.Config;
+using ConDep.Dsl.Execution;
 using ConDep.Dsl.Logging;
 using ConDep.Dsl.SemanticModel;
 using log4net;
@@ -20,12 +19,15 @@ namespace ConDep.Server.Execution
             _cts = new CancellationTokenSource();
         }
 
-        public ConDepExecutionResult Execute(ITokenSource tokenSource, Guid execId, string relativeLogPath, ConDepSettings settings, string assemblyFilePath, string artifact, string env)
+        public ExecutionResult Execute(ITokenSource tokenSource, Guid execId, string relativeLogPath, string assemblyFilePath, string artifact, string env)
         {
             //var mergedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(tokenSource.Token, _cts.Token);
             XmlConfigurator.Configure();
 
             Logger.Initialize(new FileLogger(relativeLogPath, LogManager.GetLogger("condep-file")));
+
+            //ToDo: Handle config settings
+            var settings = CreateConDepSettings(env, artifact, new ConDepEnvConfig());
 
             try
             {
@@ -44,21 +46,21 @@ namespace ConDep.Server.Execution
                     {
                         Logger.Error("ConDep finished execution run un-successfully");
                     }
-                    return result;
+                    return CreateResult(result);
                 }
                 catch (OperationCanceledException)
                 {
-                    return new ConDepExecutionResult(false) { Cancelled = true};
+                    return new ExecutionResult {Status = ExecutionStatus.Cancelled};
                 }
             }
             catch (AggregateException aggEx)
             {
-                var result = new ConDepExecutionResult(false);
+                var result = new ExecutionResult();
                 aggEx.Handle(inner =>
                     {
                         if (inner is OperationCanceledException)
                         {
-                            result.Cancelled = true;
+                            result.Status = ExecutionStatus.Cancelled;
                             Logger.Warn("ConDep execution cancelled.");
                         }
                         else
@@ -75,7 +77,7 @@ namespace ConDep.Server.Execution
             }
             catch (Exception ex)
             {
-                var result = new ConDepExecutionResult(false);
+                var result = new ExecutionResult();
                 try
                 {
                     result.AddException(ex);
@@ -89,6 +91,52 @@ namespace ConDep.Server.Execution
                     return result;
                 }
             }
+        }
+
+        private static ConDepSettings CreateConDepSettings(string env, string artifact, ConDepEnvConfig config)
+        {
+            var settings = new ConDepSettings
+            {
+                Options = new ConDepOptions
+                {
+                    Application = artifact,
+                    Environment = env
+                },
+                Config = config
+            };
+
+            //foreach (var server in settings.Config.Servers.Where(server => !server.DeploymentUser.IsDefined()))
+            //{
+            //    server.DeploymentUser = settings.Config.DeploymentUser;
+            //}
+            return settings;
+        }
+
+        private ExecutionResult CreateResult(ConDepExecutionResult result)
+        {
+            var execResult = new ExecutionResult();
+            if (result.Success)
+            {
+                execResult.Status = ExecutionStatus.Success;
+            }
+            else if (result.Cancelled)
+            {
+                execResult.Status = ExecutionStatus.Cancelled;
+            }
+            else if (!result.Success)
+            {
+                execResult.Status = ExecutionStatus.Failure;
+            }
+
+            if (result.HasExceptions())
+            {
+                foreach (var ex in result.ExceptionMessages)
+                {
+                    execResult.AddException(ex.DateTime, ex.Exception);
+                }
+            }
+
+            return execResult;
         }
 
         public CancellationToken Token { get { return _cts.Token; } }

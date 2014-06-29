@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="ArtifactResolver.cs" />
     <Compile Include="ConDepExecutor.cs" />
+    <Compile Include="ExecutionResult.cs" />
     <Compile Include="FileLogger.cs" />
     <Compile Include="ITokenSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

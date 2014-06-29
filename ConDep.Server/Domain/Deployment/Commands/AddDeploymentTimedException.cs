@@ -1,5 +1,5 @@
 ﻿using System;
-using ConDep.Dsl.SemanticModel;
+using ConDep.Server.Domain.Deployment.Model;
 using ConDep.Server.Domain.Infrastructure;
 
 namespace ConDep.Server.Domain.Deployment.Commands

@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using ConDep.Dsl.Config;
+using ConDep.Server.Domain.Environment.Model;
 
 namespace ConDep.Server.Api.Controllers
 {
@@ -12,9 +12,9 @@ namespace ConDep.Server.Api.Controllers
         {
             try
             {
-                var configs = Session.Advanced.LoadStartingWith<ConDepEnvConfig>(RavenDb.GetFullId<ConDepEnvConfig>("")) ?? new ConDepEnvConfig[0];
+                var configs = Session.Advanced.LoadStartingWith<DeploymentEnvironment>(RavenDb.GetFullId<DeploymentEnvironment>("")) ?? new DeploymentEnvironment[0];
 
-                var links = configs.Select(config => this.GetLinkFor<ConfigController>(HttpMethod.Get, config.EnvironmentName)).ToList();
+                var links = configs.Select(config => this.GetLinkFor<ConfigController>(HttpMethod.Get, config.Id)).ToList();
 
                 return Request.CreateResponse(HttpStatusCode.Found, links);
             }
@@ -28,7 +28,7 @@ namespace ConDep.Server.Api.Controllers
         {
             try
             {
-                var config = Session.Load<ConDepEnvConfig>(RavenDb.GetFullId<ConDepEnvConfig>(id));
+                var config = Session.Load<DeploymentEnvironment>(RavenDb.GetFullId<DeploymentEnvironment>(id));
                 if (config == null) throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound, string.Format("No environment with id [{0}] found!", id)));
                 return Request.CreateResponse(HttpStatusCode.Found, config);
             }
@@ -38,7 +38,7 @@ namespace ConDep.Server.Api.Controllers
             }
         }
 
-        public HttpResponseMessage Put(ConDepEnvConfig config)
+        public HttpResponseMessage Put(ConDep.Server.Domain.Environment.Model.DeploymentEnvironment config)
         {
             Session.Store(config);
             return new HttpResponseMessage(HttpStatusCode.OK);

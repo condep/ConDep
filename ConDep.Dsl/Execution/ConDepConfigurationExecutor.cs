@@ -10,9 +10,10 @@ using ConDep.Dsl.Logging;
 using ConDep.Dsl.Operations;
 using ConDep.Dsl.Operations.LoadBalancer;
 using ConDep.Dsl.Remote;
+using ConDep.Dsl.SemanticModel;
 using ConDep.Dsl.SemanticModel.Sequence;
 
-namespace ConDep.Dsl.SemanticModel
+namespace ConDep.Dsl.Execution
 {
     //Todo: Screaming for refac! 
     public class ConDepConfigurationExecutor
@@ -24,10 +25,7 @@ namespace ConDep.Dsl.SemanticModel
         {
             try
             {
-                if (conDepSettings.Options.Assembly == null)
-                {
-                    throw new ArgumentException("assembly");
-                }
+                if (conDepSettings.Options.Assembly == null) throw new ArgumentException("assembly");
 
                 var clientValidator = new ClientValidator();
 
@@ -99,9 +97,9 @@ namespace ConDep.Dsl.SemanticModel
             catch (AggregateException aggEx)
             {
                 var result = new ConDepExecutionResult(false);
-                var flattenEx = aggEx.Flatten();
+                aggEx.Handle(inner =>
                     {
-                foreach (var ex in flattenEx.InnerExceptions)
+                        if (inner is OperationCanceledException)
                         {
                             Cancel(settings, status, token);
                             result.Cancelled = true;

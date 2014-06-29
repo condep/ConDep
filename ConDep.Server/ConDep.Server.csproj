@@ -37,6 +37,12 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.3.1.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Net4">
+      <HintPath>..\packages\AutoMapper.3.1.1\lib\net40\AutoMapper.Net4.dll</HintPath>
+    </Reference>
     <Reference Include="Esent.Interop, Version=1.7.0.0, Culture=neutral, PublicKeyToken=8dd49bbdae3f61af, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\Esent.Interop.dll</HintPath>
@@ -84,14 +90,10 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Services.Client" />
-    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.1.1\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Reactive.Core">
       <HintPath>..\packages\Rx-Core.2.1.30214.0\lib\Net45\System.Reactive.Core.dll</HintPath>
@@ -112,11 +114,19 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\System.Spatial.5.2.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.30506.0\lib\net40\System.Web.Http.dll</HintPath>
+    <Reference Include="System.Web.Cors">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.1.1\lib\net45\System.Web.Cors.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http.SelfHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.SelfHost.4.0.30506.0\lib\net40\System.Web.Http.SelfHost.dll</HintPath>
+    <Reference Include="System.Web.Http, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.1.1\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Cors">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.1.1\lib\net45\System.Web.Http.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.SelfHost, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.SelfHost.5.1.1\lib\net45\System.Web.Http.SelfHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -126,14 +136,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\ApiControllerExtensions.cs" />
+    <Compile Include="Api\Controllers\Admin\LoadBalancerController.cs" />
+    <Compile Include="Api\Controllers\ApplicationController.cs" />
+    <Compile Include="Api\Controllers\ApplicationDeploymentController.cs" />
     <Compile Include="Api\Controllers\ArtifactController.cs" />
     <Compile Include="Api\Controllers\CancelController.cs" />
     <Compile Include="Api\Controllers\ConfigController.cs" />
     <Compile Include="Api\Controllers\DeploymentController.cs" />
+    <Compile Include="Api\Link.cs" />
     <Compile Include="Api\Controllers\LogController.cs" />
     <Compile Include="Api\Controllers\LogsController.cs" />
     <Compile Include="Api\Controllers\QueueController.cs" />
     <Compile Include="Api\Controllers\RavenDbController.cs" />
+    <Compile Include="Api\ViewModel\LoadBalancer.cs" />
+    <Compile Include="Application\ConDepStatusUnknowException.cs" />
     <Compile Include="Application\DeploymentScheduler.cs" />
     <Compile Include="ConDepDeploymentNotFound.cs" />
     <Compile Include="Domain\Deployment\Commands\AddDeploymentException.cs" />
@@ -142,7 +158,9 @@
     <Compile Include="Domain\Deployment\Commands\CancelDeployment.cs" />
     <Compile Include="Domain\Deployment\Commands\CreateDeployment.cs" />
     <Compile Include="Domain\Deployment\Commands\Deploy.cs" />
+    <Compile Include="Domain\Deployment\Model\TimedException.cs" />
     <Compile Include="Domain\Deployment\Events\DeploymentFinished.cs" />
+    <Compile Include="Domain\Environment\Model\DeploymentEnvironment.cs" />
     <Compile Include="Domain\Infrastructure\ConDepEventHandlerAllreadyRegisteredException.cs" />
     <Compile Include="Domain\Infrastructure\ConDepUnableToRegisterEventHandlerException.cs" />
     <Compile Include="Domain\Infrastructure\LocalEventBus.cs" />
@@ -210,16 +228,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConDep.Dsl\ConDep.Dsl.csproj">
-      <Project>{e7eba0ac-b91d-450f-8a68-5adcf18fe17e}</Project>
-      <Name>ConDep.Dsl</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ConDep.Server.Execution\ConDep.Server.Execution.csproj">
       <Project>{c2a653d9-9060-4d8b-8b76-1fb2bb863a2f}</Project>
       <Name>ConDep.Server.Execution</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="..\packages\AutoMapper.3.1.1\lib\net40\AutoMapper.Net4.dll">
+      <Link>AutoMapper.Net4.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

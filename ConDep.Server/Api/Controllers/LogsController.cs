@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
-using ConDep.Dsl.Config;
-using ConDep.Dsl.Remote.Node.Model;
 using ConDep.Server.Domain.Deployment.Model;
 using Raven.Client;
 
@@ -66,10 +64,10 @@ namespace ConDep.Server.Api.Controllers
         {
             using (var session = RavenDb.DocumentStore.OpenSession())
             {
-                var environments = session.Query<ConDepEnvConfig>();
+                var environments = session.Query<Domain.Environment.Model.DeploymentEnvironment>();
                 foreach (var env in environments)
                 {
-                    yield return this.GetLink(HttpMethod.Get, env.EnvironmentName);
+                    yield return this.GetLink(HttpMethod.Get, env.Name);
                 }
             }
         }

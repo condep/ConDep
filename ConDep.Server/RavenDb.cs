@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using ConDep.Dsl.Config;
+using ConDep.Server.Api.ViewModel;
 using ConDep.Server.Domain.Deployment.Model;
 using ConDep.Server.Domain.Queue.Model;
 using Raven.Abstractions.Util;
@@ -20,10 +20,6 @@ namespace ConDep.Server
                 {
                     typeof (Deployment),
                     "execution_info/{0}"
-                },
-                {
-                    typeof(ConDepEnvConfig),
-                    "environments/{0}"
                 }
             };
 
@@ -41,11 +37,6 @@ namespace ConDep.Server
 
         private static void RegisterConventions(EmbeddableDocumentStore docStore)
         {
-            docStore.Conventions.RegisterIdConvention<ConDepEnvConfig>(
-                (dbname, commands, config) => GetFullId<ConDepEnvConfig>(config.EnvironmentName));
-            docStore.Conventions.RegisterAsyncIdConvention<ConDepEnvConfig>(
-                (dbname, commands, config) => new CompletedTask<string>(GetFullId<ConDepEnvConfig>(config.EnvironmentName)));
-
             docStore.Conventions.RegisterIdConvention<QueueItem>(
                 (dbname, commands, item) => item.Environment + "/" + item.DeploymentId );
             docStore.Conventions.RegisterAsyncIdConvention<QueueItem>(

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ConDep.Dsl.SemanticModel;
+using ConDep.Server.Domain.Deployment.Commands;
 using ConDep.Server.Domain.Deployment.Events;
 using ConDep.Server.Domain.Infrastructure;
 using Raven.Imports.Newtonsoft.Json;

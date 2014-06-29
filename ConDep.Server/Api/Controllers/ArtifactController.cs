@@ -5,8 +5,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
-using ConDep.Dsl;
-using ConDep.Dsl.Remote.Node.Model;
 using ConDep.Server.Execution;
 
 namespace ConDep.Server.Api.Controllers
@@ -33,7 +31,7 @@ namespace ConDep.Server.Api.Controllers
                         {
                             Href = string.Format("/condepserver/api/execute?module={0}&artifact={1}&env={{0}}", 
                             Path.GetFileNameWithoutExtension(dll.Name), artifact), 
-                            Method = "POST", Rel = ""
+                            Method = HttpMethod.Post, Rel = ""
                         }));
                 }
                 return returnValues;

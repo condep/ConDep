@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using ConDep.Dsl.Config;
-using ConDep.Dsl.SemanticModel;
-using ConDep.Server.Domain.Deployment;
 using ConDep.Server.Domain.Deployment.Commands;
 using ConDep.Server.Domain.Deployment.Model;
+using ConDep.Server.Domain.Environment.Model;
 using ConDep.Server.Domain.Infrastructure;
 using ConDep.Server.Execution;
 
@@ -25,13 +22,14 @@ namespace ConDep.Server.Application
             _commandBus = commandBus;
         }
 
-        public void Deploy(ExecutionData execData, ConDepEnvConfig config)
+        public void Deploy(ExecutionData execData, DeploymentEnvironment environment)
         {
-            if (execData == null) throw new ConDepDeploymentNotFound();
+            if (execData == null) throw new ArgumentNullException("execData");
+            if (environment == null) throw new ArgumentNullException("environment");
 
             Task.Run(() =>
                 {
-                    var result = new ConDepExecutionResult(false);
+                    var result = new ExecutionResult();
                     FileInfo assemblyFile = null;
 
                     var relativeLogPath = Path.Combine("logs", execData.Environment, execData.DeploymentId + ".log");
@@ -47,8 +45,6 @@ namespace ConDep.Server.Application
 
                         var executor = (ConDepExecutor)appDomain.CreateInstanceAndUnwrap(typeof(ConDepExecutor).Assembly.FullName, typeof(ConDepExecutor).FullName);
 
-                        var settings = CreateConDepSettings(execData, config);
-
                         AddExecutionEvent(execData.DeploymentId, "Executing now");
 
                         _tokenSources.TryAdd(execData.DeploymentId, tokenSource);
@@ -58,7 +54,7 @@ namespace ConDep.Server.Application
                         var logPathCmd = new SetDeploymentLogLocation(execData.DeploymentId, relativeLogPath);
                         _commandBus.Send(logPathCmd);
 
-                        result = executor.Execute(executorCancelable, execData.DeploymentId, relativeLogPath, settings, assemblyFile.FullName,
+                        result = executor.Execute(executorCancelable, execData.DeploymentId, relativeLogPath, assemblyFile.FullName,
                                                 execData.Artifact, execData.Environment);
                     }
                     finally
@@ -91,9 +87,9 @@ namespace ConDep.Server.Application
 
                             if (result.HasExceptions())
                             {
-                                foreach (var ex in result.ExceptionMessages)
+                                foreach (var ex in result.Exceptions)
                                 {
-                                    AddException(execData.DeploymentId, ex);
+                                    AddException(execData.DeploymentId, new TimedException{ DateTime = ex.Item1, Exception = ex.Item2 });
                                 }
                             }
 
@@ -125,22 +121,25 @@ namespace ConDep.Server.Application
                 });
         }
 
-        private void FinishDeployment(Guid deploymentId, ConDepExecutionResult result, string relativeLogPath)
+        private void FinishDeployment(Guid deploymentId, ExecutionResult result, string relativeLogPath)
         {
-            if (result.Success)
+            FinishDeployment finishDeployment;
+            switch (result.Status)
             {
-                var finishDeployment = new FinishDeployment(deploymentId, DeploymentStatus.Success, relativeLogPath);
-                _commandBus.Send(finishDeployment);
-            }
-            else if (result.Cancelled)
-            {
-                var finishDeployment = new FinishDeployment(deploymentId, DeploymentStatus.Cancelled, relativeLogPath);
-                _commandBus.Send(finishDeployment);
-            }
-            else if (!result.Success)
-            {
-                var finishDeployment = new FinishDeployment(deploymentId, DeploymentStatus.Failed, relativeLogPath);
-                _commandBus.Send(finishDeployment);
+                case ExecutionStatus.Success:
+                    finishDeployment = new FinishDeployment(deploymentId, DeploymentStatus.Success, relativeLogPath);
+                    _commandBus.Send(finishDeployment);
+                    break;
+                case ExecutionStatus.Cancelled:
+                    finishDeployment = new FinishDeployment(deploymentId, DeploymentStatus.Cancelled, relativeLogPath);
+                    _commandBus.Send(finishDeployment);
+                    break;
+                case ExecutionStatus.Failure:
+                    finishDeployment = new FinishDeployment(deploymentId, DeploymentStatus.Failed, relativeLogPath);
+                    _commandBus.Send(finishDeployment);
+                    break;
+                default:
+                    throw new ConDepStatusUnknowException();
             }
         }
 
@@ -160,25 +159,6 @@ namespace ConDep.Server.Application
         {
             var executionEvent = new AddDeploymentExecutionEvent(deploymentId, message);
             _commandBus.Send(executionEvent);
-        }
-
-        private static ConDepSettings CreateConDepSettings(ExecutionData execData, ConDepEnvConfig config)
-        {
-            var settings = new ConDepSettings
-                {
-                    Options = new ConDepOptions
-                        {
-                            Application = execData.Artifact,
-                            Environment = execData.Environment
-                        },
-                    Config = config
-                };
-
-            foreach (var server in settings.Config.Servers.Where(server => !server.DeploymentUser.IsDefined()))
-            {
-                server.DeploymentUser = settings.Config.DeploymentUser;
-            }
-            return settings;
         }
 
         private FileInfo CopyAssemblyToTempLocation(Guid execId, string module)

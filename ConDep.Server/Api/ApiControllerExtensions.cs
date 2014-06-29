@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
-using ConDep.Dsl.Remote.Node.Model;
 using System.Linq;
 
 namespace ConDep.Server.Api
@@ -87,7 +86,7 @@ namespace ConDep.Server.Api
             return new Link
             {
                 Href = controller.GetControllerUrl(hrefArgs),
-                Method = httpMethod.ToString().ToUpper(),
+                Method = httpMethod,
                 Rel = rel
             };
         }
@@ -97,7 +96,7 @@ namespace ConDep.Server.Api
             return new Link
             {
                 Href = GetControllerUrlOf<T>(controller, hrefArgs),
-                Method = httpMethod.ToString().ToUpper(),
+                Method = httpMethod,
                 Rel = rel
             };
         }

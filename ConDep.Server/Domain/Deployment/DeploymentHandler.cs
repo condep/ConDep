@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using ConDep.Dsl.Config;
 using ConDep.Server.Application;
 using ConDep.Server.Domain.Deployment.Commands;
+using ConDep.Server.Domain.Environment.Model;
 using ConDep.Server.Domain.Infrastructure;
 using Raven.Client;
 
@@ -43,7 +43,7 @@ namespace ConDep.Server.Domain.Deployment
         public async Task<IAggregateRoot> Execute(Deploy command)
         {
             var deployment = Session.Load<Model.Deployment>(command.Id);
-            var config = Session.Load<ConDepEnvConfig>(RavenDb.GetFullId<ConDepEnvConfig>(deployment.Environment));
+            var environment = Session.Load<DeploymentEnvironment>(RavenDb.GetFullId<DeploymentEnvironment>(deployment.Environment));
             var execData = new ExecutionData
                 {
                     DeploymentId = deployment.Id,
@@ -52,7 +52,7 @@ namespace ConDep.Server.Domain.Deployment
                     Module = deployment.Module
                 };
 
-            _deploymentService.Deploy(execData, config);
+            _deploymentService.Deploy(execData, environment);
             return deployment;
         }
 

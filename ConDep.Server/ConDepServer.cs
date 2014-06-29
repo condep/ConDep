@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.SelfHost;
 using ConDep.Server.Domain.Infrastructure;
 using Newtonsoft.Json;
@@ -36,7 +36,11 @@ namespace ConDep.Server
             serializerSettings.Formatting = Formatting.Indented;
             serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             _config.Formatters.Remove(_config.Formatters.XmlFormatter);
-
+            
+            _config.MapHttpAttributeRoutes();
+            _config.EnableCors(new EnableCorsAttribute("http://localhost:1337", "*", "*"));
+            
+            _config.Routes.MapHttpRoute("DeployApplication", "api/deployment/application/{appName}", new { controller = "applicationdeployment" });
             _config.Routes.MapHttpRoute("Logs", "api/logs/{env}", new { controller = "logs", env = RouteParameter.Optional });
             _config.Routes.MapHttpRoute("Default", "api/{controller}/{id}", new { id = RouteParameter.Optional });
         }

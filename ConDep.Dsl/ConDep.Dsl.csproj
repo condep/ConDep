@@ -308,7 +308,7 @@
     <Compile Include="Operations\Infrastructure\IIS\WebSite\IisWebSiteOperation.cs" />
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="SemanticModel\Credentials.cs" />
-    <Compile Include="SemanticModel\ConDepConfigurationExecutor.cs" />
+    <Compile Include="Execution\ConDepConfigurationExecutor.cs" />
     <Compile Include="Operations\Application\Local\LocalOperation.cs" />
     <Compile Include="SemanticModel\IValidate.cs" />
     <Compile Include="SemanticModel\Notification.cs" />
