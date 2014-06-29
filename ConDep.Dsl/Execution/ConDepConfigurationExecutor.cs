@@ -78,13 +78,14 @@ namespace ConDep.Dsl.Execution
                 ExecutePreOps(settings, status, token);
                 _serverNodeInstalled = true;
 
-            token.Register(() => Cancel(settings, status));
+                //Todo: Result of merge. Not sure if this is correct.
+                token.Register(() => Cancel(settings, status, token));
             
-            var notification = new Notification();
-            if (!execManager.IsValid(notification))
-            {
-                notification.Throw();
-            }
+                var notification = new Notification();
+                if (!execManager.IsValid(notification))
+                {
+                    notification.Throw();
+                }
 
                 execManager.Execute(status, settings, token);
                 return new ConDepExecutionResult(true);
