@@ -9,6 +9,12 @@ namespace ConDep.Dsl
         IOfferPowerShellOptions RequireRemoteLib();
 
         /// <summary>
+        /// Skip loading of the ConDep powershell modules. 
+        /// </summary>
+        /// <returns></returns>
+        IOfferPowerShellOptions SkipLoadingConDepModule();
+
+        /// <summary>
         /// If true, will continue execution even if an error occur during operation execution
         /// </summary>
         /// <param name="value"></param>

@@ -10,6 +10,12 @@
             return this;
         }
 
+        public IOfferPowerShellOptions SkipLoadingConDepModule()
+        {
+            _values.SkipLoadingConDepModule = true;
+            return this;
+        }
+
         public IOfferPowerShellOptions ContinueOnError(bool value)
         {
             _values.ContinueOnError = value;
@@ -21,6 +27,8 @@
         public class PowerShellOptionValues
         {
             public bool RequireRemoteLib { get; set; }
+
+            public bool SkipLoadingConDepModule { get; set; }
 
             public bool ContinueOnError { get; set; }
         }
