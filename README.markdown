@@ -1,4 +1,8 @@
 [![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:%28id:bt1012%29/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=bt1012&guest=1)
+Project split and moved into seperate repositories
+==================================================
+The ConDep repository has now been split into several other repositories located in the [ConDep Organization](https://github.com/condep/) in GitHub. 
+
 About ConDep
 ============
 
